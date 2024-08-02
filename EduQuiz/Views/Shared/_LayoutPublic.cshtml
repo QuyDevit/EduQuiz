@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+	<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- Bootstrap CSS -->
+    <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/src/css/style.css" rel="stylesheet" />
+	<!-- Nice Select CSS -->
+	<link rel="stylesheet" href="~/src/css/nice-select.css">
+	<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="~/src/css/font-awesome.min.css">
+	<!-- icofont CSS -->
+	<link rel="stylesheet" href="~/src/css/icofont.css">
+	<!-- Slicknav -->
+	<link rel="stylesheet" href="~/src/css/slicknav.min.css">
+	<!-- Owl Carousel CSS -->
+	<link rel="stylesheet" href="~/src/css/owl-carousel.css">
+	<!-- Datepicker CSS -->
+	<link rel="stylesheet" href="~/src/css/datepicker.css">
+	<!-- Animate CSS -->
+	<link rel="stylesheet" href="~/src/css/animate.min.css">
+	<!-- Magnific Popup CSS -->
+	<link rel="stylesheet" href="~/src/css/magnific-popup.css">
+
+	<!-- Medipro CSS -->
+	<link rel="stylesheet" href="~/src/css/normalize.css">
+	<link rel="stylesheet" href="~/src/css/style.css">
+	<link rel="stylesheet" href="~/src/css/responsive.css">
+</head>
+<body>
+	<!-- Preloader -->
+	<div class="preloader">
+		<div class="loader">
+			<div class="loader-outter"></div>
+			<div class="loader-inner"></div>
+
+			<div class="indicator">
+				<svg width="16px" height="12px">
+					<polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+					<polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+				</svg>
+			</div>
+		</div>
+	</div>
+	<!-- End Preloader -->
+	<!-- Get Pro Button -->
+	<ul class="pro-features">
+		<li><button class="get-pro" href="#">Get Pro</button></li>
+		
+		<li class="big-title">Pro Version Available on Themeforest</li>
+		<li class="title">Pro Version Features</li>
+		<li>2+ premade home pages</li>
+		<li>20+ html pages</li>
+		<li>Color Plate With 12+ Colors</li>
+		<li>Sticky Header / Sticky Filters</li>
+		<li>Working Contact Form With Google Map</li>
+			<a href="http://preview.themeforest.net/item/mediplus-medical-and-doctor-html-template/full_screen_preview/26665910?_ga=2.145092285.888558928.1591971968-344530658.1588061879" target="_blank" class="btn">Pro Version Demo</a>
+			<a href="https://themeforest.net/item/mediplus-medical-and-doctor-html-template/26665910" target="_blank" class="btn">Buy Pro Version</a>
+	</ul>
+
+	<!-- Header Area -->
+	<header class="header">
+		<!-- Topbar -->
+		<div class="topbar">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-6 col-md-5 col-12">
+						<!-- Contact -->
+						<ul class="top-link">
+							<li><a href="#">Giới thiệu</a></li>
+							<li><a href="#">Liên hệ</a></li>
+							<li><a href="#">FAQ</a></li>
+						</ul>
+						<!-- End Contact -->
+					</div>
+					<div class="col-lg-6 col-md-7 col-12">
+						<!-- Top Contact -->
+						<ul class="top-contact">
+
+							<li><i class="fa fa-envelope"></i><a href="mailto:support@yourmail.com">eduquiztdmu@gmail.com</a></li>
+						</ul>
+						<!-- End Top Contact -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Topbar -->
+		<!-- Header Inner -->
+		<div class="header-inner">
+			<div class="container">
+				<div class="inner">
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-12">
+							<!-- Start Logo -->
+							<div class="logo">
+								<a href="/"><img style="height:48px" src="~/src/img/logomain.png" alt="#"></a>
+							</div>
+							<!-- End Logo -->
+							<!-- Mobile Nav -->
+							<div class="mobile-nav"></div>
+							<!-- End Mobile Nav -->
+						</div>
+						<div class="col-lg-6 col-md-9 col-12">
+							<!-- Main Menu -->
+							<div class="main-menu">
+								<nav class="navigation">
+									<ul class="nav menu">
+										<li class="active">
+											<a href="#">Trang chủ</a>
+										</li>
+										<li><a href="#">Sản phẩm</a></li>
+										<li>
+											<a href="#">Tin tức</a>
+										</li>
+
+										<li><a href="contact.html">Liên hệ</a></li>
+									</ul>
+								</nav>
+							</div>
+							<!--/ End Main Menu -->
+						</div>
+						<div class="col-lg-4 col-12">
+							<div class="get-quote" style="float:right;display:flex;align-items:center">
+								<a class="play" href="#">Chơi ngay</a>
+								<a href="#" class="btn" style="background-color:#26890C">Đăng ký miễn phí</a>
+								<a class="signin" href="#" >Đăng nhập</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/ End Header Inner -->
+	</header>
+	<!-- End Header Area -->
+    <div>
+        @RenderBody()
+    </div>
+	<footer id="footer" class="footer ">
+		<!-- Footer Top -->
+		<div class="footer-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-12">
+						<div class="single-footer">
+							<h2>Về EduQuiz</h2>
+							<p>Giới thiệu</p>
+							<p>Liên hệ</p>
+							<p>Dịch vụ</p>
+							<p>Điều khoản</p>
+							<p>Bảo mật</p>
+							<!-- Social -->
+							<ul class="social">
+								<li><a href="#"><i class="icofont-facebook"></i></a></li>
+								<li><a href="#"><i class="icofont-google-plus"></i></a></li>
+								<li><a href="#"><i class="icofont-twitter"></i></a></li>
+								<li><a href="#"><i class="icofont-vimeo"></i></a></li>
+								<li><a href="#"><i class="icofont-pinterest"></i></a></li>
+							</ul>
+							<!-- End Social -->
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-12">
+						<div class="single-footer f-link">
+							<h2>Các giải pháp</h2>
+							<div class="single-footer">
+								
+									<p>Ở nhà</p>
+									<p>Ở trường</p>
+									<p>Đang làm việc</p>
+									<p>Hành động</p>
+									<p>Thông minh</p>
+
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-12">
+						<div class="single-footer">
+							<h2>Tài nguyên</h2>
+							<p>Khám phá nội dung</p>
+							<p>Blog</p>
+							<p>Được chứng nhận EduQuiz</p>
+							<p>Thư viện</p>
+							<p>Cửa hàng</p>
+
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-12">
+						<div class="single-footer">
+							<h2>Các điều khoản và điều kiện</h2>
+							<p>Chính sách bảo mật</p>
+							<p>Chính sách bảo mật của sinh viên</p>
+							<p>Chính sách bao gồm và khả năng tiếp cận</p>
+							<p>Thông báo về cookie</p>
+
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/ End Footer Top -->
+		<!-- Copyright -->
+		<div class="copyright">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-12">
+						<div class="copyright-content">
+							<p>© Copyright 2024, EduQuiz  |  Mọi quyền được bảo lưu bởi <a href="#" target="_blank">eduquiztmdu.com</a> </p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/ End Copyright -->
+    </footer>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <script src="~/src/js/jquery.min.js"></script>
+	<!-- jquery Migrate JS -->
+	<script src="~/src/js/jquery-migrate-3.0.0.js"></script>
+	<!-- jquery Ui JS -->
+	<script src="~/src/js/jquery-ui.min.js"></script>
+	<!-- Easing JS -->
+	<script src="~/src/js/easing.js"></script>
+	<!-- Color JS -->
+	<script src="~/src/js/colors.js"></script>
+	<!-- Popper JS -->
+	<script src="~/src/js/popper.min.js"></script>
+	<!-- Bootstrap Datepicker JS -->
+	<script src="~/src/js/bootstrap-datepicker.js"></script>
+	<!-- Jquery Nav JS -->
+	<script src="~/src/js/jquery.nav.js"></script>
+	<!-- Slicknav JS -->
+	<script src="~/src/js/slicknav.min.js"></script>
+	<!-- ScrollUp JS -->
+	<script src="~/src/js/jquery.scrollUp.min.js"></script>
+	<!-- Niceselect JS -->
+	<script src="~/src/js/niceselect.js"></script>
+	<!-- Tilt Jquery JS -->
+	<script src="~/src/js/tilt.jquery.min.js"></script>
+	<!-- Owl Carousel JS -->
+	<script src="~/src/js/owl-carousel.js"></script>
+	<!-- counterup JS -->
+	<script src="~/src/js/jquery.counterup.min.js"></script>
+	<!-- Steller JS -->
+	<script src="~/src/js/steller.js"></script>
+	<!-- Wow JS -->
+	<script src="~/src/js/wow.min.js"></script>
+	<!-- Magnific Popup JS -->
+	<script src="~/src/js/jquery.magnific-popup.min.js"></script>
+	<!-- Counter Up CDN JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+	<!-- Google Map API Key JS -->
+	<script src="https://maps.google.com/maps/api/js?key=AIzaSyDGqTyqoPIvYxhn_Sa7ZrK5bENUWhpCo0w"></script>
+	<!-- Gmaps JS -->
+	<script src="~/src/js/gmaps.min.js"></script>
+	<!-- Map Active JS -->
+	<script src="~/src/js/map-active.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/src/js/bootstrap.min.js"></script>
+
+	<!-- Main JS -->
+	<script src="~/src/js/main.js"></script>	
+</body>
+</html>
