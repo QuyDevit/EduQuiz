@@ -1,0 +1,83 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayoutAuth";
+}
+
+<h1 class="wrapper-title">
+    Chọn loại tài khoản phù hợp với bạn
+</h1>
+<div class="wrapper-select-usage">
+    <button class="btn-card type-btn bg1" onclick="chooseTypeAccount(1)">
+        <div class="btn-wrapper " style="background: rgb(19, 104, 206);">
+            <div class="btn-wrapper-icon" style="background: rgb(0, 65, 159);">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-fabc52cc-41ab-4a19-ab06-9a500f19e7ce" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-fabc52cc-41ab-4a19-ab06-9a500f19e7ce">Icône</title><path d="M24,6 C25.103,6 26,6.896 26,8 L26,18 C26,19.103 25.103,20 24,20 L18.415,20 L24.414,25.998 L21.586,25.998 L17,21.413 L17,25.998 L15,25.998 L15,21.413 L10.414,25.998 L7.586,25.998 L13.585,20 L8,20 C6.897,20 6,19.103 6,18 L6,8 C6,6.896 6.897,6 8,6 L24,6 Z M8,18 L23.997,18 L23.999,11.415 L19.707,15.707 C19.512,15.902 19.256,16 19,16 C18.744,16 18.488,15.902 18.293,15.707 L17,14.415 L15.707,15.707 C15.316,16.098 14.684,16.098 14.293,15.707 L12,13.415 L10.707,14.707 C10.52,14.895 10.265,15 10,15 L8,15 L8,18 Z M24,8 L8,8 L8,13 L9.586,13 L11.293,11.292 C11.684,10.902 12.316,10.902 12.707,11.292 L15,13.585 L16.293,12.292 C16.684,11.902 17.316,11.902 17.707,12.292 L19,13.585 L24,8.585 L24,8 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                </span>
+            </div>
+        </div>
+        <div class="wrapper-option-text">
+            <span class="text-option">Chuyên nghiệp</span>
+        </div>
+    </button>
+    <button class="btn-card type-btn bg2" onclick="chooseTypeAccount(2)">
+        <div class="btn-wrapper " style="background: rgb(226, 27, 60);">
+            <div class="btn-wrapper-icon" style="background: rgb(171, 0, 24)">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-6f069230-3c4b-40d1-a1dd-299b91634f63" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-6f069230-3c4b-40d1-a1dd-299b91634f63">Icône</title><path d="M25,7.5H18a1,1,0,0,0-.71.29L16,9.09l-1.29-1.3A1,1,0,0,0,14,7.5H7a1,1,0,0,0-1,1v13a1,1,0,0,0,1,1h6.59l1.7,1.71a1,1,0,0,0,1.42,0l1.7-1.71H25a1,1,0,0,0,1-1V8.5A1,1,0,0,0,25,7.5Zm-11,13H8V9.5h5.59L15,10.91V21.09l-.29-.3A1,1,0,0,0,14,20.5Zm10,0H18a1,1,0,0,0-.71.29l-.29.3V10.91L18.41,9.5H24Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                </span>
+            </div>
+        </div>
+        <div class="wrapper-option-text">
+            <span class="text-option">Trường học</span>
+        </div>
+    </button>
+    <button class="btn-card type-btn bg3" onclick="chooseTypeAccount(3)">
+        <div class="btn-wrapper" style="background: rgb(255, 166, 2);">
+            <div class="btn-wrapper-icon" style="background: rgb(201, 121, 0);">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-c4a52c77-1ec2-4fc5-a52a-bd4d852e25f3" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-c4a52c77-1ec2-4fc5-a52a-bd4d852e25f3">Icône</title><path d="M16,14 C17.6568542,14 19,12.6568542 19,11 C19,9.34314575 17.6568542,8 16,8 C14.3431458,8 13,9.34314575 13,11 C13,12.6568542 14.3431458,14 16,14 Z M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M16,19 C13.0269583,19 10.5610282,20.4075601 9.52516483,22.3125 L22.4748352,22.3125 C21.4389718,20.4075601 18.9730417,19 16,19 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                </span>
+            </div>
+        </div>
+        <div class="wrapper-option-text">
+            <span class="text-option">Học sinh</span>
+        </div>
+    </button>
+    <button class="btn-card type-btn bg4" onclick="chooseTypeAccount(4)">
+        <div class="btn-wrapper " style="background: rgb(38, 137, 12);">
+            <div class="btn-wrapper-icon" style="background: rgb(0, 93, 0);">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-b6a92c76-39b9-471d-839f-74b433bb21a6" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-b6a92c76-39b9-471d-839f-74b433bb21a6">Icône</title><path d="M25,12.55A5,5,0,0,0,20,8H12a5,5,0,0,0-4.95,4.55A3.49,3.49,0,0,0,4,16v5a2,2,0,0,0,2,2v1H8V23H24v1h2V23a2,2,0,0,0,2-2V16A3.49,3.49,0,0,0,25,12.55Zm-2,.31A3.49,3.49,0,0,0,21,16H17V10h3A3,3,0,0,1,23,12.86ZM12,10h3v6H11a3.49,3.49,0,0,0-2-3.14A3,3,0,0,1,12,10ZM26,21H6V16a1.5,1.5,0,0,1,3,0v1a1,1,0,0,0,1,1H22a1,1,0,0,0,1-1V16a1.5,1.5,0,0,1,3,0Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                </span>
+            </div>
+        </div>
+        <div class="wrapper-option-text">
+            <span class="text-option">Gia đình và bạn bè</span>
+        </div>
+    </button>
+</div>
+<p style="margin:20px 0 0 0">Bạn đã có tài khoản? <a style="color: rgb(19, 104, 206);" href="/">Đăng nhập</a></p>
+
+@section scripts {
+    <script>
+        function chooseTypeAccount(value) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckTypeAccount", "Account")', // Link to your controller action
+                data: { value: value }, // Data you want to send
+                success: function (response) {
+                    if (response.status == true) {
+                        location.href = "@Url.Action("ChooseBirthday", "Account")";
+                    } else {
+                        openToast('warning', 'Lỗi', 'Vui lòng chọn kiểu tài khoản!', 2000);
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                }
+            })
+        }
+    </script>
+}

@@ -1,0 +1,183 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayoutAuth";
+}
+<h1 class="wrapper-title">
+    Tạo tên tài khoản
+</h1>
+
+<form class="form-card form-username" id="usernameForm">
+    <div class="username-wrapper">
+        <span>
+            <h2 class="title-note">Tên tài khoản</h2>
+            <span class="icon-note">
+                <i class="fa fa-question-circle icon-question" aria-hidden="true"></i>
+            </span>
+        </span>
+        <p>
+            <label class="title-note">
+                Không sử dụng tên thật của bạn
+            </label>
+        </p>
+        <div class="field-wrapper">
+            <div style="flex:1 1 auto">
+                <div style="position:relative">
+                    <input id="username" class="input-field" type="text" placeholder="Nhập tên tài khoản" onkeydown="return characterCount(event)" onpaste="return handlePaste(event)" maxlength="20" />
+                </div>
+
+            </div>
+            <span class="character-count">
+                20
+            </span>
+            <button class="btn btn-checkusser" onclick="randomName()">
+                <span class="icon-wand">
+                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-88777c41-455d-43fe-b9cf-be6d1f34ea14" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-88777c41-455d-43fe-b9cf-be6d1f34ea14">Icon</title><path d="M17.6741366,12.9029823 L19.0972206,14.3260425 L8.42308402,25 L7,23.5769399 L17.6741366,12.9029823 Z M18.9767516,18.6643631 L20.0184008,22.5541279 L18.073989,23.075447 L17.0323398,19.1856822 L18.9767516,18.6643631 Z M21.1111763,15.1070147 L25,16.1496528 L24.4796786,18.0930256 L20.5898485,17.0513939 L21.1111763,15.1070147 Z M9.44611436,11.9818176 L13.334938,13.0234493 L12.8136102,14.9678285 L8.92478655,13.9251904 L9.44611436,11.9818176 Z M21.9445963,8.63219162 L23.3676804,10.0552518 L20.5205059,12.9023785 L19.0974219,11.4793183 L21.9445963,8.63219162 Z M15.8510995,7 L16.8927487,10.887752 L14.9483369,11.4090711 L13.9066877,7.52031266 L15.8510995,7 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                </span>
+            </button>
+        </div>
+        <div class="suggestions-wrapper d-none">
+            <h3 class="title-note">Đề nghị</h3>
+            <div id="suggestions">
+
+            </div>
+            <button></button>
+        </div>
+    </div>
+    <div class="submit-wrapper">
+        <button class="btn" type="button" id="submitUsername">
+            Tiếp tục
+        </button>
+    </div>
+</form>
+
+@section scripts {
+    <script>
+        tippy('.icon-note', {
+            content: 'Tạo tên người dùng hoặc nhấp vào biểu tượng cây đũa phép để tạo tên người dùng ngẫu nhiên.',
+        });
+
+        function characterCount(event) {
+            var input = $("#username");
+            var maxLength = 20;
+            var currentLength = input.val().length;
+
+            // Cho phép các phím đặc biệt và phím tắt
+            if (event.ctrlKey || event.metaKey || event.altKey ||
+                event.key.length > 1 || currentLength < maxLength) {
+                setTimeout(function () {
+                    $(".character-count").text(maxLength - input.val().length);
+                }, 0);
+                return true;
+            }
+            // Ngăn chặn nhập ký tự mới nếu đã đạt giới hạn
+            if (currentLength >= maxLength) {
+                return false;
+            }
+
+            // Cập nhật số ký tự còn lại
+            setTimeout(function () {
+                $(".character-count").text(maxLength - input.val().length);
+            }, 0);
+
+            return true;
+        }
+
+        function handlePaste(event) {
+            var input = $("#username");
+            var maxLength = 20;
+
+            // Ngăn chặn hành động paste mặc định
+            event.preventDefault();
+
+            // Lấy nội dung được paste
+            var pastedText = (event.clipboardData || window.clipboardData).getData('text');
+
+            // Cắt nội dung paste nếu cần
+            var allowedText = pastedText.slice(0, maxLength - input.val().length);
+
+            // Chèn nội dung đã được cắt vào vị trí con trỏ
+            var start = input[0].selectionStart;
+            var end = input[0].selectionEnd;
+            var currentValue = input.val();
+            var newValue = currentValue.slice(0, start) + allowedText + currentValue.slice(end);
+
+            // Cập nhật giá trị input
+            input.val(newValue.slice(0, maxLength));
+
+            // Di chuyển con trỏ đến vị trí cuối cùng của text vừa paste
+            var newCursorPos = start + allowedText.length;
+            input[0].setSelectionRange(newCursorPos, newCursorPos);
+
+            updateCharCount();
+        }
+
+        function updateCharCount() {
+            var input = $("#username");
+            var maxLength = 20;
+            $(".character-count").text(maxLength - input.val().length);
+        }
+        $("#usernameForm").on("submit", function (e) {
+            e.preventDefault(); // Prevent the form from being submitted
+        });
+        $("#submitUsername").click(function () {
+            var username = $("#username").val();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CheckUserName", "Account")',
+                data: {
+                    username: username
+                },
+                success: function (response) {
+                    console.log(response); // Kiểm tra dữ liệu trong console
+                    if (response.status == false) {
+                        if (response.data && response.data.length > 0) {
+                            // Xóa nội dung cũ trong #suggestions
+                            $("#suggestions").empty();
+
+                            // Duyệt qua mảng response.data để thêm các nút mới
+                            response.data.forEach(function (username) {
+                                var button = $("<button>")
+                                    .addClass("flat-button")
+                                    .text(username)
+                                    .click(function () {
+                                        $("#username").val(username); // Gán giá trị username vào ô input
+                                        $(".suggestions-wrapper").addClass("d-none");
+                                    });
+
+                                // Thêm nút vào phần tử #suggestions
+                                $("#suggestions").append(button);
+                            });
+
+                            // Hiển thị phần tử #suggestions nếu nó đang bị ẩn
+                            $(".suggestions-wrapper").removeClass("d-none");
+                        } else if (response.message) {
+                            openToast('warning', 'Lỗi', response.message, 2500);
+                        }
+                    } else {
+                        location.href = "@Url.Action("SignupOption", "Account")";
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error: " + error); // Thêm console log lỗi nếu cần
+                }
+            })
+        });
+
+        function randomName() {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("RandomUserName", "Account")',
+                success: function (response) {
+                    if (response.status == true) {
+                        $("#username").val(response.data);
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                }
+            })
+        }
+    </script>
+}

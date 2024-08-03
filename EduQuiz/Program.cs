@@ -1,10 +1,25 @@
+﻿using EduQuiz.DatabaseContext;
+using EduQuiz.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages()
 	.AddRazorRuntimeCompilation();
-
+// Thêm dịch vụ session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); 
+    options.Cookie.HttpOnly = true; 
+    options.Cookie.IsEssential = true; 
+});
+// Đăng ký EduQuizDBContext như một dịch vụ
+builder.Services.AddDbContext<EduQuizDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EduQuizDBConnection")));
+builder.Services.AddScoped<UsernameService>(); // Đăng ký UsernameService
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -20,6 +35,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+// Thêm middleware session
+app.UseSession();
 
 app.UseAuthorization();
 

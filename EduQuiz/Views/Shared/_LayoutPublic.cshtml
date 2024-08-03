@@ -7,8 +7,7 @@
     <title>@ViewBag.Title</title>
 	<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 	<!-- Bootstrap CSS -->
-    <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/src/css/style.css" rel="stylesheet" />
+    <link href="~/src/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Nice Select CSS -->
 	<link rel="stylesheet" href="~/src/css/nice-select.css">
 	<!-- Font Awesome CSS -->
@@ -25,7 +24,7 @@
 	<link rel="stylesheet" href="~/src/css/animate.min.css">
 	<!-- Magnific Popup CSS -->
 	<link rel="stylesheet" href="~/src/css/magnific-popup.css">
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 	<!-- Medipro CSS -->
 	<link rel="stylesheet" href="~/src/css/normalize.css">
 	<link rel="stylesheet" href="~/src/css/style.css">
@@ -126,7 +125,7 @@
 						<div class="col-lg-4 col-12">
 							<div class="get-quote" style="float:right;display:flex;align-items:center">
 								<a class="play" href="#">Chơi ngay</a>
-								<a href="#" class="btn" style="background-color:#26890C">Đăng ký miễn phí</a>
+								<a href="@Url.Action("Register","Account")" class="btn" style="background-color:#26890C">Đăng ký miễn phí</a>
 								<a class="signin" href="#" >Đăng nhập</a>
 							</div>
 						</div>
@@ -218,7 +217,6 @@
 		</div>
 		<!--/ End Copyright -->
     </footer>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     <script src="~/src/js/jquery.min.js"></script>
 	<!-- jquery Migrate JS -->
 	<script src="~/src/js/jquery-migrate-3.0.0.js"></script>

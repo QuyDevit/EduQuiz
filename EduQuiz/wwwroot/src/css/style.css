@@ -903,12 +903,13 @@ body{
 	position:relative;
 }
 .fun-facts.section{
-	padding:200px 0;
+	padding:0;
 }
-.fun-facts{
-	background-image:url(/src/img/banner.png);
+.fun-facts img{
 	background-size:cover;
 	background-repeat:no-repeat;
+	width:100%;
+	height:300px;
 }
 .fun-facts .single-fun {
 	

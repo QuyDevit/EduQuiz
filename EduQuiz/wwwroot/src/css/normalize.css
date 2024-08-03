@@ -27,9 +27,7 @@ html,body {
 body {
 	margin: 0;
 }
-img{
-	max-width:100%;
-}
+
 article,
 aside,
 details,
@@ -669,12 +667,7 @@ dd {
 	margin: 0 1.5em 1.5em;
 }
 
-img {
-	height: auto;
-	/* Make sure images are scaled correctly. */
-	max-width: 100%;
-	/* Adhere to container width. */
-}
+
 
 figure {
 	margin: 1em 0;
