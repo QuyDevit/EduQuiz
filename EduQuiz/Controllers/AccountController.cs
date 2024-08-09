@@ -1,15 +1,15 @@
 ﻿using EduQuiz.DatabaseContext;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using EduQuiz.Models.EF;
 using EduQuiz.Models;
 using EduQuiz.Services;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Net.Mail;
-using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
+using BcryptNet = BCrypt.Net.BCrypt;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace EduQuiz.Controllers
 {
@@ -25,7 +25,7 @@ namespace EduQuiz.Controllers
             _context = context;
             _usernameService = usernameService;
             _random = new Random(); // Khởi tạo đối tượng Random
-            _httpClientFactory = httpClientFactory;
+            _httpClientFactory = httpClientFactory;     
         }
 
         public IActionResult Register()
@@ -42,6 +42,56 @@ namespace EduQuiz.Controllers
         }
         public IActionResult SignupOption() { 
             return View();
+        }
+        public IActionResult Login()
+        {
+            if (HttpContext.Session.GetString("_USERCURRENT") != null)
+            {
+                return RedirectToAction("Index","HomeDashboard");
+            }
+            return View();
+        }
+        public async Task<IActionResult> Logout()
+        {
+            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
+            if (sessionData != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
+                string email = userInfo?.Email;
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null)
+                {
+                    user.LastLoginAt = DateTime.Now;
+                    await _context.SaveChangesAsync();
+                }
+
+                // Xóa session và chuyển hướng về trang chủ
+                HttpContext.Session.Remove("_USERCURRENT");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
+            if (sessionData != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
+                string email = userInfo?.Email;
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null)
+                {
+                    user.Status = false;
+                    await _context.SaveChangesAsync();
+                }
+
+                // Xóa session và chuyển hướng về trang chủ
+                HttpContext.Session.Remove("_USERCURRENT");
+            }
+
+            return RedirectToAction("Index", "Home");
         }
         [HttpGet]
         public ActionResult VerifyEmail(string token, string email)
@@ -69,7 +119,128 @@ namespace EduQuiz.Controllers
         }
 
         #region handle
+        public IActionResult GetFirebaseConfig()
+        {
+            var firebaseConfig = new
+            {
+                apiKey = "AIzaSyA47Xp0olzLcKWmXFTARF6Wwnf1uCKe4M4",
+                authDomain = "eduquiz-d2936.firebaseapp.com",
+                projectId = "eduquiz-d2936",
+                storageBucket = "eduquiz-d2936.appspot.com",
+                messagingSenderId = "762295753722",
+                appId = "1:762295753722:web:1a333ae03e9f4004a86243",
+                measurementId = "G-P7GLMFJL3J"
+            };
+            return Json(firebaseConfig);
+        }
         [HttpPost]
+        public async Task<IActionResult> LoginWithSocial(string fullname, string email, string avatar)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(fullname) && !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(avatar))
+                {
+                    var checkUser = _context.Users.Where(n => n.Email == email).SingleOrDefault();
+                    if (checkUser == null)
+                    {
+                        var privacySettings = JsonConvert.SerializeObject(new PrivacyModel());
+                        User user = new User
+                        {
+                            Email = email,
+                            Username = fullname,
+                            Password = "",
+                            FirstName = "", // Bạn có thể sửa đổi theo nhu cầu
+                            LastName = "", // Bạn có thể sửa đổi theo nhu cầu
+                            RoleId = 2,
+                            WorkplaceTypeId=1,
+                            PrivacySettings = privacySettings,
+                            ProfilePicture = avatar,
+                            EmailVerified = true,
+                            DateOfBirth = DateTime.Now,
+                            CreatedAt = DateTime.Now,
+                            UpdatedAt = DateTime.Now
+                        };
+                        _context.Users.Add(user);
+                        await _context.SaveChangesAsync();
+                        var userInfo = new
+                        {
+                            Email = user.Email,
+                            Username = user.Username,
+                            Avatar = user.ProfilePicture
+
+                        };
+                        var userInfoJson = JsonConvert.SerializeObject(userInfo);
+                        HttpContext.Session.SetString("_USERCURRENT", userInfoJson);
+                        return Json(new { status = true, msg = "Đăng nhập thành công" });
+                    }
+                    else
+                    {
+                        var userInfo = new
+                        {
+                            Email = checkUser.Email,
+                            Username = checkUser.Username,
+                            Avatar = checkUser.ProfilePicture
+                        };
+                        var userInfoJson = JsonConvert.SerializeObject(userInfo);
+                        HttpContext.Session.SetString("_USERCURRENT", userInfoJson);
+                        return Json(new { status = true, msg = "Đăng nhập thành công" });
+                    }
+                }
+                else
+                {
+                    return Json(new { status = false, msg = "Có lỗi xảy ra" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, msg = ex.Message });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CheckLogin(string username, string pass)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(pass))
+            {
+                return Json(new { status = false, msg = "Vui lòng nhập mật khẩu và tài khoản" });
+            }
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => (u.Username == username || u.Email == username) && u.Status);
+
+            if (user == null)
+            {
+                return Json(new { status = false, msg = "Sai mật khẩu hoặc tài khoản" });
+            }
+            if (!string.IsNullOrEmpty(user.Password))
+            {
+                if (!BcryptNet.Verify(pass, user.Password))
+                {
+                    return Json(new { status = false, msg = "Sai mật khẩu hoặc tài khoản" });
+                }
+            }
+            else
+            {
+               return Json(new { status = false, msg = "Sai mật khẩu hoặc tài khoản" });
+            }
+
+            if (!user.EmailVerified)
+            {
+                return Json(new { status = false, msg = "Vui lòng kiểm tra email để kích hoạt tài khoản" });
+            }
+            var userInfo = new
+            {
+                Email = user.Email,
+                Username = user.Username,
+                Avatar = user.ProfilePicture
+            };
+
+            var userInfoJson = JsonConvert.SerializeObject(userInfo);
+            HttpContext.Session.SetString("_USERCURRENT", userInfoJson);
+            return Json(new { status = true });
+        }
+
+        [HttpPost]
+
         public async Task<IActionResult> RegisterAccount(string password, string email)
         {
             try
@@ -101,15 +272,33 @@ namespace EduQuiz.Controllers
                         var verifyToken = Guid.NewGuid().ToString();
                         var confirmationLink = Url.Action("VerifyEmail", "Account", new { token = verifyToken, email = email }, Request.Scheme);
                         SendEmail(email, "Xác thực tài khoản EduQuiz", confirmationLink, 0);
+                        int workplaceTypeId;
+                        switch (gettypeaccount.Value)
+                        {
+                            case 1:
+                                workplaceTypeId = 4;
+                                break;
+                            case 2:
+                            case 3:
+                                workplaceTypeId = 2;
+                                break;
+                            default:
+                                workplaceTypeId = 5; 
+                                break;
+                        }
+                        var privacySettings = JsonConvert.SerializeObject(new PrivacyModel());
 
                         User user = new User
                         {
                             Email = email,
                             Username = getusername,
-                            Password = BCrypt.Net.BCrypt.HashPassword(password),
+                            Password = BcryptNet.HashPassword(password),
                             FirstName = "", // Bạn có thể sửa đổi theo nhu cầu
                             LastName = "", // Bạn có thể sửa đổi theo nhu cầu
                             RoleId = gettypeaccount.Value,
+                            WorkplaceTypeId = workplaceTypeId,
+                            ProfilePicture = "/src/img/defaultimguser.png",
+                            PrivacySettings= privacySettings,
                             LinkToken = verifyToken,
                             DateOfBirth = getbirthday,
                             CreatedAt = DateTime.Now,
@@ -161,6 +350,7 @@ namespace EduQuiz.Controllers
             }
         }
         [HttpPost]
+
         public IActionResult SaveBirthday(DateTime value)
         {
             //1: Trường học, 2: Giáo viên, 3: Học sinh, Gia đình và bạn bè
@@ -181,7 +371,7 @@ namespace EduQuiz.Controllers
         }
 
         [HttpPost]
-        public IActionResult CheckUserName(string username)
+        public async Task<IActionResult> CheckUserName(string username)
         {
             if (string.IsNullOrEmpty(username))
             {
@@ -192,7 +382,7 @@ namespace EduQuiz.Controllers
             {
                 return Json(new { status = false, message = "Tên tài khoản phải lớn hơn hoặc bằng 6 ký tự!" });
             }
-            bool isAvailable = _usernameService.IsUsernameAvailable(username);
+            bool isAvailable = await _usernameService.IsUsernameAvailable(username);
             if (!isAvailable)
             {
                 return Json(new { status = false, message = "Tên tài khoản đã tồn tại!" });
@@ -200,7 +390,7 @@ namespace EduQuiz.Controllers
             HttpContext.Session.SetString("_USERNAME", username);
             return Json(new { status = true });
         }
-        [HttpPost]
+        [HttpGet]
         public IActionResult RandomUserName()
         {
             var username = GenerateUniqueUsernames(1);
@@ -220,7 +410,7 @@ namespace EduQuiz.Controllers
         }
 
         // Phương thức tạo danh sách tên người dùng ngẫu nhiên
-        private List<string> GenerateUniqueUsernames(int count)
+        private async Task<List<string>> GenerateUniqueUsernames(int count)
         {
             var usernames = new List<string>();
             var random = new Random();
@@ -231,7 +421,7 @@ namespace EduQuiz.Controllers
                 do
                 {
                     username = GenerateRandomUsername();
-                } while (_context.Users.Any(x => x.Username == username) || usernames.Contains(username));
+                } while (await  _context.Users.AnyAsync(x => x.Username == username) || usernames.Contains(username));
 
                 usernames.Add(username);
             }

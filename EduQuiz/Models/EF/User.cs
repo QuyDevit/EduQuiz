@@ -31,6 +31,7 @@ namespace EduQuiz.Models.EF
         public string? ProfilePicture { get; set; }
         public string? Favorite { get; set; }
 
+        public string PrivacySettings { get; set; } // Thiết lập sự riêng tư
         public string? LanguagePreference { get; set; } // Optional field for language preference
         public bool EmailVerified { get; set; } = false; // Optional field for email verification status
 
@@ -41,7 +42,6 @@ namespace EduQuiz.Models.EF
         public DateTime? DateOfBirth { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-
         public bool Status { get; set; } = true;
 
     }

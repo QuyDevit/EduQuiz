@@ -1,0 +1,410 @@
+﻿
+@{
+    Layout = "_LayoutUser";
+    
+}
+<style>
+    .layout-index{
+        box-sizing: border-box;
+        min-width: 0px;
+        margin: 0px auto;
+        width: 100%;
+        max-width: 1280px;
+        flex-wrap: nowrap;
+        height: fit-content;
+        display:flex;
+    }
+
+    .left-layout, .layout-card {
+        display: flex;
+        flex-direction: column;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-bottom: 0.5rem;
+        font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border: 1px rgb(204, 204, 204);
+        background-color: rgb(255, 255, 255);
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+        padding:16px 0;
+        margin-bottom:16px;
+    }
+
+    @@media screen and (max-width: 992px) {
+        .layout-index{
+            flex-direction:column;
+        }
+
+        .col-md-3,.col-md-6{
+            width:100%;
+            max-width:100%;
+        }
+
+        .view-center{
+            padding:0 15px !important;
+        }
+    }
+    .button-add{
+        display: flex;
+        align-items:center;
+        padding: 4px 12px;
+        margin: 0px 8px 8px 0px;
+        font-size: 0.875rem;
+        font-weight: bold;
+        line-height: 1.33;
+        background-color: rgb(242, 242, 242);
+        color: rgb(51, 51, 51);
+        border-radius: 4px;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px 0px;
+        border: none;
+        outline: 0px;
+        cursor: pointer;
+    }
+
+    .profile-image{
+        max-width: 56px;
+        max-height: 56px;
+        min-width: 56px;
+        min-height: 56px;
+        border: 4px solid rgb(242, 242, 242);
+        border-radius: 50%;
+    }
+
+    .profile-infomation, .profile-infomation-filed{
+        position:relative;
+        padding: 12px 16px;
+        margin: 32px 15px 4px 15px;
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        background-color: rgb(242, 242, 242);
+        color: rgb(51, 51, 51);
+        border-radius: 4px 4px 0px 0px;
+    }
+
+    .profile-infomation img {
+            width: 92px;
+            position: absolute;
+            top: -32px;
+            right: 0px;
+    }
+
+    .profile-infomation::before {
+        content:'';
+        width:100%;
+        top:0;
+        left:0;
+        position:absolute;
+        background-color: rgb(19, 104, 206);
+        border-radius: 5px 5px 0px 0px;
+        height: 4px;
+    }
+
+    .text-profile{
+        color: rgb(110, 110, 110);
+        font-size: 0.75rem;
+        font-weight: bold;
+        line-height: 1.33;
+        letter-spacing: 0.2px;
+        overflow-wrap: break-word;
+        max-width: 11rem;
+    }
+
+    .profile-link{
+        color: rgb(51, 51, 51);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-decoration:underline;
+    }
+
+    .profile-link:hover {
+        color: rgb(51, 51, 51);
+    }
+    .market-wrapper{
+        display: flex;
+        flex-direction: column;
+        background-color: rgb(255, 255, 255);
+        padding: 16px;
+        border-radius: 0px 0px 0.25rem 0.25rem;
+    }
+    .market-wrapper_title{
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 700;
+        color: rgb(51, 51, 51);
+        margin: 0 0 8px 0;
+    }
+
+    .modal-dialog-centered{
+        margin-top:200px
+    }
+    button:hover{
+        cursor:pointer
+    }
+
+    .modal-title {
+        font-size:24px;
+        font-weight:600;
+    }
+
+    .modal.fade .modal-dialog {
+        transition: none;
+    }
+
+    @@keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        70% {
+            transform: scale(0.9);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+.modal-content {
+    animation: bounceIn 0.5s ease-in-out;
+}
+
+    .center-view_wrapper{
+        display: flex;
+        background: rgb(255, 255, 255);
+        box-sizing: border-box;
+        border-radius: 4px;
+        width: 100%;
+        padding: 10px;
+        justify-content: space-around;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+        margin-top: 1rem;
+        align-items:center;
+    }
+
+    .title-center-view{
+        font-size: 1rem;
+        font-weight: 700;
+        margin:0;
+    }
+    .see-all{
+        font-size: 0.75rem;
+        flex: 1 1 0%;
+        font-weight: bold;
+        text-align: right;
+        color: rgb(19, 104, 206);
+        text-decoration:underline;
+    }
+    .btn{
+        min-height:34px
+    }
+
+    .btn:hover {
+        min-height: 32px
+    }
+
+    .layout-card_header {
+        padding: 12px 16px;
+        border-bottom: 1px solid rgb(242, 242, 242);
+    }
+    .tabs-button{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        background-color: rgb(255, 255, 255);
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        border-image: initial;
+        margin-right: 16px;
+        font-size: 0.875rem;
+        font-weight: bold;
+        line-height: 1.71;
+        letter-spacing: 0.2px;
+        margin-bottom: -8px;
+        padding-bottom: 8px;
+        color: rgb(51, 51, 51);
+        border-bottom: 2px solid rgb(19, 104, 206);
+        cursor: pointer;
+    }
+    .layout-card_body{
+        padding: 8px 16px 0;
+    }
+    .layout-card_body-style{
+        margin-top: 8px;
+        margin-bottom: 14px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-bottom: 0.5rem;
+        font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border: 1px dashed rgb(204, 204, 204);
+        background-color: rgb(242, 242, 242);
+    }
+    .onboarding-container{
+        text-align: center;
+        padding: 24px 16px;
+        border-radius: 4px;
+    }
+</style>
+    <!-- End Navbar -->
+    <div class="content">
+        <div class="layout-index">
+        <div class="col-md-3" style="min-height:400px;">
+            <div class="left-layout">
+                <div class="container d-flex">
+                    <div class="d-flex align-items-center">
+                        <img class="profile-image" src="~/src/img/defaultimguser.png" />
+                    </div>
+                    <div class="pl-2">
+                        <button class="button-add" data-toggle="modal" data-target="#modalChangName">
+                            <span>Thêm tên</span>
+                            <i style="font-size:16px;margin-left:6px" class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                        <span style="color: rgb(110, 110, 110);font-weight:600">ok123@gmail.com</span>
+                    </div>
+                </div>
+                <div class="profile-infomation">
+                    <img src="~/src/img/plan.svg" />
+                    <span class="text-profile">
+                        Kế hoạch
+                    </span>
+                    <span class="text-profile">
+                        <a href="#" class="profile-link">
+                            Nâng cấp
+                        </a>
+                    </span>
+                </div>
+                <div class="profile-infomation-filed" style="margin-top:8px">
+                    <span class="text-profile">
+                        Sở thích của bạn
+                    </span>
+                    <span class="text-profile">
+                        <a href="#" class="profile-link">
+                            Thêm sở thích
+                        </a>
+                    </span>
+                </div>
+                <div class="profile-infomation-filed" style="margin-top:8px">
+                    <div class="py-2">
+                        <div class="d-flex align-items-center mb-2">
+                            <img style="width:30px;height:30px" src="~/src/img/verified.png" />
+                            <span class="ml-2" style="font-weight:600">Hồ sơ xác minh</span>
+                            <i style="font-size:16px;margin-left:8px" class="fa fa-info-circle" aria-hidden="true"></i>
+                        </div>
+                        <p>Trở thành người sáng tạo được xác minh! Cung cấp tài nguyên học tập của bạn để bán và tham gia cộng đồng toàn cầu.</p>
+                        <button type="button" class="btn">Xác minh ngay</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layout-card" style="padding-top:0">
+                <img src="~/src/img/market.jpg"/>
+                <div class="market-wrapper">
+                    <h4 class="market-wrapper_title">Được trả tiền cho tài nguyên học tập của bạn!</h4>
+                    <p>Trở thành người bán trên thị trường mới của EduQuiz! để kiếm tiền từ nội dung học tập của bạn.</p>
+                    <button type="button" class="btn" style="width:fit-content;background-color:rgb(183, 141, 0)">Bắt đầu</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 view-center" style="min-height:600px;padding:0">
+            <div class="center-view_wrapper">
+                <h3 class="title-center-view">Giao cho tôi</h3>
+                <a class="see-all" href="#">Xem tất cả các bài tập</a>
+            </div>
+            <div class="layout-card mt-3">
+                <div class="layout-card_header">
+                    <div class="d-flex">
+                        <button type="button" class="tabs-button">Nhóm của tôi</button>
+                        <button type="button" class="tabs-button">Các nhóm tham gia</button>
+                    </div>
+                </div>
+                <div class="layout-card_body">
+                    <div class="layout-card_body-style">
+                        <div class="onboarding-container">
+                            <p>Chào mừng đến với Nhóm học! Khi một nhóm học được tạo, bạn có thể tổ chức các buổi học, chỉ định học viên và bắt đầu các hoạt động học tập ngay lập tức!</p>
+                            <a href="#" class="btn"> Tạo nhóm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" style="min-height:400px;">
+            <div class="left-layout">
+                <div class="container d-flex">
+                    <div class="d-flex align-items-center">
+                        <img class="profile-image" src="~/src/img/defaultimguser.png" />
+                    </div>
+                    <div class="pl-2">
+                        <button class="button-add" data-toggle="modal" data-target="#modalChangName">
+                            <span>Thêm tên</span>
+                            <i style="font-size:16px;margin-left:6px" class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                        <span style="color: rgb(110, 110, 110);font-weight:600">ok123@gmail.com</span>
+                    </div>
+                </div>
+                <div class="profile-infomation">
+                    <img src="~/src/img/plan.svg" />
+                    <span class="text-profile">
+                        Kế hoạch
+                    </span>
+                    <span class="text-profile">
+                        <a href="#" class="profile-link">
+                            Nâng cấp
+                        </a>
+                    </span>
+                </div>
+                <div class="profile-infomation-filed" style="margin-top:8px">
+                    <span class="text-profile">
+                        Sở thích của bạn
+                    </span>
+                    <span class="text-profile">
+                        <a href="#" class="profile-link">
+                            Thêm sở thích
+                        </a>
+                    </span>
+                </div>
+                <div class="profile-infomation-filed" style="margin-top:8px">
+                    <div class="py-2">
+                        <div class="d-flex align-items-center mb-2">
+                            <img style="width:30px;height:30px" src="~/src/img/verified.png" />
+                            <span class="ml-2" style="font-weight:600">Hồ sơ xác minh</span>
+                            <i style="font-size:16px;margin-left:8px" class="fa fa-info-circle" aria-hidden="true"></i>
+                        </div>
+                        <p>Trở thành người sáng tạo được xác minh! Cung cấp tài nguyên học tập của bạn để bán và tham gia cộng đồng toàn cầu.</p>
+                        <button type="button" class="btn">Xác minh ngay</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+
+<!-- Modal -->
+<div class="modal" id="modalChangName" tabindex="-1" role="dialog" data-easein="bounceIn" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border:none">
+                <h3 class="modal-title">Sửa tên của bạn</h3>
+            </div>
+            <div class="modal-body">
+                <span>Vui lòng nhập tên của bạn bên dưới</span>
+
+                <input type="text" class="form-control mt-4" style="padding:12px" placeholder="Nhập tên của bạn" value="">
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                <button type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>

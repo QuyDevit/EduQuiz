@@ -3,6 +3,7 @@
 
 *@
 @{
+	ViewBag.Title = "Trang chủ";
     Layout = "_LayoutPublic";
 }
 
@@ -34,31 +35,31 @@
 				<div class="owl-carousel portfolio-slider">
 					<div class="single-pf">
 						<img src="~/src/img/school7.png" alt="Bắt đầu khóa hướng dẫn">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+						<a href="/" class="btn">Xem hướng dẫn</a>
 					</div>
 					<div class="single-pf">
 						<img src="~/src/img/school10.png" alt="Hướng dẫn học tập kết hợp">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+						<a href="/" class="btn">Xem hướng dẫn</a>
 					</div>
 					<div class="single-pf">
 						<img src="~/src/img/school11.png" alt="EduQuiz EDU: hướng dẫn quản trị">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+						<a href="/" class="btn">Xem hướng dẫn</a>
 					</div>
 					<div class="single-pf">
 						<img src="~/src/img/school8.png" alt="Tài nguyên phát triển chuyên môn của EduQuiz">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+						<a href="/" class="btn">Xem hướng dẫn</a>
 					</div>
 					<div class="single-pf">
 						<img src="~/src/img/school12.png" alt="Bắt đầu khóa hướng dẫn">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+						<a href="/" class="btn">Xem hướng dẫn</a>
 					</div>
 					<div class="single-pf">
 						<img src="~/src/img/school13.png" alt="Bắt đầu khóa hướng dẫn">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+						<a href="/" class="btn">Xem hướng dẫn</a>
 					</div>
 					<div class="single-pf">
 						<img src="~/src/img/school9.png" alt="Bắt đầu khóa hướng dẫn">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+						<a href="/" class="btn">Xem hướng dẫn</a>
 					</div>
 				</div>
 			</div>
@@ -135,7 +136,7 @@
 							<h4 class="mt-2">Bắt đầu khóa hướng dẫn</h4>
 							<p>Chào mừng bạn đến với trò chơi này! Bạn sẽ tạo và chơi những trò chơi học tập tuyệt vời chỉ trong thời gian ngắn - chỉ cần làm theo hướng dẫn từng bước trong hướng dẫn này.</p>
 							<div class="d-flex justify-content-center mt-2" style="padding-bottom:14px">
-								<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+								<a href="@Url.Action("DetailGuide","Home")" class="btn">Xem hướng dẫn</a>
 							</div>
 						</div>
 					</div>
@@ -152,7 +153,7 @@
 						<h4 class="mt-2">Hướng dẫn học tập kết hợp</h4>
 						<p>Tìm hiểu cách EduQuiz có thể giúp bạn tạo điều kiện thuận lợi cho việc học tập kết hợp và học tập từ xa cũng như kết nối với học sinh ngay cả khi các em không ở trong lớp học. </p>
 							<div class="d-flex justify-content-center mt-2" style="padding-bottom:14px">
-							<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+								<a href="@Url.Action("DetailGuide","Home")" class="btn">Xem hướng dẫn</a>
 						</div>
 						</div>
 					</div>
@@ -169,7 +170,7 @@
 							<h4 class=" mt-2">EduQuiz! EDU: hướng dẫn quản trị</h4>
 						<p>Tìm hiểu cách thiết lập trường học, khu vực hoặc cơ sở của bạn với EduQuiz EDU và kết nối các nhà giáo dục bằng cách sử dụng giấy phép trang web.</p>
 							<div class="d-flex justify-content-center mt-2" style="padding-bottom:14px">
-							<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+								<a href="@Url.Action("DetailGuide","Home")" class="btn">Xem hướng dẫn</a>
 						</div>
 						</div>
 					</div>
@@ -185,7 +186,7 @@
 					<h4 class="mt-2">Tài nguyên phát triển chuyên môn của EduQuiz</h4>
 					<p>Dạy giáo viên? Chúng tôi đã hỗ trợ bạn! Các nguồn tài nguyên miễn phí bao gồm các bài thuyết trình cho các buổi phát triển chuyên môn và sự kiện, cùng thông tin về phương pháp sư phạm EduQuiz </p>
 							<div class="d-flex justify-content-center mt-2" style="padding-bottom:14px">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+								<a href="@Url.Action("DetailGuide","Home")" class="btn">Xem hướng dẫn</a>
 					</div>
 						</div>
 					</div>
@@ -201,7 +202,7 @@
 					<h4 class="mt-2">Tóm tắt giải pháp EduQuiz dành cho trường học</h4>
 					<p>Bản tóm tắt giải pháp này sẽ giúp bạn xác định liệu Kahoot! có phù hợp với nhu cầu của trường bạn hay không, cũng như cung cấp cho quản trị viên trường bạn...</p>
 							<div class="d-flex justify-content-center mt-2" style="padding-bottom:14px">
-						<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+								<a href="@Url.Action("DetailGuide","Home")" class="btn">Xem hướng dẫn</a>
 					</div>
 						</div>
 					</div>
@@ -217,7 +218,7 @@
 						<h4>Bản nhạc EduQuiz</h4>
 							<p>Bạn muốn chơi nhạc sảnh EduQuiz? Tải xuống bản nhạc và chơi cùng ban nhạc, bạn bè hoặc lớp học nhạc của bạn! </p>
 						<div class="d-flex justify-content-center mt-2" style="padding-bottom:14px">
-							<a href="portfolio-details.html" class="btn">Xem hướng dẫn</a>
+								<a href="@Url.Action("DetailGuide","Home")" class="btn">Xem hướng dẫn</a>
 						</div>
 						</div>
 					</div>

@@ -15,7 +15,7 @@ namespace EduQuiz.Services
             _context = context;
             _cache = cache;
         }
-        public bool IsUsernameAvailable(string username)
+        public async Task<bool> IsUsernameAvailable(string username)
         {
             // Kiểm tra trong cache
             if (_cache.TryGetValue(username, out _))
@@ -24,7 +24,7 @@ namespace EduQuiz.Services
             }
 
             // Kiểm tra cơ sở dữ liệu
-            var userExists = _context.Users.Any(x => x.Username == username);
+            var userExists = await _context.Users.AnyAsync(x => x.Username == username);
 
             // Nếu không tồn tại trong cơ sở dữ liệu, lưu vào cache
             if (!userExists)

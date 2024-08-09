@@ -2,6 +2,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewBag.Title = "Nhập tên tài khoản";
     Layout = "_LayoutAuth";
 }
 <h1 class="wrapper-title">
@@ -132,12 +133,12 @@
                 success: function (response) {
                     console.log(response); // Kiểm tra dữ liệu trong console
                     if (response.status == false) {
-                        if (response.data && response.data.length > 0) {
+                        if (response.data.result && response.data.result.length > 0) {
                             // Xóa nội dung cũ trong #suggestions
                             $("#suggestions").empty();
 
                             // Duyệt qua mảng response.data để thêm các nút mới
-                            response.data.forEach(function (username) {
+                            response.data.result.forEach(function (username) {
                                 var button = $("<button>")
                                     .addClass("flat-button")
                                     .text(username)
@@ -152,8 +153,8 @@
 
                             // Hiển thị phần tử #suggestions nếu nó đang bị ẩn
                             $(".suggestions-wrapper").removeClass("d-none");
-                        } else if (response.message) {
-                            openToast('warning', 'Lỗi', response.message, 2500);
+                        } else {
+                            openToast('warning', 'Lỗi', "Có lỗi xảy ra", 2500);
                         }
                     } else {
                         location.href = "@Url.Action("SignupOption", "Account")";
@@ -167,11 +168,11 @@
 
         function randomName() {
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: '@Url.Action("RandomUserName", "Account")',
                 success: function (response) {
                     if (response.status == true) {
-                        $("#username").val(response.data);
+                        $("#username").val(response.data.result[0]);
                     }
                 },
                 error: function (xhr, status, error) {

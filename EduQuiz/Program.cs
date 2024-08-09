@@ -9,17 +9,21 @@ builder.Services.AddRazorPages()
 // Thêm dịch vụ session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); 
+    options.IdleTimeout = TimeSpan.FromMinutes(60); 
     options.Cookie.HttpOnly = true; 
     options.Cookie.IsEssential = true; 
 });
-// Đăng ký EduQuizDBContext như một dịch vụ
+
+// Đăng ký EduQuizDBContext
 builder.Services.AddDbContext<EduQuizDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EduQuizDBConnection")));
 builder.Services.AddScoped<UsernameService>(); // Đăng ký UsernameService
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
+
+builder.Services.AddHttpContextAccessor();
+
 
 var app = builder.Build();
 

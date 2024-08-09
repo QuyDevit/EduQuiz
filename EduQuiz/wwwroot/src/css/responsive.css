@@ -7,10 +7,10 @@ Version:	1.1
 ========================================*/   
 /* Tablet Screen */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-/* Header Sticky */
-.section{
-	padding:70px 0px;
-}
+	/* Header Sticky */
+	.section {
+		padding: 70px 0px;
+	}
 .section-title {
 	margin-bottom: 35px;
 	padding: 0px 80px;

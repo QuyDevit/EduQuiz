@@ -1,0 +1,180 @@
+﻿@{
+    Layout = "_LayoutUser";
+}
+@model EduQuiz.Models.EF.User
+@{
+    @using Newtonsoft.Json;
+    PrivacyModel privacyUser = JsonConvert.DeserializeObject<PrivacyModel>(Model.PrivacySettings);
+}
+<style>
+    input[type="checkbox"] {
+        position: relative;
+        width: 48px;
+        background: gainsboro;
+        -webkit-appearance: none;
+        height: 24px;
+        background: #efefef;
+        outline: none;
+        border-radius: 30px;
+        box-shadow: inset 0px 0px 4px 1px rgba(0, 0, 0, 0.08);
+        transition: 0.5s;
+        cursor:pointer;
+        margin-right:10px
+    }
+
+        input[type="checkbox"]:checked {
+            background: #26890c;
+        }
+
+        input[type="checkbox"]:disabled {
+            background: #ccc;
+        }
+
+        input[type="checkbox"]:before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            left: -2px;
+            background: #fff;
+            box-shadow: 0px 1px 2px 1px gainsboro;
+            border-radius: 50%;
+            top: 0px;
+            transform: scale(1.1);
+            transition: 0.5s;
+        }
+
+        input[type="checkbox"]:checked:before {
+            left: 24px;
+        }
+
+    .box-with-toggle{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        border-radius: 4px;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px 0px;
+        border: 1px solid rgb(242, 242, 242);
+        padding: 0px;
+        transition: background-color 0.25s ease-in;
+        margin: .8rem 0;
+
+    }
+
+    .box-with-toggle span{
+        margin:0.5rem;
+        max-width:85%;
+    }
+
+    #autosave{
+        margin-top:10px;
+    }
+}
+</style>
+<div class="content" style="padding:0">
+    <div class="row" style="margin:0">
+        <div class="left-wrapper">
+        </div>
+        <div class="center-wrapper">
+            <h2 class="title-setting">Cài đặt</h2>
+            <partial name="_TabsSetting"></partial>
+            <div class="row" style="margin:8px 0 0 0">
+                <div class="col-md-6 mt-3" style="padding:0 .5rem 0 0">
+                    <div class="card card-user">
+                        <div class="card-header d-flex justify-content-between">
+                            <h5 class="card-title">Thông báo</h5>
+                            <div id="autosave">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Gửi email cho tôi khi ai đó:</label>
+                                            <div class="box-with-toggle">
+                                                <span>Chia sẻ EduQuiz với bạn</span>
+                                            <input id="noti1" type="checkbox" checked="@(privacyUser.ShareEduQuizWithMe)">
+                                            </div>
+                                            <div class="box-with-toggle">
+                                            <span>Chia sẻ EduQuiz của bạn với những người dùng khác</span>
+                                            <input id="noti2" type="checkbox" checked="@(privacyUser.ShareEduQuizWithOthers)">
+                                            </div>
+                                            <div class="box-with-toggle" >
+                                            <span>Yêu thích EduQuiz của bạn</span>
+                                            <input id="noti3" type="checkbox" checked="@(privacyUser.FavoriteEduQuiz)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-3" style="padding:0 0 0 .5rem">
+                    <div class="card card-user">
+                        <div class="card-header">
+                            <h5 class="card-title">Quyền riêng tư và tiếp thị</h5>
+                            
+                        </div>
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="box-with-toggle">
+                                        <span><a href="#">Tôi đã đọc và đồng ý với các điều khoản và điều kiện</a>  cũng như <a href="#">chính sách bảo mật </a> của EduQuiz và đồng ý cho EduQuiz thu thập và xử lý dữ liệu cá nhân của tôi như được mô tả trong <a href="#">chính sách bảo mật</a>.</span>
+                                        <input type="checkbox" checked disabled>
+                                    </div>
+                                </div>
+                            </div>
+                      
+                            <div class="row">
+                                
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-wrapper">
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var userid = `@Model.Id`;   
+            $("#noti1").click(function () { autoSavePrivacy("ShareEduQuizWithMe", this.checked); });
+            $("#noti2").click(function () { autoSavePrivacy("ShareEduQuizWithOthers", this.checked); });
+            $("#noti3").click(function () { autoSavePrivacy("FavoriteEduQuiz", this.checked); });
+            function autoSavePrivacy(id, value) {
+                showAutoSaveStatus('saving');
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("SavePrivacy", "HomeDashboard")",
+                    data: {
+                        userid: userid,
+                        type: id,
+                        value: value
+                    },
+                    success: function (response) {
+                        if (response.result == "PASS") {
+                            setTimeout(function () {
+                                showAutoSaveStatus('saved');
+                            }, 1000);
+                            
+                            setTimeout(function () {
+                                $("#autosave").empty();
+                            }, 2400);
+                        } else {
+                            console.log("error")
+                        }
+                    },
+                    error: function (err) {
+
+                    }
+                })
+            }
+        })
+        
+       
+    </script>
+}

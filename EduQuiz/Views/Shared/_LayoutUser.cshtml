@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/src/css/paper-dashboard.css" rel="stylesheet" />
+    <link href="~/src/css/toast.css" rel="stylesheet" />
+    <link href="~/src/css/auth.css" rel="stylesheet" />
+    <style>
+        .left-wrapper, .right-wrapper {
+            width: 216px;
+        }
+
+        .center-wrapper {
+            flex: 1;
+        }
+
+        .title-setting {
+            font-size: 1.5rem;
+            line-height: 2rem;
+            font-weight: 700;
+        }
+
+        .tabs-setting {
+            text-decoration: none !important;
+            color: rgb(110, 110, 110);
+            font-weight: bold;
+            font-size: 1rem;
+            padding-bottom: 0.5rem;
+            margin-right: 1.5rem;
+            margin-bottom: -1px;
+            border: none;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+            .tabs-setting:hover {
+                font-weight: bold;
+                color: rgb(51, 51, 51);
+            }
+
+            .tabs-setting.active {
+                color:rgb(70, 23, 143);
+                border-bottom: 2px solid rgb(70, 23, 143);
+            }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: bold;
+            line-height: 1.71;
+            letter-spacing: 0.2px;
+            margin: 0px;
+            color: rgb(51, 51, 51);
+        }
+
+        .user-img {
+            position: relative;
+        }
+
+            .user-img .circle-icon {
+                background-color: #ff5b5b;
+                border-radius: 50%;
+                position: absolute;
+                bottom: -4px;
+                right: -4px;
+                color: #fff;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .user-img:hover {
+                cursor: pointer;
+            }
+
+        label i:hover{
+            cursor:pointer;
+        }
+
+        #autosave i {
+            color: #939393;
+        }
+
+        #autosave .spin {
+            font-size: 14px;
+            margin-left: 4px;
+            display: inline-block;
+            animation: spin .5s linear infinite;
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(-360deg);
+            }
+    </style>
+    @RenderSection("styles", required: false)
+</head>
+<body>
+   
+    <div class="wrapper ">
+        <partial name="_SidebarUser" />
+        <div class="main-panel">
+            <!-- Navbar -->
+            <partial name="_NavbarUser" />
+            @RenderBody()
+        </div>
+    </div>
+    <section id="toast" class="info off">
+        <div id="icon-wrapper">
+            <div id="icon"></div>
+        </div>
+        <div id="toast-message">
+            <h4 id="toast-title"></h4>
+            <p id="toast-description"></p>
+        </div>
+        <button id="toast-close"></button>
+        <div id="timer"></div>
+    </section>
+    <script src="~/src/js/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="~/src/js/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/src/js/bootstrap.min.js"></script>
+    <script src="@("https://unpkg.com/@popperjs/core@2")"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script src="~/src/css/js/bootstrap-notify.js"></script>
+    <script src="~/src/css/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/src/js/toast.js"></script>
+    <script>
+        function showAutoSaveStatus(status) {
+            const statusHtml = {
+                saving: `<span>Đang lưu <i class="fa fa-undo spin" aria-hidden="true"></i></span>`,
+                saved: `<span>Đã lưu <i class="fa fa-check" aria-hidden="true"></i></span>`
+            };
+            $("#autosave").html(statusHtml[status]);
+        }
+        </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

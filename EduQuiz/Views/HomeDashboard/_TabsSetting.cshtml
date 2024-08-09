@@ -1,0 +1,12 @@
+﻿@{
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+}
+
+<div class="row" style="margin:0;border-bottom: .3px solid #e1e1e1;">
+    <a class="tabs-setting @(currentPath.Contains("/HomeDashboard/SettingInfo") ? " active" : "" )" href="@Url.Action("SettingInfo", "HomeDashboard")"><span>Chỉnh sửa hồ sơ</span></a>
+    <a class="tabs-setting @(currentPath.Contains("/HomeDashboard/Privacy") ? " active" : "")" href="@Url.Action("Privacy", "HomeDashboard")"><span>Sự riêng tư</span></a>
+    <a class="tabs-setting @(currentPath.Contains("/HomeDashboard/ChangePassword") ? " active" : "")" href="@Url.Action("ChangePassword", "HomeDashboard")"><span>Đổi mật khẩu</span></a>
+    <a class="tabs-setting  @(currentPath.Contains("/HomeDashboard/Billing") ? " active" : "")" href="@Url.Action("Billing", "HomeDashboard")"><span>Thanh toán</span></a>
+</div>

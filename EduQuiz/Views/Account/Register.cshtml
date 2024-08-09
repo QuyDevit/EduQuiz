@@ -2,6 +2,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewBag.Title = "Chọn tài khoản";
     Layout = "_LayoutAuth";
 }
 
@@ -58,7 +59,7 @@
         </div>
     </button>
 </div>
-<p style="margin:20px 0 0 0">Bạn đã có tài khoản? <a style="color: rgb(19, 104, 206);" href="/">Đăng nhập</a></p>
+<p style="margin:20px 0 0 0">Bạn đã có tài khoản? <a style="color: rgb(19, 104, 206);" href="@Url.Action("Login","Account")">Đăng nhập</a></p>
 
 @section scripts {
     <script>

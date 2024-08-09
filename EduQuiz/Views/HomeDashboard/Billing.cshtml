@@ -1,0 +1,76 @@
+﻿@{
+    Layout = "_LayoutUser";
+}
+@model EduQuiz.Models.EF.User
+@{
+    var subscriptionType = Model.SubscriptionType;
+}
+<style>
+    .bill-img{
+        padding:5px;
+        background-color: #fffa6c;
+        width:160px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+    .not-buy{
+        color: #c3c2c2;   
+    }
+    .blur{
+        background: #d9d9d9;
+    }
+
+    .grayscale-img {
+        filter: grayscale(100%);
+    }
+</style>
+<div class="content" style="padding:0">
+    <div class="row" style="margin:0">
+        <div class="left-wrapper">
+        </div>
+        <div class="center-wrapper">
+            <h2 class="title-setting">Cài đặt</h2>
+            <partial name="_TabsSetting"></partial>
+            <div class="row" style="margin:8px 0 0 0">
+                <div class="col-md-8 mt-3" style="padding:0 .5rem 0 0">
+                    <div class="card card-user d-flex flex-row">
+                       <div class="bill-img">
+                            <img style="width:100px;height:80px" src="~/src/img/logomain.png" />
+                       </div>
+                        <div class="d-flex flex-column justify-content-center pl-3" style="flex:1;">
+                            <span style="font-size:16px;font-weight:700">Gói miễn phí EduQuiz</span>
+                            <span>Miễn phí</span>
+                        </div>
+                    </div>
+                    <div class="card card-user d-flex flex-row">
+                        <div class="bill-img @(subscriptionType== null ? "blur": "")">
+                            <img class="@(subscriptionType== null ? "grayscale-img": "")" style="width:100px;height:80px" src="~/src/img/logomain.png" />
+                        </div>
+                        <div class="d-flex flex-column justify-content-center pl-3 @(subscriptionType== null ? "not-buy": "") ">
+                            <span style="font-size:16px;font-weight:700">Thẻ truy cập EduQuiz+</span>
+                            <span>Chưa đăng ký</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end pl-3 pr-4" style="flex:1">
+                            <a href="#" style="color:rgb(19, 104, 206)">Đăng ký EduQuiz+</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-wrapper">
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var userid = `@Model.Id`;
+
+           
+        })
+    </script>
+}
