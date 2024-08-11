@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\src\css\homedashboard.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\src\css\animate.min.css" />
     <None Include="wwwroot\src\css\bootstrap.min.css" />
     <None Include="wwwroot\src\css\datepicker.css" />

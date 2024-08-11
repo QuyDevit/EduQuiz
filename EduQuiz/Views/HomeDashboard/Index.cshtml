@@ -1,273 +1,35 @@
-﻿
-@{
+﻿@{
     Layout = "_LayoutUser";
-    
+
 }
-<style>
-    .layout-index{
-        box-sizing: border-box;
-        min-width: 0px;
-        margin: 0px auto;
-        width: 100%;
-        max-width: 1280px;
-        flex-wrap: nowrap;
-        height: fit-content;
-        display:flex;
-    }
-
-    .left-layout, .layout-card {
-        display: flex;
-        flex-direction: column;
-        border-radius: 4px;
-        box-sizing: border-box;
-        margin-bottom: 0.5rem;
-        font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        border: 1px rgb(204, 204, 204);
-        background-color: rgb(255, 255, 255);
-        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
-        padding:16px 0;
-        margin-bottom:16px;
-    }
-
-    @@media screen and (max-width: 992px) {
-        .layout-index{
-            flex-direction:column;
-        }
-
-        .col-md-3,.col-md-6{
-            width:100%;
-            max-width:100%;
-        }
-
-        .view-center{
-            padding:0 15px !important;
-        }
-    }
-    .button-add{
-        display: flex;
-        align-items:center;
-        padding: 4px 12px;
-        margin: 0px 8px 8px 0px;
-        font-size: 0.875rem;
-        font-weight: bold;
-        line-height: 1.33;
-        background-color: rgb(242, 242, 242);
-        color: rgb(51, 51, 51);
-        border-radius: 4px;
-        box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px 0px;
-        border: none;
-        outline: 0px;
-        cursor: pointer;
-    }
-
-    .profile-image{
-        max-width: 56px;
-        max-height: 56px;
-        min-width: 56px;
-        min-height: 56px;
-        border: 4px solid rgb(242, 242, 242);
-        border-radius: 50%;
-    }
-
-    .profile-infomation, .profile-infomation-filed{
-        position:relative;
-        padding: 12px 16px;
-        margin: 32px 15px 4px 15px;
-        display: flex;
-        -webkit-box-pack: justify;
-        justify-content: space-between;
-        background-color: rgb(242, 242, 242);
-        color: rgb(51, 51, 51);
-        border-radius: 4px 4px 0px 0px;
-    }
-
-    .profile-infomation img {
-            width: 92px;
-            position: absolute;
-            top: -32px;
-            right: 0px;
-    }
-
-    .profile-infomation::before {
-        content:'';
-        width:100%;
-        top:0;
-        left:0;
-        position:absolute;
-        background-color: rgb(19, 104, 206);
-        border-radius: 5px 5px 0px 0px;
-        height: 4px;
-    }
-
-    .text-profile{
-        color: rgb(110, 110, 110);
-        font-size: 0.75rem;
-        font-weight: bold;
-        line-height: 1.33;
-        letter-spacing: 0.2px;
-        overflow-wrap: break-word;
-        max-width: 11rem;
-    }
-
-    .profile-link{
-        color: rgb(51, 51, 51);
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        text-decoration:underline;
-    }
-
-    .profile-link:hover {
-        color: rgb(51, 51, 51);
-    }
-    .market-wrapper{
-        display: flex;
-        flex-direction: column;
-        background-color: rgb(255, 255, 255);
-        padding: 16px;
-        border-radius: 0px 0px 0.25rem 0.25rem;
-    }
-    .market-wrapper_title{
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-        font-weight: 700;
-        color: rgb(51, 51, 51);
-        margin: 0 0 8px 0;
-    }
-
-    .modal-dialog-centered{
-        margin-top:200px
-    }
-    button:hover{
-        cursor:pointer
-    }
-
-    .modal-title {
-        font-size:24px;
-        font-weight:600;
-    }
-
-    .modal.fade .modal-dialog {
-        transition: none;
-    }
-
-    @@keyframes bounceIn {
-        0% {
-            opacity: 0;
-            transform: scale(0.3);
-        }
-
-        50% {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-
-        70% {
-            transform: scale(0.9);
-        }
-
-        100% {
-            transform: scale(1);
-        }
-    }
-.modal-content {
-    animation: bounceIn 0.5s ease-in-out;
+@model EduQuiz.Models.EF.User
+@{
+    @using Newtonsoft.Json;
+    var favoriteList = JsonConvert.DeserializeObject<List<InterestUser>>(Model.Favorite);
+    var countInterest = favoriteList?.Count;
 }
-
-    .center-view_wrapper{
-        display: flex;
-        background: rgb(255, 255, 255);
-        box-sizing: border-box;
-        border-radius: 4px;
-        width: 100%;
-        padding: 10px;
-        justify-content: space-around;
-        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
-        margin-top: 1rem;
-        align-items:center;
-    }
-
-    .title-center-view{
-        font-size: 1rem;
-        font-weight: 700;
-        margin:0;
-    }
-    .see-all{
-        font-size: 0.75rem;
-        flex: 1 1 0%;
-        font-weight: bold;
-        text-align: right;
-        color: rgb(19, 104, 206);
-        text-decoration:underline;
-    }
-    .btn{
-        min-height:34px
-    }
-
-    .btn:hover {
-        min-height: 32px
-    }
-
-    .layout-card_header {
-        padding: 12px 16px;
-        border-bottom: 1px solid rgb(242, 242, 242);
-    }
-    .tabs-button{
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        background-color: rgb(255, 255, 255);
-        border-top: none;
-        border-right: none;
-        border-left: none;
-        border-image: initial;
-        margin-right: 16px;
-        font-size: 0.875rem;
-        font-weight: bold;
-        line-height: 1.71;
-        letter-spacing: 0.2px;
-        margin-bottom: -8px;
-        padding-bottom: 8px;
-        color: rgb(51, 51, 51);
-        border-bottom: 2px solid rgb(19, 104, 206);
-        cursor: pointer;
-    }
-    .layout-card_body{
-        padding: 8px 16px 0;
-    }
-    .layout-card_body-style{
-        margin-top: 8px;
-        margin-bottom: 14px;
-        display: flex;
-        flex-direction: column;
-        border-radius: 4px;
-        box-sizing: border-box;
-        margin-bottom: 0.5rem;
-        font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        border: 1px dashed rgb(204, 204, 204);
-        background-color: rgb(242, 242, 242);
-    }
-    .onboarding-container{
-        text-align: center;
-        padding: 24px 16px;
-        border-radius: 4px;
-    }
-</style>
-    <!-- End Navbar -->
-    <div class="content">
-        <div class="layout-index">
+<!-- End Navbar -->
+<div class="content">
+    <div class="layout-index">
         <div class="col-md-3" style="min-height:400px;">
             <div class="left-layout">
                 <div class="container d-flex">
                     <div class="d-flex align-items-center">
                         <img class="profile-image" src="~/src/img/defaultimguser.png" />
                     </div>
-                    <div class="pl-2">
-                        <button class="button-add" data-toggle="modal" data-target="#modalChangName">
-                            <span>Thêm tên</span>
-                            <i style="font-size:16px;margin-left:6px" class="fa fa-plus" aria-hidden="true"></i>
-                        </button>
-                        <span style="color: rgb(110, 110, 110);font-weight:600">ok123@gmail.com</span>
+                    <div class="pl-2 d-flex flex-column justify-content-center">
+                        @if (!string.IsNullOrEmpty(Model.FirstName) || !string.IsNullOrEmpty(Model.LastName))
+                        {
+                            <span id="nameshow" style="color: rgb(110, 110, 110);font-weight:600;font-size:13px">@Model.FirstName @Model.LastName</span>
+                        }
+                        else
+                        {
+                            <button class="button-add" data-toggle="modal" data-target="#modalChangName">
+                                <span>Thêm tên</span>
+                                <i style="font-size:16px;margin-left:6px" class="fa fa-plus" aria-hidden="true"></i>
+                            </button>
+                        }
+                        <span style="color: rgb(110, 110, 110);font-weight:600;font-size:13px">@Model.Email</span>
                     </div>
                 </div>
                 <div class="profile-infomation">
@@ -282,115 +44,291 @@
                     </span>
                 </div>
                 <div class="profile-infomation-filed" style="margin-top:8px">
-                    <span class="text-profile">
-                        Sở thích của bạn
+                    <span id="countInterest" class="text-profile">
+                        Sở thích của bạn(@countInterest)
                     </span>
                     <span class="text-profile">
-                        <a href="#" class="profile-link">
-                            Thêm sở thích
-                        </a>
+                        @{
+                            var isInterestAvailable = countInterest > 0;
+                            var interestActionText = isInterestAvailable ? "Hiển thị" : "Thêm sở thích";
+                            var interestActionId = isInterestAvailable ? "showInterest" : "changeInterest";
+                            var interestActionAttributes = isInterestAvailable ? "" : "data-toggle=\"modal\" data-target=\"#modalEditInterest\"";
+                        }
+                        <span id="@interestActionId" @Html.Raw(interestActionAttributes) style="padding:4px 0 4px 4px" class="profile-link">
+                            @interestActionText
+                        </span>
                     </span>
                 </div>
-                <div class="profile-infomation-filed" style="margin-top:8px">
-                    <div class="py-2">
-                        <div class="d-flex align-items-center mb-2">
-                            <img style="width:30px;height:30px" src="~/src/img/verified.png" />
-                            <span class="ml-2" style="font-weight:600">Hồ sơ xác minh</span>
-                            <i style="font-size:16px;margin-left:8px" class="fa fa-info-circle" aria-hidden="true"></i>
-                        </div>
-                        <p>Trở thành người sáng tạo được xác minh! Cung cấp tài nguyên học tập của bạn để bán và tham gia cộng đồng toàn cầu.</p>
-                        <button type="button" class="btn">Xác minh ngay</button>
-                    </div>
-                </div>
+                <div id="myinterest" class="d-flex" style="margin:10px 15px 0 15px;flex-wrap: wrap;" />
 
             </div>
-            <div class="layout-card" style="padding-top:0">
-                <img src="~/src/img/market.jpg"/>
-                <div class="market-wrapper">
-                    <h4 class="market-wrapper_title">Được trả tiền cho tài nguyên học tập của bạn!</h4>
-                    <p>Trở thành người bán trên thị trường mới của EduQuiz! để kiếm tiền từ nội dung học tập của bạn.</p>
-                    <button type="button" class="btn" style="width:fit-content;background-color:rgb(183, 141, 0)">Bắt đầu</button>
+            <div class="profile-infomation-filed" style="margin-top:8px">
+                <div class="py-2">
+                    <div class="d-flex align-items-center mb-2">
+                        <img style="width:30px;height:30px" src="~/src/img/verified.png" />
+                        <span class="ml-2" style="font-weight:600">Hồ sơ xác minh</span>
+                        <i style="font-size:16px;margin-left:8px" class="fa fa-info-circle" aria-hidden="true"></i>
+                    </div>
+                    <p>Trở thành người sáng tạo được xác minh! Cung cấp tài nguyên học tập của bạn để bán và tham gia cộng đồng toàn cầu.</p>
+                    <button type="button" class="btn">Xác minh ngay</button>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6 view-center" style="min-height:600px;padding:0">
-            <div class="center-view_wrapper">
-                <h3 class="title-center-view">Giao cho tôi</h3>
-                <a class="see-all" href="#">Xem tất cả các bài tập</a>
-            </div>
-            <div class="layout-card mt-3">
-                <div class="layout-card_header">
-                    <div class="d-flex">
-                        <button type="button" class="tabs-button">Nhóm của tôi</button>
-                        <button type="button" class="tabs-button">Các nhóm tham gia</button>
-                    </div>
-                </div>
-                <div class="layout-card_body">
-                    <div class="layout-card_body-style">
-                        <div class="onboarding-container">
-                            <p>Chào mừng đến với Nhóm học! Khi một nhóm học được tạo, bạn có thể tổ chức các buổi học, chỉ định học viên và bắt đầu các hoạt động học tập ngay lập tức!</p>
-                            <a href="#" class="btn"> Tạo nhóm</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3" style="min-height:400px;">
-            <div class="left-layout">
-                <div class="container d-flex">
-                    <div class="d-flex align-items-center">
-                        <img class="profile-image" src="~/src/img/defaultimguser.png" />
-                    </div>
-                    <div class="pl-2">
-                        <button class="button-add" data-toggle="modal" data-target="#modalChangName">
-                            <span>Thêm tên</span>
-                            <i style="font-size:16px;margin-left:6px" class="fa fa-plus" aria-hidden="true"></i>
-                        </button>
-                        <span style="color: rgb(110, 110, 110);font-weight:600">ok123@gmail.com</span>
-                    </div>
-                </div>
-                <div class="profile-infomation">
-                    <img src="~/src/img/plan.svg" />
-                    <span class="text-profile">
-                        Kế hoạch
-                    </span>
-                    <span class="text-profile">
-                        <a href="#" class="profile-link">
-                            Nâng cấp
-                        </a>
-                    </span>
-                </div>
-                <div class="profile-infomation-filed" style="margin-top:8px">
-                    <span class="text-profile">
-                        Sở thích của bạn
-                    </span>
-                    <span class="text-profile">
-                        <a href="#" class="profile-link">
-                            Thêm sở thích
-                        </a>
-                    </span>
-                </div>
-                <div class="profile-infomation-filed" style="margin-top:8px">
-                    <div class="py-2">
-                        <div class="d-flex align-items-center mb-2">
-                            <img style="width:30px;height:30px" src="~/src/img/verified.png" />
-                            <span class="ml-2" style="font-weight:600">Hồ sơ xác minh</span>
-                            <i style="font-size:16px;margin-left:8px" class="fa fa-info-circle" aria-hidden="true"></i>
-                        </div>
-                        <p>Trở thành người sáng tạo được xác minh! Cung cấp tài nguyên học tập của bạn để bán và tham gia cộng đồng toàn cầu.</p>
-                        <button type="button" class="btn">Xác minh ngay</button>
-                    </div>
-                </div>
 
-            </div>
         </div>
+        <div class="layout-card" style="padding-top:0">
+            <img src="~/src/img/market.jpg" />
+            <div class="market-wrapper">
+                <h4 class="market-wrapper_title">Được trả tiền cho tài nguyên học tập của bạn!</h4>
+                <p>Trở thành người bán trên thị trường mới của EduQuiz! để kiếm tiền từ nội dung học tập của bạn.</p>
+                <button type="button" class="btn" style="width:fit-content;background-color:rgb(183, 141, 0)">Bắt đầu</button>
+            </div>
         </div>
     </div>
+    <div class="col-md-6 view-center" style="min-height:600px;padding:0">
+        <div class="center-view_wrapper">
+            <h3 class="title-center-view">Giao cho tôi(0)</h3>
+            <a class="see-all" href="#">Xem tất cả các bài tập</a>
+        </div>
+        <div class="layout-card mt-3">
+            <div class="layout-card_header">
+                <div class="d-flex">
+                    <button type="button" class="tabs-button">Nhóm của tôi</button>
+                    <button type="button" class="tabs-button">Các nhóm tham gia</button>
+                </div>
+            </div>
+            <div class="layout-card_body">
+                <div class="layout-card_body-style">
+                    <div class="onboarding-container">
+                        <p>Chào mừng đến với Nhóm học! Khi một nhóm học được tạo, bạn có thể tổ chức các buổi học, chỉ định học viên và bắt đầu các hoạt động học tập ngay lập tức!</p>
+                        <a href="#" class="btn"> Tạo nhóm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layout-card">
+            <div class="layout-card_header">
+                <button type="button" class="tabs-button" style="border-bottom:none">Chủ đề hot</button>
+            </div>
+            <div class="layout-card_body">
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item_img">
+                            <img src="~/src/img/market.jpg" />
+                            <span>10 câu hỏi</span>
+                        </div>
+                        <div class="d-flex flex-column" style="flex:1">
+                            <div class="card-item_title">
+                                <span>Hóa học là gì</span>
+                            </div>
+                            <div class="card-item_footer">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-item_footer-img">
+                                        <img src="~/src//img/defaultimguser.png" />
+                                    </div>
+                                    <span class="card-item_footer-name">tuannguyen_ok123</span>
+                                </div>
+                                <span class="count-playquiz">100k lượt chơi</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item_img">
+                            <img src="~/src/img/market.jpg" />
+                            <span>10 câu hỏi</span>
+                        </div>
+                        <div class="d-flex flex-column" style="flex:1">
+                            <div class="card-item_title">
+                                <span>Hóa học là gì</span>
+                            </div>
+                            <div class="card-item_footer">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-item_footer-img">
+                                        <img src="~/src//img/defaultimguser.png" />
+                                    </div>
+                                    <span class="card-item_footer-name">tuannguyen_ok123</span>
+                                </div>
+                                <span class="count-playquiz">100k lượt chơi</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item_img">
+                            <img src="~/src/img/market.jpg" />
+                            <span>10 câu hỏi</span>
+                        </div>
+                        <div class="d-flex flex-column" style="flex:1">
+                            <div class="card-item_title">
+                                <span>Hóa học là gì</span>
+                            </div>
+                            <div class="card-item_footer">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-item_footer-img">
+                                        <img src="~/src//img/defaultimguser.png" />
+                                    </div>
+                                    <span class="card-item_footer-name">tuannguyen_ok123</span>
+                                </div>
+                                <span class="count-playquiz">100k lượt chơi</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item_img">
+                            <img src="~/src/img/market.jpg" />
+                            <span>10 câu hỏi</span>
+                        </div>
+                        <div class="d-flex flex-column" style="flex:1">
+                            <div class="card-item_title">
+                                <span>Hóa học là gì</span>
+                            </div>
+                            <div class="card-item_footer">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-item_footer-img">
+                                        <img src="~/src//img/defaultimguser.png" />
+                                    </div>
+                                    <span class="card-item_footer-name">tuannguyen_ok123</span>
+                                </div>
+                                <span class="count-playquiz">100k lượt chơi</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" style="min-height:400px;">
+        <div class="layout-card">
+            <div class="layout-card_header">
+                <button type="button" class="tabs-button">EduQuiz của bạn</button>
+            </div>
+            <div class="layout-card_body">
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item_img">
+                            <img src="~/src/img/market.jpg" />
+                            <span>10 câu hỏi</span>
+                        </div>
+                        <div class="d-flex flex-column" style="flex:1">
+                            <div class="card-item_title">
+                                <span>Hóa học là gì</span>
+                            </div>
+                            <div class="card-item_footer">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-item_footer-img">
+                                        <img src="~/src//img/defaultimguser.png" />
+                                    </div>
+                                    <span class="card-item_footer-name">tuan_ok123</span>
+                                </div>
+                                <span class="count-playquiz">10 lượt</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item_img">
+                            <img src="~/src/img/market.jpg" />
+                            <span>10 câu hỏi</span>
+                        </div>
+                        <div class="d-flex flex-column" style="flex:1">
+                            <div class="card-item_title">
+                                <span>Hóa học là gì</span>
+                            </div>
+                            <div class="card-item_footer">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-item_footer-img">
+                                        <img src="~/src//img/defaultimguser.png" />
+                                    </div>
+                                    <span class="card-item_footer-name">tuan</span>
+                                </div>
+                                <span class="count-playquiz">8 lượt</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="layout-card_footter">
+                <a class="footer-link" href="#">Xem tất cả(5)</a>
+            </div>
+        </div>
+        <div class="layout-card mt-3">
+            <div class="layout-card_header">
+                <button style="border-bottom:none" type="button" class="tabs-button">Báo cáo mới nhất</button>
+            </div>
+            <div class="layout-card_body">
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item-report_img">
+                            <img src="~/src/img/logoplayquiz.svg" />
+                        </div>
+                        <div class="layoutcard-item-report_footer">
+                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
+                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
+                       </div>
+                    </a>
+                </div>
+                 <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item-report_img">
+                            <img src="~/src/img/logoplayquiz.svg" />
+                        </div>
+                        <div class="layoutcard-item-report_footer">
+                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
+                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
+                       </div>
+                    </a>
+                </div>
+                 <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item-report_img">
+                            <img src="~/src/img/logoplayquiz.svg" />
+                        </div>
+                        <div class="layoutcard-item-report_footer">
+                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
+                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
+                       </div>
+                    </a>
+                </div>
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item-report_img">
+                            <img src="~/src/img/logoplayquiz.svg" />
+                        </div>
+                        <div class="layoutcard-item-report_footer">
+                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
+                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="layoutcard-item">
+                    <a class="d-flex" href="#">
+                        <div class="layoutcard-item-report_img">
+                            <img src="~/src/img/logoplayquiz.svg" />
+                        </div>
+                        <div class="layoutcard-item-report_footer">
+                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
+                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="layout-card_footter">
+                <a class="footer-link" href="#">Xem tất cả(5)</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
-<!-- Modal -->
-<div class="modal" id="modalChangName" tabindex="-1" role="dialog" data-easein="bounceIn" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+<!-- Modal EditName-->
+<div class="modal" id="modalChangName" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header" style="border:none">
@@ -398,13 +336,185 @@
             </div>
             <div class="modal-body">
                 <span>Vui lòng nhập tên của bạn bên dưới</span>
-
-                <input type="text" class="form-control mt-4" style="padding:12px" placeholder="Nhập tên của bạn" value="">
+                <input style="padding:10px 16px;" id="editname" type="text" class="form-control mt-4" placeholder="Nhập tên của bạn" value="">
             </div>
             <div class="modal-footer" style="border:none;justify-content:center">
-                <button type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
-                <button type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
+                <button id="close" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                <button id="savename" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
             </div>
         </div>
     </div>
 </div>
+<!-- Modal ADD FAVORITE-->
+<div class="modal" id="modalEditInterest" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border:none">
+                <h3 class="modal-title">Chỉnh sửa sở thích của bạn</h3>
+            </div>
+            <div class="modal-body custom-hiden">
+                <div class="interest_wrapper">
+                    <span>Sở thích bạn chọn sẽ giúp chúng tôi tùy chỉnh trải nghiệm EduQuiz cho bạn</span>
+                    <div id="interestContainer" class="interest_wrapper-content mt-3">
+                        <button class="btn-interest active">Công nghệ <i class="fa fa-plus" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button id="closeInterest" type="button" class="btn" data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                <button id="saveInterest" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var userid = `@Model.Id`;
+            var userFavorite = JSON.parse('@Html.Raw(Model.Favorite)');
+            var arrInterestCheck = [];
+            var arrInterest = [];
+            getListInterest()
+            function getListInterest() {
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Action("GetListInterest", "HomeDashboard")",
+                    success: function (response) {
+                        if (response.result == "PASS") {
+                            arrInterest = response.data;
+                        }
+                    },
+                    error: function (err) {
+
+                    }
+                })
+            }
+            $(document).on('click', '#changeInterest', function () {
+                arrInterestCheck = JSON.parse(JSON.stringify(userFavorite));
+                renderInterest();
+                $("#modalEditInterest").show();
+            });
+            $("#showInterest").click(function () {
+                var interestContainer = $("#myinterest");
+                if (interestContainer.children('.interest-item').length > 0) {
+                    interestContainer.empty();
+                    $(this).text("Hiển thị")
+                } else {
+                    userFavorite.forEach(function (item) {
+                        var interestItem = `<span class="interest-item">${item.name}</span>`;
+                        interestContainer.append(interestItem);
+                    });
+                    interestContainer.append(` <span id="changeInterest" style="padding: 4px 0 4px 4px;font-size: 12px;width: 100%;text-align: center;font-weight: 600;" class="profile-link" data-toggle="modal" data-target="#modalEditInterest">
+                                    Chỉnh sửa sở thích
+                            </span>`)
+                    $(this).text("Ẩn")
+                }
+            });
+
+            function renderInterest() {
+                var interestContainer = $('#interestContainer');
+                interestContainer.empty();
+                // Duyệt qua danh sách sở thích và tạo các phần tử HTML
+                arrInterest.forEach(function (interest) {
+                    var isActive = arrInterestCheck.some(fav => fav.id === interest.id);
+                    var iconClass = isActive ? 'fa-times' : 'fa-plus'; // Chọn biểu tượng dựa trên trạng thái active
+
+                    var interestItem = `
+                                <button class="btn-interest ${isActive ? 'active' : ''}" data-id="${interest.id}" data-name="${interest.name}">
+                                    ${interest.name} <i class="fa ${iconClass}" aria-hidden="true"></i>
+                                </button>
+                            `;
+                    interestContainer.append(interestItem); // Thêm phần tử vào container
+                });
+            }
+            $(document).on('click', '.btn-interest', function () {
+                var button = $(this);
+                var interestId = button.data('id');
+                var interestName = button.data('name');
+                var isActive = button.hasClass('active');
+
+                button.toggleClass('active');
+
+                var icon = button.find('i');
+                icon.toggleClass('fa-plus fa-times');
+
+                if (isActive) {
+                    // Xóa sở thích khỏi danh sách yêu thích
+                    arrInterestCheck = arrInterestCheck.filter(fav => fav.id !== interestId);
+                } else {
+                    // Thêm sở thích vào danh sách yêu thích
+                    arrInterestCheck.push({ id: interestId, name: interestName });
+                }
+                console.log(arrInterestCheck)
+            });
+
+            $("#saveInterest").click(function () {
+                if (arrInterestCheck.length <= 0) {
+                    openToast('warning', 'Lỗi', "Vui lòng chọn ít nhất 1 sở thích!", 2500);
+                    return;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("EditInterestUser", "HomeDashboard")",
+                    data: {
+                        userid: userid,
+                        listfavorite: arrInterestCheck
+                    },
+                    success: function (response) {
+                        if (response.result == "PASS") {
+                            userFavorite = response.data;
+                            if (userFavorite.length > 0) {
+                                $("#myinterest").empty();
+                                $("#showInterest").text("Hiển thị")
+                                $("#countInterest").text(`Sở thích của bạn(${userFavorite.length})`)
+                            }
+                            $("#closeInterest").click();
+                        }
+                    },
+                    error: function (err) {
+
+                    }
+                })
+            })
+
+            $("#savename").click(function () {
+                var name = $("#editname").val();
+                if (name == "") {
+                    openToast('warning', 'Lỗi', "Vui lòng nhập tên!", 2500);
+                    return;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("EditName", "HomeDashboard")",
+                    data: {
+                        userid: userid,
+                        name: name
+                    },
+                    success: function (response) {
+                        if (response.result == "PASS") {
+                            console.log(response.data)
+                            if (response.data != "") {
+                                $('<span>', {
+                                    id: 'nameshow',
+                                    style: 'color: rgb(110, 110, 110); font-weight: 600;font-size:13px;',
+                                    html: response.data
+                                }).insertBefore(".button-add");
+                                $(".button-add").remove();
+                            } else {
+                                $("#editname").val("")
+                            }
+                            $("#close").click();
+                        } else {
+                            openToast('warning', 'Lỗi', response.msg, 2500);
+                        }
+                    },
+                    error: function (err) {
+                        openToast('error', 'Error', 'Đã có lỗi xảy ra.', 2500);
+                    }
+                })
+
+            })
+        })
+    </script>
+}

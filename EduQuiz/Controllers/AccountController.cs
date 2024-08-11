@@ -156,6 +156,7 @@ namespace EduQuiz.Controllers
                             PrivacySettings = privacySettings,
                             ProfilePicture = avatar,
                             EmailVerified = true,
+                            Favorite = "[]",
                             DateOfBirth = DateTime.Now,
                             CreatedAt = DateTime.Now,
                             UpdatedAt = DateTime.Now
@@ -300,6 +301,7 @@ namespace EduQuiz.Controllers
                             ProfilePicture = "/src/img/defaultimguser.png",
                             PrivacySettings= privacySettings,
                             LinkToken = verifyToken,
+                            Favorite = "[]",
                             DateOfBirth = getbirthday,
                             CreatedAt = DateTime.Now,
                             UpdatedAt = DateTime.Now

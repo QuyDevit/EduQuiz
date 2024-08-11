@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - EduQuiz</title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="~/src/css/paper-dashboard.css" rel="stylesheet" />
+    <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/src/css/normalize.css" rel="stylesheet" />
+    <link href="~/src/css/layoutcreator.css" rel="stylesheet" />
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div style="width: 100%;overflow: hidden;height: 100%;display: flex;flex-direction: column;">
+        <div class="topbar">
+            <header class="base-topbar">
+                <nav class="base-topbar_style">
+                    <div class="style_wrapper">
+                        <div class="style-content_wrapper">
+                            <h1 class="mr-3">
+                                <a href="@Url.Action("Index","HomeDashBoard")">
+                                    <img style="width:110px;height:45px;" src="~/src/img/logomain.png">
+                                </a>
+                            </h1>
+                            <button class="settings-button">
+                                <span class="settings-button_title">Nhập tiêu đề EduQuiz...</span>
+                                <span class="settings-button_Setting">
+                                    <span>Cài đặt</span>
+                                </span>
+                            </button>
+                            <div class="autosave-Indicator">
+                                <span class="ml-2"><i class="fa fa-undo spin" aria-hidden="true"></i> <span class="ml-1">Đang lưu</span></span>
+                                @* <span class="ml-2"><i style="font-size:16px;" class="fa fa-check" aria-hidden="true"></i> <span class="ml-1">Đã lưu vào: Bản nháp của bạn</span></span> *@
+                            </div>
+                            <div class="styles-filter"></div>
+                            <div class="mr-1">
+                                <a href="#" class="d-flex align-items-center mr-2 upgrade">
+                                    <div style="background-color:#028282;padding:2px 7px;border-radius:50%;margin-right:8px;">
+                                        <i style="color:#fff" class="fa fa-star" aria-hidden="true"></i>
+                                    </div>
+                                    <span>Nâng cấp</span>
+                                </a>
+                            </div>
+                            <button class="button-flat">
+                                <span class="icon">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-c0a6c9a6-825e-4b21-83a1-8499009fd693" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-c0a6c9a6-825e-4b21-83a1-8499009fd693">Icon</title><path d="M16,27C10.14,27,5,21.33,5,14.86A11.12,11.12,0,0,1,9.72,5.73a3.62,3.62,0,0,1,2.65-.68A2.14,2.14,0,0,1,13.8,6c.73.92.55,2.19.39,3.32a4.83,4.83,0,0,0-.07,1.42c.26.31.83.13,2.39-.61C18.38,9.2,21,8,23.79,9.34c3.78,2,3.65,8,3.18,9.9C25.88,23.59,21.06,27,16,27ZM11.88,7a1.93,1.93,0,0,0-1,.37A9.13,9.13,0,0,0,7,14.86C7,20.26,11.21,25,16,25c4.19,0,8.15-2.74,9-6.24.29-1.18.51-6.26-2.12-7.63-2-.92-3.78-.07-5.54.77s-3.49,1.64-4.83,0A3.84,3.84,0,0,1,12.21,9c.08-.58.22-1.56,0-1.81l-.06-.08A.23.23,0,0,0,12,7ZM19,23a2,2,0,1,1,2-2A2,2,0,0,1,19,23Zm-6-1a2,2,0,1,1,2-2A2,2,0,0,1,13,22Zm-3-5a2,2,0,1,1,2-2A2,2,0,0,1,10,17Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                                </span>
+                                <span class="mr-2">Chủ đề</span>
+                            </button>
+                            <button class="button-flat preview" style="background: rgb(242, 242, 242);color:#333">
+                                <span class="icon">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                </span>
+                                <span class="ml-1">Xem trước</span>
+                            </button>
+                            <div class="mx-3">
+                                <div style="background-color:rgba(0, 0, 0, 0.1);height: 40px;width: 1px;"></div>
+                            </div>
+                            <button class="button-flat preview" style="background: rgb(242, 242, 242);color:#333;box-shadow:rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 12px">
+                                Thoát
+                            </button>
+                            <button class="button-flat" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 20px">
+                                Lưu
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        </div>
+        <div id="creator-side-bar" class="side-bar_wrapper">
+            <div class="side-bar-drag-and-drop">
+                <div class="draggableItem">
+                    <div class="draggableItem-block">
+                        <div class="draggableItem-block_wrapper">
+                            <span class="draggableItem-block_wrapper-count">1</span>
+                            <span class="draggableItem-block_wrapper-title">Câu hỏi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        @RenderBody()
+    </div>
+    <script src="~/src/js/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="~/src/js/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/src/js/bootstrap.min.js"></script>
+    <script src="~/src/css/js/bootstrap-notify.js"></script>
+    <script src="~/src/css/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

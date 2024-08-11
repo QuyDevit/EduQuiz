@@ -317,6 +317,15 @@ button:focus {
     /*background-color: #403D39 !important;*/
     color: #FFFFFF !important;
     box-shadow: none !important; }
+.upgrade span {
+    font-weight: bold;
+    color: #028282;
+}
+
+.upgrade:hover {
+    opacity: .8;
+    text-decoration:none;
+}
   .btn:not([data-action]):hover,
   .navbar .navbar-nav > a.btn:not([data-action]):hover {
     box-shadow: none; }
@@ -1959,12 +1968,13 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
       background: #66615B; }
     .navbar.navbar-transparent .nav-item .nav-link:not(.btn) {
       color: #66615B; }
-    .navbar.navbar-transparent .nav-item.active .nav-link:not(.btn),
-    .navbar.navbar-transparent .nav-item .nav-link:not(.btn):focus,
-    .navbar.navbar-transparent .nav-item .nav-link:not(.btn):hover,
-    .navbar.navbar-transparent .nav-item .nav-link:not(.btn):focus:hover,
-    .navbar.navbar-transparent .nav-item .nav-link:not(.btn):active {
-      color: #51cbce; }
+        .navbar.navbar-transparent .nav-item.active .nav-link:not(.btn),
+        .navbar.navbar-transparent .nav-item .nav-link:not(.btn):focus,
+        .navbar.navbar-transparent .nav-item .nav-link:not(.btn):hover,
+        .navbar.navbar-transparent .nav-item .nav-link:not(.btn):focus:hover,
+        .navbar.navbar-transparent .nav-item .nav-link:not(.btn):active {
+            color: rgb(70, 23, 143);
+        }
   .navbar.bg-white a:not(.dropdown-item):not(.btn) {
     color: #66615B; }
     .navbar.bg-white a:not(.dropdown-item):not(.btn).disabled {
@@ -2072,13 +2082,78 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
   display: block;
   transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.3s ease 0s, height 0s linear 0.35s; }
 
+.wrapper-content_menu {
+    min-width: 360px;
+}
+    .wrapper-content_menu .title {
+        font-size: 1rem;
+        font-weight: bold;
+        line-height: 1.5;
+        letter-spacing: 0.2px;
+        margin: 1rem;
+    }
+    .wrapper-content_menu .no-notifications {
+        display: flex;
+        flex-direction: column;
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        padding: 1rem;
+    }
+.no-notifications img{
+    width: 10rem;
+}
+.no-notifications span{
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.43;
+    text-align: center;
+}
+.nav-create_wrapper{
+    list-style:none;
+}
+.nav-create_wrapper-item .action-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 4px 24px 4px 0px;
+    border-radius:8px;
+}
+.nav-create_wrapper-item .icon-create {
+    display: none;
+}
+.nav-create_wrapper-item a:hover .icon-create {
+    display: inline-block;
+}
+.nav-create_wrapper-item .action-link:hover {
+    background-color: rgb(242, 242, 242);
+}
+.action-link img {
+    box-sizing: border-box;
+    background-color: rgb(242, 242, 242);
+    border-radius: 0.5rem;
+    width: 60px;
+    height: 60px;
+    padding: 12px;
+}
+.nav-create_wrapper-item {
+    padding: 8px 0px;
+    border-bottom: 1px solid rgb(242, 242, 242);
+}
+.nav-create_wrapper-content {
+    display: flex;
+    flex-direction: column;
+    margin-left:16px;
+}
 .dropdown .dropdown-menu,
 .dropup .dropdown-menu {
-  opacity: 0;
-  filter: alpha(opacity=0);
-  box-shadow: 1px 2px 7px 1px rgba(0, 0, 0, 0.125);
-  visibility: hidden;
-  position: absolute; }
+    opacity: 0;
+    filter: alpha(opacity=0);
+    box-shadow: 1px 2px 7px 1px rgba(0, 0, 0, 0.125);
+    visibility: hidden;
+    position: absolute;
+}
   .dropdown .dropdown-menu[x-placement="top-start"],
   .dropup .dropdown-menu[x-placement="top-start"] {
     transform: translate3d(-20px, 0px, 0) !important; }
@@ -3903,11 +3978,16 @@ License - nucleoapp.com/license/
   #minimizeSidebar {
     display: none; }
   .navbar .container-fluid {
-    padding-right: 15px;
-    padding-left: 15px; }
-  .navbar .navbar-collapse .input-group {
-    margin: 0;
-    margin-top: 5px; }
+    padding: 15px; 
+  }
+    #navigation{
+        padding-top:15px;
+    }
+
+    .navbar .navbar-collapse .input-group {
+        margin: 0;
+        margin-top: 5px;
+    }
   .navbar .navbar-nav .nav-item:first-child {
     margin-top: 10px; }
   .navbar .navbar-nav .nav-item:not(:last-child) {

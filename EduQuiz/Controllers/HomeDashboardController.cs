@@ -15,11 +15,15 @@ namespace EduQuiz.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
-            if (HttpContext.Session.GetString("_USERCURRENT") != null)
+            var getsession = HttpContext.Session.GetString("_USERCURRENT");
+            if (getsession != null)
             {
-                return View();
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
+                string email = userInfo?.Email;
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                return View(user);
             }
             return RedirectToAction("Index", "Home");
         }
@@ -34,7 +38,7 @@ namespace EduQuiz.Controllers
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
                 string email = userInfo?.Email;
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
                 ViewBag.ListTypeAccount = _context.Roles.ToList();
                 ViewBag.ListWorkplace = _context.WorkplaceTypes.ToList();
                 if (user != null)
@@ -51,7 +55,7 @@ namespace EduQuiz.Controllers
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
                 string email = userInfo?.Email;
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
                 if (user != null)
                 {
                     return View(user);
@@ -66,7 +70,7 @@ namespace EduQuiz.Controllers
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
                 string email = userInfo?.Email;
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
                 if (user != null)
                 {
                     return View(user);
@@ -81,7 +85,7 @@ namespace EduQuiz.Controllers
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
                 string email = userInfo?.Email;
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
                 if (user != null)
                 {
                     return View(user);
@@ -142,8 +146,61 @@ namespace EduQuiz.Controllers
             await _context.SaveChangesAsync();
             return Json(new { result = "PASS", msg = "Lưu thành công" });
         }
+        public async Task<IActionResult> GetListInterest()
+        {
+            try
+            {
+                var listInterest = await _context.Interests.ToListAsync();
+                return Json(new { result = "PASS", msg = "Lấy thành công", data = listInterest });
+            }
+            catch (Exception ) {
+                return Json(new { result = "FAIL", msg = "Lấy thất bại"});
+            }
+        }
+        public async Task<IActionResult> EditInterestUser(int userid,List<InterestUser> listfavorite)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u=>u.Id == userid);
+                user.Favorite = JsonConvert.SerializeObject(listfavorite);
+                _context.SaveChanges();
+                return Json(new { result = "PASS", msg = "Lấy thành công", data = listfavorite });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = "FAIL", msg = "Lấy thất bại" });
+            }
+        }
+        public async Task<IActionResult> EditName(int userid, string name)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userid);
+            if (user == null)
+            {
+                return Json(new { result = "FAIL", msg = "Lưu thất bại" });
+            }
+            var flagname = string.Empty;
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                name = name.Trim();
+                string[] strname = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-        public async Task<IActionResult> SaveInfo([FromForm] string firstname, [FromForm] string lastname, [FromForm] IFormFile image)
+                user.FirstName = strname.Length > 1
+                    ? string.Join(' ', strname.Take(strname.Length - 1))
+                    : strname[0];
+                user.LastName = strname.Length > 1 ? strname[^1] : string.Empty;
+
+                flagname = name;
+            }
+            else
+            {
+                user.FirstName = "";
+                user.LastName = "";
+            }
+            await _context.SaveChangesAsync();
+            return Json(new { result = "PASS", msg = "Lưu thành công" ,data = flagname });
+        }
+
+        public async Task<IActionResult> SaveInfo([FromForm] string name, [FromForm] IFormFile image)
         {
             try
             {
@@ -165,10 +222,21 @@ namespace EduQuiz.Controllers
                 {
                     return Json(new { result = "FAIL", msg = "Không tìm thấy người dùng" });
                 }
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    name = name.Trim();
+                    string[] strname = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                user.FirstName = firstname;
-                user.LastName = lastname;
-
+                    user.FirstName = strname.Length > 1
+                        ? string.Join(' ', strname.Take(strname.Length - 1))
+                        : strname[0];
+                    user.LastName = strname.Length > 1 ? strname[^1] : string.Empty;
+                }
+                else
+                {
+                    user.FirstName = "";
+                    user.LastName = "";
+                }
                 if (image != null && image.Length > 0)
                 {
                     // Đường dẫn thư mục chứa ảnh
