@@ -1,4 +1,4 @@
-using EduQuiz.Models;
+﻿using EduQuiz.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -12,17 +12,23 @@ namespace EduQuiz.Controllers
         {
             _logger = logger;
         }
-
+        [Route("home")]
         public IActionResult Index()
         {
             return View();
         }
-
+        [Route("privacy")]
         public IActionResult Privacy()
         {
             return View();
         }
 
+        [Route("error404")]
+        public IActionResult Error404()
+        {
+            return View();
+        }
+        [Route("error")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

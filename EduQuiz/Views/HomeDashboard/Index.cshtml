@@ -45,9 +45,9 @@
                 </div>
                 <div class="profile-infomation-filed" style="margin-top:8px">
                     <span id="countInterest" class="text-profile">
-                        Sở thích của bạn(@countInterest)
+                        Sở thích của bạn@(countInterest > 0 ? "(" + countInterest + ")" : "")
                     </span>
-                    <span class="text-profile">
+                    <span id="checkmodal" class="text-profile">
                         @{
                             var isInterestAvailable = countInterest > 0;
                             var interestActionText = isInterestAvailable ? "Hiển thị" : "Thêm sở thích";
@@ -395,7 +395,7 @@
                 renderInterest();
                 $("#modalEditInterest").show();
             });
-            $("#showInterest").click(function () {
+            $(document).on("click", "#showInterest", function () {
                 var interestContainer = $("#myinterest");
                 if (interestContainer.children('.interest-item').length > 0) {
                     interestContainer.empty();
@@ -466,7 +466,10 @@
                             userFavorite = response.data;
                             if (userFavorite.length > 0) {
                                 $("#myinterest").empty();
-                                $("#showInterest").text("Hiển thị")
+                                $("#checkmodal").empty();
+                                $("#checkmodal").append(`<span id="showInterest" style="padding:4px 0 4px 4px" class="profile-link">
+                                    Hiển thị
+                                </span>`)
                                 $("#countInterest").text(`Sở thích của bạn(${userFavorite.length})`)
                             }
                             $("#closeInterest").click();

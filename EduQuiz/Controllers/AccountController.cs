@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace EduQuiz.Controllers
 {
-	public class AccountController : Controller
+    public class AccountController : Controller
     {
         private readonly EduQuizDBContext _context;
         private readonly UsernameService _usernameService;
@@ -27,22 +27,26 @@ namespace EduQuiz.Controllers
             _random = new Random(); // Khởi tạo đối tượng Random
             _httpClientFactory = httpClientFactory;     
         }
-
+        [Route("auth/typeaccount")]
         public IActionResult Register()
 		{
 			return View();
 		}
-		public IActionResult ChooseBirthday()
+        [Route("auth/birthday")]
+        public IActionResult ChooseBirthday()
 		{
 			return View();
 		}
+        [Route("auth/username")]
         public IActionResult Username()
         {
             return View();
         }
+        [Route("auth/signup")]
         public IActionResult SignupOption() { 
             return View();
         }
+        [Route("auth/login")]
         public IActionResult Login()
         {
             if (HttpContext.Session.GetString("_USERCURRENT") != null)
@@ -51,6 +55,7 @@ namespace EduQuiz.Controllers
             }
             return View();
         }
+        [Route("auth/logout")]
         public async Task<IActionResult> Logout()
         {
             var sessionData = HttpContext.Session.GetString("_USERCURRENT");
@@ -72,6 +77,7 @@ namespace EduQuiz.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        [Route("auth/deleteaccount")]
         public async Task<IActionResult> DeleteAccount()
         {
             var sessionData = HttpContext.Session.GetString("_USERCURRENT");
@@ -93,6 +99,7 @@ namespace EduQuiz.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        [Route("auth/verifyemail")]
         [HttpGet]
         public ActionResult VerifyEmail(string token, string email)
         {
@@ -239,9 +246,7 @@ namespace EduQuiz.Controllers
             HttpContext.Session.SetString("_USERCURRENT", userInfoJson);
             return Json(new { status = true });
         }
-
         [HttpPost]
-
         public async Task<IActionResult> RegisterAccount(string password, string email)
         {
             try
@@ -327,7 +332,6 @@ namespace EduQuiz.Controllers
                 return Json(new { result = "FAIL", msg = ex.Message });
             }
         }
-
         [HttpPost]
         public async Task<IActionResult> CheckCaptcha(string captcharesponse)
         {
@@ -352,7 +356,6 @@ namespace EduQuiz.Controllers
             }
         }
         [HttpPost]
-
         public IActionResult SaveBirthday(DateTime value)
         {
             //1: Trường học, 2: Giáo viên, 3: Học sinh, Gia đình và bạn bè
@@ -361,7 +364,6 @@ namespace EduQuiz.Controllers
             // Trả về JSON với trạng thái thành công
             return Json(new { status = true });
         }
-
         [HttpPost]
         public IActionResult CheckTypeAccount(int value)
 		{
@@ -371,7 +373,6 @@ namespace EduQuiz.Controllers
             // Trả về JSON với trạng thái
             return Json(new { status = true });
         }
-
         [HttpPost]
         public async Task<IActionResult> CheckUserName(string username)
         {

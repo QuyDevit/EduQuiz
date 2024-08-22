@@ -14,7 +14,7 @@
     <link href="~/src/css/layoutcreator.css" rel="stylesheet" />
     @RenderSection("styles", required: false)
 </head>
-<body>
+<body style="height:inherit !important">
     <div style="width: 100%;overflow: hidden;height: 100%;display: flex;flex-direction: column;">
         <div class="topbar">
             <header class="base-topbar">
@@ -22,11 +22,11 @@
                     <div class="style_wrapper">
                         <div class="style-content_wrapper">
                             <h1 class="mr-3">
-                                <a href="@Url.Action("Index","HomeDashBoard")">
+                                <a href="@Url.Action("Index","HomeDashboard")">
                                     <img style="width:110px;height:45px;" src="~/src/img/logomain.png">
                                 </a>
                             </h1>
-                            <button class="settings-button">
+                            <button class="settings-button" data-toggle="modal" data-target="#modalQuizSetting">
                                 <span class="settings-button_title">Nhập tiêu đề EduQuiz...</span>
                                 <span class="settings-button_Setting">
                                     <span>Cài đặt</span>
@@ -45,7 +45,7 @@
                                     <span>Nâng cấp</span>
                                 </a>
                             </div>
-                            <button class="button-flat">
+                            <button id="btn-theme" class="button-flat">
                                 <span class="icon">
                                     <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-c0a6c9a6-825e-4b21-83a1-8499009fd693" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-c0a6c9a6-825e-4b21-83a1-8499009fd693">Icon</title><path d="M16,27C10.14,27,5,21.33,5,14.86A11.12,11.12,0,0,1,9.72,5.73a3.62,3.62,0,0,1,2.65-.68A2.14,2.14,0,0,1,13.8,6c.73.92.55,2.19.39,3.32a4.83,4.83,0,0,0-.07,1.42c.26.31.83.13,2.39-.61C18.38,9.2,21,8,23.79,9.34c3.78,2,3.65,8,3.18,9.9C25.88,23.59,21.06,27,16,27ZM11.88,7a1.93,1.93,0,0,0-1,.37A9.13,9.13,0,0,0,7,14.86C7,20.26,11.21,25,16,25c4.19,0,8.15-2.74,9-6.24.29-1.18.51-6.26-2.12-7.63-2-.92-3.78-.07-5.54.77s-3.49,1.64-4.83,0A3.84,3.84,0,0,1,12.21,9c.08-.58.22-1.56,0-1.81l-.06-.08A.23.23,0,0,0,12,7ZM19,23a2,2,0,1,1,2-2A2,2,0,0,1,19,23Zm-6-1a2,2,0,1,1,2-2A2,2,0,0,1,13,22Zm-3-5a2,2,0,1,1,2-2A2,2,0,0,1,10,17Z" style="fill: rgb(255, 255, 255);"></path></svg>
                                 </span>
@@ -72,22 +72,397 @@
             </header>
         </div>
         <div id="creator-side-bar" class="side-bar_wrapper">
-            <div class="side-bar-drag-and-drop">
-                <div class="draggableItem">
-                    <div class="draggableItem-block">
-                        <div class="draggableItem-block_wrapper">
-                            <span class="draggableItem-block_wrapper-count">1</span>
-                            <span class="draggableItem-block_wrapper-title">Câu hỏi</span>
-                        </div>
-                    </div>
+            <div class="side-bar-drag-and-drop" id="questions-container">
+         
+            </div>
+            <div class="sidebar-action_Container">
+                <div class="sidebar-action_button">
+                    <button id="createquestion" class="btn justify-content-center">Thêm câu hỏi</button>
                 </div>
             </div>
         </div>
+        <main class="styles__ContentWrapperMain">
+            <div class="styles__ContentMain">
+                <div class="styles__ContentBackground">
+                    <div class="question-title__Container">
+                        <div class="question-text-field__TitleWrapper">
+                            <div id="question-text-field" class="question-text-field__input" contenteditable="true" data-placeholder="Nhập câu hỏi của bạn..."></div>
+                        </div>
+                    </div>
+                    <header class="styles-top__Content">
+                        <div class="styles-detail__Content">
+                            <input id="input-file" class="d-none" type="file" name="name" value="" accept="image/*" />
+                            <div class="styles-detail__ContentWrapper">
+                                <div class="styles-detail__ContentWrapper-Image">       
+                                    <div class="styles-component__ContentWrapperImage">
+                                        <div class="wrapper-Image_Info"> 
+                                            <div class="wrapper-Image_Info-block">
+                                                <div class="wrapper-Image_Info-view">
+                                                </div>
+                                                <button class="btn-clean">
+                                                    <i style="font-size:20px" class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                                <p>Tải và thêm ảnh lên</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="image-question-Effect d-none">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="styles-answer__bottomContent">
+                        <div class="styles__QuestionChoices">
+                            <div class="styles__ClassicQuizChoicesWrapper">
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="styles__Sidebar-right">
+                    <button class="Sidebar-right_button">
+                        <span><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
+                        <span></span>
+                    </button>
+                    <div class="styles__ScrollWrapper">
+                        <div class="themes-list__Wrapper">
+                            <div class="themes-list__TopWrapper">
+                                <h1 class="themes-list__Title">Chủ đề</h1>
+                                <button id="closesidebar-theme" class="icon-button_themes">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <section class="themes-list__CollapsableWrapper">
+                                <header class="themes-list__CollapseHeader">
+                                    <h2 class="themes-list__SectionTitle">Miễn phí</h2>
+                                    <button class="icon-button_themes">
+                                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                    </button>
+                                </header>
+                                <ul id="themefree" class="themes-list__Collapsable">
+                                </ul>
+                            </section>
+                            <section class="themes-list__CollapsableWrapper">
+                                <header class="themes-list__CollapseHeader">
+                                    <h2 class="themes-list__SectionTitle">Chuyên nghiệp</h2>
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle-Upgrade">
+                                            <span><i style="color:#fff" class="fa fa-star" aria-hidden="true"></i></span>
+                                        </div>
+                                        <button class="icon-button_themes">
+                                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </header>
+                                <ul id="themevip" class="themes-list__Collapsable">
+                                </ul>
+                            </section>
+                        </div>
+                        <div id="sidebar-question" class="d-none">
+                            <div class="styles__Wrapper">
+                                <div class="styles__Label">
+                                    <span>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-94ccba56-892f-4ff1-bd4a-fc3c2af0eb5f" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-94ccba56-892f-4ff1-bd4a-fc3c2af0eb5f">Icon</title><path d="M15.1663167,11 C16.0371581,11 16.8763325,11.1216667 17.6663398,11.3458333 L17.6663398,11.3458333 L17.6663398,13.0966667 C16.8938326,12.8216667 16.0504915,12.6666667 15.1663167,12.6666667 C11.4904494,12.6666667 8.49958851,15.2833333 8.49958851,18.5 C8.49958851,19.7808333 8.97292621,21 9.86793447,22.0266667 C10.1479371,22.3483333 10.140437,22.8291667 9.85043431,23.1416667 L9.85043431,23.1416667 L8.74375743,24.3333333 L15.1663167,24.3333333 C18.8421839,24.3333333 21.8330449,21.7166667 21.8330449,18.5 C21.8330449,18.2166667 21.8022113,17.94 21.7572108,17.6666667 L21.7572108,17.6666667 L23.4455598,17.6666667 C23.4788934,17.9408333 23.4997269,18.2183333 23.4997269,18.5 C23.4997269,22.635 19.7621924,26 15.1663167,26 L15.1663167,26 L6.83290647,26 C6.50123674,26 6.20123397,25.8033333 6.06956609,25.5 C5.93706487,25.1958333 5.99706542,24.8425 6.2220675,24.6 L6.2220675,24.6 L8.14375189,22.53 C7.28374396,21.3266667 6.83290647,19.9458333 6.83290647,18.5 C6.83290647,14.365 10.5712743,11 15.1663167,11 Z M22.6666359,14.3333333 C23.1266402,14.3333333 23.4999769,14.7066667 23.4999769,15.1666667 C23.4999769,15.6275 23.1266402,16 22.6666359,16 C22.2066317,16 21.8332949,15.6275 21.8332949,15.1666667 C21.8332949,14.7066667 22.2066317,14.3333333 22.6666359,14.3333333 Z M22.6666359,6 C24.5049862,6 26,7.495 26,9.33333333 C26,10.8833333 24.9358235,12.19 23.4999769,12.5616667 L23.4999769,13.5 L21.8332949,13.5 L21.8332949,11 L22.6666359,11 C23.5858111,11 24.333318,10.2525 24.333318,9.33333333 C24.333318,8.41416667 23.5858111,7.66666667 22.6666359,7.66666667 C21.7474608,7.66666667 20.9999539,8.41416667 20.9999539,9.33333333 L19.3332718,9.33333333 C19.3332718,7.495 20.8282856,6 22.6666359,6 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                    </span>
+                                    <label>Loại câu hỏi</label>
+                                    <div class="styles__Label-container">
+                                        <div id="choosequestion" data-typequiz="quiz" class="select-control">
+                                            <div class="select-control__container">
+                                                <div class="select-control-left">
+                                                    <div class="position-relative">
+                                                        <div class="SingleImageWrapper">
+                                                            <img src="~/src/img/logo-quiz.jpg" />
+                                                        </div>
+                                                        <div class="SingleValueWrapper">
+                                                            <label>Đố vui</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input id="input-question" class="SingleInputWrapper" />
+                                            </div>
+                                            <div class="select-control-right">
+                                                <div class="SingleIconWrapper">
+                                                    <span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="styles__Hr" />
+                            <div class="styles__Wrapper">
+                                <div class="styles__Label">
+                                    <span>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-fba9faaf-b7f2-433b-ab8b-4476fb4e6629" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-fba9faaf-b7f2-433b-ab8b-4476fb4e6629">Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                    </span>
+                                    <label>Giới hạn thời gian</label>
+                                    <div id="menutime_wrapper" class="styles__Label-container">
+                                        <div id="timelimit" data-time="20" class="select-control">
+                                            <div class="select-control__container">
+                                                <div class="select-control-left">
+                                                    <div class="position-relative">
+                                                        <div class="SingleValueWrapper" style="margin-left:0">
+                                                            <label>20 giây</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input id="input-time" class="SingleInputWrapper" />
+                                            </div>
+                                            <div class="select-control-right">
+                                                <div class="SingleIconWrapper">
+                                                    <span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="styles__Wrapper">
+                                <div class="styles__Label">
+                                    <span>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-fba9faaf-b7f2-433b-ab8b-4476fb4e6629" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-fba9faaf-b7f2-433b-ab8b-4476fb4e6629">Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                    </span>
+                                    <label>Điểm</label>
+                                    <div id="menupoint_wrapper" class="styles__Label-container">
+                                        <div id="pointlimit" data-point="1" class="select-control">
+                                            <div class="select-control__container">
+                                                <div class="select-control-left">
+                                                    <div class="position-relative">
+                                                        <div class="SingleValueWrapper" style="margin-left:0">
+                                                            <label>Tiêu chuẩn</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input id="input-point" class="SingleInputWrapper" />
+                                            </div>
+                                            <div class="select-control-right">
+                                                <div class="SingleIconWrapper">
+                                                    <span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="wrapperTypeAnswer" class="styles__Wrapper">
+                                <div class="styles__Label">
+                                    <span>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-3ac79715-fd1c-470f-a989-3f302f157cc1" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-3ac79715-fd1c-470f-a989-3f302f157cc1">Icon</title><path d="M10.375,17.25 C12.7912458,17.25 14.75,19.2087542 14.75,21.625 C14.75,24.0412458 12.7912458,26 10.375,26 C7.95875422,26 6,24.0412458 6,21.625 C6,19.2087542 7.95875422,17.25 10.375,17.25 Z M21.625,17.25 C24.0412458,17.25 26,19.2087542 26,21.625 C26,24.0412458 24.0412458,26 21.625,26 C19.2087542,26 17.25,24.0412458 17.25,21.625 C17.25,19.2087542 19.2087542,17.25 21.625,17.25 Z M21.625,19.75 C20.5894661,19.75 19.75,20.5894661 19.75,21.625 C19.75,22.6605339 20.5894661,23.5 21.625,23.5 C22.6605339,23.5 23.5,22.6605339 23.5,21.625 C23.5,20.5894661 22.6605339,19.75 21.625,19.75 Z M10.375,6 C12.7912458,6 14.75,7.95875422 14.75,10.375 C14.75,12.7912458 12.7912458,14.75 10.375,14.75 C7.95875422,14.75 6,12.7912458 6,10.375 C6,7.95875422 7.95875422,6 10.375,6 Z M21.625,6 C24.0412458,6 26,7.95875422 26,10.375 C26,12.7912458 24.0412458,14.75 21.625,14.75 C19.2087542,14.75 17.25,12.7912458 17.25,10.375 C17.25,7.95875422 19.2087542,6 21.625,6 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                    </span>
+                                    <label>Tùy chọn trả lời</label>
+                                    <div id="menuanswer_wrapper" class="styles__Label-container">
+                                        <div id="answerlimit" data-answer="1" class="select-control">
+                                            <div class="select-control__container">
+                                                <div class="select-control-left">
+                                                    <div class="position-relative">
+                                                        <div class="SingleValueWrapper" style="margin-left:0">
+                                                            <label>Chọn đơn</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input id="input-answer" class="SingleInputWrapper" />
+                                            </div>
+                                            <div class="select-control-right">
+                                                <div class="SingleIconWrapper">
+                                                    <span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="styles__Hr" />
+                            <div id="wrapperImageEffect" class="styles__Wrapper d-none">
+                                <div class="styles__Label">
+                                    <span>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-74fc677a-1d0f-4b7e-8e55-f1a31f13b772" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-74fc677a-1d0f-4b7e-8e55-f1a31f13b772">Icon</title><path d="M17.6741366,12.9029823 L19.0972206,14.3260425 L8.42308402,25 L7,23.5769399 L17.6741366,12.9029823 Z M18.9767516,18.6643631 L20.0184008,22.5541279 L18.073989,23.075447 L17.0323398,19.1856822 L18.9767516,18.6643631 Z M21.1111763,15.1070147 L25,16.1496528 L24.4796786,18.0930256 L20.5898485,17.0513939 L21.1111763,15.1070147 Z M9.44611436,11.9818176 L13.334938,13.0234493 L12.8136102,14.9678285 L8.92478655,13.9251904 L9.44611436,11.9818176 Z M21.9445963,8.63219162 L23.3676804,10.0552518 L20.5205059,12.9023785 L19.0974219,11.4793183 L21.9445963,8.63219162 Z M15.8510995,7 L16.8927487,10.887752 L14.9483369,11.4090711 L13.9066877,7.52031266 L15.8510995,7 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                    </span>
+                                    <label>Hình ảnh tiết lộ</label>
+                                </div>
+                                <div class="styles__ContentWrapperImageReveal">
+                                    <div class="Layout__ContentWrapperImageReveal">
+                                        <ul class="styles__LayoutsImage">
+                                            <li class="style__LayoutImage">
+                                                <button class="style__StyledImageEffectButton focused" data-effect="0" type="button">
+                                                    <div class="LayoutImageWrapper">
+                                                        <div class="aspect-ratio-wrapper">
+                                                            <div class="image-with-effect">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <span class="StyledImageEffectButton_Title focused">Nguyên bản</span>
+                                                </button>
+                                            </li>
+                                            <li class="style__LayoutImage">
+                                                <button class="style__StyledImageEffectButton" data-effect="3" type="button">
+                                                    <div class="icon__Upgrade" style="top:-8px;right:-6px;">
+                                                        <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    </div>
+                                                    <div class="LayoutImageWrapper">
+                                                        <div class="aspect-ratio-wrapper">
+                                                            <div class="image-with-effect">
+                                                                <div class="GridRevealWrapper">
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                    <div class="GridRevealWrapper-item item-3_3"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <span class="StyledImageEffectButton_Title">3x3</span>
+                                                </button>
+                                            </li>
+                                            <li class="style__LayoutImage">
+                                                <button class="style__StyledImageEffectButton" data-effect="5" type="button">
+                                                    <div class="icon__Upgrade" style="top:-8px;right:-6px;">
+                                                        <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    </div>
+                                                    <div class="LayoutImageWrapper">
+                                                        <div class="aspect-ratio-wrapper">
+                                                            <div class="image-with-effect">
+                                                                <div class="GridRevealWrapper">
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                    <div class="GridRevealWrapper-item item-5_5"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <span class="StyledImageEffectButton_Title">5x5</span>
+                                                </button>
+                                            </li>
+                                            <li class="style__LayoutImage">
+                                                <button class="style__StyledImageEffectButton" data-effect="8" type="button">
+                                                    <div class="icon__Upgrade" style="top:-8px;right:-6px;">
+                                                        <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    </div>
+                                                    <div class="LayoutImageWrapper">
+                                                        <div class="aspect-ratio-wrapper">
+                                                            <div class="image-with-effect">
+                                                                <div class="GridRevealWrapper">
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+                                                                    <div class="GridRevealWrapper-item item-8_8"></div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <span class="StyledImageEffectButton_Title">8x8</span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="styles__StaticButtons">
+                        <button type="button" class="button-flat" style="background-color:#e21b3c">Xóa bỏ</button>
+                        <button type="button" class="button-flat" style="background-color:#26890c">Nhân bản</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div>
-        @RenderBody()
-    </div>
+   
+    @RenderBody()
+ 
+   
     <script src="~/src/js/jquery.min.js"></script>
     <!-- Popper JS -->
     <script src="~/src/js/popper.min.js"></script>
@@ -97,5 +472,1410 @@
     <script src="~/src/css/js/perfect-scrollbar.jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        var arrmusic = [];
+        var arrtheme = [];
+        var slideFocus = 1;
+        var optionAnswerFocus = 1;
+        var typeQuestionFocus = 'quiz';
+        var answerChoiceFocus = 1;
+        var timeQuestionFocus = 20;
+        var pointsMultiplierFocus = 1;
+        var imgFocus = '';
+        var imgEffect = '';
+        var lastContentQuestion = '';
+        var lastContentAnswer = [
+            { content: '' },
+            { content: '' },
+            { content: '' },
+            { content: '' },
+            { content: '' },
+            { content: '' }
+        ]
+        var dataQuestion = {
+            EduQuizId: quizId,
+            TypeQuestion: typeQuestionFocus,
+            TypeAnswer: optionAnswerFocus,
+            QuestionText: lastContentQuestion,
+            Time: timeQuestionFocus,
+            PointsMultiplier: pointsMultiplierFocus,
+            Image: imgFocus,
+            ImageEffect: imgEffect,
+            Choices: []
+        }
+        var eduquizdata = {
+            Uuid: quizId,
+            UserId : userId,
+            Title:'',
+            Description:'',
+            ImageCover:'',
+            Type: 0,
+            Visibility: true,
+            ThemeId: 1,
+            MusicId: 1,
+            Questions: [dataQuestion]
+        };
+        var dataQuestionFocus = eduquizdata.Questions[0];
+        //Lưu ảnh câu hỏi
+        function saveImgQuestion(formData) {
+            return $.ajax({
+                url: '@Url.Action("saveImgQuestion", "Creator")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            });
+        }
+
+        //Thay đổi tiêu đề câu hỏi
+        $('#question-text-field').on('blur', function () {
+            var content = $(this).text().trim();
+            if (content != lastContentQuestion) {
+                lastContentQuestion = content;
+                $(`#question-${slideFocus} .styles_Question-title`).text(content)
+                eduquizdata.Questions[slideFocus - 1].QuestionText = content;
+
+            } else {
+                console.log("trùng")
+            }
+            
+            console.log('data đã thay đổi:', eduquizdata);
+        });
+
+        async function getAlldataStarted() {
+            try {
+                const musicResponse = await $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetListMusic", "Creator")"
+                });
+
+                if (musicResponse.result === "PASS") {
+                    arrmusic = musicResponse.data;
+                }
+
+                const themeResponse = await $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetListTheme", "Creator")"
+                });
+
+                if (themeResponse.result === "PASS") {
+                    arrtheme = themeResponse.data;
+                }
+
+                themeOption();
+                loadMusicOptions();
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        getAlldataStarted();
+        function formatTime(seconds) {
+            if (seconds < 60) {
+                return seconds + " giây";
+            } else if (seconds < 3600) {
+                var minutes = Math.floor(seconds / 60);
+                var remainingSeconds = seconds % 60;
+                if (remainingSeconds === 0) {
+                    return minutes + " phút";
+                } else {
+                    return minutes + " phút " + remainingSeconds + " giây";
+                }
+            }
+        }
+        function handleSildeQuesion(){
+            let questionIdCounter = 1; // Biến đếm ID toàn cục
+
+            // Hàm tạo câu hỏi mới
+            function createQuestion(type) {
+                const questionId = getNextQuestionId();
+                let title;
+                let answersHtml;
+                // Xác định tiêu đề dựa trên loại câu hỏi
+                switch (type) {
+                    case 'quiz':
+                        title = 'Câu đố';
+                        answersHtml = `
+                            <div class="styles_Answers">
+                                <div class="answers-block"></div>
+                                <div class="answers-block"></div>
+                                <div class="answers-block"></div>
+                                <div class="answers-block"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'true_false':
+                        title = 'Đúng hay sai';
+                        answersHtml = `
+                            <div class="styles_Answers">
+                                <div class="answers-block" style="height: 16px;"></div>
+                                <div class="answers-block" style="height: 16px;"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'input_answer':
+                        title = 'Nhập đáp án';
+                        answersHtml = `
+                            <div class="styles_Answers" style="
+                                flex-direction: column;
+                                align-items: center;
+                            ">
+                                <div class="answers-block"></div>
+                                <div class="answers-block"></div>
+                                <div class="answers-block"></div>
+                            </div>
+                        `;
+                        break;
+                    default:
+                        title = 'Câu hỏi';
+                        answersHtml = `
+                            <div class="styles_Answers">
+                                <div class="answers-block"></div>
+                                <div class="answers-block"></div>
+                                <div class="answers-block"></div>
+                                <div class="answers-block"></div>
+                            </div>
+                        `;
+                        break;
+                }
+
+                // Mặc định là không có các class focus nếu không phải là slide đầu tiên
+                const isInitialSlide = questionId === 1;
+                const focusClassesBlock = isInitialSlide ? 'focus-bg' : '';
+                const focusClassesQuestion = isInitialSlide ? 'focus_Question' : '';
+                const focusClassesButton = isInitialSlide ? 'focus-button' : '';
+
+                const questionElement = `
+                <div class="draggableItem" id="question-${questionId}" data-typequiz="${type}" data-id="${questionId}">
+                    <div class="draggableItem-block ${focusClassesBlock}">
+                        <div class="draggableItem-block_wrapper">
+                            <span class="draggableItem-block_wrapper-count">${questionId}</span>
+                            <span class="draggableItem-block_wrapper-title">${title}</span>
+                        </div>
+                        <div class="draggableItem-block_wrapper-content">
+                            <div class="draggableItem-block_wrapper-content_Quiz ${focusClassesQuestion}">
+                                <div class="styles_Question">
+                                    <span class="styles_Question-title">Câu hỏi</span>
+                                    <div class="styles_centerSection">
+                                        <span class="styles_Countdown">20</span>
+                                        <div class="styles_ImageWrapper">
+                                            <div class="image-Wrapper">
+                                                <div class="image-Theme"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    ${answersHtml}
+                                </div>
+                            </div>
+                            <div class="button-block_Quiz ${focusClassesButton}">
+                                <span>
+                                    <button class="duplicate-button"><i class="fa fa-clone" aria-hidden="true"></i></button>
+                                </span>
+                                <span>
+                                    <button class="delete-button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+                $('#questions-container').append(questionElement);
+
+                // Gán sự kiện cho các nút sao chép và xóa
+                $(`#question-${questionId} .duplicate-button`).on('click', function (event) {
+                    event.stopPropagation();
+                    duplicateQuestion(questionId);
+                });
+
+                $(`#question-${questionId} .delete-button`).on('click', function (event) {
+                    event.stopPropagation();
+                    deleteQuestion(questionId);
+                });
+
+                // Gán sự kiện click để focus vào câu hỏi
+                $(`#question-${questionId}`).on('click', function () {
+                    focusQuestion(questionId);
+                });
+
+                updateQuestionNumbers();
+            }
+
+            // Hàm focus vào câu hỏi
+            function focusQuestion(questionId) {
+                // Xóa focus từ tất cả các câu hỏi khác
+                $('#questions-container .draggableItem-block').removeClass('focus-bg');
+                $('#questions-container .draggableItem-block_wrapper-content_Quiz').removeClass('focus_Question');
+                $('#questions-container .button-block_Quiz').removeClass('focus-button');
+                // Thêm focus vào các phần tử của câu hỏi được click
+                $(`#question-${questionId} .draggableItem-block`).addClass('focus-bg');
+                $(`#question-${questionId} .draggableItem-block_wrapper-content_Quiz`).addClass('focus_Question');
+                $(`#question-${questionId} .button-block_Quiz`).addClass('focus-button');
+            }
+
+            // Hàm sao chép câu hỏi
+            function duplicateQuestion(questionId) {
+                const originalQuestion = $(`#question-${questionId}`);
+                const clone = originalQuestion.clone();
+                const newId = getNextQuestionId();
+                clone.attr('id', `question-${newId}`);
+                clone.attr('data-id', newId);
+
+                // Loại bỏ focus khi sao chép
+                clone.find('.draggableItem-block').removeClass('focus-bg');
+                clone.find('.draggableItem-block_wrapper-content_Quiz').removeClass('focus_Question');
+                clone.find('.button-block_Quiz').removeClass('focus-button');
+
+                clone.find('.draggableItem-block_wrapper-count').text(newId);
+
+                // Thêm phần tử sao chép ngay sau phần tử gốc
+                originalQuestion.after(clone);
+
+                // Gán sự kiện cho các nút trong câu hỏi sao chép
+                clone.find('.duplicate-button').on('click', function (event) {
+                    event.stopPropagation();
+                    duplicateQuestion(newId);
+                });
+
+                clone.find('.delete-button').on('click', function (event) {
+                    event.stopPropagation();
+                    deleteQuestion(newId);
+                });
+
+                // Gán sự kiện click để focus vào câu hỏi sao chép
+                clone.on('click', function () {
+                    focusQuestion(newId);
+                });
+    
+                updateQuestionNumbers();
+
+                const originalQuestionData = eduquizdata.Questions[questionId - 1];
+
+                const clonedQuestion = JSON.parse(JSON.stringify(originalQuestionData));
+                eduquizdata.Questions.splice(questionId, 0, clonedQuestion);
+            }
+
+            // Hàm xóa câu hỏi
+            function deleteQuestion(questionId) {
+                // Kiểm tra xem còn lại bao nhiêu câu hỏi trong danh sách
+                if ($('#questions-container .draggableItem').length <= 1) {
+                    Swal.fire({
+                        title: "Không thể xóa!",
+                        text: "Danh sách không thể còn lại ít hơn một câu hỏi.",
+                        icon: "error",
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "OK"
+                    });
+                    return; // Dừng lại nếu chỉ còn một câu hỏi
+                }
+                Swal.fire({
+                    title: "Xác nhận?",
+                    text: "Bạn không thể khôi phục hành động này!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    cancelButtonText:"Hủy bỏ",
+                    confirmButtonText:
+                        "Xóa"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const elementToDelete = $(`#question-${questionId}`);
+                        const prevElement = elementToDelete.prev('.draggableItem');
+                        const nextElement = elementToDelete.next('.draggableItem');
+                        elementToDelete.remove();
+                        const indexToRemove = questionId - 1; // Giả sử questionId là chỉ số (1-based index)
+
+                        // Kiểm tra chỉ số hợp lệ
+                        if (indexToRemove >= 0 && indexToRemove < eduquizdata.Questions.length) {
+                            // Xóa phần tử khỏi mảng
+                            eduquizdata.Questions.splice(indexToRemove, 1);
+                            console.log(eduquizdata)
+                        }
+                        updateQuestionNumbers();
+                        // Đặt focus vào phần tử kế tiếp hoặc trước đó
+                        if (nextElement.length > 0) {
+                            slideFocus = parseInt(nextElement.attr('data-id'));
+                            focusQuestion(nextElement.attr('data-id'));
+                        } else if (prevElement.length > 0) {
+                            slideFocus = parseInt(prevElement.attr('data-id'));
+                            focusQuestion(prevElement.attr('data-id'));
+                        }
+                    }
+                });
+            }
+
+            // Cập nhật số thứ tự các câu hỏi
+            function updateQuestionNumbers() {
+                $('#questions-container .draggableItem').each(function (index) {
+                    const newId = index + 1;
+                    $(this).find('.draggableItem-block_wrapper-count').text(newId);
+                    $(this).attr('id', `question-${newId}`);
+                    $(this).attr('data-id', newId);
+
+                    // Cập nhật các sự kiện cho nút sao chép và xóa sau khi cập nhật số thứ tự
+                    $(this).find('.duplicate-button').off('click').on('click', function (event) {
+                        event.stopPropagation();
+                        duplicateQuestion(newId);
+                    });
+
+                    $(this).find('.delete-button').off('click').on('click', function (event) {
+                        event.stopPropagation();
+                        deleteQuestion(newId);
+                    });
+
+                    // Gán lại sự kiện click để focus vào câu hỏi
+                    $(this).off('click').on('click', function () {
+                        slideFocus = parseInt($(this).attr("data-id"))
+                        const originalQuestionData = eduquizdata.Questions[slideFocus - 1];
+
+                        renderWrapperAnswer(originalQuestionData.TypeQuestion, originalQuestionData);
+                        optionAnswerFocus = originalQuestionData.TypeAnswer;
+                        typeQuestionFocus = originalQuestionData.TypeQuestion;
+                        timeQuestionFocus = originalQuestionData.Time;
+                        pointsMultiplierFocus = originalQuestionData.PointsMultiplier;
+                        imgFocus = originalQuestionData.Image;
+                        imgEffect = originalQuestionData.ImageEffect;
+                        lastContentQuestion = originalQuestionData.QuestionText;
+                        lastContentAnswer = lastContentAnswer.map(() => ({ content: '' }));
+
+                        originalQuestionData.Choices.forEach(item => {
+                            lastContentAnswer[item.DisplayOrder].content = item.Answer;
+                        });
+
+                        $(`#question-text-field`).text(lastContentQuestion == "" ? "" : lastContentQuestion)
+                        if (imgFocus != "") { 
+                            $(".styles-detail__ContentWrapper-Image").css({
+                                "background": `url(${imgFocus}) center center / cover no-repeat`,
+                                "background-color": "rgb(242, 242, 242)" // Fallback color
+                            });
+                            $(".image-with-effect").css("background-image", `url(${imgFocus})`);
+                            $("#wrapperImageEffect").removeClass('d-none');
+                            $(".wrapper-Image_Info-block").hide()
+                        } else {
+                            $(".styles-detail__ContentWrapper-Image").removeAttr("style");
+                            $(".image-with-effect").removeAttr("style");
+                            $("#wrapperImageEffect").addClass('d-none');
+                            $(".wrapper-Image_Info-block").show()
+                        }
+                        let title;
+                        let srcimg;
+                        // Xác định tiêu đề dựa trên loại câu hỏi
+                        switch (typeQuestionFocus) {
+                            case 'quiz':
+                                title = 'Câu hỏi';
+                                srcimg = '/src/img/logo-quiz.jpg'
+                                break;
+                            case 'true_false':
+                                title = 'Đúng hoặc sai';
+                                srcimg = '/src/img/logo-true_false.jpg'
+                                break;
+                            case 'input_answer':
+                                title = 'Nhập đáp án';
+                                srcimg = '/src/img/logo-type-quiz.jpg'
+                                break;
+                            default:
+                                title = 'Câu hỏi';
+                                srcimg = '/src/img/logo-quiz.jpg'
+                                break;
+                        }
+                        const chooseQuestion = $('#choosequestion');
+                        chooseQuestion.attr('data-typequiz', typeQuestionFocus);
+                        chooseQuestion.find('label').text(title);
+                        chooseQuestion.find('.SingleImageWrapper img').attr('src', srcimg);
+
+                        $('#timelimit').attr('data-time', timeQuestionFocus).find('label').text(formatTime(timeQuestionFocus));
+                        $('#pointlimit').attr('data-point', pointsMultiplierFocus);
+                        $('#pointlimit').find('label').text(function () {
+                            switch (pointsMultiplierFocus) {
+                                case 0:
+                                    return "Không cho điểm";
+                                case 1:
+                                    return "Tiêu chuẩn";
+                                case 2:
+                                    return "Nhân đôi";
+                                default:
+                                    return ""; // hoặc một giá trị mặc định khác nếu cần
+                            }
+                        });
+                        // Loại bỏ lớp 'focused' khỏi tất cả các phần tử
+                        $('.styles__LayoutsImage .style__StyledImageEffectButton').removeClass('focused');
+
+                        // Thêm lớp 'focused' vào phần tử đầu tiên
+                        $('.styles__LayoutsImage .style__StyledImageEffectButton').first().addClass('focused').click();
+                        console.log(originalQuestionData)
+                        focusQuestion(newId);
+                    });
+                });
+
+                // Cập nhật biến counter để tránh trùng lặp ID
+                questionIdCounter = $('#questions-container .draggableItem').length + 1;
+            }
+
+            // Lấy ID kế tiếp cho câu hỏi mới
+            function getNextQuestionId() {
+                return questionIdCounter++;
+            }
+
+            // Gán sự kiện cho nút thêm câu hỏi
+            $('.create-button__CreateButton').on('click', function () {
+                var type = $(this).attr("data-example"); // Lấy loại câu hỏi từ thuộc tính data-type
+                $("#overlay-question").addClass("d-none");
+                $(".menu-Slide__Wrapper").addClass("d-none");
+                createQuestion(type);
+                var newQuestion = {
+                    EduQuizId: quizId,
+                    TypeQuestion: type,
+                    TypeAnswer: 1,
+                    QuestionText: '',
+                    Time: 20,
+                    PointsMultiplier: 1,
+                    Image: '',
+                    ImageEffect: '',
+                    Choices: []
+                } 
+                if (type === 'true_false'){
+                    // Thêm đáp án 'True'
+                    newQuestion.Choices.push({
+                        Answer: 'True',
+                        IsCorrect: false, 
+                        DisplayOrder: 0
+                    });
+
+                    // Thêm đáp án 'False'
+                    newQuestion.Choices.push({
+                        Answer: 'False',
+                        IsCorrect: false, 
+                        DisplayOrder: 1
+                    });
+                }
+                eduquizdata.Questions.push(newQuestion);
+            });
+            createQuestion('quiz');
+            // Khởi tạo số ID cho câu hỏi ban đầu
+            updateQuestionNumbers();
+        }
+        handleSildeQuesion();
+        //END Xử lý tạo Slide câu hỏi
+
+        //Mảng ramdom hiển thị ảnh theo trình tự
+        const revealSequences = {
+            9: [2, 6, 0, 3, 8, 1, 4, 7, 5], // 3x3
+            25: [23, 1, 12, 19, 7, 8, 0, 24, 17, 15, 11, 4, 20, 2, 9, 13, 5, 21, 6, 10, 14, 3, 16, 18, 22], // 5x5
+            64: [37, 5, 47, 12, 56, 0, 24, 19, 30, 35, 48, 1, 57, 4, 62, 52, 38, 10, 41, 63, 14, 33, 45, 29, 3, 27, 31, 44, 20, 7, 15, 42, 2, 39, 53, 28, 34, 59, 13, 50, 55, 8, 32, 18, 54, 11, 43, 60, 40, 16, 6, 9, 58, 61, 46, 22, 26, 36, 49, 17, 21, 25, 51, 23] // 8x8
+        };
+        //Hiệu ứng ảnh hiện mở khi click
+        function applyGridRevealEffect(gridSize, totalTransitionTime) {
+ 
+            const $imageEffectContainer = $('.image-question-Effect');
+            $imageEffectContainer.removeClass('d-none');
+            $imageEffectContainer.empty();
+            if (gridSize === 0) {
+                return;
+            }
+            const totalItems = gridSize * gridSize;
+
+            const revealOrder = revealSequences[totalItems];
+
+            const delayPerItem = totalTransitionTime / totalItems;
+
+            const gridItems = [];
+            for (let i = 0; i < totalItems; i++) {
+                const $gridItem = $('<div></div>')
+                    .addClass(`GridRevealWrapper-item item-${gridSize}_${gridSize}`)
+                    .css({
+                        'background-color': 'rgb(70, 23, 143)',
+                        'outline':'none'
+                    });
+
+                gridItems.push($gridItem);
+                $imageEffectContainer.append($gridItem);
+            }
+
+            revealOrder.forEach((index, i) => {
+                setTimeout(() => {
+                    gridItems[index].css('background-color', 'transparent');
+                }, i * delayPerItem);
+            });
+        }
+
+        $("#btn-ImgEduQuiz").click(function(){
+            $("#imgEduQuiz").click();
+        })
+        $("#imgEduQuiz").on("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const imageUrl = e.target.result;
+                    // Set background image
+                    $("#btn-ImgEduQuiz").attr("src", imageUrl)
+                  
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function renderWrapperAnswer(typequestion,dataquestion = null){
+            const answerOption = [
+                { bgcolor: 'rgb(226, 27, 60)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-54e92053-18e4-491f-9063-2016d76a1a34" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-54e92053-18e4-491f-9063-2016d76a1a34">Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(19, 104, 206)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-65487823-89b6-41e8-a399-962751cb5162" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-65487823-89b6-41e8-a399-962751cb5162">Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(216, 158, 0)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-afa4ce84-cd1c-4cce-a75a-d92836a535d2" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-afa4ce84-cd1c-4cce-a75a-d92836a535d2">Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(38, 137, 12)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-d8cb5b6e-e2b3-4066-b37f-6b7a5984c699" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-d8cb5b6e-e2b3-4066-b37f-6b7a5984c699">Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(10, 163, 163)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-ae1bd8ae-5031-4860-b805-da4ee258cf87" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-ae1bd8ae-5031-4860-b805-da4ee258cf87">Icon</title><path d="M8.584 27 4 12.786 16 3.982 28 12.786 23.417 27z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(134, 76, 191)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-ec445ab3-a963-4630-9aa6-39acf6962ac5" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-ec445ab3-a963-4630-9aa6-39acf6962ac5">Icon</title><path d="M5 8L16 26.857 27 8z" style="fill: inherit;"></path></svg>' }
+            ];
+            const wrapper = $(".styles__ClassicQuizChoicesWrapper");
+            wrapper.empty();
+            const questionType = dataquestion ? dataquestion.TypeQuestion : typequestion;
+
+            if (questionType === 'quiz') {
+                const choicesWrapper = $('<div class="styles__ChoicesWrapper"></div>');
+              
+                if (dataquestion && dataquestion.Choices.length > 0) {
+                    const sortedChoices = dataquestion.Choices.sort((a, b) => a.DisplayOrder - b.DisplayOrder);
+                    // Kiểm tra xem có bất kỳ DisplayOrder nào lớn hơn hoặc bằng 4 hay không
+                    const hasDisplayOrderGreaterThan4 = sortedChoices.some(choice => choice.DisplayOrder >= 4);
+                    // Create answer cards based on DisplayOrder
+                    for (let i = 0; i < 6; i++) {
+                        const choice = sortedChoices.find(c => c.DisplayOrder === i); // Find choice with matching DisplayOrder
+                        const card = choice
+                            ? createAnswerCard(answerOption[i], choice.Answer, true, true, i)
+                            : createAnswerCard(answerOption[i], '', true, true, i);
+
+                        if (i >= 4 && !hasDisplayOrderGreaterThan4) {
+                            card.hide(); // Ẩn đáp án bổ sung nếu không cần hiển thị
+                        }
+
+                        if (choice && choice.IsCorrect) {
+                            card.find('.iconCheck_Answer').append('<img src="/src/img/check-answer.svg" />').addClass('choose-answer');
+                        }
+
+                        choicesWrapper.append(card);
+                    }
+                } else {
+                    // Render default 4 answers
+                    for (let i = 0; i < 4; i++) {
+                        const card = createAnswerCard(answerOption[i], '', true, true, i);
+                        choicesWrapper.append(card);
+                    }
+
+                    // Create 2 additional answers (hidden initially)
+                    for (let i = 4; i < 6; i++) {
+                        const card = createAnswerCard(answerOption[i], '', true, true, i);
+                        card.hide(); // Hide additional answers
+                        choicesWrapper.append(card);
+                    }
+                }
+
+                wrapper.append(choicesWrapper);
+                const updateButtonText = () => {
+                    const extraAnswersVisible = wrapper.find('.styles__ChoicesWrapper').children().slice(4, 6).is(":visible");
+                    const addButton = $("#btn-add-answer");
+                    if (extraAnswersVisible) {
+                        addButton.html('<div class="icon-circle-Upgrade"><span><i class="fa fa-star" aria-hidden="true"></i></span></div>Xóa các câu trả lời bổ sung');
+                    } else {
+                        addButton.html('<div class="icon-circle-Upgrade"><span><i class="fa fa-star" aria-hidden="true"></i></span></div>Thêm câu trả lời');
+                    }
+                };
+
+                if ($("#btn-add-answer").length === 0) {
+                    const addButton = $('<button id="btn-add-answer" class="styles__Button-answer"><div class="icon-circle-Upgrade"><span><i class="fa fa-star" aria-hidden="true"></i></span></div>Thêm câu trả lời</button>');
+                    wrapper.append(addButton);
+
+                    // Add click event listener for the button
+                    addButton.on('click', function () {
+                        const extraAnswers = wrapper.find('.styles__ChoicesWrapper').children().slice(4, 6);
+                        if (extraAnswers.is(":visible")) {
+                            extraAnswers.hide();
+
+                        } else {
+                            extraAnswers.show();
+                        }
+                        updateButtonText(); // Update button text based on visibility
+                    });
+
+                    updateButtonText(); // Set initial button text
+                }
+            } else if (questionType === 'true_false') {
+                const choicesWrapper = $('<div class="styles__ChoicesWrapper"></div>');
+                // Find the choices for 'Đúng' and 'Sai' only if dataquestion is provided
+                const trueChoice = dataquestion ? dataquestion.Choices.find(c => c.DisplayOrder === 0) : null;
+                const falseChoice = dataquestion ? dataquestion.Choices.find(c => c.DisplayOrder === 1) : null;
+
+                // Render predefined 'Đúng' and 'Sai' answers
+                const trueCard = createAnswerCard(answerOption[0], "Đúng", true, true, 0);
+                const falseCard = createAnswerCard(answerOption[1],"Sai", true, true, 1);
+
+                if (trueChoice && trueChoice.IsCorrect) {
+                    trueCard.find('.iconCheck_Answer').append('<img src="/src/img/check-answer.svg" />').addClass('choose-answer');
+                }
+
+                if (falseChoice && falseChoice.IsCorrect) {
+                    falseCard.find('.iconCheck_Answer').append('<img src="/src/img/check-answer.svg" />').addClass('choose-answer');
+                }
+
+                choicesWrapper.append(trueCard, falseCard);
+                wrapper.append(choicesWrapper);
+            } else {
+                const choicesWrapper = $('<div class="styles__ChoicesWrapper" style="flex-direction: column;align-items: center;"></div>');
+                // Render 3 đáp án mặc định
+                const defaultAnswers = dataquestion ? dataquestion.Choices : [
+                    { Answer: "", DisplayOrder: 0 },
+                    { Answer: "", DisplayOrder: 1 },
+                    { Answer: "", DisplayOrder: 2 }
+                ];
+
+                for (let i = 0; i < 3; i++) {
+                    const choice = dataquestion ? defaultAnswers.find(c => c.DisplayOrder === i) : { Answer: "", DisplayOrder: i };
+
+                    const answerText = choice ? choice.Answer : "";
+                    const isCorrect = choice ? choice.IsCorrect : false;
+
+                    const card = createAnswerCard(answerOption[i], answerText, true, false, i);
+
+                    if (isCorrect) {
+                        card.find('.iconCheck_Answer').append('<img src="/src/img/check-answer.svg" />').addClass('choose-answer');
+                    }
+
+                    choicesWrapper.append(card);
+                }
+                wrapper.append(choicesWrapper);
+            }
+
+            function createAnswerCard(option, predefinedText = '', isEditable = true, isEditanswer = true, index) {
+                const contentEditableAttr = isEditable ? 'contenteditable="true"' : '';
+                const placeholderText = predefinedText ? predefinedText : 'Đáp án...';
+                const checkAnswerButton = isEditanswer
+                    ? `<button class="iconCheck_Answer" data-orderanswer="${index}" style="display: none;"></button>`
+                    : '';
+
+                const card = $(`
+                            <div class="card__Question" id="answer-card-${index}" style="background-color:${option.bgcolor}">
+                        <div class="styles__IconWrapper">
+                            <span>${option.svg}</span>
+                        </div>
+                        <div class="styles__CardContentWrapper">
+                            <div class="styles__TooltipContent">
+                                <div class="styles__TooltipContent-text-field">
+                                            <div class="TooltipContent-text-field__input" ${contentEditableAttr} data-placeholder="${placeholderText}" data-index="${index}">${predefinedText}</div>
+                                </div>
+                            </div>
+                                    ${checkAnswerButton}
+                        </div>
+                    </div>
+                `);
+                function updateButtonVisibility() {
+                    const inputField = card.find('.TooltipContent-text-field__input');
+                    const button = card.find('.iconCheck_Answer');
+                    if (inputField.text().trim() === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+
+                updateButtonVisibility();
+
+                card.find('.TooltipContent-text-field__input').on('input', function () {
+                    updateButtonVisibility();
+                });
+
+                card.find('.iconCheck_Answer').on('click', function () {
+                    const button = $(this);
+                    const checkIcon = button.find('img[src="/src/img/check-answer.svg"]');
+                    var indexOrder = parseInt(button.attr("data-orderanswer"));
+                    let currentQuestion = eduquizdata.Questions[slideFocus - 1];
+
+                    let choiceIndex = currentQuestion.Choices.findIndex(choice => choice.DisplayOrder === indexOrder);
+                    if (typeQuestionFocus != "true_false") {
+                        if (checkIcon.length > 0) {
+
+                            if (choiceIndex !== -1) {
+                                currentQuestion.Choices[choiceIndex].IsCorrect = false;
+                            }
+                            checkIcon.remove();
+                            button.removeClass('choose-answer');
+                        } else {
+                            if (choiceIndex !== -1) {
+                                currentQuestion.Choices[choiceIndex].IsCorrect = true;
+                            }
+                            button.append('<img src="/src/img/check-answer.svg" />');
+                            button.addClass('choose-answer');
+                        }
+                    } else {
+                        $(".iconCheck_Answer").each(function () {
+                            $(this).removeClass('choose-answer');
+                            $(this).empty();
+                            if (choiceIndex !== -1) {
+                                currentQuestion.Choices[$(this).attr('data-orderanswer')].IsCorrect = false;
+                            }
+                        });
+                        // Check the clicked option
+                        button.append('<img src="/src/img/check-answer.svg" />');
+                        button.addClass('choose-answer');
+                        if (choiceIndex !== -1) {
+                            currentQuestion.Choices[choiceIndex].IsCorrect = true;
+                        }
+                    }
+                    console.log(eduquizdata);
+                });
+
+                return card;
+            }
+
+            if(typeQuestionFocus === "quiz"){
+                if (!$(document).data('eventsAttached')) {
+                    $(document).on('focus', '.TooltipContent-text-field__input', function () {
+                        answerChoiceFocus = $(this).attr("data-index");
+                    });
+                    $(document).on('blur', '.TooltipContent-text-field__input', function () {
+                        var content = $(this).text().trim();
+                        answerChoiceFocus = parseInt($(this).data('index'));
+
+                        if (content !== lastContentAnswer[answerChoiceFocus].content) {
+                            let dataChoice = {
+                                Answer: content,
+                                IsCorrect: false,
+                                DisplayOrder: answerChoiceFocus
+                            };
+
+                            lastContentAnswer[answerChoiceFocus].content = content;
+
+
+                                let currentQuestion = eduquizdata.Questions[slideFocus - 1];
+
+                                let choiceIndex = currentQuestion.Choices.findIndex(choice => choice.DisplayOrder === answerChoiceFocus);
+
+                                if (choiceIndex !== -1) {
+                                    currentQuestion.Choices[choiceIndex].Answer = content;
+                                } else {
+                                    currentQuestion.Choices.push(dataChoice);
+                                }
+                        } else {
+                            console.log("Nội dung không thay đổi");
+                        }
+
+                        console.log('Dữ liệu đã thay đổi:', eduquizdata);
+                    });
+
+                    $(document).data('eventsAttached', true);
+                }
+            }
+        }
+        renderWrapperAnswer('quiz')
+        // Mở theme
+        $("#btn-theme").click(function () {
+            $(".themes-list__Wrapper").removeClass("d-none");
+            $("#sidebar-question").addClass("d-none");
+        });
+
+        // Mở sidebar question
+        $("#closesidebar-theme").click(function () {
+            $(".themes-list__Wrapper").addClass("d-none");
+            $("#sidebar-question").removeClass("d-none");
+        });
+        // Click ra ngoài .themes-list__Wrapper để ẩn nó và hiện #sidebar-question
+        $(document).click(function (event) {
+            if (!$(event.target).closest('.themes-list__Wrapper, #btn-theme, #closesidebar-theme').length) {
+                $(".themes-list__Wrapper").addClass("d-none");
+                $("#sidebar-question").removeClass("d-none");
+            }
+        });
+        // Ngăn chặn sự kiện click bên trong .themes-list__Wrapper từ việc bọt lên tài liệu
+        $(".themes-list__Wrapper").click(function (event) {
+            event.stopPropagation();
+        });
+
+        $('.icon-button_themes').click(function () {
+            if ($(this).attr('id') === 'closesidebar-theme') {
+                return;
+            }
+            // Toggle hiển thị/ẩn đi ul liền kề với button được nhấn
+            $(this).closest('.themes-list__CollapsableWrapper').find('ul').toggle();
+
+            // Thay đổi icon
+            var icon = $(this).find('i');
+            if (icon.hasClass('fa-chevron-down')) {
+                icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+            } else {
+                icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+            }
+        });
+
+        function themeOption() {
+            const themefree = arrtheme;
+
+            const freeList = document.getElementById('themefree');
+            const vipList = document.getElementById('themevip');
+
+            themefree.forEach((theme, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'styles__ThemeCardWrapper';
+
+                listItem.innerHTML = `
+                                    <button class="styles__ThemeCardButton ${index === 0 ? 'default' : ''}" data-theme="${theme.id}">
+                                <div class="styles__ThemeCardContentWrapper" style="background: url(${theme.source}) center center / cover;">
+                            <div class="styles__ThemeCardContent"></div>
+                            <div class="styles__ThemeCardNameWrapper">
+                                <p>${theme.name}</p>
+                            </div>
+                        </div>
+                    </button>
+                `;
+
+                // Thêm sự kiện click vào mỗi button
+                listItem.querySelector('.styles__ThemeCardButton').addEventListener('click', function () {
+                    // Xóa class 'default' khỏi tất cả các nút khác
+                    document.querySelectorAll('.styles__ThemeCardButton.default').forEach(button => {
+                        button.classList.remove('default');
+                    });
+                    $(".styles__ContentBackground").css("background", `url(${theme.source}) center center / cover no-repeat rgb(242, 242, 242)`)
+
+                    eduquizdata.ThemeId = $(this).attr("data-theme")
+                    // Thêm class 'default' vào nút hiện tại
+                    this.classList.add('default');
+                });
+
+                if (theme.type === 'free') {
+                    freeList.appendChild(listItem);
+                } else if (theme.type === 'vip') {
+                    vipList.appendChild(listItem);
+                }
+            });
+
+        }
+
+        function loadMusicOptions() {
+            const musicquiz = arrmusic;
+
+            function renderMusicOptions(currentMusic) {
+                const listMusicHtml = musicquiz.map(item => {
+                    const checkIcon = item.id === currentMusic ? '<span class="ml-2"><i class="fa fa-check" aria-hidden="true"></i></span>' : '';
+                    return `
+                            <div class="item_option-content d-flex" data-music="${item.id}">
+                                <span>${item.name}</span>
+                                        ${checkIcon}
+                                        <button class="btn-testmusic" data-src="${item.source}">
+                                    <span class="play-icon">
+                                        <svg viewBox="0 0 22 22" focusable="false" aria-hidden="false" class="icon__Svg-sc-xvsbpg-1">
+                                            <path d="M11 0C4.925 0 0 4.925 0 11s4.925 11 11 11 11-4.925 11-11S17.075 0 11 0 M8.25 15.583V6.417L15.583 11z" style="fill: #10728d;"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                                        <audio id="audio-${item.id}" src="${item.source}" preload="auto"></audio>
+                            </div>
+                        `;
+                }).join('');
+
+                return `
+                        <div id="menu-music" class="menu_WrapperContent" style="width:100%; bottom: 100%; top:unset;">
+                            <div class="menu_WrapperContent-List" style="min-height:7rem">
+                                ${listMusicHtml}
+                            </div>
+                        </div>
+                    `;
+            }
+
+            function setupMusicControls() {
+                $('#menumusic-wrapper').on('click', '.btn-testmusic', function (event) {
+                    event.stopPropagation(); // Ngăn chặn sự kiện click lan truyền lên các phần tử cha
+
+                    const button = $(this);
+                    const audioElement = button.siblings('audio')[0];
+                    const playIcon = button.find('.play-icon');
+
+                    // Nếu nhạc đang phát
+                    if (!audioElement.paused) {
+                        audioElement.pause();
+                        audioElement.currentTime = 0;
+                        playIcon.html(`
+                                <svg viewBox="0 0 22 22" focusable="false" aria-hidden="false" class="icon__Svg-sc-xvsbpg-1">
+                                    <path d="M11 0C4.925 0 0 4.925 0 11s4.925 11 11 11 11-4.925 11-11S17.075 0 11 0 M8.25 15.583V6.417L15.583 11z" style="fill: #10728d;"></path>
+                                </svg>
+                            `);
+                    } else {
+                        // Dừng tất cả các bài nhạc đang phát
+                        $('audio').each(function () {
+                            this.pause();
+                            this.currentTime = 0;
+                            $(this).siblings('.btn-testmusic').find('.play-icon').html(`
+                                    <svg viewBox="0 0 22 22" focusable="false" aria-hidden="false" class="icon__Svg-sc-xvsbpg-1">
+                                        <path d="M11 0C4.925 0 0 4.925 0 11s4.925 11 11 11 11-4.925 11-11S17.075 0 11 0 M8.25 15.583V6.417L15.583 11z" style="fill: #10728d;"></path>
+                                    </svg>
+                                `);
+                        });
+
+                        audioElement.play();
+                        playIcon.html(`
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="false" class="icon__Svg-sc-xvsbpg-1">
+                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0 M8 8h8v8H8z" style="fill: #10728d;"></path>
+                                </svg>
+                            `);
+                    }
+                });
+            }
+
+            $('#input-music').on('focus', function () {
+                $('#choosemusic').addClass('focused');
+
+                // Xóa menu hiện tại nếu có
+                $('#menu-music').remove();
+                // Sử dụng attr để lấy giá trị data-music hiện tại
+                const currentMusic = $('#choosemusic').attr('data-music');
+
+                // Render và hiển thị menu mới
+                const menuHtml = renderMusicOptions(parseInt(currentMusic));
+                $('#menumusic-wrapper').append(menuHtml);
+
+                // Gán sự kiện cho các mục nhạc
+                $('#menu-music .item_option-content').on('click', function () {
+                    if ($(event.target).closest('.btn-testmusic').length === 0) {
+                        const selectedMusic = $(this).data('music');
+                        const selectedLabel = $(this).find('span:first').text();
+                        eduquizdata.MusicId = selectedMusic;
+                        $('#choosemusic').attr('data-music', selectedMusic).find('label').text(selectedLabel);
+                        $('#choosemusic').removeClass('focused');
+                        $('#menu-music').remove();
+                    }
+                });
+            });
+
+            // Xử lý sự kiện blur để xóa menu
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#choosemusic, #menu-music').length) {
+                    $('#choosemusic').removeClass('focused');
+                    $('#menu-music').remove();
+                }
+            });
+
+            // Setup các điều khiển phát nhạc
+            setupMusicControls();
+        }
+
+        // Hiển thị menu và overlay khi click vào nút
+        $("#createquestion").click(function () {
+            $("#overlay-question").removeClass("d-none");
+            $(".menu-Slide__Wrapper").removeClass("d-none");
+        });
+
+        // Ẩn menu và overlay khi click ra ngoài
+        $(document).click(function (event) {
+            // Kiểm tra xem click có nằm trong menu hoặc nút tạo câu hỏi không
+            if (!$(event.target).closest(".menu-Slide__Wrapper, #createquestion").length) {
+                $("#overlay-question").addClass("d-none");
+                $(".menu-Slide__Wrapper").addClass("d-none");
+            }
+        });
+
+        const examples = {
+            quiz: {
+                question: "Con vật nào sau đây biết bay?",
+                answers: ["Cá", "Chim", "Rùa", "Hổ"],
+                title: "Đố vui",
+                description: "Cung cấp cho người chơi nhiều câu trả lời để lựa chọn."
+            },
+            true_false: {
+                question: "Nước đá nóng chảy thành nước?",
+                answers: ["Đúng", "Sai"],
+                title: "Đúng hoặc sai",
+                description: "Để người chơi quyết định xem câu lệnh đó đúng hay sai."
+            },
+            input_answer: {
+                question: "Động vật lớn nhất thế giới?",
+                answers: ["Cá voi xanh"],
+                title: "Nhập đáp án",
+                description: "Yêu cầu người chơi nhập câu trả lời ngắn và đúng."
+            }
+        };
+
+        $(".create-button__CreateButton").hover(function () {
+            const exampleType = $(this).data("example");
+            const example = examples[exampleType];
+
+            $("#example-question").text(example.question);
+            $("#example-answers").html(
+                example.answers.map(answer => `<div class="example-cards">${answer}</div>`).join("")
+            );
+            $("#game-block-title").text(example.title);
+            $("#game-block-description").text(example.description);
+            // Kiểm tra nếu không phải loại quiz thì đặt chiều cao là 3.75rem
+            if (exampleType !== "quiz") {
+                $(".example-cards").css("height", "3.75rem");
+            } 
+        }, function () {
+            // Có thể đặt lại nội dung mặc định nếu cần
+        });
+
+        // CHọn ảnh câu hỏi
+        $(".styles-detail__ContentWrapper-Image").click(function () {
+            $("#input-file").click();
+        })
+        // Khi chọn ảnh từ input câu hỏi
+        $("#input-file").on("change", async function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                var formData = new FormData();
+                formData.append('image', file);
+                formData.append('quizid', quizId+"_"+slideFocus);
+                try {
+                    const response = await saveImgQuestion(formData);
+                    if (response.result == "PASS") {
+                        const timestamp = new Date().getTime();
+                        imgFocus = response.url + "?t=" + timestamp;
+                        // Set background image
+                        $(".styles-detail__ContentWrapper-Image").css({
+                            "background": `url(${imgFocus}) center center / cover no-repeat`,
+                            "background-color": "rgb(242, 242, 242)" // Fallback color
+                        });
+                        $(".image-with-effect").css("background-image", `url(${imgFocus})`);
+                        $("#wrapperImageEffect").removeClass('d-none');
+                        $(`#question-${slideFocus} .image-Theme`).css({
+                            "background": `url(${imgFocus}) center center / cover no-repeat`,
+                        });
+                        eduquizdata.Questions[slideFocus - 1].Image = imgFocus;
+                    }
+                } catch (error) {
+                    console.error("Upload failed:", error);
+                }
+                $(".wrapper-Image_Info-block").hide()
+            }
+        });
+
+
+        $(".Sidebar-right_button").click(function () {
+            $(".styles__Sidebar-right").toggleClass("hide");
+            const icon = $(this).find("i");
+            icon.toggleClass("fa-chevron-right fa-chevron-left");
+        });
+        //Focus Choose Quiz
+        const options = document.querySelectorAll('.item_option');
+        options.forEach(choose => {
+            choose.addEventListener('click',function(){
+                options.forEach(opt =>{
+                    opt.classList.remove('focused');
+                })
+                this.classList.add('focused');
+            })
+        })
+
+        //Focus ImageEffect
+        const $buttons = $('.styles__LayoutsImage .style__StyledImageEffectButton');
+
+        $buttons.each(function () {
+            $(this).on('click', function () {
+                // Remove 'focused' class from all buttons and their titles
+                $buttons.removeClass('focused');
+                $buttons.find('.StyledImageEffectButton_Title').removeClass('focused');
+
+                // Get the grid size from the 'data-effect' attribute and apply the effect
+                const gridSize = parseInt($(this).attr('data-effect'));
+                applyGridRevealEffect(gridSize, timeQuestionFocus * 1000); // Adjust timing as needed
+
+                // Add 'focused' class to the clicked button and its title
+                $(this).addClass('focused');
+                $(this).find('.StyledImageEffectButton_Title').addClass('focused');
+            });
+        });
+
+        const editableDiv = document.querySelector('.question-text-field__input');
+
+        editableDiv.addEventListener('focus', function () {
+            if (this.textContent.trim() === '') {
+                this.textContent = '';
+            }
+        });
+
+        editableDiv.addEventListener('blur', function () {
+            if (this.textContent.trim() === '') {
+                this.textContent = '';
+            }
+        });
+        //START ẨN HIỆN MENU CHỌN CÂU HỎI
+        function handleMenuQuizVisibility() {
+            const quizOptions = [
+                { type: "quiz", label: "Đố vui", img: "/src/img/logo-quiz.jpg" },
+                { type: "true_false", label: "Đúng hoặc sai", img: "/src/img/logo-true_false.jpg" },
+                { type: "input_answer", label: "Nhập câu trả lời", img: "/src/img/logo-type-quiz.jpg", hasIcon: true }
+            ];
+
+            function renderMenuQuiz(options, selectedType) {
+                return `
+                       <div id="menuTypeQuiz" class="menu_WrapperContent">
+                        <div class="menu_WrapperContent-List">
+                            <div class="menu_WrapperContent-List-item">
+                                <h2>Kiểm tra kiến thức</h2>
+                                <div class="d-flex flex-wrap">
+                                    ${options.map(option => {
+                    const focusedClass = option.type === selectedType ? 'focused' : '';
+                    const iconHtml = option.hasIcon ? `
+                                            <div class="icon__Upgrade">
+                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                            </div>` : '';
+                    return `
+                                            <div class="item_option ${focusedClass}" data-typequiz="${option.type}" data-label="${option.label}" data-img="${option.img}">
+                                                <div class="styles__OptionWrapper">
+                                                        ${iconHtml}
+                                                    <div class="styles__OptionImageWrapper">
+                                                        <img src="${option.img}"/>
+                                                    </div>
+                                                    <span class="styles__OptionTitle">${option.label}</span>
+                                                </div>
+                                            </div>
+                                        `;
+                }).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+            const input = $('#input-question');
+            const chooseQuestion = $('#choosequestion');
+
+            input.on('focus', function () {
+                chooseQuestion.addClass('focused');
+                const currentType = chooseQuestion.attr('data-typequiz');
+                if ($('#menuTypeQuiz').length === 0) {
+                    $('.menu_chooseQuiz').append(renderMenuQuiz(quizOptions, currentType));
+
+                    // Sự kiện click để chọn mục
+                    $('.menu_chooseQuiz .item_option').on('click', function () {
+                        const selectedType = $(this).data('typequiz');
+                        const selectedLabel = $(this).data('label');
+                        const selectedImg = $(this).data('img');
+                        let title;
+                        // Xác định tiêu đề dựa trên loại câu hỏi
+                        switch (selectedType) {
+                            case 'quiz':
+                                title = 'Câu hỏi';
+                                break;
+                            case 'true_false':
+                                title = 'Đúng hay sai';
+                                break;
+                            case 'input_answer':
+                                title = 'Nhập đáp án';
+                                break;
+                            default:
+                                title = 'Câu hỏi';
+                                break;
+                        }
+                        $(`#question-${slideFocus} .draggableItem-block_wrapper-title`).text(title)
+                        // Cập nhật giá trị của #choosequestion
+                        chooseQuestion.attr('data-typequiz', selectedType);
+                        chooseQuestion.find('label').text(selectedLabel);
+                        chooseQuestion.find('.SingleImageWrapper img').attr('src', selectedImg);
+                        typeQuestionFocus = selectedType;
+                        if (selectedType != 'true_false') {
+                            eduquizdata.Questions[slideFocus - 1].Choices = [];    
+                        } else {
+                            eduquizdata.Questions[slideFocus - 1].Choices = [];
+                            eduquizdata.Questions[slideFocus - 1].Choices.push({
+                                Answer: 'True',
+                                IsCorrect: false,
+                                DisplayOrder: 0
+                            });
+
+                            // Thêm đáp án 'False'
+                            eduquizdata.Questions[slideFocus - 1].Choices.push({
+                                Answer: 'False',
+                                IsCorrect: false, 
+                                DisplayOrder: 1
+                            });
+                        }
+                        eduquizdata.Questions[slideFocus - 1].TypeQuestion = typeQuestionFocus;
+                        // Xóa menu và gỡ class focused
+                        chooseQuestion.removeClass('focused');
+                        $('#menuTypeQuiz').remove();
+                        renderWrapperAnswer(selectedType);
+                    });
+                }
+            });
+
+            // Ẩn menu khi click ra ngoài
+            $(document).on('click', function (event) {
+                if (!$(event.target).closest('#choosequestion, #menuTypeQuiz').length) {
+                    chooseQuestion.removeClass('focused');
+                    $('#menuTypeQuiz').remove();
+                }
+            });
+        }
+        handleMenuQuizVisibility();
+        //END ẨN HIỆN MENU CHỌN CÂU HỎI
+
+        // Start ẩn hiện menu time
+        function handleShowHideMenuTime() {
+            const timeOptions = [
+                { label: "5 giây", value: 5 },
+                { label: "10 giây", value: 10 },
+                { label: "20 giây", value: 20 },
+                { label: "30 giây", value: 30 },
+                { label: "1 phút", value: 60 },
+                { label: "1 phút 30 giây", value: 90 },
+                { label: "2 phút", value: 120 },
+                { label: "3 phút", value: 180 },
+                { label: "4 phút", value: 240 }
+            ];
+
+            function renderMenu(selectedTime) {
+                let menuItems = '';
+                timeOptions.forEach(option => {
+                    const checkIcon = option.value === selectedTime ? '<span><i class="fa fa-check" aria-hidden="true"></i></span>' : '';
+                    menuItems += `
+                        <div class="item_option-content" data-time="${option.value}">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span>${option.label}</span>
+                                ${checkIcon}
+                            </div>
+                        </div>`;
+                });
+
+                return `<div id="menutime" class="menu_WrapperContent" style="width:100%;">
+                            <div class="menu_WrapperContent-List">${menuItems}</div>
+                        </div>`;
+            }
+
+            $('#input-time').on('focus', function () {
+                $('#timelimit').addClass('focused');
+                // Luôn luôn xóa menu cũ và tạo mới
+                $('#menutime').remove();
+
+                // Sử dụng attr để lấy giá trị data-time hiện tại
+                const currentTime = $('#timelimit').attr('data-time');
+                $('#menutime_wrapper').append(renderMenu(parseInt(currentTime)));
+
+                // Thêm sự kiện click cho các mục trong menu
+                $('#menutime .item_option-content').on('click', function () {
+                    const selectedTime = $(this).data('time');
+                    const selectedLabel = $(this).find('span:first').text();
+                    $('#timelimit').attr('data-time', selectedTime).find('label').text(selectedLabel);
+                    timeQuestionFocus = selectedTime;
+                    $(`#question-${slideFocus} .styles_Countdown`).text(timeQuestionFocus);
+                    if (eduquizdata.Questions.length != 0) {
+                        eduquizdata.Questions[slideFocus - 1].Time = timeQuestionFocus;
+                    } 
+                    $('#timelimit').removeClass('focused');
+                    $('#menutime').remove();
+                });
+            });
+
+            // Xử lý sự kiện blur để xóa menu
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#timelimit, #menutime').length) {
+                    $('#timelimit').removeClass('focused');
+                    $('#menutime').remove();
+                }
+            });
+        }
+        handleShowHideMenuTime();
+        //End ẩn hiện menu time
+
+        // Start ẩn hiện menu custom
+        function handleShowHideMenuCustom() {
+            const pointOptions = [
+                { value: 1, label: "Tiêu chuẩn", description: "Trao giải cho những câu trả lời đúng với số điểm thông thường." },
+                { value: 2, label: "Nhân đôi", description: "Trả lời đúng sẽ được gấp đôi số điểm." },
+                { value: 0, label: "Không cho điểm", description: "Giảm mức độ quan trọng của câu hỏi và trừ điểm." }
+            ];
+            const answerOptions = [
+                { value: 1, label: "Chọn một", description: "Người chơi chỉ có thể chọn một trong các câu trả lời" },
+                { value: 2, label: "Chọn nhiều", description: "Người chơi có thể chọn nhiều câu trả lời trước khi gửi" }
+            ]
+
+            function renderMenuType(options, selectedValue,type) {
+                const checkmenu = type === 1 ? "menupoint" : "menuanswer";
+                return `
+                            <div id="${checkmenu}" class="menu_WrapperContent" style="width:100%;">
+                        <div class="menu_WrapperContent-List">
+                            ${options.map(option => {
+                    const checkIconUpgrade = type === 2 && option.value === 2 ? `<div style="right:-22px;top:2px;" class="icon__Upgrade">
+                                                                <span style="margin: 3px 0 0 0;"><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    </div>` : ""
+                    const checkIcon = option.value === selectedValue ? '<span><i class="fa fa-check" aria-hidden="true"></i></span>' : '';
+                    return `
+                                    <div class="item_option-content" data-value="${option.value}" data-label="${option.label}" data-description="${option.description}">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                                            <span>${option.label} ${checkIconUpgrade}</span>
+                                            ${checkIcon}
+                                        </div>
+                                        <div style="font-weight:400;font-size:12px">${option.description}</div>
+                                    </div>
+                                `;
+                }).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            $('#input-point').on('focus', function () {
+                $('#pointlimit').addClass('focused');
+                $('#menupoint').remove();
+                const currentPoint = $('#pointlimit').attr('data-point');
+
+                $('#menupoint_wrapper').append(renderMenuType(pointOptions, parseInt(currentPoint),1));
+
+                    $('#menupoint .item_option-content').on('click', function () {
+                        const selectedPoint = $(this).data('value');
+                        const selectedLabel = $(this).data('label');
+                        const selectedDescription = $(this).data('description');
+                        pointsMultiplierFocus = selectedPoint;
+                        if (eduquizdata.Questions.length != 0) {
+                            eduquizdata.Questions[slideFocus - 1].PointsMultiplier = selectedPoint;
+                        } 
+                        $('#pointlimit').attr('data-point', selectedPoint);
+                        $('#pointlimit').find('label').text(selectedLabel);
+
+                        $('#pointlimit').removeClass('focused');
+                        $('#menupoint').remove();
+                    });
+            });
+
+            $('#input-answer').on('focus', function () {
+                $('#answerlimit').addClass('focused');
+                $('#menuanswer').remove();
+                const currentAnswer = $('#answerlimit').attr('data-answer');
+
+                $('#menuanswer_wrapper').append(renderMenuType(answerOptions, parseInt(currentAnswer), 2));
+
+                $('#menuanswer .item_option-content').on('click', function () {
+                    const selectedAnswer = $(this).data('value');
+                    const selectedLabel = $(this).data('label');
+                    const selectedDescription = $(this).data('description');
+                    optionAnswerFocus = selectedAnswer;
+                    if (eduquizdata.Questions.length != 0) {
+                        eduquizdata.Questions[slideFocus - 1].TypeAnswer = optionAnswerFocus;
+                    } 
+                    $('#answerlimit').attr('data-answer', selectedAnswer);
+                    $('#answerlimit').find('label').text(selectedLabel);
+
+                    $('#answerlimit').removeClass('focused');
+                    $('#menuanswer').remove();
+                });
+            });
+
+            $(document).on('click', function (event) {
+                if (!$(event.target).closest('#pointlimit, #menupoint').length) {
+                    $('#pointlimit').removeClass('focused');
+                    $('#menupoint').remove();
+                }
+            });
+
+            $(document).on('click', function (event) {
+                if (!$(event.target).closest('#answerlimit, #menuanswer').length) {
+                    $('#answerlimit').removeClass('focused');
+                    $('#menuanswer').remove();
+                }
+            });
+        }
+
+        handleShowHideMenuCustom();
+        //End ẩn hiện menu custom
+
+        document.querySelector('#input-answer').addEventListener('focus', function () {
+            document.querySelector('#answerlimit').classList.add('focused');
+        });
+
+        document.querySelector('#input-answer').addEventListener('blur', function () {
+            document.querySelector('#answerlimit').classList.remove('focused');
+        })
+    </script>
 </body>
 </html>

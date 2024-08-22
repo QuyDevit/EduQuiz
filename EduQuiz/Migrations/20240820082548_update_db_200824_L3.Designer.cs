@@ -4,6 +4,7 @@ using EduQuiz.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduQuiz.Migrations
 {
     [DbContext(typeof(EduQuizDBContext))]
-    partial class EduQuizDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240820082548_update_db_200824_L3")]
+    partial class update_db_200824_L3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,9 +243,6 @@ namespace EduQuiz.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("Time")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TypeAnswer")
                         .HasColumnType("int");
 
                     b.Property<string>("TypeQuestion")

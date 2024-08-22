@@ -12,6 +12,25 @@ namespace EduQuiz.DatabaseContext
         public DbSet<WorkplaceType> WorkplaceTypes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Interest> Interests { get; set; }
+        public DbSet<Folder> Folders { get; set; }
+        public DbSet<Music> Musics { get; set; }
+        public DbSet<Models.EF.EduQuiz> EduQuizs { get; set; }
+        public DbSet<Theme> Themes { get; set; }
+        public DbSet<Choice> Choices { get; set; }
+        public DbSet<Question> Questions { get; set; }
 
+        // Cấu hình mô hình khi tạo bảng và quan hệ
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Cấu hình quan hệ cho bảng Folder
+            modelBuilder.Entity<Folder>()
+                .HasOne(f => f.ParentFolder)
+                .WithMany(f => f.ChildFolders)
+                .HasForeignKey(f => f.ParentFolderId)
+                .OnDelete(DeleteBehavior.Restrict); // Tránh xóa đệ quy
+
+        }
     }
 }

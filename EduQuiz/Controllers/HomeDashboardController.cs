@@ -15,6 +15,7 @@ namespace EduQuiz.Controllers
         {
             _context = context;
         }
+        [Route("")]
         public async Task <IActionResult> Index()
         {
             var getsession = HttpContext.Session.GetString("_USERCURRENT");
@@ -27,10 +28,8 @@ namespace EduQuiz.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
-        public  IActionResult Tabs()
-        {
-            return View();
-        }
+
+        [Route("user/profile")]
         public async Task<IActionResult> SettingInfo()
         {
             var getsession = HttpContext.Session.GetString("_USERCURRENT");
@@ -48,6 +47,7 @@ namespace EduQuiz.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+        [Route("user/settings")]
         public async Task<IActionResult> Privacy()
         {
             var getsession = HttpContext.Session.GetString("_USERCURRENT");
@@ -63,6 +63,7 @@ namespace EduQuiz.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+        [Route("user/change-password")]
         public async Task<IActionResult> ChangePassword()
         {
             var getsession = HttpContext.Session.GetString("_USERCURRENT");
@@ -78,6 +79,7 @@ namespace EduQuiz.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+        [Route("user/billing")]
         public async Task<IActionResult> Billing()
         {
             var getsession = HttpContext.Session.GetString("_USERCURRENT");

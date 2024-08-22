@@ -42,6 +42,15 @@ app.UseRouting();
 // Thêm middleware session
 app.UseSession();
 
+app.UseStatusCodePages(async context =>
+{
+    if (context.HttpContext.Response.StatusCode == 404)
+    {
+        context.HttpContext.Response.Redirect("/error404");
+    }
+    await Task.CompletedTask;
+});
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

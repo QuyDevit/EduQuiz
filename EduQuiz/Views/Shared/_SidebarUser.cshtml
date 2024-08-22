@@ -14,7 +14,7 @@
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
-            <li class="@(currentPath.StartsWith("/HomeDashboard") && (currentPath == "/HomeDashboard" || currentPath.Contains("/HomeDashboard/Index")) ? "active" : "")">
+            <li class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/" ? "active" : "")">
                 <a href="@Url.Action("Index","HomeDashboard")">
                     <i class="nc-icon nc-bank"></i>
                     <p>Trang chủ</p>
