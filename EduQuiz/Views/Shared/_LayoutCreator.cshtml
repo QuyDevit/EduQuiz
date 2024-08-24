@@ -93,7 +93,8 @@
                         <div class="styles-detail__Content">
                             <input id="input-file" class="d-none" type="file" name="name" value="" accept="image/*" />
                             <div class="styles-detail__ContentWrapper">
-                                <div class="styles-detail__ContentWrapper-Image">       
+                                <div class="styles-detail__ContentWrapper-Image">
+                                    <span id="removeImg" class="d-none"><i class="fa fa-times" aria-hidden="true"></i></span>
                                     <div class="styles-component__ContentWrapperImage">
                                         <div class="wrapper-Image_Info"> 
                                             <div class="wrapper-Image_Info-block">
@@ -450,10 +451,10 @@
                         </div>
                         
                     </div>
-                    <div class="styles__StaticButtons">
+                  @*   <div class="styles__StaticButtons">
                         <button type="button" class="button-flat" style="background-color:#e21b3c">Xóa bỏ</button>
                         <button type="button" class="button-flat" style="background-color:#26890c">Nhân bản</button>
-                    </div>
+                    </div> *@
                 </div>
             </div>
         </main>
@@ -477,23 +478,22 @@
         var arrtheme = [];
         var slideFocus = 1;
         var optionAnswerFocus = 1;
-        var typeQuestionFocus = 'quiz';
+        var typeQuestionFocus = "quiz";
         var answerChoiceFocus = 1;
         var timeQuestionFocus = 20;
         var pointsMultiplierFocus = 1;
-        var imgFocus = '';
-        var imgEffect = '';
-        var lastContentQuestion = '';
+        var imgFocus = "";
+        var imgEffect = "";
+        var lastContentQuestion = "";
         var lastContentAnswer = [
-            { content: '' },
-            { content: '' },
-            { content: '' },
-            { content: '' },
-            { content: '' },
-            { content: '' }
+            { content: "" },
+            { content: "" },
+            { content: "" },
+            { content: "" },
+            { content: "" },
+            { content: "" }
         ]
         var dataQuestion = {
-            EduQuizId: quizId,
             TypeQuestion: typeQuestionFocus,
             TypeAnswer: optionAnswerFocus,
             QuestionText: lastContentQuestion,
@@ -506,9 +506,9 @@
         var eduquizdata = {
             Uuid: quizId,
             UserId : userId,
-            Title:'',
-            Description:'',
-            ImageCover:'',
+            Title:"",
+            Description:"",
+            ImageCover:"",
             Type: 0,
             Visibility: true,
             ThemeId: 1,
@@ -516,6 +516,52 @@
             Questions: [dataQuestion]
         };
         var dataQuestionFocus = eduquizdata.Questions[0];
+
+        var questionIdCounter = 1; // Biến đếm ID toàn cục
+
+        if (dataquizedit == null) {
+            createQuestion('quiz');
+            renderWrapperAnswer("quiz")
+        } else {
+            eduquizdata = dataquizedit;
+            createQuestion('quiz', eduquizdata.Questions);
+            requestAnimationFrame(() => {
+                focusQuestion(1); 
+            });
+            const imgsrc = eduquizdata.Questions[0].Image;
+            if (imgsrc != "") {
+                $(".styles-detail__ContentWrapper-Image").css({
+                    "background": `url(${imgsrc}) center center / cover no-repeat`,
+                    "background-color": "rgb(242, 242, 242)" // Fallback color
+                });
+                $(".image-with-effect").css("background-image", `url(${imgsrc})`);
+                $("#wrapperImageEffect").removeClass('d-none');
+                $(".wrapper-Image_Info-block").hide();
+            }
+            $("#question-text-field").text(eduquizdata.Questions[0].QuestionText)
+            questionIdCounter = eduquizdata.Questions.length;
+            renderWrapperAnswer(eduquizdata.Questions[0].TypeQuestion, eduquizdata.Questions[0])
+        }
+        
+        function autoSaveEduQuiz(){
+            var getdataEduQuiz = JSON.stringify(eduquizdata);
+            return $.ajax({
+                url: '@Url.Action("AutoSaveEduQuiz", "Creator")',
+                type: 'POST',
+                data: getdataEduQuiz,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json'
+            }).done(function (response) {
+                if (response.result === "PASS") {
+                    eduquizdata = JSON.parse(response.data);
+                    console.log(eduquizdata);
+                } else {
+                    console.error('Auto-save failed');
+                }
+            }).fail(function () {
+                console.error('Ajax request failed');
+            });
+        }
         //Lưu ảnh câu hỏi
         function saveImgQuestion(formData) {
             return $.ajax({
@@ -534,12 +580,13 @@
                 lastContentQuestion = content;
                 $(`#question-${slideFocus} .styles_Question-title`).text(content)
                 eduquizdata.Questions[slideFocus - 1].QuestionText = content;
+                autoSaveEduQuiz();
 
             } else {
                 console.log("trùng")
             }
             
-            console.log('data đã thay đổi:', eduquizdata);
+            // console.log('data đã thay đổi:', eduquizdata);
         });
 
         async function getAlldataStarted() {
@@ -582,102 +629,106 @@
                 }
             }
         }
-        function handleSildeQuesion(){
-            let questionIdCounter = 1; // Biến đếm ID toàn cục
+        // Hàm để lấy tiêu đề mặc định dựa trên loại câu hỏi
+        function getDefaultTitle(type) {
+            switch (type) {
+                case 'quiz':
+                    return 'Câu đố';
+                case 'true_false':
+                    return 'Đúng hay sai';
+                case 'input_answer':
+                    return 'Nhập đáp án';
+                default:
+                    return 'Câu hỏi';
+            }
+        }
 
-            // Hàm tạo câu hỏi mới
-            function createQuestion(type) {
-                const questionId = getNextQuestionId();
-                let title;
-                let answersHtml;
-                // Xác định tiêu đề dựa trên loại câu hỏi
-                switch (type) {
-                    case 'quiz':
-                        title = 'Câu đố';
-                        answersHtml = `
-                            <div class="styles_Answers">
-                                <div class="answers-block"></div>
-                                <div class="answers-block"></div>
-                                <div class="answers-block"></div>
-                                <div class="answers-block"></div>
-                            </div>
+        // Hàm để lấy HTML đáp án mặc định dựa trên loại câu hỏi
+        function getDefaultAnswersHtml(type, dataanswer = null,typeedit = null) {
+            let answersHtml = ''; 
+            let typequestion = typeedit ? typeedit : type;
+            switch (typequestion) {
+                case 'quiz':
+                    for (let i = 0; i < 4; i++) {
+                        let isChosen = dataanswer && dataanswer.some(answer => answer.DisplayOrder === i && answer.IsCorrect);
+                        answersHtml += `
+                            <div class="answers-block${isChosen ? ' choose' : ''}" data-orderanswer="${i}"></div>
                         `;
-                        break;
-                    case 'true_false':
-                        title = 'Đúng hay sai';
-                        answersHtml = `
-                            <div class="styles_Answers">
-                                <div class="answers-block" style="height: 16px;"></div>
-                                <div class="answers-block" style="height: 16px;"></div>
-                            </div>
+                    }
+                    break;
+                case 'true_false':
+                    for (let i = 0; i < 2; i++) {
+                        let isChosen = dataanswer && dataanswer.some(answer => answer.DisplayOrder === i && answer.IsCorrect);
+                        answersHtml += `
+                            <div class="answers-block${isChosen ? ' choose' : ''}" data-orderanswer="${i}" style="height: 16px;"></div>
                         `;
-                        break;
-                    case 'input_answer':
-                        title = 'Nhập đáp án';
-                        answersHtml = `
-                            <div class="styles_Answers" style="
-                                flex-direction: column;
-                                align-items: center;
-                            ">
-                                <div class="answers-block"></div>
-                                <div class="answers-block"></div>
-                                <div class="answers-block"></div>
-                            </div>
+                    }
+                    break;
+                case 'input_answer':
+                    for (let i = 0; i < 3; i++) {
+                        let isChosen = dataanswer && dataanswer.some(answer => answer.DisplayOrder === i && answer.IsCorrect);
+                        answersHtml += `
+                            <div class="answers-block${isChosen ? ' choose' : ''}" data-orderanswer="${i}"></div>
                         `;
-                        break;
-                    default:
-                        title = 'Câu hỏi';
-                        answersHtml = `
-                            <div class="styles_Answers">
-                                <div class="answers-block"></div>
-                                <div class="answers-block"></div>
-                                <div class="answers-block"></div>
-                                <div class="answers-block"></div>
-                            </div>
+                    }
+                    break;
+                default:
+                    for (let i = 0; i < 4; i++) {
+                        answersHtml += `
+                            <div class="answers-block"></div>
                         `;
-                        break;
-                }
+                    }
+                    break;
+            }
 
-                // Mặc định là không có các class focus nếu không phải là slide đầu tiên
-                const isInitialSlide = questionId === 1;
+            return typeedit ? answersHtml : `<div class="styles_Answers">${answersHtml}</div>`;
+        }
+
+        // Hàm tạo câu hỏi mới
+        function createQuestion(type, datalistedit = null) {
+            const questionId = getNextQuestionId();
+
+            // Function to create and append question elements
+            function appendQuestionElement(questionId, type, title, answersHtml, isInitialSlide, questionText = 'Câu hỏi', time = 20, image = '') {
                 const focusClassesBlock = isInitialSlide ? 'focus-bg' : '';
                 const focusClassesQuestion = isInitialSlide ? 'focus_Question' : '';
                 const focusClassesButton = isInitialSlide ? 'focus-button' : '';
+                const urlImg = image === "" ? "" : `style="background-image: url(${image});"`;
 
                 const questionElement = `
-                <div class="draggableItem" id="question-${questionId}" data-typequiz="${type}" data-id="${questionId}">
-                    <div class="draggableItem-block ${focusClassesBlock}">
-                        <div class="draggableItem-block_wrapper">
-                            <span class="draggableItem-block_wrapper-count">${questionId}</span>
-                            <span class="draggableItem-block_wrapper-title">${title}</span>
-                        </div>
-                        <div class="draggableItem-block_wrapper-content">
-                            <div class="draggableItem-block_wrapper-content_Quiz ${focusClassesQuestion}">
-                                <div class="styles_Question">
-                                    <span class="styles_Question-title">Câu hỏi</span>
-                                    <div class="styles_centerSection">
-                                        <span class="styles_Countdown">20</span>
-                                        <div class="styles_ImageWrapper">
-                                            <div class="image-Wrapper">
-                                                <div class="image-Theme"></div>
+                    <div class="draggableItem" id="question-${questionId}" data-typequiz="${type}" data-id="${questionId}">
+                        <div class="draggableItem-block ${focusClassesBlock}">
+                            <div class="draggableItem-block_wrapper">
+                                <span class="draggableItem-block_wrapper-count">${questionId}</span>
+                                <span class="draggableItem-block_wrapper-title">${title}</span>
+                            </div>
+                            <div class="draggableItem-block_wrapper-content">
+                                <div class="draggableItem-block_wrapper-content_Quiz ${focusClassesQuestion}">
+                                    <div class="styles_Question">
+                                        <span class="styles_Question-title">${questionText}</span>
+                                        <div class="styles_centerSection">
+                                            <span class="styles_Countdown">${time}</span>
+                                            <div class="styles_ImageWrapper">
+                                                <div class="image-Wrapper">
+                                                     <div class="image-Theme" ${urlImg}></div>
+                                                </div>
                                             </div>
                                         </div>
+                                        ${answersHtml}
                                     </div>
-                                    ${answersHtml}
                                 </div>
-                            </div>
-                            <div class="button-block_Quiz ${focusClassesButton}">
-                                <span>
-                                    <button class="duplicate-button"><i class="fa fa-clone" aria-hidden="true"></i></button>
-                                </span>
-                                <span>
-                                    <button class="delete-button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                </span>
+                                <div class="button-block_Quiz ${focusClassesButton}">
+                                    <span>
+                                        <button class="duplicate-button"><i class="fa fa-clone" aria-hidden="true"></i></button>
+                                    </span>
+                                    <span>
+                                        <button class="delete-button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
 
                 $('#questions-container').append(questionElement);
 
@@ -700,261 +751,288 @@
                 updateQuestionNumbers();
             }
 
-            // Hàm focus vào câu hỏi
-            function focusQuestion(questionId) {
-                // Xóa focus từ tất cả các câu hỏi khác
-                $('#questions-container .draggableItem-block').removeClass('focus-bg');
-                $('#questions-container .draggableItem-block_wrapper-content_Quiz').removeClass('focus_Question');
-                $('#questions-container .button-block_Quiz').removeClass('focus-button');
-                // Thêm focus vào các phần tử của câu hỏi được click
-                $(`#question-${questionId} .draggableItem-block`).addClass('focus-bg');
-                $(`#question-${questionId} .draggableItem-block_wrapper-content_Quiz`).addClass('focus_Question');
-                $(`#question-${questionId} .button-block_Quiz`).addClass('focus-button');
+            if (datalistedit == null) {
+                let title = getDefaultTitle(type);
+                let answersHtml = getDefaultAnswersHtml(type);
+                appendQuestionElement(questionId, type, title, answersHtml, questionId === 1);
+            } else {
+                // console.log(datalistedit);
+                datalistedit.forEach((item, index) => {
+                    let title = getDefaultTitle(item.TypeQuestion);
+                    let answersHtml = getDefaultAnswersHtml(item.TypeQuestion, item.Choices);
+                    appendQuestionElement(index + 1, item.TypeQuestion, title, answersHtml, index === 0, item.QuestionText, item.Time, item.Image);
+                });
             }
+        }
 
-            // Hàm sao chép câu hỏi
-            function duplicateQuestion(questionId) {
-                const originalQuestion = $(`#question-${questionId}`);
-                const clone = originalQuestion.clone();
-                const newId = getNextQuestionId();
-                clone.attr('id', `question-${newId}`);
-                clone.attr('data-id', newId);
+        // Hàm focus vào câu hỏi
+        function focusQuestion(questionId) {
+            // Xóa focus từ tất cả các câu hỏi khác
+            $('#questions-container .draggableItem-block').removeClass('focus-bg');
+            $('#questions-container .draggableItem-block_wrapper-content_Quiz').removeClass('focus_Question');
+            $('#questions-container .button-block_Quiz').removeClass('focus-button');
+            // Thêm focus vào các phần tử của câu hỏi được click
+            $(`#question-${questionId} .draggableItem-block`).addClass('focus-bg');
+            $(`#question-${questionId} .draggableItem-block_wrapper-content_Quiz`).addClass('focus_Question');
+            $(`#question-${questionId} .button-block_Quiz`).addClass('focus-button');
+        }
 
-                // Loại bỏ focus khi sao chép
-                clone.find('.draggableItem-block').removeClass('focus-bg');
-                clone.find('.draggableItem-block_wrapper-content_Quiz').removeClass('focus_Question');
-                clone.find('.button-block_Quiz').removeClass('focus-button');
+        // Hàm sao chép câu hỏi
+        function duplicateQuestion(questionId) {
+            const originalQuestion = $(`#question-${questionId}`);
+            const clone = originalQuestion.clone();
+            const newId = getNextQuestionId();
+            clone.attr('id', `question-${newId}`);
+            clone.attr('data-id', newId);
 
-                clone.find('.draggableItem-block_wrapper-count').text(newId);
+            // Loại bỏ focus khi sao chép
+            clone.find('.draggableItem-block').removeClass('focus-bg');
+            clone.find('.draggableItem-block_wrapper-content_Quiz').removeClass('focus_Question');
+            clone.find('.button-block_Quiz').removeClass('focus-button');
 
-                // Thêm phần tử sao chép ngay sau phần tử gốc
-                originalQuestion.after(clone);
+            clone.find('.draggableItem-block_wrapper-count').text(newId);
 
-                // Gán sự kiện cho các nút trong câu hỏi sao chép
-                clone.find('.duplicate-button').on('click', function (event) {
+            // Thêm phần tử sao chép ngay sau phần tử gốc
+            originalQuestion.after(clone);
+
+            // Gán sự kiện cho các nút trong câu hỏi sao chép
+            clone.find('.duplicate-button').on('click', function (event) {
+                event.stopPropagation();
+                duplicateQuestion(newId);
+            });
+
+            clone.find('.delete-button').on('click', function (event) {
+                event.stopPropagation();
+                deleteQuestion(newId);
+            });
+
+            // Gán sự kiện click để focus vào câu hỏi sao chép
+            clone.on('click', function () {
+                focusQuestion(newId);
+            });
+
+            updateQuestionNumbers();
+
+            const originalQuestionData = eduquizdata.Questions[questionId - 1];
+
+            let clonedQuestion = JSON.parse(JSON.stringify(originalQuestionData));
+            clonedQuestion.Id = 0;
+            eduquizdata.Questions.splice(questionId, 0, clonedQuestion);
+            console.log(eduquizdata)
+            autoSaveEduQuiz()
+            
+        }
+
+        // Hàm xóa câu hỏi
+        function deleteQuestion(questionId) {
+            // Kiểm tra xem còn lại bao nhiêu câu hỏi trong danh sách
+            if ($('#questions-container .draggableItem').length <= 1) {
+                Swal.fire({
+                    title: "Không thể xóa!",
+                    text: "Danh sách không thể còn lại ít hơn một câu hỏi.",
+                    icon: "error",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK"
+                });
+                return; // Dừng lại nếu chỉ còn một câu hỏi
+            }
+            Swal.fire({
+                title: "Xác nhận?",
+                text: "Bạn không thể khôi phục hành động này!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Hủy bỏ",
+                confirmButtonText:
+                    "Xóa"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const elementToDelete = $(`#question-${questionId}`);
+                    const prevElement = elementToDelete.prev('.draggableItem');
+                    const nextElement = elementToDelete.next('.draggableItem');
+                    elementToDelete.remove();
+                    const indexToRemove = questionId - 1; // Giả sử questionId là chỉ số (1-based index)
+
+                    // Kiểm tra chỉ số hợp lệ
+                    if (indexToRemove >= 0 && indexToRemove < eduquizdata.Questions.length) {
+                        // Xóa phần tử khỏi mảng
+                        eduquizdata.Questions.splice(indexToRemove, 1);
+                        // console.log(eduquizdata)
+                    }
+                    updateQuestionNumbers();
+                    // Đặt focus vào phần tử kế tiếp hoặc trước đó
+                    if (nextElement.length > 0) {
+                        slideFocus = parseInt(nextElement.attr('data-id'));
+                        focusQuestion(nextElement.attr('data-id'));
+                        nextElement.click();
+                    } else if (prevElement.length > 0) {
+                        slideFocus = parseInt(prevElement.attr('data-id'));
+                        focusQuestion(prevElement.attr('data-id'));
+                        prevElement.click();
+                    }
+                    autoSaveEduQuiz()
+                }
+            });
+        }
+
+        // Cập nhật số thứ tự các câu hỏi
+        function updateQuestionNumbers() {
+            $('#questions-container .draggableItem').each(function (index) {
+                const newId = index + 1;
+                $(this).find('.draggableItem-block_wrapper-count').text(newId);
+                $(this).attr('id', `question-${newId}`);
+                $(this).attr('data-id', newId);
+
+                // Cập nhật các sự kiện cho nút sao chép và xóa sau khi cập nhật số thứ tự
+                $(this).find('.duplicate-button').off('click').on('click', function (event) {
                     event.stopPropagation();
                     duplicateQuestion(newId);
                 });
 
-                clone.find('.delete-button').on('click', function (event) {
+                $(this).find('.delete-button').off('click').on('click', function (event) {
                     event.stopPropagation();
                     deleteQuestion(newId);
                 });
 
-                // Gán sự kiện click để focus vào câu hỏi sao chép
-                clone.on('click', function () {
+                // Gán lại sự kiện click để focus vào câu hỏi
+                $(this).off('click').on('click', function () {
+                    slideFocus = parseInt($(this).attr("data-id"))
+                    const originalQuestionData = eduquizdata.Questions[slideFocus - 1];
+
+                    renderWrapperAnswer(originalQuestionData.TypeQuestion, originalQuestionData);
+                    optionAnswerFocus = originalQuestionData.TypeAnswer;
+                    typeQuestionFocus = originalQuestionData.TypeQuestion;
+                    timeQuestionFocus = originalQuestionData.Time;
+                    pointsMultiplierFocus = originalQuestionData.PointsMultiplier;
+                    imgFocus = originalQuestionData.Image;
+                    imgEffect = originalQuestionData.ImageEffect;
+                    lastContentQuestion = originalQuestionData.QuestionText;
+                    lastContentAnswer = lastContentAnswer.map(() => ({ content: "" }));
+
+                    originalQuestionData.Choices.forEach(item => {
+                        lastContentAnswer[item.DisplayOrder].content = item.Answer;
+                    });
+
+                    $(`#question-text-field`).text(lastContentQuestion == "" ? "" : lastContentQuestion)
+                    if (imgFocus != "") {
+                        $(".styles-detail__ContentWrapper-Image").css({
+                            "background": `url(${imgFocus}) center center / cover no-repeat`,
+                            "background-color": "rgb(242, 242, 242)" // Fallback color
+                        });
+                        $(".image-with-effect").css("background-image", `url(${imgFocus})`);
+                        $("#wrapperImageEffect").removeClass('d-none');
+                        $(".wrapper-Image_Info-block").hide()
+                    } else {
+                        $(".styles-detail__ContentWrapper-Image").removeAttr("style");
+                        $(".image-with-effect").removeAttr("style");
+                        $("#wrapperImageEffect").addClass('d-none');
+                        $(".wrapper-Image_Info-block").show()
+                    }
+                    let title;
+                    let srcimg;
+                    // Xác định tiêu đề dựa trên loại câu hỏi
+                    switch (typeQuestionFocus) {
+                        case 'quiz':
+                            title = 'Câu hỏi';
+                            srcimg = '/src/img/logo-quiz.jpg'
+                            break;
+                        case 'true_false':
+                            title = 'Đúng hoặc sai';
+                            srcimg = '/src/img/logo-true_false.jpg'
+                            break;
+                        case 'input_answer':
+                            title = 'Nhập đáp án';
+                            srcimg = '/src/img/logo-type-quiz.jpg'
+                            break;
+                        default:
+                            title = 'Câu hỏi';
+                            srcimg = '/src/img/logo-quiz.jpg'
+                            break;
+                    }
+                    const chooseQuestion = $('#choosequestion');
+                    chooseQuestion.attr('data-typequiz', typeQuestionFocus);
+                    chooseQuestion.find('label').text(title);
+                    chooseQuestion.find('.SingleImageWrapper img').attr('src', srcimg);
+
+                    $('#timelimit').attr('data-time', timeQuestionFocus).find('label').text(formatTime(timeQuestionFocus));
+                    $('#pointlimit').attr('data-point', pointsMultiplierFocus);
+                    $('#pointlimit').find('label').text(function () {
+                        switch (pointsMultiplierFocus) {
+                            case 0:
+                                return "Không cho điểm";
+                            case 1:
+                                return "Tiêu chuẩn";
+                            case 2:
+                                return "Nhân đôi";
+                            default:
+                                return ""; // hoặc một giá trị mặc định khác nếu cần
+                        }
+                    });
+                    // Loại bỏ lớp 'focused' khỏi tất cả các phần tử
+                    $('.styles__LayoutsImage .style__StyledImageEffectButton').removeClass('focused');
+                    $('.styles__LayoutsImage .StyledImageEffectButton_Title').removeClass('focused');
+                    applyGridRevealEffect(0, timeQuestionFocus);
+
+                    $('.styles__LayoutsImage .style__StyledImageEffectButton').each(function () {
+                        var effectdata = $(this).attr("data-effect");
+                        if (effectdata == imgEffect) {
+                            $(this).addClass("focused");
+                            $(this).find('.StyledImageEffectButton_Title').addClass('focused');
+                        }
+                    });
+
+                    // console.log(originalQuestionData)
                     focusQuestion(newId);
                 });
-    
-                updateQuestionNumbers();
-
-                const originalQuestionData = eduquizdata.Questions[questionId - 1];
-
-                const clonedQuestion = JSON.parse(JSON.stringify(originalQuestionData));
-                eduquizdata.Questions.splice(questionId, 0, clonedQuestion);
-            }
-
-            // Hàm xóa câu hỏi
-            function deleteQuestion(questionId) {
-                // Kiểm tra xem còn lại bao nhiêu câu hỏi trong danh sách
-                if ($('#questions-container .draggableItem').length <= 1) {
-                    Swal.fire({
-                        title: "Không thể xóa!",
-                        text: "Danh sách không thể còn lại ít hơn một câu hỏi.",
-                        icon: "error",
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "OK"
-                    });
-                    return; // Dừng lại nếu chỉ còn một câu hỏi
-                }
-                Swal.fire({
-                    title: "Xác nhận?",
-                    text: "Bạn không thể khôi phục hành động này!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    cancelButtonText:"Hủy bỏ",
-                    confirmButtonText:
-                        "Xóa"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const elementToDelete = $(`#question-${questionId}`);
-                        const prevElement = elementToDelete.prev('.draggableItem');
-                        const nextElement = elementToDelete.next('.draggableItem');
-                        elementToDelete.remove();
-                        const indexToRemove = questionId - 1; // Giả sử questionId là chỉ số (1-based index)
-
-                        // Kiểm tra chỉ số hợp lệ
-                        if (indexToRemove >= 0 && indexToRemove < eduquizdata.Questions.length) {
-                            // Xóa phần tử khỏi mảng
-                            eduquizdata.Questions.splice(indexToRemove, 1);
-                            console.log(eduquizdata)
-                        }
-                        updateQuestionNumbers();
-                        // Đặt focus vào phần tử kế tiếp hoặc trước đó
-                        if (nextElement.length > 0) {
-                            slideFocus = parseInt(nextElement.attr('data-id'));
-                            focusQuestion(nextElement.attr('data-id'));
-                        } else if (prevElement.length > 0) {
-                            slideFocus = parseInt(prevElement.attr('data-id'));
-                            focusQuestion(prevElement.attr('data-id'));
-                        }
-                    }
-                });
-            }
-
-            // Cập nhật số thứ tự các câu hỏi
-            function updateQuestionNumbers() {
-                $('#questions-container .draggableItem').each(function (index) {
-                    const newId = index + 1;
-                    $(this).find('.draggableItem-block_wrapper-count').text(newId);
-                    $(this).attr('id', `question-${newId}`);
-                    $(this).attr('data-id', newId);
-
-                    // Cập nhật các sự kiện cho nút sao chép và xóa sau khi cập nhật số thứ tự
-                    $(this).find('.duplicate-button').off('click').on('click', function (event) {
-                        event.stopPropagation();
-                        duplicateQuestion(newId);
-                    });
-
-                    $(this).find('.delete-button').off('click').on('click', function (event) {
-                        event.stopPropagation();
-                        deleteQuestion(newId);
-                    });
-
-                    // Gán lại sự kiện click để focus vào câu hỏi
-                    $(this).off('click').on('click', function () {
-                        slideFocus = parseInt($(this).attr("data-id"))
-                        const originalQuestionData = eduquizdata.Questions[slideFocus - 1];
-
-                        renderWrapperAnswer(originalQuestionData.TypeQuestion, originalQuestionData);
-                        optionAnswerFocus = originalQuestionData.TypeAnswer;
-                        typeQuestionFocus = originalQuestionData.TypeQuestion;
-                        timeQuestionFocus = originalQuestionData.Time;
-                        pointsMultiplierFocus = originalQuestionData.PointsMultiplier;
-                        imgFocus = originalQuestionData.Image;
-                        imgEffect = originalQuestionData.ImageEffect;
-                        lastContentQuestion = originalQuestionData.QuestionText;
-                        lastContentAnswer = lastContentAnswer.map(() => ({ content: '' }));
-
-                        originalQuestionData.Choices.forEach(item => {
-                            lastContentAnswer[item.DisplayOrder].content = item.Answer;
-                        });
-
-                        $(`#question-text-field`).text(lastContentQuestion == "" ? "" : lastContentQuestion)
-                        if (imgFocus != "") { 
-                            $(".styles-detail__ContentWrapper-Image").css({
-                                "background": `url(${imgFocus}) center center / cover no-repeat`,
-                                "background-color": "rgb(242, 242, 242)" // Fallback color
-                            });
-                            $(".image-with-effect").css("background-image", `url(${imgFocus})`);
-                            $("#wrapperImageEffect").removeClass('d-none');
-                            $(".wrapper-Image_Info-block").hide()
-                        } else {
-                            $(".styles-detail__ContentWrapper-Image").removeAttr("style");
-                            $(".image-with-effect").removeAttr("style");
-                            $("#wrapperImageEffect").addClass('d-none');
-                            $(".wrapper-Image_Info-block").show()
-                        }
-                        let title;
-                        let srcimg;
-                        // Xác định tiêu đề dựa trên loại câu hỏi
-                        switch (typeQuestionFocus) {
-                            case 'quiz':
-                                title = 'Câu hỏi';
-                                srcimg = '/src/img/logo-quiz.jpg'
-                                break;
-                            case 'true_false':
-                                title = 'Đúng hoặc sai';
-                                srcimg = '/src/img/logo-true_false.jpg'
-                                break;
-                            case 'input_answer':
-                                title = 'Nhập đáp án';
-                                srcimg = '/src/img/logo-type-quiz.jpg'
-                                break;
-                            default:
-                                title = 'Câu hỏi';
-                                srcimg = '/src/img/logo-quiz.jpg'
-                                break;
-                        }
-                        const chooseQuestion = $('#choosequestion');
-                        chooseQuestion.attr('data-typequiz', typeQuestionFocus);
-                        chooseQuestion.find('label').text(title);
-                        chooseQuestion.find('.SingleImageWrapper img').attr('src', srcimg);
-
-                        $('#timelimit').attr('data-time', timeQuestionFocus).find('label').text(formatTime(timeQuestionFocus));
-                        $('#pointlimit').attr('data-point', pointsMultiplierFocus);
-                        $('#pointlimit').find('label').text(function () {
-                            switch (pointsMultiplierFocus) {
-                                case 0:
-                                    return "Không cho điểm";
-                                case 1:
-                                    return "Tiêu chuẩn";
-                                case 2:
-                                    return "Nhân đôi";
-                                default:
-                                    return ""; // hoặc một giá trị mặc định khác nếu cần
-                            }
-                        });
-                        // Loại bỏ lớp 'focused' khỏi tất cả các phần tử
-                        $('.styles__LayoutsImage .style__StyledImageEffectButton').removeClass('focused');
-
-                        // Thêm lớp 'focused' vào phần tử đầu tiên
-                        $('.styles__LayoutsImage .style__StyledImageEffectButton').first().addClass('focused').click();
-                        console.log(originalQuestionData)
-                        focusQuestion(newId);
-                    });
-                });
-
-                // Cập nhật biến counter để tránh trùng lặp ID
-                questionIdCounter = $('#questions-container .draggableItem').length + 1;
-            }
-
-            // Lấy ID kế tiếp cho câu hỏi mới
-            function getNextQuestionId() {
-                return questionIdCounter++;
-            }
-
-            // Gán sự kiện cho nút thêm câu hỏi
-            $('.create-button__CreateButton').on('click', function () {
-                var type = $(this).attr("data-example"); // Lấy loại câu hỏi từ thuộc tính data-type
-                $("#overlay-question").addClass("d-none");
-                $(".menu-Slide__Wrapper").addClass("d-none");
-                createQuestion(type);
-                var newQuestion = {
-                    EduQuizId: quizId,
-                    TypeQuestion: type,
-                    TypeAnswer: 1,
-                    QuestionText: '',
-                    Time: 20,
-                    PointsMultiplier: 1,
-                    Image: '',
-                    ImageEffect: '',
-                    Choices: []
-                } 
-                if (type === 'true_false'){
-                    // Thêm đáp án 'True'
-                    newQuestion.Choices.push({
-                        Answer: 'True',
-                        IsCorrect: false, 
-                        DisplayOrder: 0
-                    });
-
-                    // Thêm đáp án 'False'
-                    newQuestion.Choices.push({
-                        Answer: 'False',
-                        IsCorrect: false, 
-                        DisplayOrder: 1
-                    });
-                }
-                eduquizdata.Questions.push(newQuestion);
             });
-            createQuestion('quiz');
-            // Khởi tạo số ID cho câu hỏi ban đầu
-            updateQuestionNumbers();
+
+            // Cập nhật biến counter để tránh trùng lặp ID
+            questionIdCounter = $('#questions-container .draggableItem').length + 1;
         }
-        handleSildeQuesion();
+
+        // Lấy ID kế tiếp cho câu hỏi mới
+        function getNextQuestionId() {
+            return questionIdCounter++;
+        }
+
+        // Gán sự kiện cho nút thêm câu hỏi
+        $('.create-button__CreateButton').on('click', function () {
+            var type = $(this).attr("data-example"); // Lấy loại câu hỏi từ thuộc tính data-type
+            $("#overlay-question").addClass("d-none");
+            $(".menu-Slide__Wrapper").addClass("d-none");
+            createQuestion(type);
+            var newQuestion = {
+                TypeQuestion: type,
+                TypeAnswer: 1,
+                QuestionText: "",
+                Time: 20,
+                PointsMultiplier: 1,
+                Image: "",
+                ImageEffect: "",
+                Choices: []
+            }
+            if (type === 'true_false') {
+                // Thêm đáp án 'True'
+                newQuestion.Choices.push({
+                    Answer: 'True',
+                    IsCorrect: false,
+                    DisplayOrder: 0
+                });
+
+                // Thêm đáp án 'False'
+                newQuestion.Choices.push({
+                    Answer: 'False',
+                    IsCorrect: false,
+                    DisplayOrder: 1
+                });
+            }
+            eduquizdata.Questions.push(newQuestion);
+            autoSaveEduQuiz();
+        });
+        // Khởi tạo số ID cho câu hỏi ban đầu
+        updateQuestionNumbers();
+
         //END Xử lý tạo Slide câu hỏi
 
         //Mảng ramdom hiển thị ảnh theo trình tự
@@ -1041,7 +1119,7 @@
                         const choice = sortedChoices.find(c => c.DisplayOrder === i); // Find choice with matching DisplayOrder
                         const card = choice
                             ? createAnswerCard(answerOption[i], choice.Answer, true, true, i)
-                            : createAnswerCard(answerOption[i], '', true, true, i);
+                            : createAnswerCard(answerOption[i], "", true, true, i);
 
                         if (i >= 4 && !hasDisplayOrderGreaterThan4) {
                             card.hide(); // Ẩn đáp án bổ sung nếu không cần hiển thị
@@ -1056,13 +1134,13 @@
                 } else {
                     // Render default 4 answers
                     for (let i = 0; i < 4; i++) {
-                        const card = createAnswerCard(answerOption[i], '', true, true, i);
+                        const card = createAnswerCard(answerOption[i], "", true, true, i);
                         choicesWrapper.append(card);
                     }
 
                     // Create 2 additional answers (hidden initially)
                     for (let i = 4; i < 6; i++) {
-                        const card = createAnswerCard(answerOption[i], '', true, true, i);
+                        const card = createAnswerCard(answerOption[i], "", true, true, i);
                         card.hide(); // Hide additional answers
                         choicesWrapper.append(card);
                     }
@@ -1088,7 +1166,18 @@
                         const extraAnswers = wrapper.find('.styles__ChoicesWrapper').children().slice(4, 6);
                         if (extraAnswers.is(":visible")) {
                             extraAnswers.hide();
-
+                            var choicearr = eduquizdata.Questions[slideFocus - 1].Choices;
+                            
+                                eduquizdata.Questions[slideFocus - 1].Choices = choicearr.filter(item => item.DisplayOrder !== 4 && item.DisplayOrder !== 5);
+                                lastContentAnswer[4].content = "";
+                                lastContentAnswer[5].content = "";
+                                $(".TooltipContent-text-field__input").each(function () {
+                                    var index = parseInt($(this).attr('data-index'), 10);
+                                    if (index === 4 || index === 5) {
+                                        $(this).text(""); // Set the content of contenteditable divs to an empty string
+                                    }
+                                });
+                            autoSaveEduQuiz();
                         } else {
                             extraAnswers.show();
                         }
@@ -1143,8 +1232,8 @@
                 wrapper.append(choicesWrapper);
             }
 
-            function createAnswerCard(option, predefinedText = '', isEditable = true, isEditanswer = true, index) {
-                const contentEditableAttr = isEditable ? 'contenteditable="true"' : '';
+            function createAnswerCard(option, predefinedText = "", isEditable = true, isEditanswer = true, index) {
+                const contentEditableAttr = isEditable ? 'contenteditable="true"' : "";
                 const placeholderText = predefinedText ? predefinedText : 'Đáp án...';
                 const checkAnswerButton = isEditanswer
                     ? `<button class="iconCheck_Answer" data-orderanswer="${index}" style="display: none;"></button>`
@@ -1168,7 +1257,7 @@
                 function updateButtonVisibility() {
                     const inputField = card.find('.TooltipContent-text-field__input');
                     const button = card.find('.iconCheck_Answer');
-                    if (inputField.text().trim() === '') {
+                    if (inputField.text().trim() === "") {
                         button.hide();
                     } else {
                         button.show();
@@ -1184,41 +1273,65 @@
                 card.find('.iconCheck_Answer').on('click', function () {
                     const button = $(this);
                     const checkIcon = button.find('img[src="/src/img/check-answer.svg"]');
-                    var indexOrder = parseInt(button.attr("data-orderanswer"));
+                    var indexOrder = button.attr("data-orderanswer");
                     let currentQuestion = eduquizdata.Questions[slideFocus - 1];
-
-                    let choiceIndex = currentQuestion.Choices.findIndex(choice => choice.DisplayOrder === indexOrder);
+                    let shouldAutoSave = true;  
+                    let choiceIndex = currentQuestion.Choices.findIndex(choice => choice.DisplayOrder === parseInt(indexOrder));
                     if (typeQuestionFocus != "true_false") {
                         if (checkIcon.length > 0) {
 
                             if (choiceIndex !== -1) {
                                 currentQuestion.Choices[choiceIndex].IsCorrect = false;
+                                checkIcon.remove();
+                                button.removeClass('choose-answer');
+                                $(`#question-${slideFocus} .answers-block`).each(function () {
+                                    if ($(this).attr("data-orderanswer") == indexOrder) {
+                                        $(this).removeClass("choose");
+                                    }
+                                });
                             }
-                            checkIcon.remove();
-                            button.removeClass('choose-answer');
+
                         } else {
                             if (choiceIndex !== -1) {
                                 currentQuestion.Choices[choiceIndex].IsCorrect = true;
+                                button.append('<img src="/src/img/check-answer.svg" />');
+                                button.addClass('choose-answer');
+                                $(`#question-${slideFocus} .answers-block`).each(function(){
+                                    if ($(this).attr("data-orderanswer") == indexOrder) {
+                                        $(this).addClass("choose");
+                                    }
+                                });
                             }
-                            button.append('<img src="/src/img/check-answer.svg" />');
-                            button.addClass('choose-answer');
                         }
                     } else {
-                        $(".iconCheck_Answer").each(function () {
-                            $(this).removeClass('choose-answer');
-                            $(this).empty();
+                        if (currentQuestion.Choices[choiceIndex].IsCorrect) {
+                            shouldAutoSave = false; 
+                        } else {
+                            $(".iconCheck_Answer").each(function () {
+                                $(this).removeClass('choose-answer');
+                                $(this).empty();
+                                if (choiceIndex !== -1) {
+                                    currentQuestion.Choices[$(this).attr('data-orderanswer')].IsCorrect = false;
+                                }
+                            });
+                            $(`#question-${slideFocus} .answers-block`).each(function () {
+                                if ($(this).attr("data-orderanswer") != indexOrder) {
+                                    $(this).removeClass("choose");
+                                } else {
+                                    $(this).addClass("choose");
+                                }
+                            });
+                            button.append('<img src="/src/img/check-answer.svg" />');
+                            button.addClass('choose-answer');
                             if (choiceIndex !== -1) {
-                                currentQuestion.Choices[$(this).attr('data-orderanswer')].IsCorrect = false;
+                                currentQuestion.Choices[choiceIndex].IsCorrect = true;
                             }
-                        });
-                        // Check the clicked option
-                        button.append('<img src="/src/img/check-answer.svg" />');
-                        button.addClass('choose-answer');
-                        if (choiceIndex !== -1) {
-                            currentQuestion.Choices[choiceIndex].IsCorrect = true;
                         }
                     }
-                    console.log(eduquizdata);
+                    // Lưu tự động dữ liệu quiz
+                    if (shouldAutoSave) {
+                        autoSaveEduQuiz();
+                    }
                 });
 
                 return card;
@@ -1252,18 +1365,19 @@
                                 } else {
                                     currentQuestion.Choices.push(dataChoice);
                                 }
+                            autoSaveEduQuiz();
                         } else {
                             console.log("Nội dung không thay đổi");
                         }
 
-                        console.log('Dữ liệu đã thay đổi:', eduquizdata);
+                        // console.log('Dữ liệu đã thay đổi:', eduquizdata);
                     });
 
                     $(document).data('eventsAttached', true);
                 }
             }
         }
-        renderWrapperAnswer('quiz')
+        // renderWrapperAnswer('quiz')
         // Mở theme
         $("#btn-theme").click(function () {
             $(".themes-list__Wrapper").removeClass("d-none");
@@ -1335,6 +1449,7 @@
                     eduquizdata.ThemeId = $(this).attr("data-theme")
                     // Thêm class 'default' vào nút hiện tại
                     this.classList.add('default');
+                    autoSaveEduQuiz();
                 });
 
                 if (theme.type === 'free') {
@@ -1438,6 +1553,7 @@
                         $('#choosemusic').removeClass('focused');
                         $('#menu-music').remove();
                     }
+                    autoSaveEduQuiz();
                 });
             });
 
@@ -1511,34 +1627,102 @@
         $(".styles-detail__ContentWrapper-Image").click(function () {
             $("#input-file").click();
         })
+        $("#removeImg").click(function (event) {
+            event.stopPropagation();  
+            alert("ok")
+        });
+        const getViolationReason = (rejectCriteria) => {
+            if (rejectCriteria.includes('porn_moderation')) {
+                return 'Hình ảnh chứa nội dung nhạy cảm không phù hợp.';
+            } else if (rejectCriteria.includes('weapon_moderation')) {
+                return 'Hình ảnh có chứa vũ khí.';
+            } else if (rejectCriteria.includes('gore_moderation')) {
+                return 'Hình ảnh có chứa nội dung bạo lực.';
+            } else {
+                return 'Hình ảnh không được chấp nhận vì lý do không xác định.';
+            }
+        };
+
+        async function analyzeImage(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('userid', userId);
+
+            return $.ajax({
+                url: '@Url.Action("AnalyzeImage", "Creator")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            });
+        }
+
+        async function uploadImage(file) {
+            var formData = new FormData();
+            formData.append('image', file);
+            formData.append('quizid', quizId+"_"+slideFocus);
+            try {
+                const response = await saveImgQuestion(formData);
+                if (response.result == "PASS") {
+                    const timestamp = new Date().getTime();
+                    imgFocus = response.url + "?t=" + timestamp;
+                    // Set background image
+                    $(".styles-detail__ContentWrapper-Image").css({
+                        "background": `url(${imgFocus}) center center / cover no-repeat`,
+                        "background-color": "rgb(242, 242, 242)" // Fallback color
+                    });
+                    $(".image-with-effect").css("background-image", `url(${imgFocus})`);
+                    $("#wrapperImageEffect").removeClass('d-none');
+                    $(`#question-${slideFocus} .image-Theme`).css({
+                        "background": `url(${imgFocus}) center center / cover no-repeat`,
+                    });
+                    eduquizdata.Questions[slideFocus - 1].Image = imgFocus;
+                    eduquizdata.Questions[slideFocus - 1].ImageEffect = "0";
+                }
+            } catch (error) {
+                console.error("Upload failed:", error);
+            }
+            $(".wrapper-Image_Info-block").hide()
+        }
         // Khi chọn ảnh từ input câu hỏi
         $("#input-file").on("change", async function (event) {
             const file = event.target.files[0];
             if (file) {
-                var formData = new FormData();
-                formData.append('image', file);
-                formData.append('quizid', quizId+"_"+slideFocus);
-                try {
-                    const response = await saveImgQuestion(formData);
-                    if (response.result == "PASS") {
-                        const timestamp = new Date().getTime();
-                        imgFocus = response.url + "?t=" + timestamp;
-                        // Set background image
-                        $(".styles-detail__ContentWrapper-Image").css({
-                            "background": `url(${imgFocus}) center center / cover no-repeat`,
-                            "background-color": "rgb(242, 242, 242)" // Fallback color
-                        });
-                        $(".image-with-effect").css("background-image", `url(${imgFocus})`);
-                        $("#wrapperImageEffect").removeClass('d-none');
-                        $(`#question-${slideFocus} .image-Theme`).css({
-                            "background": `url(${imgFocus}) center center / cover no-repeat`,
-                        });
-                        eduquizdata.Questions[slideFocus - 1].Image = imgFocus;
-                    }
-                } catch (error) {
-                    console.error("Upload failed:", error);
-                }
-                $(".wrapper-Image_Info-block").hide()
+                // try {
+                //     const response = await analyzeImage(file);
+                //     if (response.status === 'success') {
+                //         if (response.final_decision === 'KO') {
+                //             let violationReason = getViolationReason(response.reject_criteria);
+                //             let footerText = `Lưu ý: Vi phạm ba lần sẽ dẫn đến khóa tài khoản! (Đã vi phạm: ${response.violation_count}/3 )`;
+
+                //             if (response.violation_count < 3) {
+                //                 Swal.fire({
+                //                     icon: 'error',
+                //                     title: 'Vi phạm nội dung!',
+                //                     text: violationReason,
+                //                     footer: `<span style="color: #1f74b6;font-weight: 600;text-decoration: none;">${footerText}</span>`
+                //                 });
+                //             } else {
+                //                 Swal.fire({
+                //                     icon: 'error',
+                //                     title: 'Vi phạm nội dung!',
+                //                     text: violationReason,
+                //                     footer: `<span style="color: #1f74b6;font-weight: 600;text-decoration: none;">${footerText}</span>`,
+                //                     confirmButtonText: 'OK',
+                //                     didClose: () => {
+                //                         window.location.href = '@Url.Action("Logout", "Account")';
+                //                     }
+                //                 });
+                //             }
+                //         } else {
+                //             await uploadImage(file);
+                //         }
+                //     }
+                // } catch (error) {
+                //     console.error('Error:', error.responseText);
+                // }
+                await uploadImage(file);
+                autoSaveEduQuiz();
             }
         });
 
@@ -1569,26 +1753,28 @@
                 $buttons.find('.StyledImageEffectButton_Title').removeClass('focused');
 
                 // Get the grid size from the 'data-effect' attribute and apply the effect
-                const gridSize = parseInt($(this).attr('data-effect'));
-                applyGridRevealEffect(gridSize, timeQuestionFocus * 1000); // Adjust timing as needed
+                const gridSize = $(this).attr('data-effect');
+                eduquizdata.Questions[slideFocus - 1].ImageEffect = gridSize;
+                applyGridRevealEffect(parseInt(gridSize), timeQuestionFocus * 1000); // Adjust timing as needed
 
                 // Add 'focused' class to the clicked button and its title
                 $(this).addClass('focused');
                 $(this).find('.StyledImageEffectButton_Title').addClass('focused');
+                autoSaveEduQuiz();
             });
         });
 
         const editableDiv = document.querySelector('.question-text-field__input');
 
         editableDiv.addEventListener('focus', function () {
-            if (this.textContent.trim() === '') {
-                this.textContent = '';
+            if (this.textContent.trim() === "") {
+                this.textContent = "";
             }
         });
 
         editableDiv.addEventListener('blur', function () {
-            if (this.textContent.trim() === '') {
-                this.textContent = '';
+            if (this.textContent.trim() === "") {
+                this.textContent = "";
             }
         });
         //START ẨN HIỆN MENU CHỌN CÂU HỎI
@@ -1686,7 +1872,11 @@
                         // Xóa menu và gỡ class focused
                         chooseQuestion.removeClass('focused');
                         $('#menuTypeQuiz').remove();
+                        $(`#question-${slideFocus} .styles_Answers`).empty();
+                        let answer = getDefaultAnswersHtml(selectedType, null, selectedType)
+                        $(`#question-${slideFocus} .styles_Answers`).append(answer);
                         renderWrapperAnswer(selectedType);
+                        autoSaveEduQuiz();
                     });
                 }
             });
@@ -1755,6 +1945,7 @@
                     } 
                     $('#timelimit').removeClass('focused');
                     $('#menutime').remove();
+                    autoSaveEduQuiz();
                 });
             });
 
@@ -1825,7 +2016,8 @@
 
                         $('#pointlimit').removeClass('focused');
                         $('#menupoint').remove();
-                    });
+                    autoSaveEduQuiz();
+                });
             });
 
             $('#input-answer').on('focus', function () {
@@ -1848,6 +2040,7 @@
 
                     $('#answerlimit').removeClass('focused');
                     $('#menuanswer').remove();
+                    autoSaveEduQuiz();
                 });
             });
 

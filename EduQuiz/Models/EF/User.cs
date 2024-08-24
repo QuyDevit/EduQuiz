@@ -34,7 +34,7 @@ namespace EduQuiz.Models.EF
         public string PrivacySettings { get; set; } // Thiết lập sự riêng tư
         public string? LanguagePreference { get; set; } // Optional field for language preference
         public bool EmailVerified { get; set; } = false; // Optional field for email verification status
-
+        public int ViolationCount { get; set; } = 0;
         public string? SubscriptionType { get; set; } // Loại đăng ký gói
         public DateTime? SubscriptionStartDate { get; set; } // Ngày bắt đầu đăng ký gói
         public DateTime? SubscriptionEndDate { get; set; } // Ngày kết thúc đăng ký gói

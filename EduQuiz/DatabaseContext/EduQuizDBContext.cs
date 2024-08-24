@@ -30,7 +30,10 @@ namespace EduQuiz.DatabaseContext
                 .WithMany(f => f.ChildFolders)
                 .HasForeignKey(f => f.ParentFolderId)
                 .OnDelete(DeleteBehavior.Restrict); // Tránh xóa đệ quy
-
+            modelBuilder.Entity<Question>()
+            .HasMany(q => q.Choices)
+            .WithOne(c => c.Question)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

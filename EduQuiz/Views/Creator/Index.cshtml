@@ -2,6 +2,7 @@
     ViewBag.Title = "Tạo EduQuiz";
     Layout = "_LayoutCreator";
     @using Newtonsoft.Json
+    @model EduQuiz.Models.EduQuizData
 }
 
 <div class="menu_chooseQuiz">
@@ -156,6 +157,8 @@
 </div>
 <script>
     var viewData = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Data));
+    var dataquizedit = @Html.Raw(JsonConvert.SerializeObject(Model));
+    // console.log(dataquizedit);
     // Truy cập các thuộc tính từ đối tượng JSON
     var quizId = viewData.quizId;
     var userId = viewData.userId;

@@ -4,6 +4,7 @@ using EduQuiz.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduQuiz.Migrations
 {
     [DbContext(typeof(EduQuizDBContext))]
-    partial class EduQuizDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240823085939_update_db_tblUser_230824")]
+    partial class update_db_tblUser_230824
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,9 +75,6 @@ namespace EduQuiz.Migrations
 
                     b.Property<int?>("MusicId")
                         .HasColumnType("int");
-
-                    b.Property<string>("OrderQuestion")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -454,8 +454,7 @@ namespace EduQuiz.Migrations
                 {
                     b.HasOne("EduQuiz.Models.EF.Question", "Question")
                         .WithMany("Choices")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("QuestionId");
 
                     b.Navigation("Question");
                 });

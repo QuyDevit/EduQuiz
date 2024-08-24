@@ -28,6 +28,7 @@ namespace EduQuiz.Models.EF
         public int? MusicId { get; set; } // Nhạc sảnh
         public virtual Music Music { get; set; }
         public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+        public string? OrderQuestion { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool Status { get; set; } = true;

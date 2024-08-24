@@ -326,20 +326,22 @@
     border: 1px solid rgb(229, 229, 229);
     border-radius: 0.125rem;
 }
-.answers-block::before{
-    content: "";
-    position: absolute;
-    right: 3px;
-    height: 8px;
-    width: 8px;
-    border-radius: 8px;
-    border: 1px solid white;
-    background: rgb(102, 191, 57);
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0;
-}
-
+    .answers-block::before {
+        content: "";
+        position: absolute;
+        right: 3px;
+        height: 8px;
+        width: 8px;
+        border-radius: 8px;
+        border: 1px solid white;
+        background: rgb(102, 191, 57);
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+    }
+    .answers-block.choose::before {
+        opacity: 1;
+    }
 .button-block_Quiz {
     display: flex;
     flex-direction: column;
@@ -550,6 +552,24 @@
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
     border-radius: 4px;
     height: 100% !important;
+}
+#removeImg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+#removeImg i{
+    font-size:24px;
+}
+#removeImg:hover{
+    background-color:#fff;
+    cursor:pointer;
 }
 .wrapper-Image_Info {
     display: flex;

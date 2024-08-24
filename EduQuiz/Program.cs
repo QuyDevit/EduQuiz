@@ -24,7 +24,6 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddHttpContextAccessor();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

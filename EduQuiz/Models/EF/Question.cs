@@ -18,14 +18,10 @@ namespace EduQuiz.Models.EF
         public int? Time { get; set; }
         public int? PointsMultiplier { get; set; }
         public string? Image { get; set; }
+        public ICollection<Choice> Choices { get; set; } = new List<Choice>();
         public string? ImageEffect { get; set; }
-        public virtual ICollection<Choice> Choices { get; set; } = new List<Choice>();
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool Status { get; set; } = true;
-        public Question()
-        {
-            Choices = new HashSet<Choice>();
-        }
     }
 }
