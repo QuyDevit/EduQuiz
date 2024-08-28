@@ -26,8 +26,8 @@
                     <p>Khám phá</p>
                 </a>
             </li>
-            <li>
-                <a href="./map.html">
+            <li class="@(string.IsNullOrEmpty(currentPath) || currentPath.StartsWith("/my-library") ? "active" : "")">
+                <a href="@Url.Action("Index","Library")">
                     <i class="nc-icon nc-bullet-list-67"></i>
                     <p>Thư viện</p>
                 </a>

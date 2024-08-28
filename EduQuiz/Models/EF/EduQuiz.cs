@@ -18,9 +18,6 @@ namespace EduQuiz.Models.EF
         [ForeignKey("UserId")]
         public int? UserId { get; set; }
         public virtual User User { get; set; }
-        [ForeignKey("FolderId")]
-        public int? FolderId { get; set; } // Thư mục
-        public virtual Folder Folder { get; set; }
         [ForeignKey("ThemeId")]
         public int? ThemeId { get; set; } // Chủ đề
         public virtual Theme Theme { get; set; }
@@ -28,6 +25,7 @@ namespace EduQuiz.Models.EF
         public int? MusicId { get; set; } // Nhạc sảnh
         public virtual Music Music { get; set; }
         public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+        public virtual ICollection<QuizFolder> QuizFolders { get; set; } = new List<QuizFolder>();
         public string? OrderQuestion { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }

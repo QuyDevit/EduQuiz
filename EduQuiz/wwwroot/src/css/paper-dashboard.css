@@ -3133,13 +3133,15 @@ License - nucleoapp.com/license/
     z-index: 1030;
     border-right: 1px solid #ddd;
 }
-  .sidebar .sidebar-wrapper,
-  .off-canvas-sidebar .sidebar-wrapper {
-    position: relative;
-    height: calc(100vh - 75px);
-    width: 216px;
-    z-index: 4;
-    padding-bottom: 100px; }
+    .sidebar .sidebar-wrapper,
+    .off-canvas-sidebar .sidebar-wrapper {
+        position: relative;
+        height: calc(100vh - 62px);
+        width: 216px;
+        z-index: 4;
+        padding-bottom: 100px;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    }
     .sidebar .sidebar-wrapper .dropdown .dropdown-backdrop,
     .off-canvas-sidebar .sidebar-wrapper .dropdown .dropdown-backdrop {
       display: none !important; }
@@ -3167,7 +3169,7 @@ License - nucleoapp.com/license/
       height: 60px; }
   .sidebar .nav,
   .off-canvas-sidebar .nav {
-    margin-top: 20px;
+    padding-top: 10px;
     display: block; }
     .sidebar .nav .caret,
     .off-canvas-sidebar .nav .caret {
@@ -3245,7 +3247,7 @@ License - nucleoapp.com/license/
   .sidebar .logo,
   .off-canvas-sidebar .logo {
     position: relative;
-    padding: 7px 0.7rem;
+    padding: 0 0.7rem;
     z-index: 4; }
     .sidebar .logo a.logo-mini,
     .off-canvas-sidebar .logo a.logo-mini {
@@ -3259,14 +3261,14 @@ License - nucleoapp.com/license/
     .off-canvas-sidebar .logo a.logo-normal {
         display: block;
         opacity: 1;
-        padding: 5px 8px 8px 8px;
+        padding: 10px 8px 7px 8px;
         transform: translate3d(0px, 0, 0);
     }
     .sidebar .logo:after,
     .off-canvas-sidebar .logo:after {
       content: '';
       position: absolute;
-      bottom: 8px;
+      bottom: -1px;
       right: 0;
       height: 1px;
       width: calc(100%);
@@ -4272,25 +4274,25 @@ License - nucleoapp.com/license/
     padding-right: 15px; }
   .sidebar .sidebar-wrapper li.active > a:not([data-toggle="collapse"]):before,
   .sidebar .sidebar-wrapper li.active > [data-toggle="collapse"] + div .nav li:before {
-    border-right: 17px solid #DDDDDD;
-    border-top: 17px solid transparent;
-    border-bottom: 17px solid transparent;
+    border-right: 14px solid #DDDDDD;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
     content: "";
     display: inline-block;
     position: absolute;
-    right: -16px;
+    right: -14px;
     opacity: 1;
     top: 7px;
     transition: opacity 150ms ease-in; }
   .sidebar .sidebar-wrapper li.active > a:not([data-toggle="collapse"]):after,
   .sidebar .sidebar-wrapper li.active > [data-toggle="collapse"] + div .nav li:after {
-    border-right: 17px solid #f4f3ef;
-    border-top: 17px solid transparent;
-    border-bottom: 17px solid transparent;
+    border-right: 14px solid #f4f3ef;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
     content: "";
     display: inline-block;
     position: absolute;
-    right: -17px;
+    right: -14px;
     opacity: 1;
     top: 7px;
     transition: opacity 150ms ease-in; }

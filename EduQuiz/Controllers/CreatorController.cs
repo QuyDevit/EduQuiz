@@ -23,40 +23,49 @@ namespace EduQuiz.Controllers
             _httpClient = httpClient;
         }
         [Route("creator/{id:guid}")]
-        public async  Task<IActionResult> Index(Guid id)
+        public async Task<IActionResult> Index(Guid id)
         {
             var sessionData = HttpContext.Session.GetString("_USERCURRENT");
             if (sessionData != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                string email = userInfo?.Email;
+                string email = userInfo?.Email?.ToString(); // Convert dynamic type to string
 
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-                if (user != null)
+                if (!string.IsNullOrEmpty(email))
                 {
-                    var check = await _context.EduQuizs.FirstOrDefaultAsync(d => d.Uuid == id);
-                    ViewBag.Data = new { quizId = id, userId = user.Id };
-                    if (check == null)
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                    if (user != null)
                     {
-                        return View(null);
-                    }
-                    else
-                    {
-                        List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion);
-                        var getdata = await _context.EduQuizs
-                            .Where(d => d.Uuid == id)
-                            .Select(dataEduQuizUpdated => new Models.EduQuizData
+                        var check = await _context.EduQuizs
+                            .Include(e => e.Questions)
+                            .ThenInclude(q => q.Choices)
+                            .FirstOrDefaultAsync(d => d.Uuid == id);
+
+                        if (check == null)
+                        {
+                            ViewBag.Data = new { quizId = id, userId = user.Id };
+                            return View(null);
+                        }
+                        else
+                        {
+                            if (check.UserId != user.Id)
                             {
-                                Uuid = dataEduQuizUpdated.Uuid,
-                                Description = dataEduQuizUpdated.Description,
-                                Title = dataEduQuizUpdated.Title,
-                                ImageCover = dataEduQuizUpdated.ImageCover,
-                                Type = dataEduQuizUpdated.Type ?? 0,
-                                Visibility = dataEduQuizUpdated.Visibility,
-                                ThemeId = dataEduQuizUpdated.ThemeId ?? 0,
-                                MusicId = dataEduQuizUpdated.MusicId ?? 0,
-                                UserId = dataEduQuizUpdated.UserId ?? 0,
-                                Questions = dataEduQuizUpdated.Questions.Select(q => new QuestionData
+                                return RedirectToAction("Index", "HomeDashboard");
+                            }
+                            List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion);
+
+                            var getdata = new Models.EduQuizData
+                            {
+                                Uuid = check.Uuid,
+                                Description = check.Description,
+                                Title = check.Title,
+                                ImageCover = check.ImageCover,
+                                Type = check.Type ?? 0,
+                                Visibility = check.Visibility,
+                                ThemeId = check.ThemeId ?? 0,
+                                MusicId = check.MusicId ?? 0,
+                                UserId = check.UserId ?? 0,
+                                Questions = check.Questions.Select(q => new QuestionData
                                 {
                                     Id = q.Id,
                                     QuestionText = q.QuestionText,
@@ -66,7 +75,7 @@ namespace EduQuiz.Controllers
                                     PointsMultiplier = q.PointsMultiplier ?? 0,
                                     Image = q.Image,
                                     ImageEffect = q.ImageEffect,
-                                    Choices = q.Choices.Select(c => new ChoiceData
+                                    Choices = q.Choices.OrderBy(c => c.DisplayOrder).Select(c => new ChoiceData
                                     {
                                         Id = c.Id,
                                         Answer = c.Answer,
@@ -74,16 +83,23 @@ namespace EduQuiz.Controllers
                                         DisplayOrder = c.DisplayOrder
                                     }).ToList()
                                 }).ToList()
-                            })
-                            .FirstOrDefaultAsync();
-                        getdata.Questions = getdata.Questions
-                            .OrderBy(q => orderquestion.IndexOf(q.Id))
-                            .ToList();
-                        return View(getdata);
+                            };
+                            var orderLookup = orderquestion.Select((id, index) => new { id, index })
+                             .ToDictionary(x => x.id, x => x.index);
+
+                            // Sắp xếp danh sách câu hỏi theo thứ tự trong orderid
+                            getdata.Questions = getdata.Questions
+                                .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
+                                .ToList();
+
+                            ViewBag.Data = new { quizId = id, userId = user.Id };
+                            return View(getdata);
+                        }
                     }
-                }  
+                }
             }
-            return RedirectToAction("Index", "Home");
+
+            return RedirectToAction("Index", "HomeDashboard");
         }
         #region handle
         public async Task<IActionResult> saveImgQuestion([FromForm] IFormFile image, [FromForm] string quizid)
@@ -199,7 +215,6 @@ namespace EduQuiz.Controllers
 
         public async Task<IActionResult> AutoSaveEduQuiz([FromBody] Models.EduQuizData data)
         {
-            
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -265,11 +280,15 @@ namespace EduQuiz.Controllers
                 }
                 else
                 {
+                    if(checkEduQuiz.UserId != data.UserId)
+                    {
+                        return Json(new { result = "FAIL", message = "Bạn không có quyền chỉnh sửa!" });
+                    }
                     // Cập nhật EduQuiz đã tồn tại
                     checkEduQuiz.Description = data.Description;
                     checkEduQuiz.Title = data.Title;
                     checkEduQuiz.ImageCover = data.ImageCover;
-                    checkEduQuiz.Type = data.Type;
+                    checkEduQuiz.Type = 0;
                     checkEduQuiz.Visibility = data.Visibility;
                     checkEduQuiz.ThemeId = data.ThemeId;
                     checkEduQuiz.MusicId = data.MusicId;
@@ -363,89 +382,75 @@ namespace EduQuiz.Controllers
                 await _context.SaveChangesAsync(); // Lưu mọi thay đổi một lần duy nhất
                 await transaction.CommitAsync();
 
-                var getdata = await _context.EduQuizs
-                 .Where(d => d.Uuid == data.Uuid)
-                 .Select(dataEduQuizUpdated => new Models.EduQuizData
-                 {
-                     Uuid = dataEduQuizUpdated.Uuid,
-                     Description = dataEduQuizUpdated.Description,
-                     Title = dataEduQuizUpdated.Title,
-                     ImageCover = dataEduQuizUpdated.ImageCover,
-                     Type = dataEduQuizUpdated.Type ?? 0,
-                     Visibility = dataEduQuizUpdated.Visibility,
-                     ThemeId = dataEduQuizUpdated.ThemeId ?? 0,
-                     MusicId = dataEduQuizUpdated.MusicId ?? 0,
-                     UserId = dataEduQuizUpdated.UserId ?? 0,
-                     Questions = dataEduQuizUpdated.Questions.Select(q => new QuestionData
-                     {
-                         Id = q.Id,
-                         QuestionText = q.QuestionText,
-                         TypeQuestion = q.TypeQuestion,
-                         TypeAnswer = q.TypeAnswer ?? 0,
-                         Time = q.Time ?? 0,
-                         PointsMultiplier = q.PointsMultiplier ?? 0,
-                         Image = q.Image,
-                         ImageEffect = q.ImageEffect,
-                         Choices = q.Choices.Select(c => new ChoiceData
-                         {
-                             Id = c.Id,
-                             Answer = c.Answer,
-                             IsCorrect = c.IsCorrect,
-                             DisplayOrder = c.DisplayOrder
-                         }).ToList()
-                     }).ToList()
-                 })
-                 .FirstOrDefaultAsync();
-                if (getdata != null)
-                {
-                    var update = await _context.EduQuizs
+                var eduQuiz = await _context.EduQuizs
+                    .Include(d => d.Questions)
+                        .ThenInclude(q => q.Choices)
                     .FirstOrDefaultAsync(d => d.Uuid == data.Uuid);
-                    // Sắp xếp câu hỏi theo `orderid`
-                    if (!orderid.Contains(0))
+                var getdata = new Models.EduQuizData
+                {
+                    Uuid = eduQuiz.Uuid,
+                    Description = eduQuiz.Description,
+                    Title = eduQuiz.Title,
+                    ImageCover = eduQuiz.ImageCover,
+                    Type = eduQuiz.Type ?? 0,
+                    Visibility = eduQuiz.Visibility,
+                    ThemeId = eduQuiz.ThemeId ?? 0,
+                    MusicId = eduQuiz.MusicId ?? 0,
+                    UserId = eduQuiz.UserId ?? 0,
+                    Questions = eduQuiz.Questions.Select(q => new QuestionData
                     {
-                        getdata.Questions = getdata.Questions
-                            .OrderBy(q => orderid.IndexOf(q.Id))
-                            .ToList();
-                    }
-                    else
-                    {
-                        if(orderid.Count(x => x == 0) == 1){
-                            var questions = getdata.Questions;
-                            var newQuestion = questions.Last(); // Phần tử mới (cuối cùng trong danh sách)
-
-                            // Loại bỏ phần tử mới khỏi danh sách câu hỏi
-                            var existingQuestions = questions.Take(questions.Count - 1).ToList();
-
-                            // Xác định vị trí để chèn phần tử mới
-                            var zeroIndex = orderid.IndexOf(0);
-
-                            // Nếu có phần tử nào có Id = 0 trong orderid
-                            if (zeroIndex != -1)
-                            {
-                                // Thay thế phần tử có Id = 0 bằng phần tử mới trong orderid
-                                orderid[zeroIndex] = newQuestion.Id;
-                            }
-                            // Sắp xếp các câu hỏi còn lại theo thứ tự trong orderid
-                            var orderedQuestions = existingQuestions
-                                .OrderBy(q => orderid.IndexOf(q.Id))
-                                .ToList();
-
-                            // Thêm phần tử mới vào danh sách đã sắp xếp
-                            orderedQuestions.Insert(zeroIndex, newQuestion);
-
-                            // Cập nhật danh sách câu hỏi đã sắp xếp
-                            getdata.Questions = orderedQuestions;
-                            update.OrderQuestion = JsonConvert.SerializeObject(orderid);
-                        }
-                        else
+                        Id = q.Id,
+                        QuestionText = q.QuestionText,
+                        TypeQuestion = q.TypeQuestion,
+                        TypeAnswer = q.TypeAnswer ?? 0,
+                        Time = q.Time ?? 0,
+                        PointsMultiplier = q.PointsMultiplier ?? 0,
+                        Image = q.Image,
+                        ImageEffect = q.ImageEffect,
+                        Choices = q.Choices.OrderBy(c => c.DisplayOrder).Select(c => new ChoiceData
                         {
-                            update.OrderQuestion = JsonConvert.SerializeObject                          (getdata.Questions.Select(q => q.Id).ToList());
-                        }
-                        
-                    }
-                    
-                    await _context.SaveChangesAsync();
+                            Id = c.Id,
+                            Answer = c.Answer,
+                            IsCorrect = c.IsCorrect,
+                            DisplayOrder = c.DisplayOrder
+                        }).ToList()
+                    }).ToList()
+                };
+
+                // Sort questions based on `orderid`
+                if (!orderid.Contains(0))
+                {
+                    var orderLookup = orderid.Select((id, index) => new { id, index })
+                             .ToDictionary(x => x.id, x => x.index);
+
+                    // Sắp xếp danh sách câu hỏi theo thứ tự trong orderid
+                    getdata.Questions = getdata.Questions
+                        .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
+                        .ToList();
+
                 }
+                else if (orderid.Count(x => x == 0) == 1)
+                {
+                    var zeroIndex = orderid.IndexOf(0);
+                    var lastQuestion = getdata.Questions.Last();
+
+                    // Replace 0 with last question's ID
+                    orderid[zeroIndex] = lastQuestion.Id;
+
+                    var orderedQuestions = getdata.Questions
+                        .OrderBy(q => orderid.IndexOf(q.Id))
+                        .ToList();
+
+                    // Update the order question data in the tracked entity
+                    eduQuiz.OrderQuestion = JsonConvert.SerializeObject(orderid);
+                    getdata.Questions = orderedQuestions;
+                }
+                else
+                {
+                    // Update order question if orderid has more than one 0
+                    eduQuiz.OrderQuestion = JsonConvert.SerializeObject(getdata.Questions.Select(q => q.Id).ToList());
+                }
+                await _context.SaveChangesAsync();
 
                 return Json(new { result = "PASS", data = JsonConvert.SerializeObject(getdata) });
             }
@@ -456,6 +461,34 @@ namespace EduQuiz.Controllers
             }
         }
 
+        public async Task<IActionResult> SaveTypeEduQuiz(Guid idquiz,int userid)
+        {
+            try
+            {
+                var geteduquiz = await _context.EduQuizs.FirstOrDefaultAsync(q=>q.Uuid == idquiz);
+                if(geteduquiz == null)
+                {
+                    return Json(new { result = "FAIL", msg = "Eduquiz không tồn tại" });
+                }
+                else
+                {
+                    if(geteduquiz.UserId != userid)
+                    {
+                        return Json(new { result = "FAIL", msg = "Bạn không có quyền chỉnh sửa" });
+                    }
+                    else
+                    {
+                        geteduquiz.Type = 1;
+                        await _context.SaveChangesAsync();
+                        return Json(new { result = "PASS" });
+                    }
+                }
+                
+            }
+            catch (Exception ex) {
+                return Json(new { result = "FAIL", msg = $"Lưu thất bại: {ex.Message}" });
+            }
+        }
         #endregion
     }
 }

@@ -1,0 +1,28 @@
+﻿@{
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+    var folderid = 1;
+}
+<div class="eduquiz-root__Tabs-Wrapper">
+    <div class="eduquiz-root__Tabs">
+        <a href="@Url.Action("Index","Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/all" ? "active" : "")">Gần đây</a>
+    </div>
+    <div class="eduquiz-root__Tabs">
+        <a href="@Url.Action("EduQuizDraft","Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/drafts" ? "active" : "")">Bản nháp</a>
+    </div>
+    <div class="eduquiz-root__Tabs">
+        <a href="#">Yêu thích</a>
+    </div>
+    <div class="eduquiz-root__Tabs">
+        <a href="#">Chia sẻ với bạn</a>
+    </div>
+</div>
+<script>
+    $(".eduquiz-root__Tabs a").click(function (event) {
+        if($(this).hasClass("active")){
+            event.preventDefault();
+        }
+    })
+</script>
+   

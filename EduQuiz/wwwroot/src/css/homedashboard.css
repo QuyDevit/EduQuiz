@@ -120,7 +120,7 @@ label i:hover {
 }
 
 @media screen and (max-width: 992px) {
-    .layout-index {
+    .layout-index, .layout-detail {
         flex-direction: column;
     }
 

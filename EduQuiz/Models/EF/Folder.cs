@@ -22,11 +22,7 @@ namespace EduQuiz.Models.EF
         public virtual Folder ParentFolder { get; set; }
 
         // Collection chứa các folder con
-        public virtual ICollection<Folder> ChildFolders { get; set; }
-
-        public Folder()
-        {
-            ChildFolders = new HashSet<Folder>();
-        }
+        public virtual ICollection<Folder> ChildFolders { get; set; } = new HashSet<Folder>();
+        public virtual ICollection<QuizFolder> QuizFolders { get; set; } = new List<QuizFolder>();
     }
 }

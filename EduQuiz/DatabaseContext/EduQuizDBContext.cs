@@ -18,6 +18,7 @@ namespace EduQuiz.DatabaseContext
         public DbSet<Theme> Themes { get; set; }
         public DbSet<Choice> Choices { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<QuizFolder> QuizFolders { get; set; }
 
         // Cấu hình mô hình khi tạo bảng và quan hệ
         protected override void OnModelCreating(ModelBuilder modelBuilder)

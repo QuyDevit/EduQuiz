@@ -26,7 +26,7 @@
                                     <img style="width:110px;height:45px;" src="~/src/img/logomain.png">
                                 </a>
                             </h1>
-                            <button class="settings-button" data-toggle="modal" data-target="#modalQuizSetting">
+                            <button class="settings-button" data-toggle="modal" data-target="#modalQuizSetting" onclick="setdataSettingEduQuiz();">
                                 <span class="settings-button_title">Nhập tiêu đề EduQuiz...</span>
                                 <span class="settings-button_Setting">
                                     <span>Cài đặt</span>
@@ -47,7 +47,7 @@
                             </div>
                             <button id="btn-theme" class="button-flat">
                                 <span class="icon">
-                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-c0a6c9a6-825e-4b21-83a1-8499009fd693" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-c0a6c9a6-825e-4b21-83a1-8499009fd693">Icon</title><path d="M16,27C10.14,27,5,21.33,5,14.86A11.12,11.12,0,0,1,9.72,5.73a3.62,3.62,0,0,1,2.65-.68A2.14,2.14,0,0,1,13.8,6c.73.92.55,2.19.39,3.32a4.83,4.83,0,0,0-.07,1.42c.26.31.83.13,2.39-.61C18.38,9.2,21,8,23.79,9.34c3.78,2,3.65,8,3.18,9.9C25.88,23.59,21.06,27,16,27ZM11.88,7a1.93,1.93,0,0,0-1,.37A9.13,9.13,0,0,0,7,14.86C7,20.26,11.21,25,16,25c4.19,0,8.15-2.74,9-6.24.29-1.18.51-6.26-2.12-7.63-2-.92-3.78-.07-5.54.77s-3.49,1.64-4.83,0A3.84,3.84,0,0,1,12.21,9c.08-.58.22-1.56,0-1.81l-.06-.08A.23.23,0,0,0,12,7ZM19,23a2,2,0,1,1,2-2A2,2,0,0,1,19,23Zm-6-1a2,2,0,1,1,2-2A2,2,0,0,1,13,22Zm-3-5a2,2,0,1,1,2-2A2,2,0,0,1,10,17Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,27C10.14,27,5,21.33,5,14.86A11.12,11.12,0,0,1,9.72,5.73a3.62,3.62,0,0,1,2.65-.68A2.14,2.14,0,0,1,13.8,6c.73.92.55,2.19.39,3.32a4.83,4.83,0,0,0-.07,1.42c.26.31.83.13,2.39-.61C18.38,9.2,21,8,23.79,9.34c3.78,2,3.65,8,3.18,9.9C25.88,23.59,21.06,27,16,27ZM11.88,7a1.93,1.93,0,0,0-1,.37A9.13,9.13,0,0,0,7,14.86C7,20.26,11.21,25,16,25c4.19,0,8.15-2.74,9-6.24.29-1.18.51-6.26-2.12-7.63-2-.92-3.78-.07-5.54.77s-3.49,1.64-4.83,0A3.84,3.84,0,0,1,12.21,9c.08-.58.22-1.56,0-1.81l-.06-.08A.23.23,0,0,0,12,7ZM19,23a2,2,0,1,1,2-2A2,2,0,0,1,19,23Zm-6-1a2,2,0,1,1,2-2A2,2,0,0,1,13,22Zm-3-5a2,2,0,1,1,2-2A2,2,0,0,1,10,17Z" style="fill: rgb(255, 255, 255);"></path></svg>
                                 </span>
                                 <span class="mr-2">Chủ đề</span>
                             </button>
@@ -63,7 +63,7 @@
                             <button class="button-flat preview" style="background: rgb(242, 242, 242);color:#333;box-shadow:rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 12px">
                                 Thoát
                             </button>
-                            <button class="button-flat" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 20px">
+                            <button class="button-flat" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 20px" onclick="checkEduQuiz()">
                                 Lưu
                             </button>
                         </div>
@@ -165,7 +165,7 @@
                             <div class="styles__Wrapper">
                                 <div class="styles__Label">
                                     <span>
-                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-94ccba56-892f-4ff1-bd4a-fc3c2af0eb5f" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-94ccba56-892f-4ff1-bd4a-fc3c2af0eb5f">Icon</title><path d="M15.1663167,11 C16.0371581,11 16.8763325,11.1216667 17.6663398,11.3458333 L17.6663398,11.3458333 L17.6663398,13.0966667 C16.8938326,12.8216667 16.0504915,12.6666667 15.1663167,12.6666667 C11.4904494,12.6666667 8.49958851,15.2833333 8.49958851,18.5 C8.49958851,19.7808333 8.97292621,21 9.86793447,22.0266667 C10.1479371,22.3483333 10.140437,22.8291667 9.85043431,23.1416667 L9.85043431,23.1416667 L8.74375743,24.3333333 L15.1663167,24.3333333 C18.8421839,24.3333333 21.8330449,21.7166667 21.8330449,18.5 C21.8330449,18.2166667 21.8022113,17.94 21.7572108,17.6666667 L21.7572108,17.6666667 L23.4455598,17.6666667 C23.4788934,17.9408333 23.4997269,18.2183333 23.4997269,18.5 C23.4997269,22.635 19.7621924,26 15.1663167,26 L15.1663167,26 L6.83290647,26 C6.50123674,26 6.20123397,25.8033333 6.06956609,25.5 C5.93706487,25.1958333 5.99706542,24.8425 6.2220675,24.6 L6.2220675,24.6 L8.14375189,22.53 C7.28374396,21.3266667 6.83290647,19.9458333 6.83290647,18.5 C6.83290647,14.365 10.5712743,11 15.1663167,11 Z M22.6666359,14.3333333 C23.1266402,14.3333333 23.4999769,14.7066667 23.4999769,15.1666667 C23.4999769,15.6275 23.1266402,16 22.6666359,16 C22.2066317,16 21.8332949,15.6275 21.8332949,15.1666667 C21.8332949,14.7066667 22.2066317,14.3333333 22.6666359,14.3333333 Z M22.6666359,6 C24.5049862,6 26,7.495 26,9.33333333 C26,10.8833333 24.9358235,12.19 23.4999769,12.5616667 L23.4999769,13.5 L21.8332949,13.5 L21.8332949,11 L22.6666359,11 C23.5858111,11 24.333318,10.2525 24.333318,9.33333333 C24.333318,8.41416667 23.5858111,7.66666667 22.6666359,7.66666667 C21.7474608,7.66666667 20.9999539,8.41416667 20.9999539,9.33333333 L19.3332718,9.33333333 C19.3332718,7.495 20.8282856,6 22.6666359,6 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M15.1663167,11 C16.0371581,11 16.8763325,11.1216667 17.6663398,11.3458333 L17.6663398,11.3458333 L17.6663398,13.0966667 C16.8938326,12.8216667 16.0504915,12.6666667 15.1663167,12.6666667 C11.4904494,12.6666667 8.49958851,15.2833333 8.49958851,18.5 C8.49958851,19.7808333 8.97292621,21 9.86793447,22.0266667 C10.1479371,22.3483333 10.140437,22.8291667 9.85043431,23.1416667 L9.85043431,23.1416667 L8.74375743,24.3333333 L15.1663167,24.3333333 C18.8421839,24.3333333 21.8330449,21.7166667 21.8330449,18.5 C21.8330449,18.2166667 21.8022113,17.94 21.7572108,17.6666667 L21.7572108,17.6666667 L23.4455598,17.6666667 C23.4788934,17.9408333 23.4997269,18.2183333 23.4997269,18.5 C23.4997269,22.635 19.7621924,26 15.1663167,26 L15.1663167,26 L6.83290647,26 C6.50123674,26 6.20123397,25.8033333 6.06956609,25.5 C5.93706487,25.1958333 5.99706542,24.8425 6.2220675,24.6 L6.2220675,24.6 L8.14375189,22.53 C7.28374396,21.3266667 6.83290647,19.9458333 6.83290647,18.5 C6.83290647,14.365 10.5712743,11 15.1663167,11 Z M22.6666359,14.3333333 C23.1266402,14.3333333 23.4999769,14.7066667 23.4999769,15.1666667 C23.4999769,15.6275 23.1266402,16 22.6666359,16 C22.2066317,16 21.8332949,15.6275 21.8332949,15.1666667 C21.8332949,14.7066667 22.2066317,14.3333333 22.6666359,14.3333333 Z M22.6666359,6 C24.5049862,6 26,7.495 26,9.33333333 C26,10.8833333 24.9358235,12.19 23.4999769,12.5616667 L23.4999769,13.5 L21.8332949,13.5 L21.8332949,11 L22.6666359,11 C23.5858111,11 24.333318,10.2525 24.333318,9.33333333 C24.333318,8.41416667 23.5858111,7.66666667 22.6666359,7.66666667 C21.7474608,7.66666667 20.9999539,8.41416667 20.9999539,9.33333333 L19.3332718,9.33333333 C19.3332718,7.495 20.8282856,6 22.6666359,6 Z" style="fill: rgb(51, 51, 51);"></path></svg>
                                     </span>
                                     <label>Loại câu hỏi</label>
                                     <div class="styles__Label-container">
@@ -196,7 +196,7 @@
                             <div class="styles__Wrapper">
                                 <div class="styles__Label">
                                     <span>
-                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-fba9faaf-b7f2-433b-ab8b-4476fb4e6629" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-fba9faaf-b7f2-433b-ab8b-4476fb4e6629">Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true" ><title>Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(51, 51, 51);"></path></svg>
                                     </span>
                                     <label>Giới hạn thời gian</label>
                                     <div id="menutime_wrapper" class="styles__Label-container">
@@ -224,7 +224,7 @@
                             <div class="styles__Wrapper">
                                 <div class="styles__Label">
                                     <span>
-                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-fba9faaf-b7f2-433b-ab8b-4476fb4e6629" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-fba9faaf-b7f2-433b-ab8b-4476fb4e6629">Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(51, 51, 51);"></path></svg>
                                     </span>
                                     <label>Điểm</label>
                                     <div id="menupoint_wrapper" class="styles__Label-container">
@@ -251,7 +251,7 @@
                             <div id="wrapperTypeAnswer" class="styles__Wrapper">
                                 <div class="styles__Label">
                                     <span>
-                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-3ac79715-fd1c-470f-a989-3f302f157cc1" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-3ac79715-fd1c-470f-a989-3f302f157cc1">Icon</title><path d="M10.375,17.25 C12.7912458,17.25 14.75,19.2087542 14.75,21.625 C14.75,24.0412458 12.7912458,26 10.375,26 C7.95875422,26 6,24.0412458 6,21.625 C6,19.2087542 7.95875422,17.25 10.375,17.25 Z M21.625,17.25 C24.0412458,17.25 26,19.2087542 26,21.625 C26,24.0412458 24.0412458,26 21.625,26 C19.2087542,26 17.25,24.0412458 17.25,21.625 C17.25,19.2087542 19.2087542,17.25 21.625,17.25 Z M21.625,19.75 C20.5894661,19.75 19.75,20.5894661 19.75,21.625 C19.75,22.6605339 20.5894661,23.5 21.625,23.5 C22.6605339,23.5 23.5,22.6605339 23.5,21.625 C23.5,20.5894661 22.6605339,19.75 21.625,19.75 Z M10.375,6 C12.7912458,6 14.75,7.95875422 14.75,10.375 C14.75,12.7912458 12.7912458,14.75 10.375,14.75 C7.95875422,14.75 6,12.7912458 6,10.375 C6,7.95875422 7.95875422,6 10.375,6 Z M21.625,6 C24.0412458,6 26,7.95875422 26,10.375 C26,12.7912458 24.0412458,14.75 21.625,14.75 C19.2087542,14.75 17.25,12.7912458 17.25,10.375 C17.25,7.95875422 19.2087542,6 21.625,6 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M10.375,17.25 C12.7912458,17.25 14.75,19.2087542 14.75,21.625 C14.75,24.0412458 12.7912458,26 10.375,26 C7.95875422,26 6,24.0412458 6,21.625 C6,19.2087542 7.95875422,17.25 10.375,17.25 Z M21.625,17.25 C24.0412458,17.25 26,19.2087542 26,21.625 C26,24.0412458 24.0412458,26 21.625,26 C19.2087542,26 17.25,24.0412458 17.25,21.625 C17.25,19.2087542 19.2087542,17.25 21.625,17.25 Z M21.625,19.75 C20.5894661,19.75 19.75,20.5894661 19.75,21.625 C19.75,22.6605339 20.5894661,23.5 21.625,23.5 C22.6605339,23.5 23.5,22.6605339 23.5,21.625 C23.5,20.5894661 22.6605339,19.75 21.625,19.75 Z M10.375,6 C12.7912458,6 14.75,7.95875422 14.75,10.375 C14.75,12.7912458 12.7912458,14.75 10.375,14.75 C7.95875422,14.75 6,12.7912458 6,10.375 C6,7.95875422 7.95875422,6 10.375,6 Z M21.625,6 C24.0412458,6 26,7.95875422 26,10.375 C26,12.7912458 24.0412458,14.75 21.625,14.75 C19.2087542,14.75 17.25,12.7912458 17.25,10.375 C17.25,7.95875422 19.2087542,6 21.625,6 Z" style="fill: rgb(51, 51, 51);"></path></svg>
                                     </span>
                                     <label>Tùy chọn trả lời</label>
                                     <div id="menuanswer_wrapper" class="styles__Label-container">
@@ -279,7 +279,7 @@
                             <div id="wrapperImageEffect" class="styles__Wrapper d-none">
                                 <div class="styles__Label">
                                     <span>
-                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-74fc677a-1d0f-4b7e-8e55-f1a31f13b772" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-74fc677a-1d0f-4b7e-8e55-f1a31f13b772">Icon</title><path d="M17.6741366,12.9029823 L19.0972206,14.3260425 L8.42308402,25 L7,23.5769399 L17.6741366,12.9029823 Z M18.9767516,18.6643631 L20.0184008,22.5541279 L18.073989,23.075447 L17.0323398,19.1856822 L18.9767516,18.6643631 Z M21.1111763,15.1070147 L25,16.1496528 L24.4796786,18.0930256 L20.5898485,17.0513939 L21.1111763,15.1070147 Z M9.44611436,11.9818176 L13.334938,13.0234493 L12.8136102,14.9678285 L8.92478655,13.9251904 L9.44611436,11.9818176 Z M21.9445963,8.63219162 L23.3676804,10.0552518 L20.5205059,12.9023785 L19.0974219,11.4793183 L21.9445963,8.63219162 Z M15.8510995,7 L16.8927487,10.887752 L14.9483369,11.4090711 L13.9066877,7.52031266 L15.8510995,7 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M17.6741366,12.9029823 L19.0972206,14.3260425 L8.42308402,25 L7,23.5769399 L17.6741366,12.9029823 Z M18.9767516,18.6643631 L20.0184008,22.5541279 L18.073989,23.075447 L17.0323398,19.1856822 L18.9767516,18.6643631 Z M21.1111763,15.1070147 L25,16.1496528 L24.4796786,18.0930256 L20.5898485,17.0513939 L21.1111763,15.1070147 Z M9.44611436,11.9818176 L13.334938,13.0234493 L12.8136102,14.9678285 L8.92478655,13.9251904 L9.44611436,11.9818176 Z M21.9445963,8.63219162 L23.3676804,10.0552518 L20.5205059,12.9023785 L19.0974219,11.4793183 L21.9445963,8.63219162 Z M15.8510995,7 L16.8927487,10.887752 L14.9483369,11.4090711 L13.9066877,7.52031266 L15.8510995,7 Z" style="fill: rgb(51, 51, 51);"></path></svg>
                                     </span>
                                     <label>Hình ảnh tiết lộ</label>
                                 </div>
@@ -476,6 +476,7 @@
     <script>
         var arrmusic = [];
         var arrtheme = [];
+        var imgCoverSetting = "";
         var slideFocus = 1;
         var optionAnswerFocus = 1;
         var typeQuestionFocus = "quiz";
@@ -508,7 +509,7 @@
             UserId : userId,
             Title:"",
             Description:"",
-            ImageCover:"",
+            ImageCover: "/src/img/market.jpg",
             Type: 0,
             Visibility: true,
             ThemeId: 1,
@@ -518,31 +519,59 @@
         var dataQuestionFocus = eduquizdata.Questions[0];
 
         var questionIdCounter = 1; // Biến đếm ID toàn cục
-
-        if (dataquizedit == null) {
-            createQuestion('quiz');
-            renderWrapperAnswer("quiz")
-        } else {
-            eduquizdata = dataquizedit;
-            createQuestion('quiz', eduquizdata.Questions);
-            requestAnimationFrame(() => {
-                focusQuestion(1); 
-            });
-            const imgsrc = eduquizdata.Questions[0].Image;
-            if (imgsrc != "") {
-                $(".styles-detail__ContentWrapper-Image").css({
-                    "background": `url(${imgsrc}) center center / cover no-repeat`,
-                    "background-color": "rgb(242, 242, 242)" // Fallback color
+        async function getAlldataStarted() {
+            try {
+                const musicResponse = await $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetListMusic", "Creator")"
                 });
-                $(".image-with-effect").css("background-image", `url(${imgsrc})`);
-                $("#wrapperImageEffect").removeClass('d-none');
-                $(".wrapper-Image_Info-block").hide();
+
+                if (musicResponse.result === "PASS") {
+                    arrmusic = musicResponse.data;
+                }
+
+                const themeResponse = await $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetListTheme", "Creator")"
+                });
+
+                if (themeResponse.result === "PASS") {
+                    arrtheme = themeResponse.data;
+                    console.log(arrtheme)
+                }
+                themeOption();
+                loadMusicOptions();
+                if (dataquizedit == null) {
+                    createQuestion('quiz');
+                    renderWrapperAnswer("quiz")
+                } else {
+                    eduquizdata = dataquizedit;
+                    createQuestion('quiz', eduquizdata.Questions);
+                    requestAnimationFrame(() => {
+                        focusQuestion(1);
+                    });
+                    updateThemeInfo(eduquizdata.ThemeId);
+                    const imgsrc = eduquizdata.Questions[0].Image;
+                    if (imgsrc != "") {
+                        $(".styles-detail__ContentWrapper-Image").css({
+                            "background": `url(${imgsrc}) center center / cover no-repeat`,
+                            "background-color": "rgb(242, 242, 242)" // Fallback color
+                        });
+                        $(".image-with-effect").css("background-image", `url(${imgsrc})`);
+                        $("#wrapperImageEffect").removeClass('d-none');
+                        $(".wrapper-Image_Info-block").hide();
+                    }
+                    $("#question-text-field").text(eduquizdata.Questions[0].QuestionText)
+                    questionIdCounter = eduquizdata.Questions.length;
+                    renderWrapperAnswer(eduquizdata.Questions[0].TypeQuestion, eduquizdata.Questions[0])
+                }
+              
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-            $("#question-text-field").text(eduquizdata.Questions[0].QuestionText)
-            questionIdCounter = eduquizdata.Questions.length;
-            renderWrapperAnswer(eduquizdata.Questions[0].TypeQuestion, eduquizdata.Questions[0])
         }
-        
+        getAlldataStarted();
+       
         function autoSaveEduQuiz(){
             var getdataEduQuiz = JSON.stringify(eduquizdata);
             return $.ajax({
@@ -554,13 +583,174 @@
             }).done(function (response) {
                 if (response.result === "PASS") {
                     eduquizdata = JSON.parse(response.data);
-                    console.log(eduquizdata);
+                    // console.log(eduquizdata);
                 } else {
                     console.error('Auto-save failed');
                 }
             }).fail(function () {
                 console.error('Ajax request failed');
             });
+        }
+        function checkEduQuiz(){
+            var valid = true;
+            var errorMessage = '';
+            var errorVip = "";
+
+            // Kiểm tra nếu Title không có giá trị
+            if (!eduquizdata.Title || eduquizdata.Title.trim() === '') {
+                Swal.fire({
+                    title: "Chưa đủ thông tin",
+                    text: "Vui lòng nhập tiêu đề cho EduQuiz.",
+                    icon: "info"
+                });
+                return;
+            }
+
+            // Kiểm tra các câu hỏi
+            $.each(eduquizdata.Questions, function (index, question) {
+                // Kiểm tra nếu câu hỏi không có QuestionText
+                if (!question.QuestionText) {
+                    valid = false;
+                    errorMessage = 'Vui lòng hoàn thành đầy đủ bộ câu hỏi.';
+                    return false; // Thoát khỏi vòng lặp
+                }
+
+                // Kiểm tra nếu câu hỏi là 'quiz'
+                if (question.TypeQuestion === 'quiz') {
+                    var correctAnswers = 0;
+                    var totalAnswers = question.Choices.length;
+
+                    $.each(question.Choices, function (i, choice) {
+                        if (choice.IsCorrect) {
+                            correctAnswers++;
+                        }
+                    });
+                    // Kiểm tra nếu câu hỏi kiểu "quiz" có nhiều hơn 4 đáp án hoặc nhiều hơn 1 đáp án đúng
+                    if (totalAnswers > 4 || correctAnswers > 1) {
+                        valid = false;
+                        errorVip = 'Vui lòng nâng cấp tài khoản để lưu EduQuiz.';
+                        return false; // Thoát khỏi vòng lặp
+                    }
+                    if (totalAnswers !== 4 || correctAnswers !== 1) {
+                        valid = false;
+                        errorMessage = 'Câu hỏi kiểu "quiz" phải có đúng 4 đáp án và 1 đáp án đúng.';
+                        return false; // Thoát khỏi vòng lặp
+                    }
+                }
+
+                // Kiểm tra nếu câu hỏi là 'true_false'
+                if (question.TypeQuestion === 'true_false') {
+                    var correctAnswers = 0;
+                    var totalAnswers = question.Choices.length;
+
+                    $.each(question.Choices, function (i, choice) {
+                        if (choice.IsCorrect) {
+                            correctAnswers++;
+                        }
+                    });
+
+                    if (totalAnswers !== 2 || correctAnswers !== 1) {
+                        valid = false;
+                        errorMessage = 'Câu hỏi kiểu "true_false" phải có 1 đáp án đúng.';
+                        return false; // Thoát khỏi vòng lặp
+                    }
+                }
+
+                // Kiểm tra nếu câu hỏi là 'input_answer'
+                if (question.TypeQuestion === 'input_answer') {
+                    var totalAnswers = question.Choices.length;
+
+                    if (totalAnswers < 1) {
+                        valid = false;
+                        errorMessage = 'Câu hỏi kiểu "input_answer" phải có ít nhất 1 đáp án.';
+                        return false; // Thoát khỏi vòng lặp
+                    }
+                }
+                if (question.TypeAnswer == 2 || (question.ImageEffect != "" && question.ImageEffect != "0")) {
+                    valid = false;
+                    errorVip = 'Vui lòng nâng cấp tài khoản để lưu EduQuiz.';
+                    return false; // Thoát khỏi vòng lặp
+                }
+            });
+
+            // Kiểm tra loại của themeId
+            var theme = arrtheme.find(function (t) {
+                return t.id == eduquizdata.ThemeId;
+            });
+
+            if (theme) {
+                if (theme.type === 'vip') {
+                    valid = false;
+                    errorVip = 'Vui lòng nâng cấp tài khoản để sử dụng Theme Vip.';
+                }
+            }
+
+            // Hiển thị thông báo nếu có lỗi
+            if (!valid) {
+                Swal.fire({
+                    title: errorMessage != "" ? "Chưa đủ thông tin" :"Nâng cấp tài khoản để tiếp tục",
+                    text: errorMessage != "" ? errorMessage : errorVip,
+                    icon: "info"
+                });
+                return;
+            } else {
+                $.ajax({
+                    type:"POST",
+                    url: "@Url.Action("SaveTypeEduQuiz", "Creator")",
+                    data:{
+                        idquiz: quizId,
+                        userid: userId
+                    },
+                    success:function(response){
+                        if(response.result ==="PASS"){
+                            location.href = "@Url.Action("Index", "Library")";
+                        }
+                    },error:function(err){
+
+                    }
+                })
+            }
+        }
+        function updateMusicInfo(musicId) {
+            const selectedMusic = arrmusic.find(music => music.id === musicId);
+
+            if (selectedMusic) {
+                const selectedLabel = selectedMusic.name;
+                if (musicId !== 1) {
+                    $('#choosemusic').attr('data-music', selectedMusic.id).find('label').text(selectedLabel);
+                }
+            }
+        }
+        function updateThemeInfo(themeId) {
+            const selectedTheme = arrtheme.find(theme => theme.id === themeId);
+
+            if (selectedTheme) {
+                const selectedLabel = selectedTheme.name;
+                if (themeId !== 1) {
+                    $('.styles__ThemeCardButton').each(function () {
+                        if ($(this).attr("data-theme") == themeId) {
+                            $(this).addClass('default');  // Thêm class 'default' vào nút được chọn
+                            $(this).click();  // Kích hoạt sự kiện click nếu cần
+                        }
+                    });
+                }
+            }
+        }
+        function setdataSettingEduQuiz(){
+            eduquizdata.Title != "" ? $("#eduquizTitle").val(eduquizdata.Title) : "";
+            eduquizdata.ImageCover != "" ? $("#btn-ImgEduQuiz").attr("src", eduquizdata.ImageCover) : "";
+            updateMusicInfo(eduquizdata.MusicId);
+            eduquizdata.Visibility == true ? $("#radio1").prop("checked", true) : "";
+            eduquizdata.Description != "" ? $("#eduquizDescription").val(eduquizdata.Description) : "";
+        }
+        function saveSettingEduQuiz() {
+            eduquizdata.Title = $("#eduquizTitle").val();
+            eduquizdata.Description = $("#eduquizDescription").val();
+            eduquizdata.MusicId = $("#choosemusic").attr("data-music");
+            eduquizdata.Visibility = $("#radio1").is(":checked") ? false : true;
+            eduquizdata.ImageCover = imgCoverSetting;
+            autoSaveEduQuiz();
+            $("#closeInterest").click();
         }
         //Lưu ảnh câu hỏi
         function saveImgQuestion(formData) {
@@ -583,39 +773,12 @@
                 autoSaveEduQuiz();
 
             } else {
-                console.log("trùng")
+                // console.log("trùng")
             }
             
             // console.log('data đã thay đổi:', eduquizdata);
         });
 
-        async function getAlldataStarted() {
-            try {
-                const musicResponse = await $.ajax({
-                    type: "GET",
-                    url: "@Url.Action("GetListMusic", "Creator")"
-                });
-
-                if (musicResponse.result === "PASS") {
-                    arrmusic = musicResponse.data;
-                }
-
-                const themeResponse = await $.ajax({
-                    type: "GET",
-                    url: "@Url.Action("GetListTheme", "Creator")"
-                });
-
-                if (themeResponse.result === "PASS") {
-                    arrtheme = themeResponse.data;
-                }
-
-                themeOption();
-                loadMusicOptions();
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
-        getAlldataStarted();
         function formatTime(seconds) {
             if (seconds < 60) {
                 return seconds + " giây";
@@ -681,7 +844,7 @@
                     break;
             }
 
-            return typeedit ? answersHtml : `<div class="styles_Answers">${answersHtml}</div>`;
+            return typeedit ? answersHtml : `<div class="styles_Answers" style="${typequestion == "input_answer" ? "flex-direction: column;align-items: center;" : ""}" > ${ answersHtml } </div>`;
         }
 
         // Hàm tạo câu hỏi mới
@@ -818,7 +981,7 @@
             let clonedQuestion = JSON.parse(JSON.stringify(originalQuestionData));
             clonedQuestion.Id = 0;
             eduquizdata.Questions.splice(questionId, 0, clonedQuestion);
-            console.log(eduquizdata)
+            // console.log(eduquizdata)
             autoSaveEduQuiz()
             
         }
@@ -1079,29 +1242,33 @@
         $("#btn-ImgEduQuiz").click(function(){
             $("#imgEduQuiz").click();
         })
-        $("#imgEduQuiz").on("change", function (event) {
+        $("#imgEduQuiz").on("change",async function (event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    const imageUrl = e.target.result;
-                    // Set background image
-                    $("#btn-ImgEduQuiz").attr("src", imageUrl)
-                  
-                };
-                reader.readAsDataURL(file);
+                var formData = new FormData();
+                formData.append('image', file);
+                formData.append('quizid', quizId);
+                try {
+                    const response = await saveImgQuestion(formData);
+                    if (response.result == "PASS") {
+                        const timestamp = new Date().getTime();
+                        imgCoverSetting = response.url + "?t=" + timestamp;
+                        $("#btn-ImgEduQuiz").attr("src", imgCoverSetting)
+                    }
+                } catch (error) {
+                    console.error("Upload failed:", error);
+                }
             }
         });
 
         function renderWrapperAnswer(typequestion,dataquestion = null){
             const answerOption = [
-                { bgcolor: 'rgb(226, 27, 60)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-54e92053-18e4-491f-9063-2016d76a1a34" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-54e92053-18e4-491f-9063-2016d76a1a34">Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: inherit;"></path></svg>' },
-                { bgcolor: 'rgb(19, 104, 206)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-65487823-89b6-41e8-a399-962751cb5162" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-65487823-89b6-41e8-a399-962751cb5162">Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path></svg>' },
-                { bgcolor: 'rgb(216, 158, 0)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-afa4ce84-cd1c-4cce-a75a-d92836a535d2" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-afa4ce84-cd1c-4cce-a75a-d92836a535d2">Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: inherit;"></path></svg>' },
-                { bgcolor: 'rgb(38, 137, 12)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-d8cb5b6e-e2b3-4066-b37f-6b7a5984c699" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-d8cb5b6e-e2b3-4066-b37f-6b7a5984c699">Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: inherit;"></path></svg>' },
-                { bgcolor: 'rgb(10, 163, 163)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-ae1bd8ae-5031-4860-b805-da4ee258cf87" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-ae1bd8ae-5031-4860-b805-da4ee258cf87">Icon</title><path d="M8.584 27 4 12.786 16 3.982 28 12.786 23.417 27z" style="fill: inherit;"></path></svg>' },
-                { bgcolor: 'rgb(134, 76, 191)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-labelledby="label-ec445ab3-a963-4630-9aa6-39acf6962ac5" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE" style="paint-order: stroke;"><title id="label-ec445ab3-a963-4630-9aa6-39acf6962ac5">Icon</title><path d="M5 8L16 26.857 27 8z" style="fill: inherit;"></path></svg>' }
+                { bgcolor: 'rgb(226, 27, 60)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(19, 104, 206)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(216, 158, 0)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(38, 137, 12)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(10, 163, 163)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M8.584 27 4 12.786 16 3.982 28 12.786 23.417 27z" style="fill: inherit;"></path></svg>' },
+                { bgcolor: 'rgb(134, 76, 191)', svg: '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M5 8L16 26.857 27 8z" style="fill: inherit;"></path></svg>' }
             ];
             const wrapper = $(".styles__ClassicQuizChoicesWrapper");
             wrapper.empty();
@@ -1337,7 +1504,7 @@
                 return card;
             }
 
-            if(typeQuestionFocus === "quiz"){
+            if (typeQuestionFocus !== "true_false") {
                 if (!$(document).data('eventsAttached')) {
                     $(document).on('focus', '.TooltipContent-text-field__input', function () {
                         answerChoiceFocus = $(this).attr("data-index");
@@ -1349,7 +1516,7 @@
                         if (content !== lastContentAnswer[answerChoiceFocus].content) {
                             let dataChoice = {
                                 Answer: content,
-                                IsCorrect: false,
+                                IsCorrect: typeQuestionFocus === "quiz" ? false : true,
                                 DisplayOrder: answerChoiceFocus
                             };
 
@@ -1367,7 +1534,7 @@
                                 }
                             autoSaveEduQuiz();
                         } else {
-                            console.log("Nội dung không thay đổi");
+                            // console.log("Nội dung không thay đổi");
                         }
 
                         // console.log('Dữ liệu đã thay đổi:', eduquizdata);
@@ -1548,12 +1715,12 @@
                     if ($(event.target).closest('.btn-testmusic').length === 0) {
                         const selectedMusic = $(this).data('music');
                         const selectedLabel = $(this).find('span:first').text();
-                        eduquizdata.MusicId = selectedMusic;
+                        // eduquizdata.MusicId = selectedMusic;
                         $('#choosemusic').attr('data-music', selectedMusic).find('label').text(selectedLabel);
                         $('#choosemusic').removeClass('focused');
                         $('#menu-music').remove();
                     }
-                    autoSaveEduQuiz();
+                    // autoSaveEduQuiz();
                 });
             });
 
@@ -1678,6 +1845,7 @@
                     });
                     eduquizdata.Questions[slideFocus - 1].Image = imgFocus;
                     eduquizdata.Questions[slideFocus - 1].ImageEffect = "0";
+                    $('.styles__LayoutsImage .style__LayoutImage:first-child .style__StyledImageEffectButton').click();
                 }
             } catch (error) {
                 console.error("Upload failed:", error);
@@ -1874,7 +2042,15 @@
                         $('#menuTypeQuiz').remove();
                         $(`#question-${slideFocus} .styles_Answers`).empty();
                         let answer = getDefaultAnswersHtml(selectedType, null, selectedType)
-                        $(`#question-${slideFocus} .styles_Answers`).append(answer);
+                        if (selectedType === "input_answer"){
+                            $(`#question-${slideFocus} .styles_Answers`).css({
+                                "flex-direction": "column",
+                                "align-items": "center" 
+                            }).append(answer);
+                        }else{
+                            $(`#question-${slideFocus} .styles_Answers`).removeAttr("style").append(answer);
+                        }
+                        
                         renderWrapperAnswer(selectedType);
                         autoSaveEduQuiz();
                     });
