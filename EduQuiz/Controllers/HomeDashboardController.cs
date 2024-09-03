@@ -22,9 +22,10 @@ namespace EduQuiz.Controllers
             if (getsession != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                string email = userInfo?.Email;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
                 return View(user);
+
             }
             return RedirectToAction("Index", "Home");
         }
@@ -36,8 +37,8 @@ namespace EduQuiz.Controllers
             if (getsession != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                string email = userInfo?.Email;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
                 ViewBag.ListTypeAccount = _context.Roles.ToList();
                 ViewBag.ListWorkplace = _context.WorkplaceTypes.ToList();
                 if (user != null)
@@ -54,8 +55,8 @@ namespace EduQuiz.Controllers
             if (getsession != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                string email = userInfo?.Email;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
                 if (user != null)
                 {
                     return View(user);
@@ -70,8 +71,8 @@ namespace EduQuiz.Controllers
             if (getsession != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                string email = userInfo?.Email;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
                 if (user != null)
                 {
                     return View(user);
@@ -86,8 +87,8 @@ namespace EduQuiz.Controllers
             if (getsession != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                string email = userInfo?.Email;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
                 if (user != null)
                 {
                     return View(user);
@@ -213,13 +214,8 @@ namespace EduQuiz.Controllers
                 }
 
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                string email = userInfo?.Email;
-                if (string.IsNullOrEmpty(email))
-                {
-                    return Json(new { result = "FAIL", msg = "Email không hợp lệ" });
-                }
-
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
                 if (user == null)
                 {
                     return Json(new { result = "FAIL", msg = "Không tìm thấy người dùng" });
@@ -263,10 +259,10 @@ namespace EduQuiz.Controllers
                 await _context.SaveChangesAsync();
                 var usersession = new
                 {
+                    Id = user.Id,
                     Email = user.Email,
                     Username = user.Username,
                     Avatar = user.ProfilePicture
-
                 };
                 var userInfoJson = JsonConvert.SerializeObject(usersession);
                 HttpContext.Session.SetString("_USERCURRENT", userInfoJson);

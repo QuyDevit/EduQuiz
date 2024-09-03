@@ -1,4 +1,5 @@
 ﻿using EduQuiz.DatabaseContext;
+using EduQuiz.Models;
 using EduQuiz.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,10 @@ builder.Services.AddSession(options =>
 builder.Services.AddDbContext<EduQuizDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EduQuizDBConnection")));
 builder.Services.AddScoped<UsernameService>(); // Đăng ký UsernameService
+// Đọc cấu hình từ appsettings.json và thêm vào container DI
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+// Đăng ký EmailService
+builder.Services.AddTransient<IEmailService, EmailService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();

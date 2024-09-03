@@ -1291,7 +1291,7 @@ button:focus{
     cursor: default;
     border-radius: 50%;
     transition: background-color 0.2s;
-    z-index: 1;
+    z-index: 2;
 }
     .icon__Upgrade span {
         display: flex;

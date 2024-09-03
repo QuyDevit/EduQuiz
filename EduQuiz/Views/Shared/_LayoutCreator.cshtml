@@ -32,9 +32,8 @@
                                     <span>Cài đặt</span>
                                 </span>
                             </button>
-                            <div class="autosave-Indicator">
-                                <span class="ml-2"><i class="fa fa-undo spin" aria-hidden="true"></i> <span class="ml-1">Đang lưu</span></span>
-                                @* <span class="ml-2"><i style="font-size:16px;" class="fa fa-check" aria-hidden="true"></i> <span class="ml-1">Đã lưu vào: Bản nháp của bạn</span></span> *@
+                            <div id="autosave" class="autosave-Indicator">
+             
                             </div>
                             <div class="styles-filter"></div>
                             <div class="mr-1">
@@ -51,18 +50,18 @@
                                 </span>
                                 <span class="mr-2">Chủ đề</span>
                             </button>
-                            <button class="button-flat preview" style="background: rgb(242, 242, 242);color:#333">
+                           @*  <button class="button-flat preview" style="background: rgb(242, 242, 242);color:#333">
                                 <span class="icon">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                 </span>
                                 <span class="ml-1">Xem trước</span>
-                            </button>
+                            </button> *@
                             <div class="mx-3">
                                 <div style="background-color:rgba(0, 0, 0, 0.1);height: 40px;width: 1px;"></div>
                             </div>
-                            <button class="button-flat preview" style="background: rgb(242, 242, 242);color:#333;box-shadow:rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 12px">
+                            <a href="@Url.Action("EduQuizDraft","Library")" class="button-flat preview" style="background: rgb(242, 242, 242);color:#333;box-shadow:rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 12px">
                                 Thoát
-                            </button>
+                            </a>
                             <button class="button-flat" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 20px" onclick="checkEduQuiz()">
                                 Lưu
                             </button>
@@ -537,7 +536,6 @@
 
                 if (themeResponse.result === "PASS") {
                     arrtheme = themeResponse.data;
-                    console.log(arrtheme)
                 }
                 themeOption();
                 loadMusicOptions();
@@ -562,7 +560,7 @@
                         $(".wrapper-Image_Info-block").hide();
                     }
                     $("#question-text-field").text(eduquizdata.Questions[0].QuestionText)
-                    questionIdCounter = eduquizdata.Questions.length;
+                    $("#question-1").click();
                     renderWrapperAnswer(eduquizdata.Questions[0].TypeQuestion, eduquizdata.Questions[0])
                 }
               
@@ -571,8 +569,16 @@
             }
         }
         getAlldataStarted();
+        function showAutoSaveStatus(status) {
+            const statusHtml = {
+                saving: `<span class="ml-2"><i class="fa fa-undo spin" aria-hidden="true"></i> <span class="ml-1">Đang lưu</span></span>`,
+                saved: `<span class="ml-2"><i style="font-size:16px;" class="fa fa-check" aria-hidden="true"></i> <span class="ml-1">Đã lưu vào: Bản nháp của bạn</span></span>`
+            };
+            $("#autosave").html(statusHtml[status]);
+        }
        
         function autoSaveEduQuiz(){
+            showAutoSaveStatus('saving');
             var getdataEduQuiz = JSON.stringify(eduquizdata);
             return $.ajax({
                 url: '@Url.Action("AutoSaveEduQuiz", "Creator")',
@@ -584,6 +590,13 @@
                 if (response.result === "PASS") {
                     eduquizdata = JSON.parse(response.data);
                     // console.log(eduquizdata);
+                    setTimeout(function () {
+                        showAutoSaveStatus('saved');
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $("#autosave").empty();
+                    }, 2400);
                 } else {
                     console.error('Auto-save failed');
                 }
@@ -611,7 +624,7 @@
                 // Kiểm tra nếu câu hỏi không có QuestionText
                 if (!question.QuestionText) {
                     valid = false;
-                    errorMessage = 'Vui lòng hoàn thành đầy đủ bộ câu hỏi.';
+                    errorMessage = 'Vui lòng hoàn thành các tiêu đề cho các câu hỏi.';
                     return false; // Thoát khỏi vòng lặp
                 }
 
@@ -633,7 +646,7 @@
                     }
                     if (totalAnswers !== 4 || correctAnswers !== 1) {
                         valid = false;
-                        errorMessage = 'Câu hỏi kiểu "quiz" phải có đúng 4 đáp án và 1 đáp án đúng.';
+                        errorMessage = 'Câu hỏi kiểu "Đố vui" phải có đúng 4 đáp án và 1 đáp án đúng.';
                         return false; // Thoát khỏi vòng lặp
                     }
                 }
@@ -651,7 +664,7 @@
 
                     if (totalAnswers !== 2 || correctAnswers !== 1) {
                         valid = false;
-                        errorMessage = 'Câu hỏi kiểu "true_false" phải có 1 đáp án đúng.';
+                        errorMessage = 'Câu hỏi kiểu "Đúng hoặc sai" phải có 1 đáp án đúng.';
                         return false; // Thoát khỏi vòng lặp
                     }
                 }
@@ -662,7 +675,7 @@
 
                     if (totalAnswers < 1) {
                         valid = false;
-                        errorMessage = 'Câu hỏi kiểu "input_answer" phải có ít nhất 1 đáp án.';
+                        errorMessage = 'Câu hỏi kiểu "Nhập đáp án" phải có ít nhất 1 đáp án.';
                         return false; // Thoát khỏi vòng lặp
                     }
                 }
@@ -725,22 +738,25 @@
             const selectedTheme = arrtheme.find(theme => theme.id === themeId);
 
             if (selectedTheme) {
-                const selectedLabel = selectedTheme.name;
                 if (themeId !== 1) {
                     $('.styles__ThemeCardButton').each(function () {
+                        $(this).removeClass("default");
+                    });
+                    $('.styles__ThemeCardButton').each(function () {
                         if ($(this).attr("data-theme") == themeId) {
-                            $(this).addClass('default');  // Thêm class 'default' vào nút được chọn
-                            $(this).click();  // Kích hoạt sự kiện click nếu cần
+                            $(this).addClass('default');  
+                            $(".styles__ContentBackground").css("background", `url(${selectedTheme.source}) center center / cover no-repeat rgb(242, 242, 242)`)
                         }
                     });
                 }
             }
         }
+       
         function setdataSettingEduQuiz(){
             eduquizdata.Title != "" ? $("#eduquizTitle").val(eduquizdata.Title) : "";
-            eduquizdata.ImageCover != "" ? $("#btn-ImgEduQuiz").attr("src", eduquizdata.ImageCover) : "";
+            eduquizdata.ImageCover != "" ? $("#btn-ImgEduQuiz").attr("src", eduquizdata.ImageCover) : "/src/img/market.jpg";
             updateMusicInfo(eduquizdata.MusicId);
-            eduquizdata.Visibility == true ? $("#radio1").prop("checked", true) : "";
+            eduquizdata.Visibility == true ? $("#radio2").prop("checked", true) : $("#radio1").prop("checked", true);
             eduquizdata.Description != "" ? $("#eduquizDescription").val(eduquizdata.Description) : "";
         }
         function saveSettingEduQuiz() {
@@ -852,12 +868,12 @@
             const questionId = getNextQuestionId();
 
             // Function to create and append question elements
-            function appendQuestionElement(questionId, type, title, answersHtml, isInitialSlide, questionText = 'Câu hỏi', time = 20, image = '') {
+            function appendQuestionElement(questionId, type, title, answersHtml, isInitialSlide, questionText = 'Câu hỏi', time = 20, image = '',checkUpgrade = false) {
                 const focusClassesBlock = isInitialSlide ? 'focus-bg' : '';
                 const focusClassesQuestion = isInitialSlide ? 'focus_Question' : '';
                 const focusClassesButton = isInitialSlide ? 'focus-button' : '';
                 const urlImg = image === "" ? "" : `style="background-image: url(${image});"`;
-
+                const upgrade = checkUpgrade == false ? "d-none" :"";
                 const questionElement = `
                     <div class="draggableItem" id="question-${questionId}" data-typequiz="${type}" data-id="${questionId}">
                         <div class="draggableItem-block ${focusClassesBlock}">
@@ -866,6 +882,9 @@
                                 <span class="draggableItem-block_wrapper-title">${title}</span>
                             </div>
                             <div class="draggableItem-block_wrapper-content">
+                                                   <div class="icon__Upgrade ${upgrade}" style="right: -9px; top: 50%; transform: translateY(-50%);">
+                                       <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                   </div>
                                 <div class="draggableItem-block_wrapper-content_Quiz ${focusClassesQuestion}">
                                     <div class="styles_Question">
                                         <span class="styles_Question-title">${questionText}</span>
@@ -923,7 +942,20 @@
                 datalistedit.forEach((item, index) => {
                     let title = getDefaultTitle(item.TypeQuestion);
                     let answersHtml = getDefaultAnswersHtml(item.TypeQuestion, item.Choices);
-                    appendQuestionElement(index + 1, item.TypeQuestion, title, answersHtml, index === 0, item.QuestionText, item.Time, item.Image);
+                    let correctAnswers = 0;
+                    let totalAnswers = item.Choices.length;
+                    $.each(item.Choices, function (i, choice) {
+                        if (choice.IsCorrect) {
+                            correctAnswers++;
+                        }
+                    });
+                    let checkUpgrade = (
+                        totalAnswers > 4 ||
+                        correctAnswers > 1 ||
+                        item.TypeAnswer == 2 ||
+                        (item.ImageEffect != "" && item.ImageEffect != "0")
+                    );
+                    appendQuestionElement(index + 1, item.TypeQuestion, title, answersHtml, index === 0, item.QuestionText, item.Time, item.Image, checkUpgrade);
                 });
             }
         }
@@ -1132,6 +1164,7 @@
                                 return ""; // hoặc một giá trị mặc định khác nếu cần
                         }
                     });
+                    $("#answerlimit").attr("data-answer", optionAnswerFocus).find('label').text(optionAnswerFocus == 1 ?"Chọn đơn":"Chọn nhiều");
                     // Loại bỏ lớp 'focused' khỏi tất cả các phần tử
                     $('.styles__LayoutsImage .style__StyledImageEffectButton').removeClass('focused');
                     $('.styles__LayoutsImage .StyledImageEffectButton_Title').removeClass('focused');
@@ -1144,7 +1177,6 @@
                             $(this).find('.StyledImageEffectButton_Title').addClass('focused');
                         }
                     });
-
                     // console.log(originalQuestionData)
                     focusQuestion(newId);
                 });
@@ -1328,23 +1360,27 @@
                     const addButton = $('<button id="btn-add-answer" class="styles__Button-answer"><div class="icon-circle-Upgrade"><span><i class="fa fa-star" aria-hidden="true"></i></span></div>Thêm câu trả lời</button>');
                     wrapper.append(addButton);
 
-                    // Add click event listener for the button
+
                     addButton.on('click', function () {
                         const extraAnswers = wrapper.find('.styles__ChoicesWrapper').children().slice(4, 6);
                         if (extraAnswers.is(":visible")) {
                             extraAnswers.hide();
                             var choicearr = eduquizdata.Questions[slideFocus - 1].Choices;
-                            
+                            if (choicearr.some(item => item.DisplayOrder === 4 || item.DisplayOrder === 5)) {
                                 eduquizdata.Questions[slideFocus - 1].Choices = choicearr.filter(item => item.DisplayOrder !== 4 && item.DisplayOrder !== 5);
                                 lastContentAnswer[4].content = "";
                                 lastContentAnswer[5].content = "";
+
                                 $(".TooltipContent-text-field__input").each(function () {
                                     var index = parseInt($(this).attr('data-index'), 10);
                                     if (index === 4 || index === 5) {
-                                        $(this).text(""); // Set the content of contenteditable divs to an empty string
+                                        $(this).text(""); 
                                     }
                                 });
-                            autoSaveEduQuiz();
+
+                                autoSaveEduQuiz(); 
+                                checkUpgrade();
+                            }
                         } else {
                             extraAnswers.show();
                         }
@@ -1497,7 +1533,8 @@
                     }
                     // Lưu tự động dữ liệu quiz
                     if (shouldAutoSave) {
-                        autoSaveEduQuiz();
+                        autoSaveEduQuiz(); 
+                        checkUpgrade();
                     }
                 });
 
@@ -1533,15 +1570,37 @@
                                     currentQuestion.Choices.push(dataChoice);
                                 }
                             autoSaveEduQuiz();
+                            checkUpgrade();
                         } else {
                             // console.log("Nội dung không thay đổi");
                         }
 
-                        // console.log('Dữ liệu đã thay đổi:', eduquizdata);
                     });
 
                     $(document).data('eventsAttached', true);
                 }
+            }
+        }
+        function checkUpgrade(){
+            let correctAnswers = 0;
+            let totalAnswers = eduquizdata.Questions[slideFocus-1].Choices.length;
+            $.each(eduquizdata.Questions[slideFocus - 1].Choices, function (i, choice) {
+                if (choice.IsCorrect) {
+                    correctAnswers++;
+                }
+            });
+            let item = eduquizdata.Questions[slideFocus - 1];
+            let checkUpgrade = (
+                totalAnswers > 4 ||
+                correctAnswers > 1 ||
+                item.TypeAnswer == 2 ||
+                (item.ImageEffect != "" && item.ImageEffect != "0")
+            );
+            
+            if (checkUpgrade) {
+                $(`#question-${slideFocus} .icon__Upgrade`).removeClass("d-none")
+            }else{
+                $(`#question-${slideFocus} .icon__Upgrade`).addClass("d-none")
             }
         }
         // renderWrapperAnswer('quiz')
@@ -1929,6 +1988,7 @@
                 $(this).addClass('focused');
                 $(this).find('.StyledImageEffectButton_Title').addClass('focused');
                 autoSaveEduQuiz();
+                checkUpgrade();
             });
         });
 
@@ -2179,7 +2239,7 @@
 
                 $('#menupoint_wrapper').append(renderMenuType(pointOptions, parseInt(currentPoint),1));
 
-                    $('#menupoint .item_option-content').on('click', function () {
+                $('#menupoint .item_option-content').on('click', function () {
                         const selectedPoint = $(this).data('value');
                         const selectedLabel = $(this).data('label');
                         const selectedDescription = $(this).data('description');
@@ -2217,6 +2277,7 @@
                     $('#answerlimit').removeClass('focused');
                     $('#menuanswer').remove();
                     autoSaveEduQuiz();
+                    checkUpgrade();
                 });
             });
 

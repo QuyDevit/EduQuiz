@@ -243,8 +243,15 @@
     align-items: stretch;
     box-sizing: border-box;
 }
+.link-action {
+    display: flex;
+    width: 100%;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    box-sizing: border-box;
+}
 .styles__CheckboxWrapper {
-    width: 2rem;
+    width: 2.3rem;
     padding: 3rem 0px;
 }
 .checkbox__Wrapper{
@@ -281,7 +288,7 @@
     font-weight: 700;
     width: fit-content;
     height: fit-content;
-    z-index: 49;
+    /*z-index: 49;*/
     backdrop-filter: blur(27px);
     background-color: rgba(0, 0, 0, 0.4);
 }
@@ -474,6 +481,7 @@ button:focus{
 }
 .folder-item {
     display: flex;
+    position:relative;
     -webkit-box-align: center;
     align-items: center;
     -webkit-box-pack: justify;
@@ -562,4 +570,60 @@ button:focus{
     display: list-item;
     vertical-align: top;
     padding:5px 0;
+}
+
+/*Model folder*/
+.folder__Container {
+    display: flex;
+    flex-direction: column;
+    height: 324px;
+    overflow: auto;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: rgb(242, 242, 242);
+}
+.folder__Name {
+    font-weight: bold;
+    font-size: 0.875rem;
+    letter-spacing: 0.2px;
+    line-height: 1.71;
+    color: rgb(51, 51, 51);
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.folder-item__Wrapper {
+    color: rgb(51, 51, 51);
+    margin-bottom: 0.5rem;
+    width: 100%;
+    height: 3rem;
+    border-radius: 4px;
+    padding: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px 0px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    border: none;
+}
+.folder-item__Wrapper:hover{
+        background: rgb(231, 231, 231);
+}
+.folder-content {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    flex: 1 1 0%;
+}
+.back-folder{
+    background:none;
+    border:none;
+    font-weight:600;
 }

@@ -3,14 +3,36 @@
     @model ICollection<EduQuiz.Models.EF.EduQuiz>;
     @using Newtonsoft.Json;
     var userInfo = JsonConvert.DeserializeObject<dynamic>(ViewBag.Data);
-    var urledit = @Url.Action("Index", "Creator");
+    var countdraft = Model.Count;
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
 }
 @section styles {
     <link href="~/src/css/library.css" rel="stylesheet" />
 }
 <div class="content" style="padding:0;margin-top:63px;">
     <div class="layout-library">
-        <partial name="_SidebarLibrary" />
+        <div class="col-md-3 sidebar-wrapper__library" style="min-height:400px;padding:0;">
+            <div class="layout-card" style="padding:0;margin:0;height:calc(100vh - 63px) ">
+                <div class="sidebar-wrapper__library-Block">
+                    <ul class="sidebar-Link__Container">
+                        <li class="sidebar-Link__Wrapper">
+                            <a class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/all" ? "active" : "")" href="@Url.Action("Index","Library")">
+                                <span class="sidebar-Link__Icon">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M10,20.6c0-0.9,0.7-1.6,1.6-1.6s1.6,0.7,1.6,1.6s-0.7,1.6-1.6,1.6S10,21.5,10,20.6z M11.5,9.8l-2,3.2h4  L11.5,9.8z M26,9v14c0,1.7-1.3,3-3,3H9c-1.7,0-3-1.3-3-3V9c0-1.7,1.3-3,3-3h14C24.7,6,26,7.3,26,9z M15,17H8v6c0,0.6,0.4,1,1,1h6V17  z M15,8H9C8.4,8,8,8.4,8,9v6h7V8z M24,17h-7v7h6c0.6,0,1-0.4,1-1V17z M24,9c0-0.6-0.4-1-1-1h-6v7h7V9z M22,19h-3v3h3V19z M18.5,11.5  l2,2l2-2l-2-2L18.5,11.5z" style="fill: rgb(110, 110, 110);"></path></svg>
+                                </span>
+                                <span class="ml-2">EduQuizs</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="library-sidebar__Separator"></div>
+                    <div id="partialfolder-container">
+                        <partial name="_PartialFolders" model="@ViewBag.Folders" />
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="library-layout__Content">
             <div class="library-eduquiz__Content">
                 <div class="library-eduquiz__Filter">
@@ -27,63 +49,66 @@
                     {
                         foreach (var item in Model)
                         {
-                            <div class="styles__BaseCard" data-question="@item.Uuid">
+                            <div class="styles__BaseCard">
                                 <div class="styles__CheckboxWrapper">
                                     <div class="checkbox__Wrapper">
                                         <input type="checkbox" class="checkbox" />
                                     </div>
                                 </div>
-                                <div class="styles__Image" style="@($"background: url({item.ImageCover}) center center / cover no-repeat;")">
-                                    <span class="styles__Questions">@item.Questions.Count câu hỏi</span>
-                                </div>
-                                <div class="styles__BaseCard_Body">
-                                    <div class="styles__BaseCard_Body flex-row">
-                                        <h3 class="styles__BaseCard_Body-title">@item.Title</h3>
-                                        <div class="d-flex align-items-center">
-                                            <a href="@Url.Action("Index","Creator",new{id = item.Uuid})" class="styles__Button">
-                                                <span class="styles-button__Icon"><svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M23.4091683,8.594 C24.1731683,9.359 24.1731683,10.693 23.4091683,11.458 L22.6901683,12.178 L19.8241683,9.313 L20.5451683,8.594 C21.3101683,7.83 22.6441683,7.829 23.4091683,8.594 L23.4091683,8.594 Z M8.37616832,23.626 L8.97116832,21.252 L10.7501683,23.033 L8.37616832,23.626 Z M18.4111683,10.728 L21.2741683,13.591 L12.7061683,22.159 L9.84316832,19.296 L18.4111683,10.728 Z M24.8211683,7.179 C24.0611683,6.418 23.0501683,6 21.9741683,6 C20.9001683,6 19.8881683,6.418 19.1281683,7.179 L7.71916832,18.587 C7.71916832,18.587 7.71816832,18.59 7.71716832,18.591 C7.63616832,18.673 7.49716832,18.889 7.45616832,19.052 L6.03016832,24.757 C5.94416832,25.097 6.04516832,25.458 6.29316832,25.706 L6.29416832,25.707 L6.29616832,25.708 C6.54416832,25.956 6.90416832,26.057 7.24516832,25.972 L12.9491683,24.545 C13.1121683,24.504 13.3291683,24.365 13.4101683,24.284 C13.4111683,24.283 13.4141683,24.282 13.4141683,24.282 L24.8231683,12.873 C25.5831683,12.113 26.0021683,11.102 26.0011683,10.027 C26.0011683,8.951 25.5831683,7.941 24.8231683,7.18 L24.8211683,7.179 Z" style="fill: rgb(51, 51, 51);"></path></svg></span>
-                                            </a>
-                                            <div class="styles__Actionmenu">
-                                                <button class="styles__Button p-2" id="openmenu-@item.Id" data-question="@item.Id">
-                                                    <span class="styles-button__Icon"><svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,10 C17.1045695,10 18,9.1045695 18,8 C18,6.8954305 17.1045695,6 16,6 C14.8954305,6 14,6.8954305 14,8 C14,9.1045695 14.8954305,10 16,10 Z M16,18 C17.1045695,18 18,17.1045695 18,16 C18,14.8954305 17.1045695,14 16,14 C14.8954305,14 14,14.8954305 14,16 C14,17.1045695 14.8954305,18 16,18 Z M16,26 C17.1045695,26 18,25.1045695 18,24 C18,22.8954305 17.1045695,22 16,22 C14.8954305,22 14,22.8954305 14,24 C14,25.1045695 14.8954305,26 16,26 Z" style="fill: rgb(51, 51, 51);"></path></svg></span>
-                                                </button>
-                                                <ul class="list-action__menu d-none" id="menu-@item.Id">
-                                                    <li class="list-action__menu-item">
-                                                        <button class="styles__Button-menu" data-quesion="@item.Id">
-                                                            <span class="styles-button__Icon"><svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24,12 L20,12 L20,10 C20,9.449 20.449,9 21,9 L23,9 L23,7 L21,7 C20.232,7 19.531,7.29 19,7.766 C18.469,7.29 17.768,7 17,7 L15,7 L15,9 L17,9 C17.551,9 18,9.449 18,10 L18,12 L8,12 C6.897,12 6,12.897 6,14 L6,18 C6,19.103 6.897,20 8,20 L18,20 L18,22 C18,22.551 17.551,23 17,23 L15,23 L15,25 L17,25 C17.768,25 18.469,24.71 19,24.234 C19.531,24.71 20.232,25 21,25 L23,25 L23,23 L21,23 C20.449,23 20,22.551 20,22 L20,20 L24,20 C25.103,20 26,19.103 26,18 L26,14 C26,12.897 25.103,12 24,12 Z M8,18 L8,14 L18,14 L18,18 L8,18 Z M23.997,18 L20,18 L20,14 L24,14 L23.997,18 Z" style="fill: rgb(115, 115, 115);"></path></svg></span>
-                                                            <p class="action-title">Đổi tên</p>
-                                                        </button>
-                                                    </li>
-                                                    <li class="list-action__menu-item">
-                                                        <button class="styles__Button-menu" data-quesion="@item.Id">
-                                                            <span class="styles-button__Icon">
-                                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M9,24 C9,25.103 9.897,26 11,26 L21,26 C22.103,26 23,25.103 23,24 L23,12 L9,12 L9,24 Z M11,14 L21,14 L21.001,24 L11,24 L11,14 Z M19,9 L25,9 L25,11 L7,11 L7,9 L13,9 L13,7 L19,7 L19,9 Z M13,16 L13,22 L15,22 L15,16 L13,16 Z M17,16 L17,22 L19,22 L19,16 L17,16 Z" style="fill: rgb(115, 115, 115);"></path></svg>
-                                                            </span>
-                                                            <p class="action-title">Xóa bỏ</p>
-                                                        </button>
-                                                    </li>
-                                                </ul>
+                                <div class="link-action" data-question="@item.Uuid">
+                                    <div class="styles__Image" style="@($"background: url({item.ImageCover}) center center / cover no-repeat;")">
+                                        <span class="styles__Questions">@item.Questions.Count câu hỏi</span>
+                                    </div>
+                                    <div class="styles__BaseCard_Body">
+                                        <div class="styles__BaseCard_Body flex-row">
+                                            <h3 class="styles__BaseCard_Body-title">@(item.Title != "" ? item.Title : "Đặt tên cho EduQuiz")</h3>
+                                            <div class="d-flex align-items-center">
+                                                <a href="@Url.Action("Index","Creator",new{id = item.Uuid})" class="styles__Button">
+                                                    <span class="styles-button__Icon"><svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M23.4091683,8.594 C24.1731683,9.359 24.1731683,10.693 23.4091683,11.458 L22.6901683,12.178 L19.8241683,9.313 L20.5451683,8.594 C21.3101683,7.83 22.6441683,7.829 23.4091683,8.594 L23.4091683,8.594 Z M8.37616832,23.626 L8.97116832,21.252 L10.7501683,23.033 L8.37616832,23.626 Z M18.4111683,10.728 L21.2741683,13.591 L12.7061683,22.159 L9.84316832,19.296 L18.4111683,10.728 Z M24.8211683,7.179 C24.0611683,6.418 23.0501683,6 21.9741683,6 C20.9001683,6 19.8881683,6.418 19.1281683,7.179 L7.71916832,18.587 C7.71916832,18.587 7.71816832,18.59 7.71716832,18.591 C7.63616832,18.673 7.49716832,18.889 7.45616832,19.052 L6.03016832,24.757 C5.94416832,25.097 6.04516832,25.458 6.29316832,25.706 L6.29416832,25.707 L6.29616832,25.708 C6.54416832,25.956 6.90416832,26.057 7.24516832,25.972 L12.9491683,24.545 C13.1121683,24.504 13.3291683,24.365 13.4101683,24.284 C13.4111683,24.283 13.4141683,24.282 13.4141683,24.282 L24.8231683,12.873 C25.5831683,12.113 26.0021683,11.102 26.0011683,10.027 C26.0011683,8.951 25.5831683,7.941 24.8231683,7.18 L24.8211683,7.179 Z" style="fill: rgb(51, 51, 51);"></path></svg></span>
+                                                </a>
+                                                <div class="styles__Actionmenu">
+                                                    <button class="styles__Button p-2" id="openmenu-@item.Id" data-question="@item.Id">
+                                                        <span class="styles-button__Icon"><svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,10 C17.1045695,10 18,9.1045695 18,8 C18,6.8954305 17.1045695,6 16,6 C14.8954305,6 14,6.8954305 14,8 C14,9.1045695 14.8954305,10 16,10 Z M16,18 C17.1045695,18 18,17.1045695 18,16 C18,14.8954305 17.1045695,14 16,14 C14.8954305,14 14,14.8954305 14,16 C14,17.1045695 14.8954305,18 16,18 Z M16,26 C17.1045695,26 18,25.1045695 18,24 C18,22.8954305 17.1045695,22 16,22 C14.8954305,22 14,22.8954305 14,24 C14,25.1045695 14.8954305,26 16,26 Z" style="fill: rgb(51, 51, 51);"></path></svg></span>
+                                                    </button>
+                                                    <ul class="list-action__menu d-none" id="menu-@item.Id">
+                                                        <li class="list-action__menu-item">
+                                                            <button class="styles__Button-menu" data-quesion="@item.Id">
+                                                                <span class="styles-button__Icon"><svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24,12 L20,12 L20,10 C20,9.449 20.449,9 21,9 L23,9 L23,7 L21,7 C20.232,7 19.531,7.29 19,7.766 C18.469,7.29 17.768,7 17,7 L15,7 L15,9 L17,9 C17.551,9 18,9.449 18,10 L18,12 L8,12 C6.897,12 6,12.897 6,14 L6,18 C6,19.103 6.897,20 8,20 L18,20 L18,22 C18,22.551 17.551,23 17,23 L15,23 L15,25 L17,25 C17.768,25 18.469,24.71 19,24.234 C19.531,24.71 20.232,25 21,25 L23,25 L23,23 L21,23 C20.449,23 20,22.551 20,22 L20,20 L24,20 C25.103,20 26,19.103 26,18 L26,14 C26,12.897 25.103,12 24,12 Z M8,18 L8,14 L18,14 L18,18 L8,18 Z M23.997,18 L20,18 L20,14 L24,14 L23.997,18 Z" style="fill: rgb(115, 115, 115);"></path></svg></span>
+                                                                <p class="action-title">Đổi tên</p>
+                                                            </button>
+                                                        </li>
+                                                        <li class="list-action__menu-item">
+                                                            <button class="styles__Button-menu" data-quesion="@item.Id">
+                                                                <span class="styles-button__Icon">
+                                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M9,24 C9,25.103 9.897,26 11,26 L21,26 C22.103,26 23,25.103 23,24 L23,12 L9,12 L9,24 Z M11,14 L21,14 L21.001,24 L11,24 L11,14 Z M19,9 L25,9 L25,11 L7,11 L7,9 L13,9 L13,7 L19,7 L19,9 Z M13,16 L13,22 L15,22 L15,16 L13,16 Z M17,16 L17,22 L19,22 L19,16 L17,16 Z" style="fill: rgb(115, 115, 115);"></path></svg>
+                                                                </span>
+                                                                <p class="action-title">Xóa bỏ</p>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="styles__BaseCard_Body Basecard-footer">
-                                        <div class="styles-InfoUser">
-                                            <div class="profile-imageUser" style="@($"background: url({userInfo.Avatar}) center center / cover no-repeat;")"></div>
-                                            <span>@userInfo.UserName</span>
-                                            <span class="ml-2"><i style="font-size:16px;margin-right:10px;color:#939393" class="fa @(item.Visibility ? "fa-globe": "fa-user")" aria-hidden="true"></i></span>
-                                        </div>
-                                        <div class="styles_eduquizInfo justify-content-center">
-                                            <span class="font-weight-bold">
-                                                @if (item.UpdateAt.HasValue)
-                                                {
-                                                    @($"Ngày {item.UpdateAt.Value:dd} tháng {item.UpdateAt.Value:MM} năm {item.UpdateAt.Value:yyyy}")
-                                                }
-                                                else
-                                                {
-                                                    @($"Ngày {item.CreatedAt.Value:dd} tháng {item.CreatedAt.Value:MM} năm {item.CreatedAt.Value:yyyy}")
-                                                }
-                                            </span>
-                                            <a href="@Url.Action("Index","Creator",new {id = item.Uuid})" class="styles__eduquizInfo-Btn" style="background: rgb(19, 104, 206);margin:0 4px;">Chỉnh sửa</a>
+                                        <div class="styles__BaseCard_Body Basecard-footer">
+                                            <div class="styles-InfoUser">
+                                                <div class="profile-imageUser" style="@($"background: url({userInfo.Avatar}) center center / cover no-repeat;")"></div>
+                                                <span>@userInfo.UserName</span>
+                                                <span class="ml-2"><i style="font-size:16px;margin-right:10px;color:#939393" class="fa @(item.Visibility ? "fa-globe": "fa-user")" aria-hidden="true"></i></span>
+                                                <span class="ml-1">@(item.Visibility ? "Công khai" : "Riêng tư")</span>
+                                            </div>
+                                            <div class="styles_eduquizInfo justify-content-center">
+                                                <span class="font-weight-bold">
+                                                    @if (item.UpdateAt.HasValue)
+                                                    {
+                                                        @($"Ngày {item.UpdateAt.Value:dd} tháng {item.UpdateAt.Value:MM} năm {item.UpdateAt.Value:yyyy}")
+                                                    }
+                                                    else
+                                                    {
+                                                        @($"Ngày {item.CreatedAt.Value:dd} tháng {item.CreatedAt.Value:MM} năm {item.CreatedAt.Value:yyyy}")
+                                                    }
+                                                </span>
+                                                <a href="@Url.Action("Index","Creator",new {id = item.Uuid})" class="styles__eduquizInfo-Btn" style="background: rgb(19, 104, 206);margin:0 4px;">Chỉnh sửa</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -95,45 +120,17 @@
         </div>
     </div>
 </div>
-
 <script>
-    $(".styles__BaseCard").click(function () {
-        var questionId = $(this).attr("data-question");
-        location.href = `@urledit/${questionId}`;
-    });
-    $('.styles__Button.p-2').click(function (event) {
-        var menuId = $(this).attr('id').replace('openmenu-', '#menu-');
-        var $menu = $(menuId);
-        $('.list-action__menu').not($menu).addClass('d-none');
-        $menu.toggleClass('d-none');
-        event.stopPropagation();
-    });
-    $(document).click(function () {
-        $('.list-action__menu').addClass('d-none');
-    });
-    $('.list-action__menu').click(function (event) {
-        event.stopPropagation();
-    });
-
-    $(".add-folders").click(function () {
-        let check = $("#addfolder-wrapper").hasClass("d-none");
-        var inputfolder = $(".input__add-folder");
-        $("#addfolder-wrapper").toggleClass("d-none")
-        if (check) {
-            inputfolder.focus();
+    var urlcurrent = "@currentPath";
+    $("#tab_draft").text("Bản nháp(@countdraft)")
+    $(document).on('click', '.link-action', function (event) {
+        if ($(event.target).closest('.styles__Button.p-2, .list-action__menu').length > 0) {
+            event.preventDefault();
         } else {
-            inputfolder.val(""); // Clear input if the wrapper is hidden
-        }
-    })
-    $(".sidebar-Link__Wrapper a").click(function (event) {
-        if ($(this).hasClass("active")) {
-            event.preventDefault();
-        }
-    })
-    $(".sidebar-folders__Root a").click(function (event) {
-        if ($(this).closest(".sidebar-folders__Root").hasClass("active")) {
-            event.preventDefault();
+            var questionId = $(this).attr('data-question');
+            location.href = `/creator/${questionId}`;
         }
     });
-
 </script>
+<script src="~/src/js/mainlibrary.js"></script>
+

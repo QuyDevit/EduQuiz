@@ -9,7 +9,7 @@
         <a href="@Url.Action("Index","Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/all" ? "active" : "")">Gần đây</a>
     </div>
     <div class="eduquiz-root__Tabs">
-        <a href="@Url.Action("EduQuizDraft","Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/drafts" ? "active" : "")">Bản nháp</a>
+        <a id="tab_draft" href="@Url.Action("EduQuizDraft","Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/drafts" ? "active" : "")">Bản nháp</a>
     </div>
     <div class="eduquiz-root__Tabs">
         <a href="#">Yêu thích</a>

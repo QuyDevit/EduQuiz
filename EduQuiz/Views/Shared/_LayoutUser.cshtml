@@ -37,6 +37,50 @@
         <button id="toast-close"></button>
         <div id="timer"></div>
     </section>
+    <div class="modal" id="modalReNameEduQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="border:none">
+                    <h3 class="modal-title">Sửa tên EduQuiz</h3>
+                </div>
+                <div class="modal-body">
+                    <span>Vui lòng nhập tên EduQuiz bên dưới</span>
+                    <input style="padding:10px 16px;font-weight:600" id="editname" type="text" class="form-control mt-4" placeholder="Nhập tên EduQuiz mới" value="">
+                </div>
+                <div class="modal-footer" style="border:none;justify-content:center">
+                    <button id="close" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                    <button id="savename" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="modalMoveEduQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="border:none">
+                    <h3 class="modal-title">Di chuyển EduQuiz</h3>
+                </div>
+                <div class="modal-body">
+                    <button class="back-folder d-none">
+                        <span class="styles-button__Icon">
+                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M10.707 11.293L12.121 12.707 9.828 15 25.414 15 25.414 17 9.828 17 12.121 19.293 10.707 20.707 6 16z" style="fill: rgb(110, 110, 110);"></path></svg>
+                        </span>
+                        Quay lại
+                    </button>
+                    <div class="folder__Container">
+                        <div class="folder__Name"></div>
+                        <div class="folder-container">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;justify-content:center">
+                    <button id="closemenufolder" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                    <button id="savefolder" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Lưu ở đây</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="~/src/js/jquery.min.js"></script>
     <!-- Popper JS -->
     <script src="~/src/js/popper.min.js"></script>
@@ -56,6 +100,77 @@
             };
             $("#autosave").html(statusHtml[status]);
         }
+        function setnameEduQuiz(id) {
+            $('.list-action__menu').addClass('d-none');
+            $("#editname").val($(`#title-${id}`).text())
+            $("#savename").attr("data-id", id);
+        }
+        function openMenuFolder(ideduquiz) {
+            $("#closemenufolder").click();
+            $("#savefolder").attr("data-eduquiz", ideduquiz);
+            getFolder();
+        } 
+        function getFolder(id = null) {
+            $.ajax({
+                type: "POST",
+                url: "/Library/GetFolderbyUser",
+                data: {
+                    idfolder: id ? id : 0,
+                },
+                success: function (response) {
+                    if (response.result == "PASS") {
+                        $(".folder__Name").text(response.dataroot.name);
+                        $("#savefolder").attr("data-id", response.dataroot.id);
+                        if (response.dataroot.parentFolderId == null) {
+                            $(".back-folder").addClass("d-none");
+                        } else {
+
+                            $(".back-folder").removeClass("d-none");
+                            $(".back-folder").attr("data-id", response.dataroot.parentFolderId);
+                        }
+                        $(".folder-container").empty();
+                        if (response.data.length === 0) {
+                            
+                            $(".folder-container").css({
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center"
+                            }).append('<span>Không còn thư mục nào nữa</span>');
+                        }else{
+                            $(".folder-container").removeAttr("style");
+                            response.data.forEach(function (folder) {
+                                const folderElement = `
+                                        <button class="folder-item__Wrapper" data-id="${folder.id}">
+                                            <div class="folder-content">
+                                                <span>
+                                                    <span class="styles-button__Icon">
+                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24,11 L15.75,11 L14.1,8.8 C13.725,8.299 13.126,8 12.5,8 L8,8 C6.897,8 6,8.898 6,10 L6,23 C6,24.103 6,25 8,25 L24,25 C25.103,25 26,24.103 26,23 L26,13 C26,11.898 25.103,11 24,11 L24,11 Z" style="fill: #e3c92c"></path></svg>
+                                                    </span>
+                                                    <span style="font-weight:600">${folder.name}</span>
+                                                </span>
+                                                <span class="styles-button__Icon">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M12 24.415L10.586 23 17.586 16 10.586 9.001 12 7.586 20.414 16z" style="fill: rgb(110, 110, 110);"></path></svg>
+                                                </span>
+                                            </div>
+                                        </button>`;
+                                $(".folder-container").append(folderElement);
+                            });
+                            $(".folder-item__Wrapper").on('click', function () {
+                                var folderId = $(this).data("id");
+                                getFolder(folderId);
+                            });
+                        }
+                    
+                    }
+                }
+            })
+        }
+        $(".back-folder").on('click', function () {
+            var parentFolderId = $(this).attr("data-id");
+            getFolder(parentFolderId);
+        });
         </script>
     @RenderSection("scripts", required: false)
 </body>

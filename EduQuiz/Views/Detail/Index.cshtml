@@ -3,7 +3,21 @@
     @model EduQuiz.Models.EduQuizData;
     @using Newtonsoft.Json;
     var userInfo = JsonConvert.DeserializeObject<dynamic>(ViewBag.Data);
+    var now = DateTime.Now;
+    var updateAt = Model.UpdateAt;
+    string timeAgo = "Vừa xong";
 
+    if (updateAt.HasValue)
+    {
+        var timeSpan = now - updateAt.Value;
+
+        if (timeSpan.TotalDays >= 1)
+            timeAgo = $"{(int)timeSpan.TotalDays} ngày trước";
+        else if (timeSpan.TotalHours >= 1)
+            timeAgo = $"{(int)timeSpan.TotalHours} giờ trước";
+        else if (timeSpan.TotalMinutes >= 1)
+            timeAgo = $"{(int)timeSpan.TotalMinutes} phút trước";
+    }
 }
 @section styles{
     <link href="~/src/css/detail.css" rel="stylesheet" />
@@ -40,7 +54,7 @@
                             <a class="img-user" href="#" style="background: url('@userInfo.Avatar') 100% center / cover no-repeat rgb(242, 242, 242);"></a>
                                 <div class="d-flex flex-column">
                                 <a href="#" style="font-weight: 600; color:#333">@userInfo.UserName</a>
-                                    <span>Cập nhật 7 ngày trước</span>
+                                <span>@timeAgo</span>
                                 </div>
                             </div>
         

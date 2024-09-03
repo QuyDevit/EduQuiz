@@ -9,6 +9,7 @@ namespace EduQuiz.Models.EF
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
+        public Guid Uuid { get; set; } = Guid.NewGuid();
 
         [ForeignKey("UserId")]
         public int? UserId { get; set; }

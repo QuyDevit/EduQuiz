@@ -19,13 +19,15 @@ namespace EduQuiz.Controllers
         private readonly UsernameService _usernameService;
         private readonly Random _random;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IEmailService _emailService;
 
-        public AccountController(EduQuizDBContext context, UsernameService usernameService, IHttpClientFactory httpClientFactory)
+        public AccountController(EduQuizDBContext context, UsernameService usernameService, IHttpClientFactory httpClientFactory, IEmailService emailService)
         {
             _context = context;
             _usernameService = usernameService;
             _random = new Random(); // Khởi tạo đối tượng Random
-            _httpClientFactory = httpClientFactory;     
+            _httpClientFactory = httpClientFactory;
+            _emailService = emailService;
         }
         [Route("auth/typeaccount")]
         public IActionResult Register()
@@ -62,9 +64,8 @@ namespace EduQuiz.Controllers
             if (sessionData != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                string email = userInfo?.Email;
-
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
                 if (user != null)
                 {
                     user.LastLoginAt = DateTime.Now;
@@ -74,7 +75,6 @@ namespace EduQuiz.Controllers
                 // Xóa session và chuyển hướng về trang chủ
                 HttpContext.Session.Remove("_USERCURRENT");
             }
-
             return RedirectToAction("Index", "Home");
         }
         [Route("auth/deleteaccount")]
@@ -84,19 +84,16 @@ namespace EduQuiz.Controllers
             if (sessionData != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                string email = userInfo?.Email;
-
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
                 if (user != null)
                 {
                     user.Status = false;
                     await _context.SaveChangesAsync();
                 }
-
                 // Xóa session và chuyển hướng về trang chủ
                 HttpContext.Session.Remove("_USERCURRENT");
             }
-
             return RedirectToAction("Index", "Home");
         }
         [Route("auth/verifyemail")]
@@ -172,6 +169,7 @@ namespace EduQuiz.Controllers
                         await _context.SaveChangesAsync();
                         var userInfo = new
                         {
+                            Id = user.Id,
                             Email = user.Email,
                             Username = user.Username,
                             Avatar = user.ProfilePicture
@@ -185,6 +183,7 @@ namespace EduQuiz.Controllers
                     {
                         var userInfo = new
                         {
+                            Id = checkUser.Id,
                             Email = checkUser.Email,
                             Username = checkUser.Username,
                             Avatar = checkUser.ProfilePicture
@@ -237,6 +236,7 @@ namespace EduQuiz.Controllers
             }
             var userInfo = new
             {
+                Id = user.Id,
                 Email = user.Email,
                 Username = user.Username,
                 Avatar = user.ProfilePicture
@@ -251,9 +251,14 @@ namespace EduQuiz.Controllers
         {
             try
             {
+                if (!IsValidEmail(email))
+                {
+                    return Json(new { result = "FAIL", msg = "Địa chỉ email không hợp lệ." });
+                }
                 string getusername = HttpContext.Session.GetString("_USERNAME");
                 int? gettypeaccount = HttpContext.Session.GetInt32("_TYPEACCOUNT");
                 string birthdayString = HttpContext.Session.GetString("_DATEOFBIRTH");
+                
 
                 // Kiểm tra giá trị
                 if (string.IsNullOrEmpty(getusername) || gettypeaccount == null || string.IsNullOrEmpty(birthdayString))
@@ -314,6 +319,7 @@ namespace EduQuiz.Controllers
 
                         _context.Users.Add(user);
                         await _context.SaveChangesAsync();
+                        HttpContext.Session.Clear();
 
                         return Json(new { result = "PASS", msg = "Vui lòng kiểm tra Email để xác minh tài khoản" });
                     }
@@ -501,20 +507,18 @@ namespace EduQuiz.Controllers
                 </tr>
             </table>";
             }
-            using (MailMessage mail = new MailMessage())
+            _emailService.SendEmail(recipientEmail, subject, template);
+        }
+        private bool IsValidEmail(string email)
+        {
+            try
             {
-                mail.From = new MailAddress("pingvocuc555@gmail.com", "EduQuiz");
-                mail.To.Add(recipientEmail);
-                mail.Subject = subject;
-                mail.IsBodyHtml = true;
-                mail.Body = template; // Set your HTML template as the email body
-
-                using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
-                {
-                    smtp.Credentials = new System.Net.NetworkCredential("pingvocuc555@gmail.com", "bkxflmlmnyxxrzrz");
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-                }
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
             }
         }
         #endregion

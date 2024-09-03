@@ -15,6 +15,7 @@ namespace EduQuiz.Models
         public int? ThemeId { get; set; }
         public int? MusicId { get; set; }
         public List<QuestionData> Questions { get; set; }
+        public DateTime? UpdateAt { get; set; }
     }
     public class QuestionData
     {

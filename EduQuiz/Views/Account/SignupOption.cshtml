@@ -145,26 +145,30 @@
                                     email: email
                                 },
                                 success: function (response) {
+                                    $(".loading").hide();
                                     if (response.result == "PASS") {
-                                        $(".loading").hide();
                                         openToast('success', 'Thành công', response.msg, 2500);
                                         $("#pass").val("");
                                         $("#email").val("");
-                                    } else if (response.code === 400) {
-                                        $(".loading").hide();
+                                        grecaptcha.reset()
+                                    } else {
                                         openToast('warning', 'Lỗi', response.msg, 2500);
+                                        grecaptcha.reset();
                                     } 
                                 },
                                 error: function (err) {
-                                    
+                                    $(".loading").hide();
+                                    grecaptcha.reset()
                                 }
                             });
                         } else {
                             openToast('warning', 'Lỗi', 'Xác minh thất bại. Vui lòng thử lại!', 2500);
+                            grecaptcha.reset()
                         }
                     },
                     error: function (err) {
                         commonError(err);
+                        grecaptcha.reset()
                     }
                 });
             })

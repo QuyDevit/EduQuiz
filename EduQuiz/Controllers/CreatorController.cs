@@ -29,76 +29,73 @@ namespace EduQuiz.Controllers
             if (sessionData != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                string email = userInfo?.Email?.ToString(); // Convert dynamic type to string
 
-                if (!string.IsNullOrEmpty(email))
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var user = await _context.Users.FindAsync(userId);
+                if (user != null)
                 {
-                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-                    if (user != null)
+                    var check = await _context.EduQuizs
+                        .Include(e => e.Questions)
+                        .ThenInclude(q => q.Choices)
+                        .FirstOrDefaultAsync(d => d.Uuid == id);
+
+                    if (check == null)
                     {
-                        var check = await _context.EduQuizs
-                            .Include(e => e.Questions)
-                            .ThenInclude(q => q.Choices)
-                            .FirstOrDefaultAsync(d => d.Uuid == id);
-
-                        if (check == null)
+                        ViewBag.Data = new { quizId = id, userId = user.Id };
+                        return View(null);
+                    }
+                    else
+                    {
+                        if (check.UserId != user.Id)
                         {
-                            ViewBag.Data = new { quizId = id, userId = user.Id };
-                            return View(null);
+                            return RedirectToAction("Index", "HomeDashboard");
                         }
-                        else
-                        {
-                            if (check.UserId != user.Id)
-                            {
-                                return RedirectToAction("Index", "HomeDashboard");
-                            }
-                            List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion);
+                        List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion);
 
-                            var getdata = new Models.EduQuizData
+                        var getdata = new Models.EduQuizData
+                        {
+                            Uuid = check.Uuid,
+                            Description = check.Description,
+                            Title = check.Title,
+                            ImageCover = check.ImageCover,
+                            Type = check.Type ?? 0,
+                            Visibility = check.Visibility,
+                            ThemeId = check.ThemeId ?? 0,
+                            MusicId = check.MusicId ?? 0,
+                            UserId = check.UserId ?? 0,
+                            Questions = check.Questions.Select(q => new QuestionData
                             {
-                                Uuid = check.Uuid,
-                                Description = check.Description,
-                                Title = check.Title,
-                                ImageCover = check.ImageCover,
-                                Type = check.Type ?? 0,
-                                Visibility = check.Visibility,
-                                ThemeId = check.ThemeId ?? 0,
-                                MusicId = check.MusicId ?? 0,
-                                UserId = check.UserId ?? 0,
-                                Questions = check.Questions.Select(q => new QuestionData
+                                Id = q.Id,
+                                QuestionText = q.QuestionText,
+                                TypeQuestion = q.TypeQuestion,
+                                TypeAnswer = q.TypeAnswer ?? 0,
+                                Time = q.Time ?? 0,
+                                PointsMultiplier = q.PointsMultiplier ?? 0,
+                                Image = q.Image,
+                                ImageEffect = q.ImageEffect,
+                                Choices = q.Choices.OrderBy(c => c.DisplayOrder).Select(c => new ChoiceData
                                 {
-                                    Id = q.Id,
-                                    QuestionText = q.QuestionText,
-                                    TypeQuestion = q.TypeQuestion,
-                                    TypeAnswer = q.TypeAnswer ?? 0,
-                                    Time = q.Time ?? 0,
-                                    PointsMultiplier = q.PointsMultiplier ?? 0,
-                                    Image = q.Image,
-                                    ImageEffect = q.ImageEffect,
-                                    Choices = q.Choices.OrderBy(c => c.DisplayOrder).Select(c => new ChoiceData
-                                    {
-                                        Id = c.Id,
-                                        Answer = c.Answer,
-                                        IsCorrect = c.IsCorrect,
-                                        DisplayOrder = c.DisplayOrder
-                                    }).ToList()
+                                    Id = c.Id,
+                                    Answer = c.Answer,
+                                    IsCorrect = c.IsCorrect,
+                                    DisplayOrder = c.DisplayOrder
                                 }).ToList()
-                            };
-                            var orderLookup = orderquestion.Select((id, index) => new { id, index })
-                             .ToDictionary(x => x.id, x => x.index);
+                            }).ToList()
+                        };
+                        var orderLookup = orderquestion.Select((id, index) => new { id, index })
+                         .ToDictionary(x => x.id, x => x.index);
 
-                            // Sắp xếp danh sách câu hỏi theo thứ tự trong orderid
-                            getdata.Questions = getdata.Questions
-                                .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
-                                .ToList();
+                        // Sắp xếp danh sách câu hỏi theo thứ tự trong orderid
+                        getdata.Questions = getdata.Questions
+                            .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
+                            .ToList();
 
-                            ViewBag.Data = new { quizId = id, userId = user.Id };
-                            return View(getdata);
-                        }
+                        ViewBag.Data = new { quizId = id, userId = user.Id };
+                        return View(getdata);
                     }
                 }
-            }
 
+            }
             return RedirectToAction("Index", "HomeDashboard");
         }
         #region handle
@@ -219,10 +216,24 @@ namespace EduQuiz.Controllers
             try
             {
                 List<int> orderid = new List<int>();
-                var checkEduQuiz = await _context.EduQuizs
-                    .Include(q => q.Questions)
-                    .ThenInclude(q => q.Choices)
-                    .FirstOrDefaultAsync(q => q.Uuid == data.Uuid);
+                Models.EF.EduQuiz checkEduQuiz;
+                if (data.Id != 0)
+                {
+                    checkEduQuiz = await _context.EduQuizs.FindAsync(data.Id);
+
+                    await _context.Entry(checkEduQuiz)
+                        .Collection(q => q.Questions)
+                        .Query()
+                        .Include(q => q.Choices)
+                        .LoadAsync();
+                }
+                else
+                {
+                    checkEduQuiz = await _context.EduQuizs
+                        .Include(q => q.Questions)
+                        .ThenInclude(q => q.Choices)
+                        .FirstOrDefaultAsync(q => q.Uuid == data.Uuid);
+                }
 
                 if (checkEduQuiz == null)
                 {
@@ -238,7 +249,8 @@ namespace EduQuiz.Controllers
                         ThemeId = data.ThemeId,
                         MusicId = data.MusicId,
                         UserId = data.UserId,
-                        CreatedAt = DateTime.Now
+                        CreatedAt = DateTime.Now,
+                        UpdateAt = DateTime.Now,
                     };
 
                     // Thêm các câu hỏi và lựa chọn vào EduQuiz mới

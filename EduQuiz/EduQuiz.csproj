@@ -7,16 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Shared\_SidebarLibrary.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Shared\_SidebarLibrary.cshtml" />
     <_ContentIncludedByDefault Remove="wwwroot\src\css\homedashboard.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Shared\_SidebarLibrary.cshtml" />
     <None Include="wwwroot\src\css\animate.min.css" />
     <None Include="wwwroot\src\css\bootstrap.min.css" />
     <None Include="wwwroot\src\css\datepicker.css" />
@@ -97,10 +91,6 @@
     <Folder Include="wwwroot\lib\jquery\" />
     <Folder Include="wwwroot\lib\jquery\dist\" />
     <Folder Include="wwwroot\src\img\question\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Shared\_SidebarLibrary.cshtml" />
   </ItemGroup>
 
 </Project>
