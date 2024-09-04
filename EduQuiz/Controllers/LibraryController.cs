@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static NuGet.Packaging.PackagingConstants;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EduQuiz.Controllers
 {
@@ -55,7 +56,7 @@ namespace EduQuiz.Controllers
 
             ViewBag.Folders = folders;
             var listEduQuizByUser = await _context.EduQuizs
-                    .Where(d => d.UserId == user.Id && d.Type == 1)
+                    .Where(d => d.UserId == user.Id && d.Type == 1 && d.Status == true)
                     .Include(e => e.Questions)
                     .OrderByDescending(d => d.UpdateAt)
                     .ToListAsync();
@@ -84,7 +85,7 @@ namespace EduQuiz.Controllers
 
             ViewBag.Folders = folders;
             var listEduQuizByUser = await _context.EduQuizs
-                    .Where(d => d.UserId == user.Id && d.Type == 0)
+                    .Where(d => d.UserId == user.Id && d.Type == 0 && d.Status == true)
                     .Include(e => e.Questions)
                     .OrderByDescending(d => d.UpdateAt)
                     .ToListAsync();
@@ -181,7 +182,52 @@ namespace EduQuiz.Controllers
                 return Json(new { result = "FAIL", msg = ex.Message });
             }
         }
+        public async Task<IActionResult> RemoveFolder(int folderid)
+        {
+            try
+            {
+                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                if (string.IsNullOrEmpty(sessionData))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
 
+                var folderToDelete = await _context.Folders
+                    .Include(f => f.ChildFolders) 
+                    .Include(f => f.QuizFolders)
+                    .FirstOrDefaultAsync(f => f.Id == folderid);
+
+                if (folderToDelete == null)
+                {
+                    return Json(new { result = "FAIL", msg = "Thư mục không tồn tại." });
+                }
+
+                _context.QuizFolders.RemoveRange(folderToDelete.QuizFolders);
+
+                DeleteChildFolders(folderToDelete.ChildFolders);
+                _context.Folders.Remove(folderToDelete);
+
+                await _context.SaveChangesAsync();
+                return Json(new { result = "PASS" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "FAIL", msg = ex.Message });
+            }
+        }
+        private void DeleteChildFolders(IEnumerable<Folder> childFolders)
+        {
+            foreach (var childFolder in childFolders.ToList())
+            {
+                _context.QuizFolders.RemoveRange(childFolder.QuizFolders);
+
+                DeleteChildFolders(childFolder.ChildFolders);
+
+                _context.Folders.Remove(childFolder);
+            }
+        }
         public async Task<IActionResult> RenameEduQuiz(string name,int idquiz)
         {
             try
@@ -210,6 +256,71 @@ namespace EduQuiz.Controllers
                 }
             }
             catch (Exception ex) {
+                return Json(new { result = "FAIL", msg = ex.Message });
+            }
+        }
+        public async Task<IActionResult> RemoveEduQuiz(int idquiz)
+        {
+            try
+            {
+                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                if (string.IsNullOrEmpty(sessionData))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                var getquiz = await _context.EduQuizs.FindAsync(idquiz);
+                if (getquiz == null)
+                {
+                    return Json(new { result = "FAIL", msg = "EduQuiz không tồn tại" });
+                }
+                if (getquiz.UserId != getquiz.UserId)
+                {
+                    return Json(new { result = "FAIL", msg = "Bạn Không có quyền sửa" });
+                }
+                else
+                {
+                    getquiz.Status = false;
+                    await _context.SaveChangesAsync();
+                    return Json(new { result = "PASS" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "FAIL", msg = ex.Message });
+            }
+        }
+        public async Task<IActionResult> RemoveEduQuizByFolder(int folderid, int idquiz)
+        {
+            try
+            {
+                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                if (string.IsNullOrEmpty(sessionData))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                var getquiz = await _context.EduQuizs.FindAsync(idquiz);
+                if (getquiz == null)
+                {
+                    return Json(new { result = "FAIL", msg = "EduQuiz không tồn tại" });
+                }
+                if (getquiz.UserId != getquiz.UserId)
+                {
+                    return Json(new { result = "FAIL", msg = "Bạn Không có quyền sửa" });
+                }
+                else
+                {
+                    var getEduQuizbyFolder = await _context.QuizFolders.FirstOrDefaultAsync(f => f.FolderId == folderid && f.EduQuizId == idquiz);
+                    _context.QuizFolders.Remove(getEduQuizbyFolder);
+                    await _context.SaveChangesAsync();
+                    return Json(new { result = "PASS" });
+                }
+            }
+            catch (Exception ex)
+            {
                 return Json(new { result = "FAIL", msg = ex.Message });
             }
         }
@@ -280,7 +391,7 @@ namespace EduQuiz.Controllers
                 return Json(new { result = "FAIL", msg = ex.Message });
             }
         }
-        public async Task<IActionResult> MoveEduQuiz(int idfolder, int ideduquiz)
+        public async Task<IActionResult> MoveEduQuiz(int idfolder, int ideduquiz,int idfoldercurrent)
         {
             try
             {
@@ -292,6 +403,14 @@ namespace EduQuiz.Controllers
                     return RedirectToAction("Login", "Account");
                 }
                 var getfolder = await _context.Folders.FindAsync(idfolder);
+                if (idfoldercurrent != 0)
+                {
+                    var currentQuizFolder = await _context.QuizFolders.FirstOrDefaultAsync(q => q.EduQuizId == ideduquiz && q.FolderId == idfoldercurrent);
+                    if (currentQuizFolder != null)
+                    {
+                        _context.QuizFolders.Remove(currentQuizFolder);
+                    }
+                }
                 var checkQuizFolder = await _context.QuizFolders.FirstOrDefaultAsync(q => q.EduQuizId == ideduquiz && q.FolderId == idfolder);
                 if (checkQuizFolder == null) {
                     QuizFolder quizFolder = new QuizFolder()
@@ -305,7 +424,7 @@ namespace EduQuiz.Controllers
                 }
                 else
                 {
-                    return Json(new { result = "FAIL", msg = "EduQuiz đã tồn tại" });
+                    return Json(new { result = "FAIL", msg = "EduQuiz đã tồn tại" , data = getfolder?.Uuid });
                 }
             }
             catch (Exception ex)
@@ -313,6 +432,181 @@ namespace EduQuiz.Controllers
                 return Json(new { result = "FAIL", msg = ex.Message });
             }
         }
+        public async Task<IActionResult> MoveMutiEduQuiz(int idfolder, int[] ideduquiz, int idfoldercurrent)
+        {
+            try
+            {
+                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                if (string.IsNullOrEmpty(sessionData))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                var getfolder = await _context.Folders.FindAsync(idfolder);
+                if (getfolder == null)
+                {
+                    return Json(new { result = "FAIL", msg = "Thư mục không tồn tại." });
+                }
+                if (idfoldercurrent != 0)
+                {
+                    var currentQuizFolders = await _context.QuizFolders
+                        .Where(q => ideduquiz.Contains(q.EduQuizId) && q.FolderId == idfoldercurrent)
+                        .ToListAsync();
+
+                    if (currentQuizFolders.Any())
+                    {
+                        _context.QuizFolders.RemoveRange(currentQuizFolders);
+                    }
+                }
+                foreach (var eduQuizId in ideduquiz)
+                {
+                    var checkQuizFolder = await _context.QuizFolders
+                        .FirstOrDefaultAsync(q => q.EduQuizId == eduQuizId && q.FolderId == idfolder);
+
+                    if (checkQuizFolder == null)
+                    {
+                        QuizFolder quizFolder = new QuizFolder()
+                        {
+                            EduQuizId = eduQuizId,
+                            FolderId = idfolder
+                        };
+                        _context.QuizFolders.Add(quizFolder);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return Json(new { result = "PASS", data = getfolder?.Uuid });
+               
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "FAIL", msg = ex.Message });
+            }
+        }
+        public async Task<IActionResult> RenameFolder(string name, int folderid)
+        {
+            try
+            {
+                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                if (string.IsNullOrEmpty(sessionData))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                var getfolder = await _context.Folders.FindAsync(folderid);
+                if (getfolder == null)
+                {
+                    return Json(new { result = "FAIL", msg = "Thư mục không tồn tại" });
+                }
+                if (getfolder.UserId != getfolder.UserId)
+                {
+                    return Json(new { result = "FAIL", msg = "Bạn Không có quyền sửa" });
+                }
+                else
+                {
+                    getfolder.Name = name;
+                    await _context.SaveChangesAsync();
+                    return Json(new { result = "PASS" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "FAIL", msg = ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> DuplicateEduQuiz(int idquiz,int folderid)
+        {
+            try
+            {
+                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
+                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
+                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                if (string.IsNullOrEmpty(sessionData))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                // Tìm EduQuiz cần sao chép
+                var originalEduQuiz = await _context.EduQuizs
+                    .Include(eq => eq.Questions)
+                    .ThenInclude(q => q.Choices)
+                    .FirstOrDefaultAsync(eq => eq.Id == idquiz);
+                if (originalEduQuiz == null)
+                {
+                    return Json(new { result = "FAIL", msg = "EduQuiz không tồn tại." });
+                }
+                // Tạo một bản sao của EduQuiz
+                var newEduQuiz = new Models.EF.EduQuiz
+                {
+                    Title = originalEduQuiz.Title + " (Bản sao)",
+                    Uuid = Guid.NewGuid(),
+                    ImageCover = originalEduQuiz.ImageCover,
+                    Description = originalEduQuiz.Description,
+                    Type = originalEduQuiz.Type,
+                    Visibility = originalEduQuiz.Visibility,
+                    ThemeId = originalEduQuiz.ThemeId,
+                    MusicId = originalEduQuiz.MusicId,
+                    OrderQuestion = originalEduQuiz.OrderQuestion,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    UserId = userId,
+                    Questions = new List<Question>()
+                };
+                // Sao chép các câu hỏi và lựa chọn
+                foreach (var originalQuestion in originalEduQuiz.Questions)
+                {
+                    var newQuestion = new Question
+                    {
+                        QuestionText = originalQuestion.QuestionText,
+                        TypeQuestion = originalQuestion.TypeQuestion,
+                        TypeAnswer = originalQuestion.TypeAnswer,
+                        Time = originalQuestion.Time,
+                        PointsMultiplier = originalQuestion.PointsMultiplier,
+                        Image = originalQuestion.Image,
+                        ImageEffect = originalQuestion.ImageEffect,
+                        Choices = new List<Choice>()
+                    };
+
+                    if (originalQuestion.Choices?.Count > 0)
+                    {
+                        var newChoices = originalQuestion.Choices.Select(choice => new Choice
+                        {
+                            Question = newQuestion, // Gán trực tiếp vào Question mới
+                            Answer = choice.Answer,
+                            IsCorrect = choice.IsCorrect,
+                            DisplayOrder = choice.DisplayOrder
+                        }).ToList();
+
+                        newQuestion.Choices = newChoices; // Gán danh sách Choices vào Question
+                    }
+
+                    newEduQuiz.Questions.Add(newQuestion);
+                }
+
+                // Lưu EduQuiz mới vào cơ sở dữ liệu
+                _context.EduQuizs.Add(newEduQuiz);
+
+                if(folderid != 0)
+                {
+                    var quizFolder = new QuizFolder
+                    {
+                        EduQuiz = newEduQuiz, // Gán trực tiếp EduQuiz mới vào QuizFolder
+                        FolderId = folderid
+                    };
+
+                    _context.QuizFolders.Add(quizFolder);
+                }
+                await _context.SaveChangesAsync();
+                return Json(new { result = "PASS" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "FAIL", msg = ex.Message });
+            }
+        }
+
         #endregion
     }
 }

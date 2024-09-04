@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="352" height="120" viewBox="0 0 352 120">
+    <defs>
+        <filter id="j58wagk0ba" width="105.8%" height="121.9%" x="-2.9%" y="-7.8%" filterUnits="objectBoundingBox">
+            <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+        </filter>
+        <filter id="99t0sw0d9c" width="121.9%" height="170%" x="-10.9%" y="-25%" filterUnits="objectBoundingBox">
+            <feOffset dy="4" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+        </filter>
+        <filter id="gc97yzalze" width="117.5%" height="158.3%" x="-8.8%" y="-20.8%" filterUnits="objectBoundingBox">
+            <feOffset dy="4" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+        </filter>
+        <filter id="k2f5dqxp2g" width="125%" height="187.5%" x="-12.5%" y="-31.2%" filterUnits="objectBoundingBox">
+            <feOffset dy="4" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+        </filter>
+        <circle id="tvulg7hg9i" cx="8" cy="8" r="8"/>
+        <circle id="2vxw3cn0hm" cx="12" cy="12" r="12"/>
+        <circle id="efhkfvjwgq" cx="12" cy="12" r="12"/>
+        <circle id="padu4qzp7u" cx="8" cy="8" r="8"/>
+        <rect id="ma9a58v8mb" width="240" height="64" x="0" y="0" rx="4"/>
+        <rect id="pftpyzzoyd" width="128" height="40" x="0" y="0" rx="4"/>
+        <rect id="0kht40fwuf" width="160" height="48" x="0" y="0" rx="4"/>
+        <rect id="ec0j9do1oh" width="112" height="32" x="0" y="0" rx="4"/>
+        <path id="tux3pbmrbk" d="M8 10.5c-.46 0-.833.373-.833.833 0 .46.373.834.833.834.46 0 .833-.374.833-.834 0-.46-.373-.833-.833-.833zm.667-.5H7.333V8H8c.735 0 1.333-.598 1.333-1.333 0-.736-.598-1.334-1.333-1.334s-1.333.598-1.333 1.334H5.333C5.333 5.196 6.53 4 8 4c1.47 0 2.667 1.196 2.667 2.667 0 1.24-.852 2.285-2 2.582V10z"/>
+        <path id="xivnp4lgoo" d="M12 15.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm1-.75h-2v-3h1c1.103 0 2-.897 2-2 0-1.104-.897-2-2-2s-2 .896-2 2H8c0-2.206 1.794-4 4-4s4 1.794 4 4c0 1.86-1.277 3.428-3 3.874V15z"/>
+        <path id="9frnt60mts" d="M12 15.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm1-.75h-2v-3h1c1.103 0 2-.897 2-2 0-1.104-.897-2-2-2s-2 .896-2 2H8c0-2.206 1.794-4 4-4s4 1.794 4 4c0 1.86-1.277 3.428-3 3.874V15z"/>
+        <path id="itrwn371tw" d="M8 10.5c-.46 0-.833.373-.833.833 0 .46.373.834.833.834.46 0 .833-.374.833-.834 0-.46-.373-.833-.833-.833zm.667-.5H7.333V8H8c.735 0 1.333-.598 1.333-1.333 0-.736-.598-1.334-1.333-1.334s-1.333.598-1.333 1.334H5.333C5.333 5.196 6.53 4 8 4c1.47 0 2.667 1.196 2.667 2.667 0 1.24-.852 2.285-2 2.582V10z"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g>
+                    <g>
+                        <g transform="translate(-720 -252) translate(256 208) translate(432 48) translate(40) translate(48 16)">
+                            <g>
+                                <use fill="#000" filter="url(#j58wagk0ba)" xlink:href="#ma9a58v8mb"/>
+                                <use fill="#FFF" xlink:href="#ma9a58v8mb"/>
+                            </g>
+                            <rect width="125" height="16" x="91" y="14" fill="#F2F2F2" rx="2"/>
+                            <rect width="40" height="16" x="91" y="34" fill="#F2F2F2" rx="2"/>
+                            <rect width="80" height="58" x="3" y="3" fill="#F2F2F2" rx="2"/>
+                        </g>
+                        <g transform="translate(-720 -252) translate(256 208) translate(432 48) translate(40) translate(208 60)">
+                            <g>
+                                <use fill="#000" filter="url(#99t0sw0d9c)" xlink:href="#pftpyzzoyd"/>
+                                <use fill="#FFF" xlink:href="#pftpyzzoyd"/>
+                            </g>
+                            <rect width="56" height="8" x="56" y="10" fill="#F2F2F2" rx="2"/>
+                            <rect width="24" height="8" x="56" y="22" fill="#F2F2F2" rx="2"/>
+                            <rect width="46" height="36" x="2" y="2" fill="#F2F2F2" rx="2"/>
+                        </g>
+                        <g transform="translate(-720 -252) translate(256 208) translate(432 48) translate(40) translate(0 56)">
+                            <g>
+                                <use fill="#000" filter="url(#gc97yzalze)" xlink:href="#0kht40fwuf"/>
+                                <use fill="#FFF" xlink:href="#0kht40fwuf"/>
+                            </g>
+                            <rect width="80" height="12" x="66" y="10" fill="#F2F2F2" rx="2"/>
+                            <rect width="32" height="12" x="66" y="26" fill="#F2F2F2" rx="2"/>
+                            <rect width="56" height="44" x="2" y="2" fill="#F2F2F2" rx="2"/>
+                        </g>
+                        <g transform="translate(-720 -252) translate(256 208) translate(432 48) translate(40) translate(104)">
+                            <g>
+                                <use fill="#000" filter="url(#k2f5dqxp2g)" xlink:href="#ec0j9do1oh"/>
+                                <use fill="#FFF" xlink:href="#ec0j9do1oh"/>
+                            </g>
+                            <rect width="54" height="6" x="50" y="9" fill="#F2F2F2" rx="2"/>
+                            <rect width="40" height="6" x="50" y="17" fill="#F2F2F2" rx="2"/>
+                            <rect width="40" height="28" x="2" y="2" fill="#F2F2F2" rx="2"/>
+                        </g>
+                        <g transform="translate(-720 -252) translate(256 208) translate(432 48) translate(40) translate(152 72)">
+                            <mask id="bbexazotxj" fill="#fff">
+                                <use xlink:href="#tvulg7hg9i"/>
+                            </mask>
+                            <use fill="#D89E00" xlink:href="#tvulg7hg9i"/>
+                            <g mask="url(#bbexazotxj)">
+                                <mask id="1n5qzjuyal" fill="#fff">
+                                    <use xlink:href="#tux3pbmrbk"/>
+                                </mask>
+                                <use fill="#757575" xlink:href="#tux3pbmrbk"/>
+                                <g fill="#FFF" mask="url(#1n5qzjuyal)">
+                                    <path d="M0 0H16V16H0z"/>
+                                </g>
+                            </g>
+                        </g>
+                        <g transform="translate(-720 -252) translate(256 208) translate(432 48) translate(40) translate(36 24)">
+                            <mask id="6fm1zsy1jn" fill="#fff">
+                                <use xlink:href="#2vxw3cn0hm"/>
+                            </mask>
+                            <use fill="#E21B3C" xlink:href="#2vxw3cn0hm"/>
+                            <g mask="url(#6fm1zsy1jn)">
+                                <mask id="zkkhak949p" fill="#fff">
+                                    <use xlink:href="#xivnp4lgoo"/>
+                                </mask>
+                                <use fill="#757575" xlink:href="#xivnp4lgoo"/>
+                                <g fill="#FFF" mask="url(#zkkhak949p)">
+                                    <path d="M0 0H24V24H0z"/>
+                                </g>
+                            </g>
+                        </g>
+                        <g transform="translate(-720 -252) translate(256 208) translate(432 48) translate(40) translate(276 48)">
+                            <mask id="x5eoq6i1qr" fill="#fff">
+                                <use xlink:href="#efhkfvjwgq"/>
+                            </mask>
+                            <use fill="#26890C" xlink:href="#efhkfvjwgq"/>
+                            <g mask="url(#x5eoq6i1qr)">
+                                <mask id="1q74g10rnt" fill="#fff">
+                                    <use xlink:href="#9frnt60mts"/>
+                                </mask>
+                                <use fill="#757575" xlink:href="#9frnt60mts"/>
+                                <g fill="#FFF" mask="url(#1q74g10rnt)">
+                                    <path d="M0 0H24V24H0z"/>
+                                </g>
+                            </g>
+                        </g>
+                        <g transform="translate(-720 -252) translate(256 208) translate(432 48) translate(40) translate(96 8)">
+                            <mask id="mn5qyrwsrv" fill="#fff">
+                                <use xlink:href="#padu4qzp7u"/>
+                            </mask>
+                            <use fill="#1368CE" xlink:href="#padu4qzp7u"/>
+                            <g mask="url(#mn5qyrwsrv)">
+                                <mask id="9nlhd7ydwx" fill="#fff">
+                                    <use xlink:href="#itrwn371tw"/>
+                                </mask>
+                                <use fill="#757575" xlink:href="#itrwn371tw"/>
+                                <g fill="#FFF" mask="url(#9nlhd7ydwx)">
+                                    <path d="M0 0H16V16H0z"/>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

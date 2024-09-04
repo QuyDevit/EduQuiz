@@ -33,6 +33,36 @@
             }
         })
     })
+    $(".styles__Button-menu.duplicate").click(function () {
+        Swal.fire({
+            title: "Bạn có muốn nhân bản EduQuiz ngay tại đây",
+            showCancelButton: true,
+            confirmButtonText: "Nhân bản",
+            CancelButtonText:"Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var idquiz = $(this).attr("data-quesion");
+                var idfolder = $(this).attr("data-folder");
+                $.ajax({
+                    type: "POST",
+                    url: "/Library/DuplicateEduQuiz",
+                    data: {
+                        idquiz: idquiz,
+                        folderid: idfolder
+                    },
+                    success: function (response) {
+                        if (response.result == "PASS") {
+                            location.reload();
+                        }
+                    },
+                    error: function (err) {
+
+                    }
+                })
+            } 
+        });
+        
+    })
    
     $('#partialfolder-container').on('keydown', '.input__add-folder', function (event) {
         if (event.key === 'Enter') {
@@ -76,26 +106,63 @@
         }
     }
     $(document).on('click', "#savefolder", function () {
+        var flagcheck = $(this).attr("data-flag");
         var folderId = $(this).attr("data-id");
-        var eduQuizId = $(this).attr("data-eduquiz");
-        $.ajax({
-            url: '/Library/MoveEduQuiz',
-            type: 'POST',
-            data: {
-                idfolder: folderId,
-                ideduquiz: eduQuizId
-            },
-            success: function (response) {
-                if (response.result === "PASS") {
-                    location.href = `/my-library/eduquizs/${response.data}`;
-                } else {
-                    location.href = `/my-library/eduquizs/${response.data}`;
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX error:', status, error);
+        var folderIdCurrent = 0;
+        if (typeof foldercurrent !== 'undefined' && foldercurrent !== null) {
+            folderIdCurrent = foldercurrent;
+        }
+        if (!flagcheck) {
+            var eduQuizId = $(this).attr("data-eduquiz");
+            if (!folderId || !eduQuizId) {
+                openToast('warning', 'Lỗi', "Vui lòng chọn EduQuiz và thư mục cần di chuyển!", 2500);
+                return;
             }
-        });
+            $.ajax({
+                url: '/Library/MoveEduQuiz',
+                type: 'POST',
+                data: {
+                    idfolder: folderId,
+                    ideduquiz: eduQuizId,
+                    idfoldercurrent: folderIdCurrent
+                },
+                success: function (response) {
+                    if (response.result === "PASS") {
+                        location.href = `/my-library/eduquizs/${response.data}`;
+                    } else {
+                        location.href = `/my-library/eduquizs/${response.data}`;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', status, error);
+                }
+            });
+        } else {
+            if (!folderId || selectedCheckboxes.length === 0) {
+                openToast('warning', 'Lỗi', "Vui lòng chọn EduQuiz và thư mục cần di chuyển!", 2500);
+                return;
+            }
+            $.ajax({
+                url: '/Library/MoveMutiEduQuiz',
+                type: 'POST',
+                data: {
+                    idfolder: folderId,
+                    ideduquiz: selectedCheckboxes,
+                    idfoldercurrent: folderIdCurrent
+                },
+                success: function (response) {
+                    if (response.result === "PASS") {
+                        location.href = `/my-library/eduquizs/${response.data}`;
+                    } else {
+                        location.href = `/my-library/eduquizs/${response.data}`;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', status, error);
+                }
+            });
+        }
+        
     })
     $(document).on('click', '.styles__Button.p-2', function (event) {
         event.stopPropagation();

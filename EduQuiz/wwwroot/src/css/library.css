@@ -254,10 +254,10 @@
     width: 2.3rem;
     padding: 3rem 0px;
 }
-.checkbox__Wrapper{
-    display:flex;
-    align-items:center;
-    justify-content:center;
+.checkbox__Wrapper, .bulk-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .checkbox {
     flex: 0 0 auto;
@@ -626,4 +626,42 @@ button:focus{
     background:none;
     border:none;
     font-weight:600;
+}
+
+.bulk-actions__Container {
+    padding: 0.5rem 1rem;
+    margin-top: 1.5rem;
+    box-sizing: border-box;
+    z-index: 90;
+    background-color: rgb(19, 104, 206);
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    animation: 200ms ease 0s 1 normal none running beEaCR;
+    border-radius: 5px;
+    width: 100%;
+}
+.bulk-actions .styles__eduquizInfo-Btn:hover {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+}
+.empty-prompt__Container {
+    width: 100%;
+    min-height: 320px;
+    border: 2px dashed rgb(178, 178, 178);
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    border-radius: 4px;
+    margin-top: 1.5rem;
+    padding: 16px;
+    box-sizing: border-box;
 }

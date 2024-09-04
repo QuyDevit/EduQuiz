@@ -37,7 +37,7 @@ namespace EduQuiz.Controllers
                     var check = await _context.EduQuizs
                         .Include(e => e.Questions)
                         .ThenInclude(q => q.Choices)
-                        .FirstOrDefaultAsync(d => d.Uuid == id);
+                        .FirstOrDefaultAsync(d => d.Uuid == id && d.Status == true);
 
                     if (check == null)
                     {

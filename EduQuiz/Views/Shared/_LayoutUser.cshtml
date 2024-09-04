@@ -14,10 +14,11 @@
     <link href="~/src/css/auth.css" rel="stylesheet" />
     <link href="~/src/css/homedashboard.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="@("https://unpkg.com/@popperjs/core@2")"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
     @RenderSection("styles", required: false)
 </head>
-<body>
-   
+<body>  
     <div class="wrapper ">
         <partial name="_SidebarUser" />
         <div class="main-panel">
@@ -86,13 +87,62 @@
     <script src="~/src/js/popper.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="~/src/js/bootstrap.min.js"></script>
-    <script src="@("https://unpkg.com/@popperjs/core@2")"></script>
-    <script src="https://unpkg.com/tippy.js@6"></script>
+
     <script src="~/src/css/js/bootstrap-notify.js"></script>
     <script src="~/src/css/js/perfect-scrollbar.jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/src/js/toast.js"></script>
     <script>
+        tippy('.link-edit', {
+            content: "Chỉnh sửa!",
+        });
+        var $bulkActionsContainer = $('.bulk-actions__Container');
+        var $bulkCheckCount = $('#bulk-checkcount');
+        var $bulkCheckAll = $('#bulk-checkall');
+        var $checkboxItems = $('.checkbox.item');
+
+        // Mảng để lưu trạng thái của các checkbox đã chọn
+        var selectedCheckboxes = [];
+
+        function updateBulkActions() {
+            var checkedCount = selectedCheckboxes.length;
+
+            if (checkedCount > 0) {
+                $bulkActionsContainer.removeClass("d-none");
+                $bulkCheckCount.text(checkedCount + ' đã chọn');
+                $bulkCheckAll.prop('checked', checkedCount === $checkboxItems.length);
+                $("#savefolder").attr("data-flag", 1);
+                $("#savefolder").attr("data-checkfoldercurrent", 1);
+            } else {
+                $bulkActionsContainer.addClass("d-none");
+                $("#savefolder").removeAttr("data-flag");
+                $("#savefolder").removeAttr("data-checkfoldercurrent");
+            }
+        }
+
+        // Cập nhật mảng khi checkbox thay đổi
+        function updateSelectedCheckboxes() {
+            selectedCheckboxes = [];
+            $checkboxItems.each(function () {
+                if ($(this).is(':checked')) {
+                    selectedCheckboxes.push($(this).attr('data-id'));
+                }
+            });
+            updateBulkActions();
+        }
+
+        // Sự kiện khi nhấp vào bất kỳ checkbox nào
+        $checkboxItems.on('change', function () {
+            updateSelectedCheckboxes();
+        });
+
+        // Sự kiện khi nhấp vào checkbox "Chọn tất cả"
+        $bulkCheckAll.on('change', function () {
+            var isChecked = $(this).is(':checked');
+            $checkboxItems.prop('checked', isChecked);
+            updateSelectedCheckboxes();
+        });
+
         function showAutoSaveStatus(status) {
             const statusHtml = {
                 saving: `<span>Đang lưu <i class="fa fa-undo spin" aria-hidden="true"></i></span>`,
@@ -105,7 +155,7 @@
             $("#editname").val($(`#title-${id}`).text())
             $("#savename").attr("data-id", id);
         }
-        function openMenuFolder(ideduquiz) {
+        function openMenuFolder(ideduquiz = null) {
             $("#closemenufolder").click();
             $("#savefolder").attr("data-eduquiz", ideduquiz);
             getFolder();
