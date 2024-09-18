@@ -156,16 +156,29 @@
                         value: value
                     },
                     success: function (response) {
-                        if (response.result == "PASS") {
-                            setTimeout(function () {
-                                showAutoSaveStatus('saved');
-                            }, 1000);
-                            
-                            setTimeout(function () {
-                                $("#autosave").empty();
-                            }, 2400);
+                        if (response.redirectUrl) {
+                            Swal.fire({
+                                title: 'Hết phiên đăng nhập',
+                                text: 'Vui lòng đăng nhập lại',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            });
                         } else {
-                            console.log("error")
+                            if (response.result == "PASS") {
+                                setTimeout(function () {
+                                    showAutoSaveStatus('saved');
+                                }, 1000);
+                            
+                                setTimeout(function () {
+                                    $("#autosave").empty();
+                                }, 2400);
+                            } else {
+                                console.log("error")
+                            }
                         }
                     },
                     error: function (err) {

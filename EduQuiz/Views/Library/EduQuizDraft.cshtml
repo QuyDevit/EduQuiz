@@ -161,8 +161,21 @@
                         idquiz: idquiz
                     },
                     success: function (response) {
-                        if (response.result === "PASS") {
-                            location.reload();
+                        if (response.redirectUrl) {
+                            Swal.fire({
+                                title: 'Hết phiên đăng nhập',
+                                text: 'Vui lòng đăng nhập lại',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            });
+                        } else {
+                            if (response.result === "PASS") {
+                                location.reload();
+                            }
                         }
                     },
                     error: function (xhr, status, error) {

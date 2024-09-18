@@ -1,0 +1,186 @@
+﻿.discover-page__Container {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background: linear-gradient(264deg, rgb(70, 23, 143) 0%, rgba(37, 7, 107, 0) 68.59%), linear-gradient(105deg, rgb(69, 163, 229) 0.45%, rgb(134, 76, 191) 40.78%);
+    padding: 16px;
+    border-radius: 0.75rem;
+}
+
+    .discover-page__Container h2 {
+        color: #fff;
+        margin: 0 0 10px 15px;
+        font-size: 20px;
+        font-weight: bold
+    }
+
+.carousel-control-next, .carousel-control-prev {
+    width: 7% !important;
+}
+
+.col-md-12 {
+    padding: 0;
+}
+.new-channel {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    color: rgb(255, 255, 255);
+    padding: 0px 8px;
+    background-color: rgb(235, 103, 15);
+    border-radius: 1rem;
+    vertical-align: middle;
+    width:fit-content;
+    margin-left:15px;
+    margin-bottom:10px;
+}
+.card__Content {
+    position: relative;
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+/*    padding-inline: 8px;*/
+    padding-block: 8px 16px;
+    border-radius: 0.5rem;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    z-index: 1;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    color: #fff !important;
+    text-decoration: none !important;
+}
+.channel-item:nth-child(1) .card__Content {
+    background-color: #273152;
+}
+
+.channel-item:nth-child(2) .card__Content {
+    background-color: #2a4d69;
+}
+.channel-item:nth-child(3) .card__Content {
+    background-color: #24433c;
+}
+.channel-item:nth-child(4) .card__Content {
+    background-color: #551018;
+}
+.channel-item:nth-child(5) .card__Content {
+    background-color: #440e6f;
+}
+.channel-item:nth-child(6) .card__Content {
+    background-color: #1f1e81;
+}
+.card__BannerImg {
+    width: 100%;
+    height: 94px;
+    object-fit: cover;
+    vertical-align: bottom;
+    background-color: rgb(242, 242, 242);
+    border-radius: 0.5rem 0.5rem 0px 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.card__profileImg {
+    display: flex;
+    width: 80px;
+    height: 80px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: #faf4e0;
+}
+
+.card__Content .card-title {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    margin-bottom: 8px;
+    text-wrap: balance;
+    color:#fff;
+ 
+}
+.card__ProfileWrapper {
+    z-index: 1;
+    margin-top: 45px;
+}
+.card_Data {
+    display: flex;
+    gap: 4px;
+    font-size: 0.6875rem;
+    line-height: 0.875rem;
+    font-weight: 500;
+
+}
+
+.card__Creator {
+    font-size: 0.6875rem;
+    line-height: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 4px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 100%;
+}
+.card__Creator .card-Icon{
+    display: inline-block;
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
+}    
+
+@keyframes scale{
+    0% {
+        z-index: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        z-index: 1;
+        transform: scale(0.99);
+    }
+
+    100% {
+        z-index: 1;
+        transform: scale(1);
+    }
+}
+.styles_Icon-EduQuiz{
+    width:22px;
+}
+.label-top {
+    font-size:14px;
+    margin:0;
+}
+.styles_CenterWithLandscapeImage {
+    position: relative;
+}
+.styles_BottomRightLabel {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background-color: #000;
+}
+.accesspass_EduQuiz {
+    background-color: #19014b;
+    width:100%;
+}

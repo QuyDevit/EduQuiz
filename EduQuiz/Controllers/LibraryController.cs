@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static NuGet.Packaging.PackagingConstants;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EduQuiz.Controllers
 {
+    [CustomAuthorize]
     public class LibraryController : Controller
     {
         private readonly EduQuizDBContext _context;
@@ -20,15 +22,21 @@ namespace EduQuiz.Controllers
         }
         public IActionResult _PartialFolders()
         {
-            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-            if (string.IsNullOrEmpty(sessionData))
+            var authCookie = Request.Cookies["acToken"];
+            int iduser = 0;
+            if (authCookie != null)
             {
-                return RedirectToAction("Index", "Home");
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                iduser = int.Parse(userId ?? "1");
             }
-            var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-            int.TryParse(userInfo?.Id?.ToString(), out int userId);
+            else
+            {
+                return RedirectToAction("Login", "Accout");
+            }
             var model = _context.Folders
-                .Where(f => f.UserId == userId)
+                .Where(f => f.UserId == iduser)
                 .OrderBy(f => f.Name)
                 .ToList();
             return PartialView("_PartialFolders", model);
@@ -36,21 +44,27 @@ namespace EduQuiz.Controllers
         [Route("my-library/eduquizs/all")]
         public async Task<IActionResult> Index()
         {
-            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-            if (string.IsNullOrEmpty(sessionData))
+            var authCookie = Request.Cookies["acToken"];
+            int iduser = 0;
+            if (authCookie != null)
             {
-                return RedirectToAction("Index", "Home");
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                iduser = int.Parse(userId ?? "1");
             }
-            var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-            int.TryParse(userInfo?.Id?.ToString(), out int userId);
-            var user = await _context.Users.FindAsync(userId);
+            else
+            {
+                return RedirectToAction("Login", "Accout");
+            }
+            var user = await _context.Users.FindAsync(iduser);
             if (user == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Accout");
             }
             await EnsureFolderExistsAsync(user.Id);
             var folders = _context.Folders
-              .Where(f => f.UserId == userId)
+              .Where(f => f.UserId == iduser)
               .OrderBy(f => f.Name)
               .ToList();
 
@@ -66,20 +80,26 @@ namespace EduQuiz.Controllers
         [Route("my-library/eduquizs/drafts")]
         public async Task<IActionResult> EduQuizDraft()
         {
-            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-            if (string.IsNullOrEmpty(sessionData))
+            var authCookie = Request.Cookies["acToken"];
+            int iduser = 0;
+            if (authCookie != null)
             {
-                return RedirectToAction("Index", "Home");
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                iduser = int.Parse(userId ?? "1");
             }
-            var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-            int.TryParse(userInfo?.Id?.ToString(), out int userId);
-            var user = await _context.Users.FindAsync(userId);
+            else
+            {
+                return RedirectToAction("Login", "Accout");
+            }
+            var user = await _context.Users.FindAsync(iduser);
             if (user == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Accout");
             }
             var folders = _context.Folders
-                .Where(f => f.UserId == userId)
+                .Where(f => f.UserId == iduser)
                 .OrderBy(f => f.Name)
                 .ToList();
 
@@ -95,20 +115,26 @@ namespace EduQuiz.Controllers
         [Route("my-library/eduquizs/{id:guid}")]
         public async Task<IActionResult> LibrarybyFolder(Guid id)
         {
-            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-            if (string.IsNullOrEmpty(sessionData))
+            var authCookie = Request.Cookies["acToken"];
+            int iduser = 0;
+            if (authCookie != null)
             {
-                return RedirectToAction("Index", "Home");
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                iduser = int.Parse(userId ?? "1");
             }
-            var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-            int.TryParse(userInfo?.Id?.ToString(), out int userId);
-            var user = await _context.Users.FindAsync(userId);
+            else
+            {
+                return RedirectToAction("Login", "Accout");
+            }
+            var user = await _context.Users.FindAsync(iduser);
             if (user == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Accout");
             }
             var folders = _context.Folders
-                .Where(f => f.UserId == userId)
+                .Where(f => f.UserId == iduser)
                 .OrderBy(f => f.Name)
                 .ToList();
             // Tìm folder hiện tại dựa trên `Uuid`
@@ -156,12 +182,18 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                int iduser = 0;
+                if (authCookie != null)
                 {
-                    return RedirectToAction("Login","Account");
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                    var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                    iduser = int.Parse(userId ?? "1");
+                }
+                else
+                {
+                    return RedirectToAction("Login","Accout");
                 }
                 if (string.IsNullOrEmpty(folderName))
                 {
@@ -170,7 +202,7 @@ namespace EduQuiz.Controllers
                 Folder folder = new Folder
                 {
                     Name = folderName,
-                    UserId = userId,
+                    UserId = iduser,
                     ParentFolderId = idroot,
                     CreatedAt = DateTime.Now,
                 };
@@ -186,14 +218,12 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                if (authCookie == null)
                 {
-                    return RedirectToAction("Login", "Account");
-                }
+                    return RedirectToAction("Login", "Accout");
 
+                }
                 var folderToDelete = await _context.Folders
                     .Include(f => f.ChildFolders) 
                     .Include(f => f.QuizFolders)
@@ -232,12 +262,11 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                if (authCookie == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "Accout");
+
                 }
                 var getquiz = await _context.EduQuizs.FindAsync(idquiz);
                 if (getquiz == null) 
@@ -263,12 +292,11 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                if (authCookie == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "Accout");
+
                 }
                 var getquiz = await _context.EduQuizs.FindAsync(idquiz);
                 if (getquiz == null)
@@ -295,12 +323,11 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                if (authCookie == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "Accout");
+
                 }
                 var getquiz = await _context.EduQuizs.FindAsync(idquiz);
                 if (getquiz == null)
@@ -329,17 +356,23 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                int iduser = 0;
+                if (authCookie != null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                    var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                    iduser = int.Parse(userId ?? "1");
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Accout");
                 }
                 if (idfolder == 0)
                 {
                     var rootFolder = await _context.Folders
-                       .Where(f => f.UserId == userId && f.ParentFolderId == null)
+                       .Where(f => f.UserId == iduser && f.ParentFolderId == null)
                        .Select(f => new
                        {
                            Id = f.Id,
@@ -354,7 +387,7 @@ namespace EduQuiz.Controllers
                     }
 
                     var childFolders = await _context.Folders
-                        .Where(f => f.UserId == userId && f.ParentFolderId == rootFolder.Id)
+                        .Where(f => f.UserId == iduser && f.ParentFolderId == rootFolder.Id)
                         .Select(f => new
                         {
                             Id = f.Id,
@@ -367,7 +400,7 @@ namespace EduQuiz.Controllers
                 else
                 {
                     var currentFolder = await _context.Folders
-                       .Where(f => f.UserId == userId && f.Id == idfolder)
+                       .Where(f => f.UserId == iduser && f.Id == idfolder)
                        .Select(f => new
                        {
                            Id = f.Id,
@@ -376,7 +409,7 @@ namespace EduQuiz.Controllers
                        })
                        .FirstOrDefaultAsync();
                     var folders = await _context.Folders
-                        .Where(f => f.UserId == userId && f.ParentFolderId == idfolder).Select(f => new
+                        .Where(f => f.UserId == iduser && f.ParentFolderId == idfolder).Select(f => new
                         {
                             Id = f.Id,
                             Name = f.Name
@@ -395,12 +428,11 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                if (authCookie == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "Accout");
+
                 }
                 var getfolder = await _context.Folders.FindAsync(idfolder);
                 if (idfoldercurrent != 0)
@@ -436,12 +468,11 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                if (authCookie == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "Accout");
+
                 }
                 var getfolder = await _context.Folders.FindAsync(idfolder);
                 if (getfolder == null)
@@ -488,12 +519,11 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                if (authCookie == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "Accout");
+
                 }
                 var getfolder = await _context.Folders.FindAsync(folderid);
                 if (getfolder == null)
@@ -521,12 +551,18 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                if (string.IsNullOrEmpty(sessionData))
+                var authCookie = Request.Cookies["acToken"];
+                int iduser = 0;
+                if (authCookie != null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                    var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                    iduser = int.Parse(userId ?? "1");
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Accout");
                 }
                 // Tìm EduQuiz cần sao chép
                 var originalEduQuiz = await _context.EduQuizs
@@ -551,7 +587,7 @@ namespace EduQuiz.Controllers
                     OrderQuestion = originalEduQuiz.OrderQuestion,
                     CreatedAt = DateTime.Now,
                     UpdateAt = DateTime.Now,
-                    UserId = userId,
+                    UserId = iduser,
                     Questions = new List<Question>()
                 };
                 // Sao chép các câu hỏi và lựa chọn

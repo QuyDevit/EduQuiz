@@ -1,44 +1,58 @@
 ﻿using EduQuiz.DatabaseContext;
 using EduQuiz.Models;
 using EduQuiz.Models.EF;
+using EduQuiz.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using BcryptNet = BCrypt.Net.BCrypt;
 
 namespace EduQuiz.Controllers
 {
+    [CustomAuthorize]
     public class HomeDashboardController : Controller
     {
         private readonly EduQuizDBContext _context;
-        public HomeDashboardController(EduQuizDBContext context)
+        private readonly IConfiguration _config; 
+        private readonly CookieAuth _cookieAuth;
+        public HomeDashboardController(EduQuizDBContext context,IConfiguration config, CookieAuth cookieAuth)
         {
             _context = context;
+            _config = config;
+            _cookieAuth = cookieAuth;
         }
         [Route("")]
         public async Task <IActionResult> Index()
         {
-            var getsession = HttpContext.Session.GetString("_USERCURRENT");
-            if (getsession != null)
-            {
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                var user = await _context.Users.FindAsync(userId);
-                return View(user);
+            var authCookie = Request.Cookies["acToken"];
 
+            if (authCookie != null)
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                // Sử dụng các giá trị trong logic của bạn
+                var iduser = int.Parse(userId ?? "1");
+                var user = await _context.Users.FindAsync(iduser);
+                return View(user);
             }
             return RedirectToAction("Index", "Home");
         }
-
+        
         [Route("user/profile")]
         public async Task<IActionResult> SettingInfo()
         {
-            var getsession = HttpContext.Session.GetString("_USERCURRENT");
-            if (getsession != null)
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie != null)
             {
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                var user = await _context.Users.FindAsync(userId);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var iduser = int.Parse(userId ?? "1");
+                var user = await _context.Users.FindAsync(iduser);
                 ViewBag.ListTypeAccount = _context.Roles.ToList();
                 ViewBag.ListWorkplace = _context.WorkplaceTypes.ToList();
                 if (user != null)
@@ -51,12 +65,14 @@ namespace EduQuiz.Controllers
         [Route("user/settings")]
         public async Task<IActionResult> Privacy()
         {
-            var getsession = HttpContext.Session.GetString("_USERCURRENT");
-            if (getsession != null)
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie != null)
             {
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                var user = await _context.Users.FindAsync(userId);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var iduser = int.Parse(userId ?? "1");
+                var user = await _context.Users.FindAsync(iduser);
                 if (user != null)
                 {
                     return View(user);
@@ -67,12 +83,14 @@ namespace EduQuiz.Controllers
         [Route("user/change-password")]
         public async Task<IActionResult> ChangePassword()
         {
-            var getsession = HttpContext.Session.GetString("_USERCURRENT");
-            if (getsession != null)
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie != null)
             {
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                var user = await _context.Users.FindAsync(userId);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var iduser = int.Parse(userId ?? "1");
+                var user = await _context.Users.FindAsync(iduser);
                 if (user != null)
                 {
                     return View(user);
@@ -83,12 +101,14 @@ namespace EduQuiz.Controllers
         [Route("user/billing")]
         public async Task<IActionResult> Billing()
         {
-            var getsession = HttpContext.Session.GetString("_USERCURRENT");
-            if (getsession != null)
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie != null)
             {
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                var user = await _context.Users.FindAsync(userId);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var iduser = int.Parse(userId ?? "1");
+                var user = await _context.Users.FindAsync(iduser);
                 if (user != null)
                 {
                     return View(user);
@@ -207,15 +227,19 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var getsession = HttpContext.Session.GetString("_USERCURRENT");
-                if (getsession == null)
+                var authCookie = Request.Cookies["acToken"];
+                int iduser = 0;
+                if (authCookie != null)
+                {
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                    var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                    iduser = int.Parse(userId ?? "1");
+                }else
                 {
                     return Json(new { result = "FAIL", msg = "Vui lòng đăng nhập lại" });
                 }
-
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(getsession);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                var user = await _context.Users.FindAsync(userId);
+                var user = await _context.Users.FindAsync(iduser);
                 if (user == null)
                 {
                     return Json(new { result = "FAIL", msg = "Không tìm thấy người dùng" });
@@ -257,15 +281,14 @@ namespace EduQuiz.Controllers
                     user.ProfilePicture = $"/src/img/profiles/{uniqueFileName}";
                 }
                 await _context.SaveChangesAsync();
-                var usersession = new
+                var acToken = _cookieAuth.GenerateToken(user);
+
+                HttpContext.Response.Cookies.Append("acToken", acToken, new CookieOptions
                 {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Username = user.Username,
-                    Avatar = user.ProfilePicture
-                };
-                var userInfoJson = JsonConvert.SerializeObject(usersession);
-                HttpContext.Session.SetString("_USERCURRENT", userInfoJson);
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(15)
+                });
 
                 return Json(new { result = "PASS", msg = "Lưu thông tin thành công" });
             }

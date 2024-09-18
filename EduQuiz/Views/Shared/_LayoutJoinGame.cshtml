@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - EduQuiz!</title>
+    <link rel="icon" href="~/src/img/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/src/css/paper-dashboard.css" rel="stylesheet" />
+
+    <script src="@("https://unpkg.com/@popperjs/core@2")"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <link href="~/src/css/playeduquiz.css" rel="stylesheet" />
+    <link href="~/src/css/auth.css" rel="stylesheet" />
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div class="layout-page-content" style="top:unset;height:100%;background:rgb(33 32 93)">
+			<div class="wrapper-content" style="min-height:100%;padding:0">
+				<span class="circle-box bg-icon">
+                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-dd9f731c-1691-40b8-9220-bc6dac149444" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-dd9f731c-1691-40b8-9220-bc6dac149444">Icône</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: #1c1b35;"></path></svg>
+				</span>
+				<span class="rectangle-box bg-icon">
+                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-labelledby="label-b0f66aa4-e070-47c1-a4ea-feacec0fdea3" aria-hidden="true" class="icon__Svg-sc-xvsbpg-1 ipIYNE"><title id="label-b0f66aa4-e070-47c1-a4ea-feacec0fdea3">Icône</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill:#1c1b35;"></path></svg>
+				</span>
+			    @RenderBody()
+			</div>
+	</div>
+    <script src="~/src/js/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="~/src/js/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/src/js/bootstrap.min.js"></script>
+
+    <script src="~/src/css/js/bootstrap-notify.js"></script>
+    <script src="~/src/css/js/perfect-scrollbar.jquery.min.js"></script>
+</body>
+</html>

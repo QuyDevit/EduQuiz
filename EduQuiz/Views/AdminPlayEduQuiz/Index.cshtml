@@ -1,0 +1,192 @@
+﻿@{
+    Layout = "_LayoutPlay";
+    ViewBag.Title = "Chọn chế độ chơi";
+}
+<header class="styles__TopContainer">
+    <img style="height:40px;width:100px;margin-left:20px" src="~/src/img/logomain.png" alt="#">
+</header>
+<div class="styles__ContentWrapper">
+    <div class="styles__LaunchPagePanel">
+        <div class="styles__SelectedGameModeWrapper">
+            <div class="selected-game-mode">
+                <div class="selected-game-mode-description">
+                    <div class="game-mode-preview">
+                        <div class="aspect-ratio-wrapper">
+                            <div class="game-mode-preview__InnerWrapper">
+                                <div class="slick-list">
+                                    <img src="/src/img/examplequiz.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="selected-game-mode-description__RightContent">
+                    <div>
+                        <h2 class="selected-game-mode_Title">Chế độ cổ điển</h2>
+                        <div class="selected-game-mode-description__ScrollWrapper">
+                            <div class="categories__CategoryWrapper d-none" id="team-note">
+                                Tối đa 5 đội
+                            </div>
+                            <div class="categories__CategoryWrapper">
+                                Số lượng người chơi tối đa :10
+                            </div>
+                        </div>
+                        <div class="game-mode-preview__InnerWrapper">
+                            <p id="description">Mang lại sự cạnh tranh thân thiện cho eduquiz này. Người chơi đối đầu và cạnh tranh để giành vị trí cao nhất trên bục vinh quang. Người chơi trả lời nhanh nhất và nhận được câu trả lời đúng nhất sẽ có điểm cao hơn.</p>
+                        </div>
+                    </div>
+                    <div class="start-button__StartButtonWrapper">
+                        <div class="start-button__EduquizInfo">
+                            <img src="~/src/img/market.jpg" />
+                            <div class="start-button__EduquizTitle">
+                                Học tiếng anh cho mọi cấp độ
+                            </div>
+                        </div>
+                        <div class="start-button__ButtonWrapper">
+                            <a href="@Url.Action("Lobby","AdminPlayEduQuiz",new{quizId = Guid.NewGuid()})" class="btn" style="background:#fff;color:#000">Bắt đầu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="game-mode-list__GameModes">
+            <div class="game-mode-list__ScrollWrapper">
+                <div class="game-mode-slider__GameModeSliderWrapper">
+                    <h2 class="game-mode-slider__Title">Chọn chế độ</h2>
+                    <div class="swiper-wrapper">
+                        <div class="swiper-wrapper d-flex">
+                            <div class="swiper-slide-item swiper-wrapper">
+                                <div class="styles__GameModeWrapper">
+                                    <button class="styles__GameModeButton active" data-mode="1">
+                                        <div class="styles__GameModeCard">
+                                            <img src="/src/img/classicmode.png" />
+                                        </div>
+                                        <h3 class="styles__GameModeTitle">Chế độ cổ điển</h3>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="swiper-slide-item swiper-wrapper">
+                                <div class="styles__GameModeWrapper">
+                                    <button class="styles__GameModeButton" data-mode="2">
+                                        <div class="styles__GameModeCard">
+                                            <img src="/src/img/teammode.png" />
+                                        </div>
+                                        <h3 class="styles__GameModeTitle">Chế độ đội</h3>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="load__LoadingPage">
+    <div class="load__Wrapper">
+        <div class="styles__Wrapper">
+            <div class="styles__LoadingAnimation">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 280 280" width="280" height="280" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; transform: translate3d(0px, 0px, 0px); content-visibility: visible;">
+                    <defs>
+                        <clipPath>
+                            <rect width="280" height="280" x="0" y="0"></rect>
+                        </clipPath>
+                    </defs>
+                    <g clip-path="url(#__lottie_element_2)">
+                        <g transform="matrix(1.943629503250122,0,0,0.7288585901260376,84.62065124511719,224.3936309814453)" opacity="0.4" style="display: block;">
+                            <g opacity="1" transform="matrix(1,0,0,1,28.75,9.75)">
+                                <path fill="rgb(0,0,0)" fill-opacity="1" d=" M28.5,0 C28.5,5.247000217437744 15.739999771118164,9.5 0,9.5 C-15.739999771118164,9.5 -28.5,5.247000217437744 -28.5,0 C-28.5,-5.247000217437744 -15.739999771118164,-9.5 0,-9.5 C15.739999771118164,-9.5 28.5,-5.247000217437744 28.5,0z"></path>
+                            </g>
+                        </g>
+                        <g transform="matrix(0.9916391372680664,0.1290421187877655,-0.1290421187877655,0.9916391372680664,192.18943786621094,145.68043518066406)" opacity="1" style="display: block;">
+                            <g opacity="1" transform="matrix(1,0,0,1,17.100000381469727,3.25)">
+                                <path fill="rgb(255,255,255)" fill-opacity="1" d=" M13.850000381469727,3 C13.850000381469727,3 -16.850000381469727,3 -16.850000381469727,3 C-16.850000381469727,3 -16.850000381469727,-3 -16.850000381469727,-3 C-16.850000381469727,-3 13.850000381469727,-3 13.850000381469727,-3 C15.505999565124512,-3 16.850000381469727,-1.656999945640564 16.850000381469727,0 C16.850000381469727,1.656999945640564 15.505999565124512,3 13.850000381469727,3z"></path>
+                            </g>
+                        </g>
+                        <g transform="matrix(0.9916391372680664,0.1290421187877655,-0.1290421187877655,0.9916391372680664,204.24424743652344,126.54703521728516)" opacity="1" style="display: block;">
+                            <g opacity="1" transform="matrix(0.9999356269836426,-0.011344396509230137,0.011344396509230137,0.9999356269836426,13.79800033569336,23.48200035095215)">
+                                <path class="rotating" fill="rgb(255,255,255)" fill-opacity="1" d=" M11.583999633789062,-3.1740000247955322 C12.904999732971191,-5.431000232696533 13.54699993133545,-8.104999542236328 13.234999656677246,-10.942999839782715 C12.57800006866455,-16.94099998474121 7.546999931335449,-21.80500030517578 1.343999981880188,-22.423999786376953 C-6.744999885559082,-23.231000900268555 -13.54800033569336,-17.08799934387207 -13.49899959564209,-9.442999839782715 C-13.473999977111816,-5.5370001792907715 -11.656999588012695,-2.055999994277954 -8.819000244140625,0.30300000309944153 C-11.727999687194824,2.7850000858306885 -13.52400016784668,6.458000183105469 -13.364999771118164,10.531999588012695 C-13.100000381469727,17.232999801635742 -7.368000030517578,22.7549991607666 -0.4390000104904175,22.98200035095215 C7.21999979019165,23.231000900268555 13.484999656677246,17.275999069213867 13.437999725341797,9.937999725341797 C13.423999786376953,7.658999919891357 12.800999641418457,5.525000095367432 11.718999862670898,3.6740000247955322 C10.470999717712402,1.5379999876022339 10.335000038146973,-1.0399999618530273 11.583999633789062,-3.1740000247955322z M-0.13300000131130219,-15.90999984741211 C3.509999990463257,-15.932999610900879 6.48199987411499,-13.095999717712402 6.505000114440918,-9.571999549865723 C6.5269999504089355,-6.047999858856201 3.5920000076293945,-3.1710000038146973 -0.050999999046325684,-3.1480000019073486 C-3.694000005722046,-3.124000072479248 -6.665999889373779,-5.964000225067139 -6.689000129699707,-9.48799991607666 C-6.710999965667725,-13.01099967956543 -3.7760000228881836,-15.88700008392334 -0.13300000131130219,-15.90999984741211z M0.07400000095367432,16.402999877929688 C-3.569000005722046,16.426000595092773 -6.540999889373779,13.59000015258789 -6.564000129699707,10.065999984741211 C-6.585999965667725,6.541999816894531 -3.6510000228881836,3.6679999828338623 -0.00800000037997961,3.6440000534057617 C3.634999990463257,3.621000051498413 6.605999946594238,6.455999851226807 6.630000114440918,9.979999542236328 C6.6519999504089355,13.503999710083008 3.7170000076293945,16.3799991607666 0.07400000095367432,16.402999877929688z"></path>
+                            </g>
+                        </g>
+                        <g>
+                            <g transform="matrix(0.9916391372680664,0.1290421187877655,-0.1290421187877655,0.9916391372680664,138.94422912597656,143.7433624267578)" opacity="1" style="display: block;">
+                                <g opacity="1" transform="matrix(1,0,0,1,26.75,26.75)">
+                                    <path class="rotate1" fill="rgb(19,104,206)" fill-opacity="1" d=" M22.5,26.5 C22.5,26.5 -22.5,26.5 -22.5,26.5 C-24.708999633789062,26.5 -26.5,24.708999633789062 -26.5,22.5 C-26.5,22.5 -26.5,-22.5 -26.5,-22.5 C-26.5,-24.708999633789062 -24.708999633789062,-26.5 -22.5,-26.5 C-22.5,-26.5 22.5,-26.5 22.5,-26.5 C24.708999633789062,-26.5 26.5,-24.708999633789062 26.5,-22.5 C26.5,-22.5 26.5,22.5 26.5,22.5 C26.5,24.708999633789062 24.708999633789062,26.5 22.5,26.5z"></path>
+                                </g>
+                                <g opacity="1" transform="matrix(1,0,0,1,26.75,26.75)">
+                                    <path class="rotate1" fill="rgb(255,255,255)" fill-opacity="1" d=" M-14.5,0.004999999888241291 C-14.5,0.004999999888241291 0,-14.5 0,-14.5 C0,-14.5 14.5,0.0010000000474974513 14.5,0.0010000000474974513 C14.5,0.0010000000474974513 0,14.5 0,14.5 C0,14.5 -14.5,0.004999999888241291 -14.5,0.004999999888241291z"></path>
+                                </g>
+                            </g>
+                            <g transform="matrix(0.9916391372680664,0.1290421187877655,-0.1290421187877655,0.9916391372680664,82.42079162597656,136.38795471191406)" opacity="1" style="display: block;">
+                                <g opacity="1" transform="matrix(1,0,0,1,26.75,26.75)">
+                                    <path class="rotate2" fill="rgb(37,136,11)" fill-opacity="1" d=" M22.496999740600586,26.5 C22.496999740600586,26.5 -22.496999740600586,26.5 -22.496999740600586,26.5 C-24.70800018310547,26.5 -26.5,24.70800018310547 -26.5,22.496999740600586 C-26.5,22.496999740600586 -26.5,-22.496999740600586 -26.5,-22.496999740600586 C-26.5,-24.70800018310547 -24.70800018310547,-26.5 -22.496999740600586,-26.5 C-22.496999740600586,-26.5 22.496999740600586,-26.5 22.496999740600586,-26.5 C24.70800018310547,-26.5 26.5,-24.70800018310547 26.5,-22.496999740600586 C26.5,-22.496999740600586 26.5,22.496999740600586 26.5,22.496999740600586 C26.5,24.70800018310547 24.70800018310547,26.5 22.496999740600586,26.5z"></path>
+                                </g>
+                                <g opacity="1" transform="matrix(1,0,0,1,26.75,26.75)">
+                                    <path class="rotate2" fill="rgb(255,255,255)" fill-opacity="1" d=" M-10.5,-10.5 C-10.5,-10.5 10.5,-10.5 10.5,-10.5 C10.5,-10.5 10.5,10.5 10.5,10.5 C10.5,10.5 -10.5,10.5 -10.5,10.5 C-10.5,10.5 -10.5,-10.5 -10.5,-10.5z"></path>
+                                </g>
+                            </g>
+                            <g transform="matrix(0.9916391372680664,0.1290421187877655,-0.1290421187877655,0.9916391372680664,89.77619171142578,79.8645248413086)" opacity="1" style="display: block;">
+                                <g opacity="1" transform="matrix(1,0,0,1,26.75,26.75)">
+                                    <path class="rotate3" fill="rgb(255,166,2)" fill-opacity="1" d=" M22.5,26.5 C22.5,26.5 -22.5,26.5 -22.5,26.5 C-24.708999633789062,26.5 -26.5,24.708999633789062 -26.5,22.5 C-26.5,22.5 -26.5,-22.5 -26.5,-22.5 C-26.5,-24.708999633789062 -24.708999633789062,-26.5 -22.5,-26.5 C-22.5,-26.5 22.5,-26.5 22.5,-26.5 C24.708999633789062,-26.5 26.5,-24.708999633789062 26.5,-22.5 C26.5,-22.5 26.5,22.5 26.5,22.5 C26.5,24.708999633789062 24.708999633789062,26.5 22.5,26.5z"></path>
+                                </g>
+                                <g opacity="1" transform="matrix(1,0,0,1,26.75,26.75)">
+                                    <path class="rotate3" fill="rgb(255,255,255)" fill-opacity="1" d=" M0,13.5 C-7.455999851226807,13.5 -13.5,7.455999851226807 -13.5,0 C-13.5,-7.455999851226807 -7.455999851226807,-13.5 0,-13.5 C7.455999851226807,-13.5 13.5,-7.455999851226807 13.5,0 C13.5,7.455999851226807 7.455999851226807,13.5 0,13.5z"></path>
+                                </g>
+                            </g>
+                            <g transform="matrix(0.9916391372680664,0.1290421187877655,-0.1290421187877655,0.9916391372680664,146.29962158203125,87.21992492675781)" opacity="1" style="display: block;">
+                                <g opacity="1" transform="matrix(1,0,0,1,26.75,26.75)">
+                                    <path class="rotate4" fill="rgb(225,27,59)" fill-opacity="1" d=" M22.5,26.5 C22.5,26.5 -22.5,26.5 -22.5,26.5 C-24.708999633789062,26.5 -26.5,24.708999633789062 -26.5,22.5 C-26.5,22.5 -26.5,-22.5 -26.5,-22.5 C-26.5,-24.708999633789062 -24.708999633789062,-26.5 -22.5,-26.5 C-22.5,-26.5 22.5,-26.5 22.5,-26.5 C24.708999633789062,-26.5 26.5,-24.708999633789062 26.5,-22.5 C26.5,-22.5 26.5,22.5 26.5,22.5 C26.5,24.708999633789062 24.708999633789062,26.5 22.5,26.5z"></path>
+                                </g>
+                                <g opacity="1" transform="matrix(1,0,0,1,26.75,26.475000381469727)">
+                                    <path class="rotate4" fill="rgb(255,255,255)" fill-opacity="1" d=" M13.5,10.774999618530273 C13.5,10.774999618530273 -13.5,10.774999618530273 -13.5,10.774999618530273 C-13.5,10.774999618530273 0,-10.774999618530273 0,-10.774999618530273 C0,-10.774999618530273 13.5,10.774999618530273 13.5,10.774999618530273z"></path>
+                                </g>
+                            </g>
+                        </g>
+
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <span class="load__LoadingText">
+            <span>Đ</span>
+            <span>a</span>
+            <span>n</span>
+            <span>g</span>
+            <span>t</span>
+            <span>ả</span>
+            <span>i</span>
+            <span>.</span>
+            <span>.</span>
+            <span>.</span>
+        </span>
+    </div>
+</div>
+        
+
+<script>
+    setTimeout(() => {
+        $(".load__LoadingPage").addClass("scale-down");
+        setTimeout(() => {
+            $(".load__LoadingPage").remove();
+        }, 300);
+    }, 3000);
+
+    $(".styles__GameModeButton").click(function () {
+        $(".styles__GameModeButton").removeClass("active");
+        $(this).addClass("active");
+        let description = "";
+        let title = "";
+        if ($(this).attr("data-mode") == "1") {
+            title = "Chế độ cổ điển";
+            description = "Mang lại sự cạnh tranh thân thiện cho eduquiz này. Người chơi đối đầu và cạnh tranh để giành vị trí cao nhất trên bục vinh quang. Người chơi trả lời nhanh nhất và nhận được câu trả lời đúng nhất sẽ có điểm cao hơn.";
+            $("#team-note").addClass("d-none");
+        } else {
+            title = "Chế độ đội";
+            description = "Tăng cường sự hợp tác, làm việc nhóm và giao tiếp với chế độ nhóm. Người chơi làm việc cùng nhau theo nhóm để cạnh tranh giành vị trí cao nhất trên bục vinh quang.";
+            $("#team-note").removeClass("d-none");
+        }
+        
+        $("#description").text(description);
+        $(".selected-game-mode_Title").text(title);
+    })
+</script>

@@ -1,0 +1,818 @@
+﻿@{
+    Layout = "_LayoutPlay";
+    ViewBag.Title = "Eduquiz! Game";
+}
+<main class="lobbystyles__PageWrapper">
+    <div id="header-title" class="lobbystyles__GetReadyToJoinWrapper">
+        <div class="lobbystyles__GetReadyToJoin">
+            Hãy sẵn sàng để tham gia
+        </div>
+    </div>
+    <div class="lobbystyles__StatusBarWrapper">
+        <div class="headerstyles__Heading">
+            <div class="headerstyles__ExpandedJoinInfoWrapper">
+                <div class="headerstyles__ExpandedWrapper">
+                    <div class="headerstyles__ExpandedContentVisibleWrapper">
+                        <div class="headerstyles__ExpandedContentWrapper">
+                            <div class="headerstyles__ExpandedTextWrapperShadow">
+                                <div class="headerstyles__ExpandedTextWrapper">
+                                    <div class="headerstyles__GamePinTextWrapper">
+                                        <div>Tham gia tại 
+                                            <strong>www.eduquiz.it</strong>
+                                        </div>
+                                        <div>hoặc với 
+                                            <strong>EduQuiz! app</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="headerstyles__GamePinShadowWrapper">
+                                <div class="headerstyles__PinWrapper">
+                                    <div id="joininfo" class="headerstyles__GamePinContainer">
+                                        <div class="headerstyles__PinLoading">
+                                            Đang tải mã PIN trò chơi
+                                            <span class="headerstyles__Ellipsis"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lobby-qr-code__Wrapper">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lobbystyles__LobbyListHeader">
+        <div class="lobbystyles__LobbyListItem">
+        </div>
+        <div class="lobbystyles__LobbyListItem">
+            <div class="game-logo__LobbyBrandLogo">
+                <img style="width:50%" src="~/src/img/logotext.png"/>
+            </div>
+        </div>
+        <div class="lobbystyles__LobbyListItem">
+            <div class="lobbystyles__StartWrapper">
+                <div class="style-button__Wrapper">
+                    <button class="icon-button__IconButton" style="padding:5px 10px;">
+                        <i class="fa fa-lock icon-lock" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="style-button__Wrapper">
+                    <button onclick="startGame()" class="icon-button__IconButton" disabled style="font-weight: bolder;font-size: 19px;padding: 4px 8px;">
+                        Bắt đầu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="lobbystyles__LobbyListSection">
+        <ul class="controller-list__ControllerList">
+            <li class="controller-entry__Wrapper">
+                <button class="controller-entry__ControllerEntry">
+                    <div class="controller-entry__AvatarContainer">
+                        <div class="styles__AvatarWrapper">
+                            <img class="styles__AvatarItem" src="~/src/img/accessory/accessory1.svg" />
+                            <img class="styles__AvatarBase" src="~/src/img/avatar/avatar1.svg" />
+                            <div class="styles__AvatarFace">
+                                <img src="~/src/img/eyes-blink.gif" />
+                            </div>
+                        </div> 
+                    </div>
+                    <span class="controller-entry__ControllerName">Ok let go</span>
+                </button>
+            </li>
+            <li class="controller-entry__Wrapper">
+                <button class="controller-entry__ControllerEntry">
+                    <div class="controller-entry__AvatarContainer">
+                        <div class="styles__AvatarWrapper">
+                            <img class="styles__AvatarItem" src="~/src/img/accessory/accessory4.svg" />
+                            <img class="styles__AvatarBase" src="~/src/img/avatar/avatar4.svg" />
+                            <div class="styles__AvatarFace">
+                                <img src="~/src/img/eyes-blink.gif" />
+                            </div>
+                        </div>
+                    </div>
+                    <span class="controller-entry__ControllerName">Ok let go</span>
+                </button>
+            </li>
+            <li class="controller-entry__Wrapper">
+                <button class="controller-entry__ControllerEntry">
+                    <div class="controller-entry__AvatarContainer">
+                        <div class="styles__AvatarWrapper">
+                            <img class="styles__AvatarItem" src="~/src/img/accessory/accessory6.svg" />
+                            <img class="styles__AvatarBase" src="~/src/img/avatar/avatar8.svg" />
+                            <div class="styles__AvatarFace">
+                                <img src="~/src/img/eyes-blink.gif" />
+                            </div>
+                        </div>
+                    </div>
+                    <span class="controller-entry__ControllerName">Ok let go</span>
+                </button>
+            </li>
+            <li class="controller-entry__Wrapper">
+                <button class="controller-entry__ControllerEntry">
+                    <div class="controller-entry__AvatarContainer">
+                        <div class="styles__AvatarWrapper">
+                            <img class="styles__AvatarItem" src="~/src/img/accessory/accessory3.svg" />
+                            <img class="styles__AvatarBase" src="~/src/img/avatar/avatar2.svg" />
+                            <div class="styles__AvatarFace">
+                                <img src="~/src/img/eyes-blink.gif" />
+                            </div>
+                        </div>
+                    </div>
+                    <span class="controller-entry__ControllerName">Ok let go</span>
+                </button>
+            </li>
+            <li class="controller-entry__Wrapper">
+                <button class="controller-entry__ControllerEntry">
+                    <div class="controller-entry__AvatarContainer">
+                        <div class="styles__AvatarWrapper">
+                            <img class="styles__AvatarItem" src="~/src/img/accessory/accessory5.svg" />
+                            <img class="styles__AvatarBase" src="~/src/img/avatar/avatar4.svg" />
+                            <div class="styles__AvatarFace">
+                                <img src="~/src/img/eyes-blink.gif" />
+                            </div>
+                        </div>
+                    </div>
+                    <span class="controller-entry__ControllerName">Ok let go</span>
+                </button>
+            </li>
+        </ul>
+        <div class="lobbystyles__WaitingMessageWrapper">
+            Đang chờ người chơi…
+        </div>
+    </section>
+    <div class="lobbystyles__BottomBarWrapper">
+        <div class="player-counter__Wrapper">
+            <span class="icon__Icon">
+                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+            </span>
+            <div class="player-counter__PlayerCountText">0</div>
+        </div>
+        <div class="setting-bar__Wrapper">
+            <div class="volume-controller__Wrapper">
+                <button id="volume-controller" class="volume-controller__VolumeController">
+                    <i class="fa fa-volume-up icon-custom" aria-hidden="true"></i>
+                </button>
+                <div class="volume-controller__TrackSection">
+                    <div class="track__Track">
+                        <div class="track__Thumb" style="inset-inline-start:50%">
+                        </div>
+                        <div class="track__left"></div>
+                        <div class="track__right"></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="volume-controller__VolumeController">
+                    <span class="icon__Icon">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7.83159109,16 C7.83159109,15.637 7.85915912,15.266 7.91429518,14.893 L6.51036785,14.099 C6.27655014,13.967 6.10501575,13.748 6.03456412,13.492 C5.9641125,13.236 6.00086987,12.963 6.13666793,12.733 L8.17874403,9.27 C8.46157157,8.792 9.08440478,8.627 9.57348201,8.903 L10.9804724,9.698 C11.5788007,9.24 12.2383913,8.865 12.9367814,8.585 L12.9367814,7 C12.9367814,6.448 13.3931854,6 13.9578194,6 L18.0419716,6 C18.6066057,6 19.0630097,6.448 19.0630097,7 L19.0630097,8.586 C19.7613997,8.864 20.4209903,9.24 21.0193186,9.697 L22.426309,8.902 C22.6601267,8.769 22.9398912,8.734 23.2012769,8.802 C23.4626626,8.87 23.6852489,9.038 23.821047,9.267 L25.8631231,12.731 C26.1449296,13.209 25.9774794,13.821 25.4904442,14.097 L24.0854959,14.892 C24.1406319,15.265 24.1681999,15.636 24.1681999,16 C24.1681999,16.364 24.1406319,16.735 24.0854959,17.108 L25.4904442,17.903 C25.9774794,18.179 26.1449296,18.791 25.8631231,19.269 L23.821047,22.733 C23.6852489,22.962 23.4626626,23.13 23.2012769,23.198 C22.9398912,23.266 22.6601267,23.231 22.426309,23.098 L21.0193186,22.303 C20.4209903,22.76 19.7613997,23.136 19.0630097,23.414 L19.0630097,25 C19.0630097,25.552 18.6066057,26 18.0419716,26 L13.9578194,26 C13.3931854,26 12.9367814,25.552 12.9367814,25 L12.9367814,23.415 C12.2383913,23.135 11.5788007,22.76 10.9804724,22.302 L9.57348201,23.097 C9.08440478,23.373 8.46157157,23.208 8.17874403,22.73 L6.13666793,19.267 C6.00086987,19.037 5.9641125,18.764 6.03456412,18.508 C6.10501575,18.252 6.27655014,18.033 6.51036785,17.901 L7.91429518,17.107 C7.85915912,16.734 7.83159109,16.363 7.83159109,16 Z M9.8736672,16 C9.8736672,16.455 9.92982429,16.908 10.0452016,17.39 C10.1493475,17.82 9.95330817,18.265 9.56225059,18.485 L8.41562486,19.133 L9.43666291,20.865 L10.5843097,20.217 C10.9784304,19.997 11.4695497,20.053 11.7962819,20.357 C12.4936508,21.002 13.3431545,21.483 14.2498363,21.749 C14.6827564,21.875 14.9788575,22.266 14.9788575,22.707 L14.9788575,24 L17.0209336,24 L17.0209336,22.707 C17.0209336,22.265 17.3180556,21.875 17.7509758,21.749 C18.6556155,21.484 19.5030771,21.003 20.2035092,20.357 C20.5322834,20.053 21.0254448,19.996 21.4154813,20.217 L22.5631281,20.866 L23.5841662,19.135 L22.4375404,18.484 C22.0464829,18.264 21.8504436,17.819 21.9545894,17.39 C22.0699667,16.908 22.1261238,16.454 22.1261238,16 C22.1261238,15.546 22.0699667,15.092 21.9545894,14.61 C21.8504436,14.181 22.0464829,13.736 22.4375404,13.516 L23.5841662,12.865 L22.5631281,11.134 L21.4154813,11.783 C21.0254448,12.004 20.5322834,11.947 20.2035092,11.643 C19.5030771,10.997 18.6556155,10.516 17.7509758,10.251 C17.3180556,10.125 17.0209336,9.735 17.0209336,9.293 L17.0209336,8 L14.9788575,8 L14.9788575,9.293 C14.9788575,9.734 14.6827564,10.125 14.2498363,10.251 C13.3431545,10.517 12.4936508,10.998 11.7962819,11.643 C11.4695497,11.947 10.9784304,12.003 10.5843097,11.783 L9.43666291,11.135 L8.41562486,12.867 L9.56225059,13.515 C9.95330817,13.735 10.1493475,14.18 10.0452016,14.61 C9.92982429,15.092 9.8736672,15.545 9.8736672,16 Z M16,18 C14.8954305,18 14,17.1045695 14,16 C14,14.8954305 14.8954305,14 16,14 C17.1045695,14 18,14.8954305 18,16 C18,17.1045695 17.1045695,18 16,18 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+@* <main class="start__PageWrapper">
+    <div class="block-title__ContainerQuestion">
+        <div class="block-title__WrapperQuestion">
+            <h1 class="block-title__Title">giới thiệu về khoa học </h1>
+        </div>
+    </div>
+    <div class="spinning-count-down__Container">
+        <div class="spinning-count-down__Background"></div>
+        <div class="spinning-count-down__Count">3</div>
+    </div>
+</main> *@
+
+@* <main class="quiz__PageWrapper"> *@
+    @* <main class="question-results__PageWrapper">
+        <div class="top-bar__TopBar">
+            <div class="top-bar__TitleWrapper">
+                <section class="top-bar__Title">
+                    <div class="question-title__TitleWrapper">
+                        <span class="question-title__Title">Con cá nào lớn hơn trong bức tranh này?</span>
+                    </div>
+                </section>
+            </div>
+            <div class="top-bar__TopRightContainer">
+                <div class="top-bar__RightButtons">
+                    <button class="button__Button">Kế tiếp</button>
+                </div>
+            </div>
+        </div>
+        <header class="styles__TopContent">
+            <div class="question-results__CenterContent">
+                <div class="answers-histogram__AnswersHistogram">
+                    <div class="answers-histogram__Choice">
+                        <div class="answers-histogram__BarContainer">
+                            <div class="answers-histogram__Bar" style="background-color: rgb(226, 27, 60);" ></div>
+                        </div>
+                        <div class="card__PassiveCard" style="background: rgb(175, 21, 46);">
+                            <div class="card-icon__IconWrapper">
+                                <span class="icon__Icon">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path></svg>
+                                </span>
+                            </div>
+                            <span class="answers-histogram__LabelText">1</span>
+                            <span class="icon__Icon">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M12.926 22.652L8 17.725 9.767 15.957 12.841 19.031 21.959 9 23.808 10.682z" style="fill: rgb(255, 255, 255);"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="answers-histogram__Choice">
+                        <div class="answers-histogram__BarContainer">
+                            <div class="answers-histogram__Bar" style="background-color: rgb(19, 104, 206);"></div>
+                        </div>
+                        <div class="card__PassiveCard" style="background: rgb(15, 81, 160);">
+                            <div class="card-icon__IconWrapper">
+                                <span class="icon__Icon">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: inherit;"></path></svg>
+                                </span>
+                            </div>
+                            <span class="answers-histogram__LabelText">0</span>
+                        </div>
+                    </div>
+                    <div class="answers-histogram__Choice">
+                        <div class="answers-histogram__BarContainer">
+                            <div class="answers-histogram__Bar" style="background-color: rgb(216, 158, 0);"></div>
+                        </div>
+                        <div class="card__PassiveCard" style="background: rgb(167, 122, 0);">
+                            <div class="card-icon__IconWrapper">
+                                <span class="icon__Icon">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: inherit;"></path></svg>
+                                </span>
+                            </div>
+                            <span class="answers-histogram__LabelText">0</span>
+                        </div>
+                    </div>
+                    <div class="answers-histogram__Choice">
+                        <div class="answers-histogram__BarContainer">
+                            <div class="answers-histogram__Bar" style="background-color: rgb(38, 137, 12);"></div>
+                        </div>
+                        <div class="card__PassiveCard" style="background: rgb(29, 106, 9);">
+                            <div class="card-icon__IconWrapper">
+                                <span class="icon__Icon">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: inherit;"></path></svg>
+                                </span>
+                            </div>
+                            <span class="answers-histogram__LabelText">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="countdown__CountdownWrapper">
+                <div class="question-countdown__count">20</div>
+            </div>
+            <div class="question-media__QuestionMedia">
+                <div class="question-image__ImageWrapper">
+                    <div class="question-image__MediaImageWrapper">
+                        <div class="question-media__QuestionImage">
+                            <img class="question-base__Img" src="/src/img/question/39a66ed9-c0d2-4dde-b234-4e28be6f86a1.webp" />
+                            <div class="image-question-Effect"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="quiz-question__RightContent">
+                <div class="answer-counter__AnswerCounter">
+                    <div class="answer-counter__Count">0</div>
+                    <div class="answer-counter__Title">Câu trả lời</div>
+                </div>
+            </div>
+        </header>
+        <div class="question-results__QuestionChoices">
+            <div class="card__PassiveCardChoice choice-item">
+                <div class="card-icon__IconWrapper">
+                    <span class="icon__Icon" style="width: 5.95733vmin;height: 5.95733vmin;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path></svg>
+                    </span>
+                </div>
+                <span class="question-choice-content__Text">
+                    <span class="break-long-words__WordBreak">ưefwefwe</span>
+                </span>
+                <div class="question-choice-content__IconWrapper">
+                    <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                    </span>
+                </div>
+            </div>
+            <div class="card__PassiveCardChoice choice-item">
+                <div class="card-icon__IconWrapper">
+                    <span class="icon__Icon" style="width: 5.95733vmin;height: 5.95733vmin;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: inherit;"></path></svg>
+                    </span>
+                </div>
+                <span class="question-choice-content__Text">
+                    <span class="break-long-words__WordBreak">ưefwefwe</span>
+                </span>
+                <div class="question-choice-content__IconWrapper">
+                    <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M21.4352896,7.29315397 L16.4852814,12.2358635 L11.5352732,7.29315397 L7.29390115,11.534526 L12.216469,16.4852814 L7.29390115,21.4360368 L11.5339288,25.6760644 L16.4852814,20.7695678 L21.4366339,25.6760644 L25.6750612,21.4376372 L20.7955092,16.4852814 L25.6750612,11.5329256 L21.4352896,7.29315397 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                    </span>
+                </div>
+            </div>
+            <div class="card__PassiveCardChoice choice-item">
+                <div class="card-icon__IconWrapper">
+                    <span class="icon__Icon" style="width: 5.95733vmin;height: 5.95733vmin;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: inherit;"></path></svg>
+                    </span>
+                </div>
+                <span class="question-choice-content__Text">
+                    <span class="break-long-words__WordBreak">ưefwefwe</span>
+                </span>
+                <div class="question-choice-content__IconWrapper">
+                    <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M21.4352896,7.29315397 L16.4852814,12.2358635 L11.5352732,7.29315397 L7.29390115,11.534526 L12.216469,16.4852814 L7.29390115,21.4360368 L11.5339288,25.6760644 L16.4852814,20.7695678 L21.4366339,25.6760644 L25.6750612,21.4376372 L20.7955092,16.4852814 L25.6750612,11.5329256 L21.4352896,7.29315397 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                    </span>
+                </div>
+            </div>
+            <div class="card__PassiveCardChoice choice-item">
+                <div class="card-icon__IconWrapper">
+                    <span class="icon__Icon" style="width: 5.95733vmin;height: 5.95733vmin;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: inherit;"></path></svg>
+                    </span>
+                </div>
+                <span class="question-choice-content__Text">
+                    <span class="break-long-words__WordBreak">ưefwefwe</span>
+                </span>
+                <div class="question-choice-content__IconWrapper">
+                    <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M21.4352896,7.29315397 L16.4852814,12.2358635 L11.5352732,7.29315397 L7.29390115,11.534526 L12.216469,16.4852814 L7.29390115,21.4360368 L11.5339288,25.6760644 L16.4852814,20.7695678 L21.4366339,25.6760644 L25.6750612,21.4376372 L20.7955092,16.4852814 L25.6750612,11.5329256 L21.4352896,7.29315397 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="base-bottom-bar__BottomBar">
+            <div class="styles__Left">
+                <div class="question-counter__Text">1/10</div>
+            </div>
+            <div class="styles__Center">
+                <div class="pin-and-lock-info__JoinWrapper">
+                    <i class="fa fa-lock icon-lock" aria-hidden="true"></i>
+                    <div class="pin-and-lock-info__JoinInfo">
+                        <div>Mã PIN trò chơi:</div>
+                        <div class="pin-and-lock-info__Pin">213423</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main> *@
+@*     <main class="styles__PageWrapper">
+        <div class="styles__QuestionIntroWrapper">
+            <div class="question-intro__QuestionCount">
+                1 trên 10
+            </div>
+            <div class="styles__QuestionContainer">
+                <div class="styles__AnimationContainer">
+                    <div class="styles__Animation">
+                        <div class="styles__AnimationImgWrapper">
+                            <div class="styles__AnimationImgBlock">
+                                <img class="styles__AnimationImg" src="/src/img/logo-quiz.png" />
+                            </div>
+                            <div class="styles__WrapperBlock">Câu đố</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="block-title__Container styles_BlockTitle">
+                    <div class="block-title__Wrapper">
+                        <h1 class="block-title__Title">Con người có mấy chân</h1>
+                    </div>
+                </div>
+                <div class="styles__LoadingWrapper">
+                    <div class="loading-bar__Bar">
+                        <div class="loading-bar__ProgressMeter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main> *@
+   @*  <main class="animated-scoreboard__PageWrapper">
+        <div class="top-bar__TopBar">
+            <div class="top-bar__TitleWrapper">
+                <section class="top-bar__Title">
+                    <div class="question-title__TitleWrapper">
+                        <span class="question-title__Title">Bảng xếp hạng</span>
+                    </div>
+                </section>
+            </div>
+            <div class="top-bar__TopRightContainer">
+                <div class="top-bar__RightButtons">
+                    <button class="button__Button">Kế tiếp</button>
+                </div>
+            </div>
+        </div>
+        <div class="animated-scoreboard__CenterContent">
+            <div class="scoreboard__Scoreboard">
+                <div class="scoreboard__Entries">
+                    <div class="entry__Entry top1">
+                        <div class="entry__NameSection">
+                            <div class="entry__AvatarContainer avatar-rank1">
+                                <div class="styles__AvatarWrapper">
+                                    <img class="styles__AvatarItem" src="~/src/img/accessory/accessory4.svg" />
+                                    <img class="styles__AvatarBase" src="~/src/img/avatar/avatar4.svg" />
+                                    <div class="styles__AvatarFace">
+                                        <img src="~/src/img/eyes-blink.gif" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="entry__Name">Top 1 server</button>
+                        </div>
+                        <div class="entry__ScoreSection">
+                            <div class="entry__PointsSection">1000</div>
+                            <div class="entry__RankUp">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><g fill="none" fill-rule="evenodd"><g fill="#FFF"><path d="M1634 434l20-32 20 32h-12v8h-16v-8h-12z" transform="translate(-1634 -402)"></path></g></g></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entry__Entry">
+                        <div class="entry__NameSection">
+                            <div class="entry__AvatarContainer">
+                                <div class="styles__AvatarWrapper">
+                                    <img class="styles__AvatarItem" src="~/src/img/accessory/accessory4.svg" />
+                                    <img class="styles__AvatarBase" src="~/src/img/avatar/avatar4.svg" />
+                                    <div class="styles__AvatarFace">
+                                        <img src="~/src/img/eyes-blink.gif" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="entry__Name">Top 1 server</button>
+                        </div>
+                        <div class="entry__ScoreSection">
+                            <div class="entry__PointsSection">1000</div>
+                            <div class="entry__RankUp">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><g fill="none" fill-rule="evenodd"><g fill="#FFF"><path d="M1634 434l20-32 20 32h-12v8h-16v-8h-12z" transform="translate(-1634 -402)"></path></g></g></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entry__Entry">
+                        <div class="entry__NameSection">
+                            <div class="entry__AvatarContainer">
+                                <div class="styles__AvatarWrapper">
+                                    <img class="styles__AvatarItem" src="~/src/img/accessory/accessory4.svg" />
+                                    <img class="styles__AvatarBase" src="~/src/img/avatar/avatar4.svg" />
+                                    <div class="styles__AvatarFace">
+                                        <img src="~/src/img/eyes-blink.gif" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="entry__Name">Top 1 server</button>
+                        </div>
+                        <div class="entry__ScoreSection">
+                            <div class="entry__PointsSection">1000</div>
+                            <div class="entry__RankUp">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><g fill="none" fill-rule="evenodd"><g fill="#FFF"><path d="M1634 434l20-32 20 32h-12v8h-16v-8h-12z" transform="translate(-1634 -402)"></path></g></g></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="base-bottom-bar__BottomBar">
+            <div class="styles__Left">
+                <div class="question-counter__Text">1/10</div>
+            </div>
+            <div class="styles__Center">
+                <div class="pin-and-lock-info__JoinWrapper">
+                    <i class="fa fa-lock icon-lock" aria-hidden="true"></i>
+                    <div class="pin-and-lock-info__JoinInfo">
+                        <div>Mã PIN trò chơi:</div>
+                        <div class="pin-and-lock-info__Pin">213423</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main> *@
+@* </main> *@
+@* <script>
+    const revealSequences = {
+        9: [2, 6, 0, 3, 8, 1, 4, 7, 5], // 3x3
+        25: [23, 1, 12, 19, 7, 8, 0, 24, 17, 15, 11, 4, 20, 2, 9, 13, 5, 21, 6, 10, 14, 3, 16, 18, 22], // 5x5
+        64: [37, 5, 47, 12, 56, 0, 24, 19, 30, 35, 48, 1, 57, 4, 62, 52, 38, 10, 41, 63, 14, 33, 45, 29, 3, 27, 31, 44, 20, 7, 15, 42, 2, 39, 53, 28, 34, 59, 13, 50, 55, 8, 32, 18, 54, 11, 43, 60, 40, 16, 6, 9, 58, 61, 46, 22, 26, 36, 49, 17, 21, 25, 51, 23] // 8x8
+    };
+    //Hiệu ứng ảnh hiện mở khi click
+    function applyGridRevealEffect(gridSize, totalTransitionTime) {
+
+        const $imageEffectContainer = $('.image-question-Effect');
+        $imageEffectContainer.removeClass('d-none');
+        $imageEffectContainer.empty();
+        if (gridSize === 0) {
+            return;
+        }
+        const totalItems = gridSize * gridSize;
+
+        const revealOrder = revealSequences[totalItems];
+
+        const delayPerItem = totalTransitionTime / totalItems;
+
+        const gridItems = [];
+        for (let i = 0; i < totalItems; i++) {
+            const $gridItem = $('<div></div>')
+                .addClass(`GridRevealWrapper-item item-${gridSize}_${gridSize}`)
+                .css({
+                    'background-color': 'rgb(70, 23, 143)',
+                    'outline': 'none'
+                });
+
+            gridItems.push($gridItem);
+            $imageEffectContainer.append($gridItem);
+        }
+
+        revealOrder.forEach((index, i) => {
+            setTimeout(() => {
+                gridItems[index].css('background-color', 'transparent');
+            }, i * delayPerItem);
+        });
+    }
+    applyGridRevealEffect(parseInt("3"), 5 * 1000);
+</script> *@
+
+<script>
+    let angle = 0;
+    let countDown = 3;
+
+    function rotateElement() {
+        if (angle <= 90) {
+            $(".spinning-count-down__Background").css({
+                'transform': 'rotate(' + angle + 'deg)'
+            });
+            $(".spinning-count-down__Count").remove();
+            $(".spinning-count-down__Container").append(`
+                         <div class="spinning-count-down__Count">${countDown}</div>`)
+            countDown--;
+            angle += 45;
+            if (angle <= 90) {
+                setTimeout(rotateElement, 1000);
+            }
+        }
+    }
+    // rotateElement();
+    $.ajax({
+        url: '@Url.Action("GenerateQRCode", "AdminPlayEduQuiz")',
+        type: 'GET',
+        data: { url: window.location.href },
+        xhrFields: {
+            responseType: 'blob' 
+        },
+        success: function (data) {
+            // Tạo URL cho hình ảnh mã QR trả về
+            var imageUrl = window.URL.createObjectURL(data);
+            setTimeout(() => {
+                $(".lobby-qr-code__Wrapper").append(`<button class="lobby-qr-code__QRCodeButton">
+                                <div class="qr-logo">
+                                        <img id="qr-code" src="${imageUrl}" alt="QR code" />
+                                </div>
+                            </button>`);
+                $(".headerstyles__PinLoading").remove();
+                $("#joininfo").append(`<div>
+                                                <div class="headerstyles__GamePinText">
+                                                    Mã PIN trò chơi:
+                                                </div>
+                                                <div class="headerstyles__GamePinWrapper">
+                                                    <span class="headerstyles__PinFragment">345</span>
+                                                    <span class="headerstyles__PinFragment">723</span>
+                                                </div>
+                                            </div>`);
+                setTimeout(() => {
+                    $("#header-title").addClass("hide");
+                    setTimeout(() => {
+                        setTimeout(() => {
+                            $("#header-title").addClass("d-none");
+                            $(".lobbystyles__LobbyListHeader").css("opacity", "1");
+                            $(".lobbystyles__LobbyListSection").css("opacity", "1");
+                        },500)
+                        
+                        $(".headerstyles__ExpandedWrapper").addClass("show");
+
+                        $(".headerstyles__ExpandedWrapper").addClass("bounce-effect");
+                        
+                    },700)
+                },1000)
+            },5000)
+            
+        },
+        error: function (xhr, status, error) {
+            console.error('Error generating QR code:', error);
+        }
+    });
+
+    function startGame() {
+        $(".lobbystyles__PageWrapper").remove();
+        $(".layout_Fullscreen").append(`<main class="start__PageWrapper">
+        <div class="block-title__ContainerQuestion">
+            <div class="block-title__WrapperQuestion">
+                <h1 class="block-title__Title">giới thiệu về khoa học </h1>
+            </div>
+        </div> 
+    </main>`);
+        setTimeout(() => {
+            $(".block-title__ContainerQuestion").remove();
+            $(".start__PageWrapper").append(` <div class="spinning-count-down__Container">
+                    <div class="spinning-count-down__Background"></div>
+                    <div class="spinning-count-down__Count">3</div>
+                </div>`)
+            rotateElement();
+        },3000)
+    setTimeout(() =>{
+        $(".start__PageWrapper").remove();
+            $(".layout_Fullscreen").append(`
+            <main class="quiz__PageWrapper">
+                <main class="styles__PageWrapper">
+                    <div class="styles__QuestionIntroWrapper">
+                        <div class="question-intro__QuestionCount">
+                            1 trên 10
+                        </div>
+                        <div class="styles__QuestionContainer">
+                            <div class="styles__AnimationContainer">
+                                <div class="styles__Animation">
+                                    <div class="styles__AnimationImgWrapper">
+                                        <div class="styles__AnimationImgBlock">
+                                            <img class="styles__AnimationImg" src="/src/img/logo-quiz.png" />
+                                        </div>
+                                        <div class="styles__WrapperBlock">Câu đố</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-title__Container styles_BlockTitle">
+                                <div class="block-title__Wrapper">
+                                    <h1 class="block-title__Title">Con người có mấy chân</h1>
+                                </div>
+                            </div>
+                            <div class="styles__LoadingWrapper">
+                                <div class="loading-bar__Bar">
+                                    <div class="loading-bar__ProgressMeter"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </main>
+            `);
+            setTimeout(() => {
+                $(".styles__PageWrapper").remove();
+                $(".quiz__PageWrapper").append(`<main class="question-results__PageWrapper">
+                <div class="top-bar__TopBar">
+                    <div class="top-bar__TitleWrapper">
+                        <section class="top-bar__Title">
+                            <div class="question-title__TitleWrapper">
+                                <span class="question-title__Title">Con cá nào lớn hơn trong bức tranh này?</span>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="top-bar__TopRightContainer">
+                        <div class="top-bar__RightButtons">
+                            <button class="button__Button">Kế tiếp</button>
+                        </div>
+                    </div>
+                </div>
+                <header class="styles__TopContent">
+                    <div class="countdown__CountdownWrapper">
+                    <div class="question-countdown__count">20</div>
+                    </div>
+                    <div class="question-media__QuestionMedia">
+                        <div class="question-image__ImageWrapper">
+                            <div class="question-image__MediaImageWrapper">
+                                <div class="question-media__QuestionImage">
+                                    <img class="question-base__Img" src="/src/img/question/39a66ed9-c0d2-4dde-b234-4e28be6f86a1.webp" />
+                                    <div class="image-question-Effect"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quiz-question__RightContent">
+                        <div class="answer-counter__AnswerCounter">
+                            <div class="answer-counter__Count">0</div>
+                            <div class="answer-counter__Title">Câu trả lời</div>
+                        </div>
+                    </div>
+                </header>
+                <div class="question-results__QuestionChoices">
+                    <div class="card__PassiveCardChoice choice-item">
+                        <div class="card-icon__IconWrapper">
+                            <span class="icon__Icon" style="width: 5.95733vmin;height: 5.95733vmin;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path></svg>
+                            </span>
+                        </div>
+                        <span class="question-choice-content__Text">
+                            <span class="break-long-words__WordBreak">ưefwefwe</span>
+                        </span>
+                        <div class="question-choice-content__IconWrapper">
+                            <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card__PassiveCardChoice choice-item">
+                        <div class="card-icon__IconWrapper">
+                            <span class="icon__Icon" style="width: 5.95733vmin;height: 5.95733vmin;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: inherit;"></path></svg>
+                            </span>
+                        </div>
+                        <span class="question-choice-content__Text">
+                            <span class="break-long-words__WordBreak">ưefwefwe</span>
+                        </span>
+                        <div class="question-choice-content__IconWrapper">
+                            <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M21.4352896,7.29315397 L16.4852814,12.2358635 L11.5352732,7.29315397 L7.29390115,11.534526 L12.216469,16.4852814 L7.29390115,21.4360368 L11.5339288,25.6760644 L16.4852814,20.7695678 L21.4366339,25.6760644 L25.6750612,21.4376372 L20.7955092,16.4852814 L25.6750612,11.5329256 L21.4352896,7.29315397 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card__PassiveCardChoice choice-item">
+                        <div class="card-icon__IconWrapper">
+                            <span class="icon__Icon" style="width: 5.95733vmin;height: 5.95733vmin;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: inherit;"></path></svg>
+                            </span>
+                        </div>
+                        <span class="question-choice-content__Text">
+                            <span class="break-long-words__WordBreak">ưefwefwe</span>
+                        </span>
+                        <div class="question-choice-content__IconWrapper">
+                            <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M21.4352896,7.29315397 L16.4852814,12.2358635 L11.5352732,7.29315397 L7.29390115,11.534526 L12.216469,16.4852814 L7.29390115,21.4360368 L11.5339288,25.6760644 L16.4852814,20.7695678 L21.4366339,25.6760644 L25.6750612,21.4376372 L20.7955092,16.4852814 L25.6750612,11.5329256 L21.4352896,7.29315397 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card__PassiveCardChoice choice-item">
+                        <div class="card-icon__IconWrapper">
+                            <span class="icon__Icon" style="width: 5.95733vmin;height: 5.95733vmin;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: inherit;"></path></svg>
+                            </span>
+                        </div>
+                        <span class="question-choice-content__Text">
+                            <span class="break-long-words__WordBreak">ưefwefwe</span>
+                        </span>
+                        <div class="question-choice-content__IconWrapper">
+                            <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M21.4352896,7.29315397 L16.4852814,12.2358635 L11.5352732,7.29315397 L7.29390115,11.534526 L12.216469,16.4852814 L7.29390115,21.4360368 L11.5339288,25.6760644 L16.4852814,20.7695678 L21.4366339,25.6760644 L25.6750612,21.4376372 L20.7955092,16.4852814 L25.6750612,11.5329256 L21.4352896,7.29315397 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                       <div class="base-bottom-bar__BottomBar">
+                <div class="styles__Left">
+                    <div class="question-counter__Text">1/10</div>
+                </div>
+                <div class="styles__Center">
+                    <div class="pin-and-lock-info__JoinWrapper">
+                        <i class="fa fa-lock icon-lock" aria-hidden="true"></i>
+                        <div class="pin-and-lock-info__JoinInfo">
+                            <div>Mã PIN trò chơi:</div>
+                            <div class="pin-and-lock-info__Pin">213423</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </main>`)
+                // $(".layout_Fullscreen").addClass("score_Result")
+            }, 5200)
+    },7500)
+       
+    }
+
+    let isDragging = false;
+
+    $('.track__Thumb').on('mousedown', function (e) {
+        isDragging = true;
+    });
+
+    $(document).on('mousemove', function (e) {
+        if (isDragging) {
+            let trackOffset = $('.track__Track').offset().left;
+            let trackWidth = $('.track__Track').width();
+            let newPosition = (e.pageX - trackOffset) / trackWidth * 100;
+
+            // Clamp between 0 and 100
+            if (newPosition < 0) newPosition = 0;
+            if (newPosition > 100) newPosition = 100;
+
+            // Calculate the CSS values
+            let insetPosition = newPosition;
+            let leftWidth = insetPosition;
+            let rightWidth = 100 - insetPosition;
+
+            $('.track__Thumb').css('left', insetPosition + '%');
+            $('.track__left').css('width', leftWidth + '%');
+            $('.track__right').css({
+                'left': `${leftWidth}%`,
+                'width': `${rightWidth}%`,
+            });
+            if (insetPosition == 0) {
+                $(".icon-custom").removeClass("fa-volume-down fa-volume-up").addClass("fa-volume-off");
+            } else if (insetPosition > 50) {
+                $(".icon-custom").removeClass("fa-volume-off fa-volume-down").addClass("fa-volume-up");
+            } else {
+                $(".icon-custom").removeClass("fa-volume-off fa-volume-up").addClass("fa-volume-down");
+            }
+        }
+    });
+
+    $(document).on('mouseup', function () {
+        isDragging = false;
+    });
+    $("#volume-controller").click(function () {
+        $(".volume-controller__TrackSection").toggleClass("show");
+    })
+</script>

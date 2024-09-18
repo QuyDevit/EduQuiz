@@ -20,6 +20,16 @@ Licensed under the MIT license - http://opensource.org/licenses/MIT
 
 Copyright (c) 2015 Daniel Eden
 */
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+     color:#333;
+}
+a:focus{
+    color:#333;
+}
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
@@ -260,8 +270,14 @@ Copyright (c) 2015 Daniel Eden
     padding: 0px 16px 4px;
     position: relative;
 }
-button:focus {
+/*button:focus {
     outline: 2px solid #81b7f1 !important;
+}*/
+select:focus-within {
+    outline: 0;
+}
+button:focus-within {
+    outline: 0;
 }
 
     .btn:hover {
@@ -1418,6 +1434,9 @@ optgroup,
 select,
 textarea {
   font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif; }
+input:focus-within{
+    outline:0;
+}
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: 400; }

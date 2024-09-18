@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - EduQuiz!</title>
+    <link rel="icon" href="~/src/img/favicon.ico" type="image/x-icon">
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/src/css/paper-dashboard.css" rel="stylesheet" />
+
+    <script src="@("https://unpkg.com/@popperjs/core@2")"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <link href="~/src/css/playeduquiz.css" rel="stylesheet" />
+    @RenderSection("styles", required: false)
+
+</head>
+<body>
+    <div class="wrapper__FullscreenWrapper">
+        <div class="layout_Fullscreen" style="background:url(/src/img/playtheme.png) center center / cover no-repeat; ">
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/src/js/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="~/src/js/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/src/js/bootstrap.min.js"></script>
+
+    <script src="~/src/css/js/bootstrap-notify.js"></script>
+    <script src="~/src/css/js/perfect-scrollbar.jquery.min.js"></script>
+</body>
+</html>

@@ -1,13 +1,14 @@
 ﻿@{
-    @using Microsoft.AspNetCore.Http
+    @using EduQuiz.Security;
     @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
-    @using Newtonsoft.Json;
-    var userInfoJson = HttpContextAccessor.HttpContext.Session.GetString("_USERCURRENT");
-    var userInfo = JsonConvert.DeserializeObject<dynamic>(userInfoJson);
-    // Truy cập các thuộc tính
-    var email = userInfo.Email;
-    var username = userInfo.Username;
-    var avatar = userInfo.Avatar;
+    @inject CookieAuth CookieAuth
+    var httpContext = HttpContextAccessor.HttpContext;
+    var token = httpContext.Request.Cookies["acToken"];
+    var userClaims = !string.IsNullOrEmpty(token) ? CookieAuth.GetUserClaimsFromToken(token) : new UserClaims();
+    var email = userClaims.Email;
+    var username = userClaims.UserName;
+    var avatar = userClaims.Avatar;
+
 }
 <nav class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent">
     <div class="container-fluid">

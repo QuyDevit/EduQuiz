@@ -30,6 +30,7 @@ namespace EduQuiz.Models.EF
         public DateTime? LastLoginAt { get; set; }
         public string? ProfilePicture { get; set; }
         public string? Favorite { get; set; }
+        public string? RefeshToken { get; set; }
 
         public string PrivacySettings { get; set; } // Thiết lập sự riêng tư
         public string? LanguagePreference { get; set; } // Optional field for language preference

@@ -4,9 +4,11 @@ using EduQuiz.Models.EF;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace EduQuiz.Controllers
 {
+    [CustomAuthorize]
     public class DetailController : Controller
     {
         private readonly EduQuizDBContext _context;
@@ -17,17 +19,19 @@ namespace EduQuiz.Controllers
         [Route("detail/{id:guid}")]
         public async Task<IActionResult> Index(Guid id)
         {
-            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-            if (sessionData != null)
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie != null)
             {
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var iduser = int.Parse(userId ?? "1");
                 var check = await _context.EduQuizs
                        .Include(e => e.Questions)
                        .ThenInclude(q => q.Choices)
                        .FirstOrDefaultAsync(d => d.Uuid == id && d.Type == 1);
                
-                if (check == null || (!check.Visibility && check.UserId != userId))
+                if (check == null || (!check.Visibility && check.UserId != iduser))
                 {
                     var referer = Request.Headers["Referer"].ToString();
                     if (!string.IsNullOrEmpty(referer))

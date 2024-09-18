@@ -4,16 +4,17 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+    <link rel="icon" href="~/src/img/favicon.ico" type="image/x-icon">
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
     <!-- CSS Files -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/src/css/paper-dashboard.css" rel="stylesheet" />
     <link href="~/src/css/toast.css" rel="stylesheet" />
     <link href="~/src/css/auth.css" rel="stylesheet" />
     <link href="~/src/css/homedashboard.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="@("https://unpkg.com/@popperjs/core@2")"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     @RenderSection("styles", required: false)
@@ -168,30 +169,42 @@
                     idfolder: id ? id : 0,
                 },
                 success: function (response) {
-                    if (response.result == "PASS") {
-                        $(".folder__Name").text(response.dataroot.name);
-                        $("#savefolder").attr("data-id", response.dataroot.id);
-                        if (response.dataroot.parentFolderId == null) {
-                            $(".back-folder").addClass("d-none");
-                        } else {
+                    if (response.redirectUrl) {
+                        Swal.fire({
+                            title: 'Hết phiên đăng nhập',
+                            text: 'Vui lòng đăng nhập lại',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = response.redirectUrl;
+                            }
+                        });
+                    } else {
+                        if (response.result == "PASS") {
+                            $(".folder__Name").text(response.dataroot.name);
+                            $("#savefolder").attr("data-id", response.dataroot.id);
+                            if (response.dataroot.parentFolderId == null) {
+                                $(".back-folder").addClass("d-none");
+                            } else {
 
-                            $(".back-folder").removeClass("d-none");
-                            $(".back-folder").attr("data-id", response.dataroot.parentFolderId);
-                        }
-                        $(".folder-container").empty();
-                        if (response.data.length === 0) {
-                            
-                            $(".folder-container").css({
-                                width: "100%",
-                                height: "100%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center"
-                            }).append('<span>Không còn thư mục nào nữa</span>');
-                        }else{
-                            $(".folder-container").removeAttr("style");
-                            response.data.forEach(function (folder) {
-                                const folderElement = `
+                                $(".back-folder").removeClass("d-none");
+                                $(".back-folder").attr("data-id", response.dataroot.parentFolderId);
+                            }
+                            $(".folder-container").empty();
+                            if (response.data.length === 0) {
+
+                                $(".folder-container").css({
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }).append('<span>Không còn thư mục nào nữa</span>');
+                            } else {
+                                $(".folder-container").removeAttr("style");
+                                response.data.forEach(function (folder) {
+                                    const folderElement = `
                                         <button class="folder-item__Wrapper" data-id="${folder.id}">
                                             <div class="folder-content">
                                                 <span>
@@ -205,14 +218,15 @@
                                                 </span>
                                             </div>
                                         </button>`;
-                                $(".folder-container").append(folderElement);
-                            });
-                            $(".folder-item__Wrapper").on('click', function () {
-                                var folderId = $(this).data("id");
-                                getFolder(folderId);
-                            });
+                                    $(".folder-container").append(folderElement);
+                                });
+                                $(".folder-item__Wrapper").on('click', function () {
+                                    var folderId = $(this).data("id");
+                                    getFolder(folderId);
+                                });
+                            }
+
                         }
-                    
                     }
                 }
             })

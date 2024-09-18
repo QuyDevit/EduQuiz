@@ -108,12 +108,12 @@
                     type: "POST",
                     url: '@Url.Action("CheckLogin", "Account")',
                     data: {
-                        username: email,
+                        username: email,    
                         pass: password
                     },
                     success: function (response) {
-                        if (response.status == true) {        
-                            location.href = "@Url.Action("Index","HomeDashboard")"
+                        if (response.status == true) {
+                            window.location.href = `@Url.Action("Index", "HomeDashboard")`;
                             $(".overlayLoad").hide();
                         }
                         else {

@@ -134,7 +134,7 @@
                                         </div>
                                         <div class="styles_eduquizInfo">
                                             <button class="styles__eduquizInfo-Btn" style="background: rgb(242, 242, 242);color:#333">Thiết lập kiểm tra</button>
-                                            <button class="styles__eduquizInfo-Btn" style="background: rgb(19, 104, 206);margin:0 4px;">Bắt đầu ngay</button>
+                                                <a href="@Url.Action("Index","AdminPlayEduQuiz",new {quizId = Guid.NewGuid()})" class="styles__eduquizInfo-Btn" style="background: rgb(19, 104, 206);margin:0 4px;">Bắt đầu ngay</a>
                                         </div>
                                     </div>
                                 </div>
@@ -188,8 +188,21 @@
                         idquiz: idquiz
                     },
                     success: function (response) {
-                        if (response.result === "PASS") {
-                            location.reload();
+                        if (response.redirectUrl) {
+                            Swal.fire({
+                                title: 'Hết phiên đăng nhập',
+                                text: 'Vui lòng đăng nhập lại',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            });
+                        } else {
+                            if (response.result === "PASS") {
+                                location.reload();
+                            }
                         }
                     },
                     error: function (xhr, status, error) {

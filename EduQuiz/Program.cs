@@ -1,7 +1,11 @@
 ﻿using EduQuiz.DatabaseContext;
 using EduQuiz.Models;
+using EduQuiz.Security;
 using EduQuiz.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,10 +19,25 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; 
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
 // Đăng ký EduQuizDBContext
 builder.Services.AddDbContext<EduQuizDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EduQuizDBConnection")));
 builder.Services.AddScoped<UsernameService>(); // Đăng ký UsernameService
+builder.Services.AddScoped<CookieAuth>();// Đăng ký CookieAuth
 // Đọc cấu hình từ appsettings.json và thêm vào container DI
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 // Đăng ký EmailService
@@ -30,7 +49,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
-
+app.UseMiddleware<TokenRefreshMiddleware>();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -46,6 +65,9 @@ app.UseRouting();
 // Thêm middleware session
 app.UseSession();
 
+app.UseAuthentication(); 
+app.UseAuthorization();
+
 app.UseStatusCodePages(async context =>
 {
     if (context.HttpContext.Response.StatusCode == 404)
@@ -54,8 +76,6 @@ app.UseStatusCodePages(async context =>
     }
     await Task.CompletedTask;
 });
-
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

@@ -23,9 +23,22 @@
                 idquiz: id
             },
             success: function (response) {
-                if (response.result == "PASS") {
-                    $(`#title-${id}`).text(name);
-                    $("#close").click();
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;  
+                        }
+                    });
+                } else {
+                    if (response.result == "PASS") {
+                        $(`#title-${id}`).text(name);
+                        $("#close").click();
+                    }
                 }
             },
             error: function (err) {
@@ -51,8 +64,21 @@
                         folderid: idfolder
                     },
                     success: function (response) {
-                        if (response.result == "PASS") {
-                            location.reload();
+                        if (response.redirectUrl) {
+                            Swal.fire({
+                                title: 'Hết phiên đăng nhập',
+                                text: 'Vui lòng đăng nhập lại',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            });
+                        } else {
+                            if (response.result == "PASS") {
+                                location.reload();
+                            }
                         }
                     },
                     error: function (err) {
@@ -77,8 +103,21 @@
                         folderName: folderName,
                         idroot: idfolderRoot
                     },
-                    success: function (result) {
-                        reloadPartialFolders();
+                    success: function (response) {
+                        if (response.redirectUrl) {
+                            Swal.fire({
+                                title: 'Hết phiên đăng nhập',
+                                text: 'Vui lòng đăng nhập lại',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            });
+                        } else {
+                            reloadPartialFolders();
+                        }
                     },
                     error: function (xhr, status, error) {
                         console.error('AJAX error:', status, error);
@@ -127,10 +166,23 @@
                     idfoldercurrent: folderIdCurrent
                 },
                 success: function (response) {
-                    if (response.result === "PASS") {
-                        location.href = `/my-library/eduquizs/${response.data}`;
+                    if (response.redirectUrl) {
+                        Swal.fire({
+                            title: 'Hết phiên đăng nhập',
+                            text: 'Vui lòng đăng nhập lại',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = response.redirectUrl;
+                            }
+                        });
                     } else {
-                        location.href = `/my-library/eduquizs/${response.data}`;
+                        if (response.result === "PASS") {
+                            location.href = `/my-library/eduquizs/${response.data}`;
+                        } else {
+                            location.href = `/my-library/eduquizs/${response.data}`;
+                        }
                     }
                 },
                 error: function (xhr, status, error) {
@@ -151,10 +203,23 @@
                     idfoldercurrent: folderIdCurrent
                 },
                 success: function (response) {
-                    if (response.result === "PASS") {
-                        location.href = `/my-library/eduquizs/${response.data}`;
+                    if (response.redirectUrl) {
+                        Swal.fire({
+                            title: 'Hết phiên đăng nhập',
+                            text: 'Vui lòng đăng nhập lại',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = response.redirectUrl;
+                            }
+                        });
                     } else {
-                        location.href = `/my-library/eduquizs/${response.data}`;
+                        if (response.result === "PASS") {
+                            location.href = `/my-library/eduquizs/${response.data}`;
+                        } else {
+                            location.href = `/my-library/eduquizs/${response.data}`;
+                        }
                     }
                 },
                 error: function (xhr, status, error) {

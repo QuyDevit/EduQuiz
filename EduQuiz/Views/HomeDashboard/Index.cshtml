@@ -70,7 +70,7 @@
                         <i style="font-size:16px;margin-left:8px" class="fa fa-info-circle" aria-hidden="true"></i>
                     </div>
                     <p>Trở thành người sáng tạo được xác minh! Cung cấp tài nguyên học tập của bạn để bán và tham gia cộng đồng toàn cầu.</p>
-                    <button type="button" class="btn">Xác minh ngay</button>
+                    <a href="@Url.Action("Index","Profile")" class="btn">Xác minh ngay</a>
                 </div>
             </div>
 
@@ -462,21 +462,35 @@
                         listfavorite: arrInterestCheck
                     },
                     success: function (response) {
-                        if (response.result == "PASS") {
-                            userFavorite = response.data;
-                            if (userFavorite.length > 0) {
-                                $("#myinterest").empty();
-                                $("#checkmodal").empty();
-                                $("#checkmodal").append(`<span id="showInterest" style="padding:4px 0 4px 4px" class="profile-link">
-                                    Hiển thị
-                                </span>`)
-                                $("#countInterest").text(`Sở thích của bạn(${userFavorite.length})`)
+                        if (response.redirectUrl) {
+                            Swal.fire({
+                                title: 'Hết phiên đăng nhập',
+                                text: 'Vui lòng đăng nhập lại',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirectUrl;  // Chuyển hướng sau khi ấn OK
+                                }
+                            });
+                        } else {
+                            if (response.result == "PASS") {
+                                userFavorite = response.data;
+                                if (userFavorite.length > 0) {
+                                    $("#myinterest").empty();
+                                    $("#checkmodal").empty();
+                                    $("#checkmodal").append(`<span id="showInterest" style="padding:4px 0 4px 4px" class="profile-link">
+                                            Hiển thị
+                                        </span>`)
+                                    $("#countInterest").text(`Sở thích của bạn(${userFavorite.length})`)
+                                }
+                                $("#closeInterest").click();
                             }
-                            $("#closeInterest").click();
                         }
+                        
                     },
-                    error: function (err) {
-
+                    error: function (xhr, status, error) {
+                      
                     }
                 })
             })

@@ -1716,6 +1716,9 @@ button:focus{
 .styles__ThemeCardWrapper:nth-child(4) .styles__ThemeCardNameWrapper {
     background: rgb(81, 101, 40);
 }
+.styles__ThemeCardWrapper:nth-child(5) .styles__ThemeCardNameWrapper {
+    background: rgb(169 130 15);
+}
 #themevip .styles__ThemeCardWrapper:nth-child(1) .styles__ThemeCardNameWrapper {
     background: rgb(93, 97, 134);
 }
@@ -1727,7 +1730,7 @@ button:focus{
     .styles__ThemeCardNameWrapper p {
         overflow: hidden;
         font-weight: bold;
-        line-height: 1.09;
+        line-height: 1.34;
         margin: 0px auto;
         text-overflow: ellipsis;
         word-break: break-word;

@@ -9,6 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using BcryptNet = BCrypt.Net.BCrypt;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using NuGet.Common;
+using Newtonsoft.Json.Linq;
+using EduQuiz.Security;
 
 
 namespace EduQuiz.Controllers
@@ -20,14 +26,19 @@ namespace EduQuiz.Controllers
         private readonly Random _random;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IEmailService _emailService;
+        private readonly IConfiguration _config;
+        private readonly CookieAuth _cookieAuth;
 
-        public AccountController(EduQuizDBContext context, UsernameService usernameService, IHttpClientFactory httpClientFactory, IEmailService emailService)
+        public AccountController(EduQuizDBContext context, UsernameService usernameService, 
+            IHttpClientFactory httpClientFactory, IEmailService emailService, IConfiguration config,CookieAuth cookieAuth)
         {
             _context = context;
             _usernameService = usernameService;
             _random = new Random(); // Khởi tạo đối tượng Random
             _httpClientFactory = httpClientFactory;
             _emailService = emailService;
+            _config = config;
+            _cookieAuth = cookieAuth;
         }
         [Route("auth/typeaccount")]
         public IActionResult Register()
@@ -51,49 +62,85 @@ namespace EduQuiz.Controllers
         [Route("auth/login")]
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetString("_USERCURRENT") != null)
+            var actoken = HttpContext.Request.Cookies["acToken"];
+            if (!string.IsNullOrEmpty(actoken) && _cookieAuth.ValidateToken(actoken))
             {
-                return RedirectToAction("Index","HomeDashboard");
+                // Token is valid, redirect to the desired page
+                return RedirectToAction("Index", "HomeDashboard");
             }
             return View();
         }
+       
         [Route("auth/logout")]
         public async Task<IActionResult> Logout()
         {
-            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-            if (sessionData != null)
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie != null)
             {
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
-                var user = await _context.Users.FindAsync(userId);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var iduser = int.Parse(userId ?? "1");
+                var user = await _context.Users.FindAsync(iduser);
                 if (user != null)
                 {
                     user.LastLoginAt = DateTime.Now;
                     await _context.SaveChangesAsync();
                 }
-
-                // Xóa session và chuyển hướng về trang chủ
-                HttpContext.Session.Remove("_USERCURRENT");
+                HttpContext.Response.Cookies.Append("acToken", "", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddDays(-1)
+                });
             }
-            return RedirectToAction("Index", "Home");
+
+            var refreshTokenCookie = Request.Cookies["rfToken"];
+            if (refreshTokenCookie != null)
+            {
+                HttpContext.Response.Cookies.Append("rfToken", "", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddDays(-7)
+                });
+            }
+            return RedirectToAction("Login", "Account");
         }
         [Route("auth/deleteaccount")]
         public async Task<IActionResult> DeleteAccount()
         {
-            var sessionData = HttpContext.Session.GetString("_USERCURRENT");
-            if (sessionData != null)
+            var authCookie = Request.Cookies["acToken"];
+
+            if (authCookie != null)
             {
-                var userInfo = JsonConvert.DeserializeObject<dynamic>(sessionData);
-                int.TryParse(userInfo?.Id?.ToString(), out int userId);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var iduser = int.Parse(userId ?? "1");
                 var user = await _context.Users.FindAsync(userId);
                 if (user != null)
                 {
                     user.Status = false;
                     await _context.SaveChangesAsync();
                 }
-                // Xóa session và chuyển hướng về trang chủ
-                HttpContext.Session.Remove("_USERCURRENT");
-            }
+                HttpContext.Response.Cookies.Append("acToken", "", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddDays(-1)
+                });
+                var refreshTokenCookie = Request.Cookies["rfToken"];
+                if (refreshTokenCookie != null)
+                {
+                    HttpContext.Response.Cookies.Append("rfToken", "", new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        Expires = DateTimeOffset.UtcNow.AddDays(-7)
+                    });
+                }
+            } 
             return RedirectToAction("Index", "Home");
         }
         [Route("auth/verifyemail")]
@@ -145,6 +192,7 @@ namespace EduQuiz.Controllers
                 if (!string.IsNullOrEmpty(fullname) && !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(avatar))
                 {
                     var checkUser = _context.Users.Where(n => n.Email == email).SingleOrDefault();
+                    var rfToken = _cookieAuth.GenerateRefreshToken();
                     if (checkUser == null)
                     {
                         var privacySettings = JsonConvert.SerializeObject(new PrivacyModel());
@@ -163,33 +211,49 @@ namespace EduQuiz.Controllers
                             Favorite = "[]",
                             DateOfBirth = DateTime.Now,
                             CreatedAt = DateTime.Now,
-                            UpdatedAt = DateTime.Now
+                            UpdatedAt = DateTime.Now,
+                            RefeshToken = rfToken
                         };
                         _context.Users.Add(user);
                         await _context.SaveChangesAsync();
-                        var userInfo = new
-                        {
-                            Id = user.Id,
-                            Email = user.Email,
-                            Username = user.Username,
-                            Avatar = user.ProfilePicture
+                        user.RefeshToken = rfToken;
+                        var acToken = _cookieAuth.GenerateToken(user);
 
-                        };
-                        var userInfoJson = JsonConvert.SerializeObject(userInfo);
-                        HttpContext.Session.SetString("_USERCURRENT", userInfoJson);
+                        HttpContext.Response.Cookies.Append("acToken", acToken, new CookieOptions
+                        {
+                            HttpOnly = true,
+                            Secure = true,
+                            Expires = DateTimeOffset.UtcNow.AddDays(1)
+                        });
+
+                        HttpContext.Response.Cookies.Append("rfToken", rfToken, new CookieOptions
+                        {
+                            HttpOnly = true,
+                            Secure = true,
+                            Expires = DateTimeOffset.UtcNow.AddDays(7)
+                        });
                         return Json(new { status = true, msg = "Đăng nhập thành công" });
                     }
                     else
                     {
-                        var userInfo = new
+                        checkUser.RefeshToken = rfToken;
+                        var acToken = _cookieAuth.GenerateToken(checkUser);
+
+                        HttpContext.Response.Cookies.Append("acToken", acToken, new CookieOptions
                         {
-                            Id = checkUser.Id,
-                            Email = checkUser.Email,
-                            Username = checkUser.Username,
-                            Avatar = checkUser.ProfilePicture
-                        };
-                        var userInfoJson = JsonConvert.SerializeObject(userInfo);
-                        HttpContext.Session.SetString("_USERCURRENT", userInfoJson);
+                            HttpOnly = true,
+                            Secure = true,
+                            Expires = DateTimeOffset.UtcNow.AddDays(1)
+                        });
+
+                        HttpContext.Response.Cookies.Append("rfToken", rfToken, new CookieOptions
+                        {
+                            HttpOnly = true,
+                            Secure = true,
+                            Expires = DateTimeOffset.UtcNow.AddDays(7)
+                        });
+                        await _context.SaveChangesAsync();
+
                         return Json(new { status = true, msg = "Đăng nhập thành công" });
                     }
                 }
@@ -234,18 +298,28 @@ namespace EduQuiz.Controllers
             {
                 return Json(new { status = false, msg = "Vui lòng kiểm tra email để kích hoạt tài khoản" });
             }
-            var userInfo = new
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Username = user.Username,
-                Avatar = user.ProfilePicture
-            };
+            var rfToken = _cookieAuth.GenerateRefreshToken();
+            user.RefeshToken = rfToken;
+            var acToken = _cookieAuth.GenerateToken(user);
+          
 
-            var userInfoJson = JsonConvert.SerializeObject(userInfo);
-            HttpContext.Session.SetString("_USERCURRENT", userInfoJson);
+            HttpContext.Response.Cookies.Append("acToken", acToken, new CookieOptions
+            {
+                HttpOnly = true, 
+                Secure = true, 
+                Expires = DateTimeOffset.UtcNow.AddDays(1) 
+            });
+
+            HttpContext.Response.Cookies.Append("rfToken", rfToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTimeOffset.UtcNow.AddDays(7)
+            });
+            await _context.SaveChangesAsync();
             return Json(new { status = true });
         }
+        
         [HttpPost]
         public async Task<IActionResult> RegisterAccount(string password, string email)
         {

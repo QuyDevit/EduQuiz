@@ -20,8 +20,8 @@
                     <p>Trang chủ</p>
                 </a>
             </li>
-            <li>
-                <a href="./icons.html">
+            <li class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/discover" ? "active" : "")">
+                <a href="@Url.Action("Index","Discover")">
                     <i class="nc-icon nc-compass-05"></i>
                     <p>Khám phá</p>
                 </a>
@@ -32,8 +32,8 @@
                     <p>Thư viện</p>
                 </a>
             </li>
-            <li>
-                <a href="./map.html">
+            <li class="@(string.IsNullOrEmpty(currentPath) || currentPath.StartsWith("/groups") ? "active" : "")">
+                <a href="@Url.Action("Index","Group")">
                     <i class="nc-icon nc-circle-10"></i>
                     <p>Nhóm</p>
                 </a>
