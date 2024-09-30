@@ -1,0 +1,1279 @@
+﻿@{
+    Layout = "_LayoutPlay";
+    ViewBag.Title = "Play Game";
+}
+<div class="instructions__PageWrapper">
+    <main class="instructions-with-avatar__PageMainContent">
+        <button id="avatar-current" class="avatar-content__AvatarContainer" style="--scale-size: -225.25px;">
+            <div class="avatar-content__EditButton">
+                <span class="icon__Icon">
+                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M23.4091683,8.594 C24.1731683,9.359 24.1731683,10.693 23.4091683,11.458 L22.6901683,12.178 L19.8241683,9.313 L20.5451683,8.594 C21.3101683,7.83 22.6441683,7.829 23.4091683,8.594 L23.4091683,8.594 Z M8.37616832,23.626 L8.97116832,21.252 L10.7501683,23.033 L8.37616832,23.626 Z M18.4111683,10.728 L21.2741683,13.591 L12.7061683,22.159 L9.84316832,19.296 L18.4111683,10.728 Z M24.8211683,7.179 C24.0611683,6.418 23.0501683,6 21.9741683,6 C20.9001683,6 19.8881683,6.418 19.1281683,7.179 L7.71916832,18.587 C7.71916832,18.587 7.71816832,18.59 7.71716832,18.591 C7.63616832,18.673 7.49716832,18.889 7.45616832,19.052 L6.03016832,24.757 C5.94416832,25.097 6.04516832,25.458 6.29316832,25.706 L6.29416832,25.707 L6.29616832,25.708 C6.54416832,25.956 6.90416832,26.057 7.24516832,25.972 L12.9491683,24.545 C13.1121683,24.504 13.3291683,24.365 13.4101683,24.284 C13.4111683,24.283 13.4141683,24.282 13.4141683,24.282 L24.8231683,12.873 C25.5831683,12.113 26.0021683,11.102 26.0011683,10.027 C26.0011683,8.951 25.5831683,7.941 24.8231683,7.18 L24.8211683,7.179 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                </span>   
+            </div>
+            <div class="avatar-content__Container">
+                <div class="styles__AvatarWrapper av-animation" style="width:100%;height:100%">
+                    <img class="styles__AvatarItem" src="@ViewBag.Player.Accessory" />
+                    <img class="styles__AvatarBase" src="@ViewBag.Player.AvatarUrl" />
+                    <div class="styles__AvatarFace">
+                        <img src="/src/img/eyes-blink.gif" />
+                    </div>
+                </div>
+            </div>
+        </button>
+        <div class="avatar-content__AvatarMenuContainer">
+            <div class="avatar-content__AvatarMenu">
+                <div class="avatar-content__AvatarStyleTabs">
+                    <button class="avatar-content__AvatarStyleTab active" data-menu="avatar">
+                        Nhân vật
+                    </button>
+                    <button class="avatar-content__AvatarStyleTab" data-menu="accessory">
+                        Phụ kiện
+                    </button>
+                </div>
+                <div class="avatar-content__AvatarMenuContentContainer" >
+                    <div id="avatar" class="avatar-content__AvatarMenuContent">
+                        <button class="avatar-content__SelectionButton">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarBase" src="/src/img/avatar/avatar1.svg" />
+                            </div>
+                            <div class="styles__StaticFace">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                    <defs>
+                                    </defs>
+                                    <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" ></path>
+                                </svg>
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarBase" src="/src/img/avatar/avatar2.svg" />
+                            </div>
+                            <div class="styles__StaticFace">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                    <defs>
+                                    </defs>
+                                    <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                </svg>
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarBase" src="/src/img/avatar/avatar3.svg" />
+                            </div>
+                            <div class="styles__StaticFace">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                    <defs>
+                                    </defs>
+                                    <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                </svg>
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarBase" src="/src/img/avatar/avatar4.svg" />
+                            </div>
+                            <div class="styles__StaticFace">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                    <defs>
+                                    </defs>
+                                    <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z"></path>
+                                </svg>
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarBase" src="/src/img/avatar/avatar5.svg" />
+                            </div>
+                            <div class="styles__StaticFace">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                    <defs>
+                                    </defs>
+                                    <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                </svg>
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarBase" src="/src/img/avatar/avatar6.svg" />
+                            </div>
+                            <div class="styles__StaticFace">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                    <defs>
+                                    </defs>
+                                    <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                </svg>
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarBase" src="/src/img/avatar/avatar7.svg" />
+                            </div>
+                            <div class="styles__StaticFace">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                    <defs>
+                                    </defs>
+                                    <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                </svg>
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarBase" src="/src/img/avatar/avatar8.svg" />
+                            </div>
+                            <div class="styles__StaticFace">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                    <defs>
+                                    </defs>
+                                    <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                    <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                    <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
+                    <div id="accessory" class="avatar-content__AvatarMenuContent" style="display:none">
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory1.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div> 
+                        </button>
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory2.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory3.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory4.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory5.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory6.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory7.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory8.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div>
+                        </button>
+                        <button class="avatar-content__SelectionButton accessory">
+                            <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                <img class="styles__AvatarItem" src="/src/img/accessory/accessory9.svg" />
+                                <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                            </div>
+                        </button>
+                    </div>
+                    <button id="close-menu" class="avatar-content__SelectionDone">Xong</button>
+                </div>
+            </div>
+        </div>
+        <div class="instructions-with-avatar__TextContent">
+            <h1 class="header-text__HeaderText">
+                <span class="shadow-text__Container">
+                    <span class="shadow-text__HiddenText">@ViewBag.Player.Nickname</span>
+                    <span class="shadow-text__Text">@ViewBag.Player.Nickname</span>
+                    <span class="shadow-text__Shadow">@ViewBag.Player.Nickname</span>
+                </span>
+            </h1>
+            <h2 class="sub-header-text__SubHeaderText">
+                <span class="shadow-text__Container">
+                    <span class="shadow-text__HiddenText">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                    <span class="shadow-text__Text">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                    <span class="shadow-text__Shadow">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                </span>
+            </h2>
+        </div>
+    </main>
+</div>
+<script> 
+    let isKicked = false;
+    var isPlayer = `@ViewBag.Player.IsPlayer`;
+    var playerid = `@ViewBag.Player.Id`;
+    var pin = `@ViewBag.Player.QuizSession.Pin`;
+    var avatarcurrent = `@ViewBag.Player.AvatarUrl`;
+    var itemcurrent = `@ViewBag.Player.Accessory`;
+    var startgame = `@ViewBag.Player.QuizSession.IsWaitingRoom`;
+    var isShowAvatar = `@ViewBag.Player.QuizSession.IsShowAvatar`;
+    var arranswer = [];
+    const revealSequences = {
+        9: [2, 6, 0, 3, 8, 1, 4, 7, 5], // 3x3
+        25: [23, 1, 12, 19, 7, 8, 0, 24, 17, 15, 11, 4, 20, 2, 9, 13, 5, 21, 6, 10, 14, 3, 16, 18, 22], // 5x5
+        64: [37, 5, 47, 12, 56, 0, 24, 19, 30, 35, 48, 1, 57, 4, 62, 52, 38, 10, 41, 63, 14, 33, 45, 29, 3, 27, 31, 44, 20, 7, 15, 42, 2, 39, 53, 28, 34, 59, 13, 50, 55, 8, 32, 18, 54, 11, 43, 60, 40, 16, 6, 9, 58, 61, 46, 22, 26, 36, 49, 17, 21, 25, 51, 23] // 8x8
+    };
+    if (startgame == "False") {
+        $(".instructions-with-avatar__PageMainContent").remove();
+        setTimeout(() => {
+            connection.invoke("ReloadConnect", pin)
+                .catch(function (err) {
+                    console.error(err.toString());
+                });
+        }, 50)
+    }
+
+    sessionStorage.setItem('isLoaded', 'true');
+
+    let isLoaded = sessionStorage.getItem('isLoaded') === 'true';
+    window.addEventListener('load', function () {
+        if (performance.navigation.type === 1) {
+            if (isLoaded && isPlayer === 'False') {
+                window.location.href = "/pin";
+            }else{ 
+                setTimeout(()=>{
+                    connection.invoke("ReloadConnect", pin)
+                        .catch(function (err) {
+                            console.error(err.toString());
+                        });
+                },150) 
+            }
+        }
+    })
+
+    // Sự kiện khi làm mới trang
+    $(window).on('beforeunload', function (event) {
+        if (!isKicked) {
+            event.preventDefault();
+            event.returnValue = 'Các thay đổi bạn đã thực hiện có thể không được lưu.';
+        }
+    });
+    // Sự kiện unload
+    $(window).on('unload', function () {     
+            connection.invoke("PlayerOutRoom", pin, parseInt(playerid, 10))
+                .catch(function (err) {
+                    console.error(err.toString());
+                });
+    });
+    function changeAvartar() {
+        var urlItem = $(".styles__AvatarItem").attr("src");
+        var urlavatar = $(".styles__AvatarBase").attr("src");
+        avatarcurrent = urlavatar;
+        itemcurrent = urlItem;
+        connection.invoke("ChangeAvatar", pin, parseInt(playerid, 10), urlItem, urlavatar)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/gameHub")
+        .build();
+
+    connection.start().then(function () {
+        console.log("SignalR connected.");
+        connection.invoke("ReConnectPlayer", pin)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+    connection.on("OptionAvatar", function (option) {  
+        OptionAvatar(option);
+    });
+    connection.on("FinishedQuiz", function (data) { 
+        $(".instructions-with-avatar__PageMainContent").remove();
+        $(".bottom-bar__BottomBar").remove();
+        const currentPlayer = data.find(player => player.id === parseInt(playerid, 10));
+        const rank = data.indexOf(currentPlayer) + 1;
+        const checkIsShowAvatar = isShowAvatar == "True" ? `<div class="podium__AvatarContainer">
+                                                            <div class="styles__AvatarWrapper" style="width:170px;height:170px;margin-top:15px;">
+                                                                <img class="styles__AvatarItem" src="@ViewBag.Player.Accessory" />
+                                                                <img class="styles__AvatarBase" src="@ViewBag.Player.AvatarUrl" />
+                                                                <div class="styles__AvatarFace">
+                                                                    <img src="/src/img/eyes-blink.gif" />
+                                                                </div>
+                                                            </div>
+                                                                <div class="ribbon__Wrapper">
+                                                                    <img src="/src/img/podium.png" />
+                                                                </div>
+                                                           </div>` : "";
+        $(".instructions__PageWrapper").append(`<main class="instructions-with-avatar__PageMainContent">
+                    <div class="instructions-with-avatar__TextContent">
+                                    <h1 class="header-text__HeaderText">
+                                        <span class="shadow-text__Container">
+                                            <span class="shadow-text__HiddenText">Top ${rank}</span>
+                                            <span class="shadow-text__Text">Top ${rank}</span>
+                                            <span class="shadow-text__Shadow">Top ${rank}</span>
+                                        </span>
+                                    </h1>
+                                    ${checkIsShowAvatar}
+                                    <h1 class="header-text__HeaderText">
+                                        <span class="shadow-text__Container">
+                                            <span class="shadow-text__HiddenText">${currentPlayer.nickname}</span>
+                                            <span class="shadow-text__Text">${currentPlayer.nickname}</span>
+                                            <span class="shadow-text__Shadow">${currentPlayer.nickname}</span>
+                                        </span>
+                                    </h1>
+                                    <h2 class="sub-header-text__SubHeaderText">
+                                        <span class="shadow-text__Container">
+                                            <span class="shadow-text__HiddenText">· ${currentPlayer.totalScore} điểm ·</span>
+                                            <span class="shadow-text__Text">· ${currentPlayer.totalScore} điểm ·</span>
+                                            <span class="shadow-text__Shadow">· ${currentPlayer.totalScore} điểm ·</span>
+                                        </span>
+                                    </h2>
+                                    </div>
+                                        </main>`);
+    })
+    connection.on("ReloadQuestion", function (timecountdown,questionIndex) {
+        const storedData = JSON.parse(sessionStorage.getItem('question-player-params')) || { quizOption: {}, question: {}, currentQuestionIndex: 0 };
+        // Tăng chỉ số câu hỏi hiện tại
+        storedData.currentQuestionIndex = questionIndex; // Tăng chỉ số câu hỏi
+        sessionStorage.setItem('question-player-params', JSON.stringify(storedData));
+        if (timecountdown != 0 && Object.keys(storedData.question).length !== 0) {
+            RenderQuestion(timecountdown);
+        } 
+        else{
+            $(".instructions-with-avatar__PageMainContent").remove();
+            $(".bottom-bar__BottomBar").remove();
+            let scores = parseInt(sessionStorage.getItem("scores")) || 0;
+            const checkIsShowAvatar = isShowAvatar == "True" ? `<div class="styles__AvatarWrapper" style="width:80px;height:80px;margin-bottom:15px;">
+                                                            <img class="styles__AvatarItem" src="@ViewBag.Player.Accessory" />
+                                                            <img class="styles__AvatarBase" src="@ViewBag.Player.AvatarUrl" />
+                                                            <div class="styles__AvatarFace">
+                                                                <img src="/src/img/eyes-blink.gif" />
+                                                            </div>
+                                                        </div>` : "";
+            $(".instructions__PageWrapper").append(`<main class="instructions-with-avatar__PageMainContent">
+                <div class="instructions-with-avatar__TextContent">
+                                <h1 class="header-text__HeaderText">
+                                    <span class="shadow-text__Container">
+                                        <span class="shadow-text__HiddenText">Chuẩn bị!</span>
+                                        <span class="shadow-text__Text">Chuẩn bị!</span>
+                                        <span class="shadow-text__Shadow">Chuẩn bị!</span>
+                                    </span>
+                                </h1>
+                                <div class="spinner__Container">
+                                    <svg id="Layer_Loader" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 140 140" enable-background="new 0 0 140 140" xml:space="preserve" color="#fff" aria-label="Merci de patienter" data-functional-selector="spinner" class="spinner__Spinner-sc-r6rcac-1 civXet"><g><circle opacity="0" fill="#FFFFFF" cx="70" cy="70" r="70"></circle><g><path fill="#FFFFFF" d="M70,0C31.3,0,0,31.3,0,70h35c0-19.3,15.7-35,35-35s35,15.7,35,35h35C140,31.3,108.7,0,70,0z"></path></g></g></svg>
+                                </div>
+                                <h2 class="sub-header-text__SubHeaderText">
+                                    <span class="shadow-text__Container">
+                                        <span class="shadow-text__HiddenText">Đang tải...</span>
+                                        <span class="shadow-text__Text">Đang tải...</span>
+                                        <span class="shadow-text__Shadow">Đang tải...</span>
+                                    </span>
+                                </h2>
+                                </div>
+                                    </main>
+                                    <div class="bottom-bar__BottomBar">
+                                                                ${checkIsShowAvatar}
+                                                        <div class="bottom-bar__NameWrapper">
+                                                            <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                                        </div>
+                                                            <div class="bottom-bar-score">${scores}</div>
+                                                    </div>`);
+        }
+    });
+    connection.on("TimeUp", function (data) {
+        const parsedPlayerId = parseInt(playerid, 10);
+        const playerAnswers = data.filter(answer => answer.playerId === parsedPlayerId);
+        let messageHTML = '';
+        let totalPoints = 0;
+        let isCorrect = false;
+
+        if (playerAnswers.length > 0) {
+            playerAnswers.forEach(playerAnswer => {
+                totalPoints += playerAnswer.isCorrect ? playerAnswer.score : 0;
+                if (playerAnswer.isCorrect) {
+                    isCorrect = true;
+                }
+            });
+            messageHTML = isCorrect ? `
+                <h1 class="header-text__HeaderText">
+                    <span class="shadow-text__Container">
+                        <span class="shadow-text__HiddenText">Câu trả lời đúng</span>
+                        <span class="shadow-text__Text">Câu trả lời đúng</span>
+                        <span class="shadow-text__Shadow">Câu trả lời đúng</span>
+                    </span>
+                </h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><g fill="none" fill-rule="evenodd"><g><g><g><g transform="translate(-703 -1807) translate(536 1581) translate(46 170) translate(121 56)"><circle cx="40" cy="40" r="37.895" fill="#66BF39" stroke="#FFF" stroke-width="4.211"></circle><g fill="#FFF" fill-rule="nonzero" stroke="#000" stroke-opacity="0.15" stroke-width="2.105"><path d="M46.244 15.355l8.127 7.393-25.623 28.184-15.526-14.483 7.743-7.747 7.333 6.396 17.946-19.743z" transform="translate(6.316 6.316) rotate(-3 33.81 33.138)"></path></g></g></g></g></g></g></svg>
+                <div class="points__Points">
+                        <span class="points__Score">+ ${totalPoints}</span>
+                </div>
+            ` : `
+                <h1 class="header-text__HeaderText">
+                    <span class="shadow-text__Container">
+                        <span class="shadow-text__HiddenText">Câu trả lời sai</span>
+                        <span class="shadow-text__Text">Câu trả lời sai</span>
+                        <span class="shadow-text__Shadow">Câu trả lời sai</span>
+                    </span>
+                </h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><g fill="none" fill-rule="evenodd"><g><g><g><g transform="translate(-257 -1827) translate(90 1581) translate(47 190) translate(120 56)"><circle cx="40" cy="40" r="37.895" fill="#F35" stroke="#FFF" stroke-width="4.211"></circle><g fill="#FFF" fill-rule="nonzero" stroke="#000" stroke-opacity="0.15" stroke-width="2.105"><path d="M39.99 12.621v14.736l14.736.001V39.99H39.99v14.736H27.359V39.99H12.62V27.359h14.736l.001-14.737H39.99z" transform="translate(6.316 6.316) rotate(-135 33.674 33.674)"></path></g></g></g></g></g></g></svg>
+                <div class="points__Points">
+                    <span class="points__Score">Không có điểm</span>
+                </div>
+            `;
+        } else {
+            messageHTML = `
+                <h1 class="header-text__HeaderText">
+                    <span class="shadow-text__Container">
+                        <span class="shadow-text__HiddenText">Không có đáp án</span>
+                        <span class="shadow-text__Text">Không có đáp án</span>
+                        <span class="shadow-text__Shadow">Không có đáp án</span>
+                    </span>
+                </h1>
+                <div class="points__Points">
+                    <span class="points__Score">Hãy tập trung hơn!</span>
+                </div>
+            `;
+        }
+        let scores = parseInt(sessionStorage.getItem("scores")) || 0;
+        const storedData = JSON.parse(sessionStorage.getItem('question-player-params'));
+        // Cập nhật điểm số
+        if (isCorrect) {
+            scores += totalPoints;
+            sessionStorage.setItem("scores", scores);
+        }
+        const checkIsShowAvatar = storedData.quizOption.isShowAvatar == true ? `<div class="styles__AvatarWrapper" style="width:80px;height:80px;margin-bottom:15px;">
+                                                    <img class="styles__AvatarItem" src="@ViewBag.Player.Accessory" />
+                                                    <img class="styles__AvatarBase" src="@ViewBag.Player.AvatarUrl" />
+                                                    <div class="styles__AvatarFace">
+                                                        <img src="/src/img/eyes-blink.gif" />
+                                                    </div>
+                                                </div>` : "";
+        // Cập nhật nội dung HTML
+        $(".bottom-bar__BottomBar").remove();
+        $(".instructions-with-avatar__PageMainContent").remove();
+        $(".question-results__PageWrapper").remove();
+        $(".instructions__PageWrapper").append(`
+            <main class="instructions-with-avatar__PageMainContent">
+            <div class="instructions-with-avatar__TextContent">
+                ${messageHTML}
+                <h2 class="sub-header-text__SubHeaderText">
+                    <span class="shadow-text__Container">
+                        <span class="shadow-text__HiddenText">Điểm tổng của bạn ở phía dưới!</span>
+                        <span class="shadow-text__Text">Điểm tổng của bạn ở phía dưới!</span>
+                        <span class="shadow-text__Shadow">Điểm tổng của bạn ở phía dưới!</span>
+                    </span>
+                </h2>
+            </div>
+            </main>
+                <div class="bottom-bar__BottomBar">
+                                            ${checkIsShowAvatar}
+                                            <div class="bottom-bar__NameWrapper">
+                                                <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                            </div>
+                                                <div class="bottom-bar-score">${scores}</div>
+                                        </div>
+        `);
+        $(".bottom-bar-score").text(scores);
+    });
+    function applyGridRevealEffect(gridSize, totalTransitionTime) {
+
+        const $imageEffectContainer = $('.image-question-Effect');
+        $imageEffectContainer.removeClass('d-none');
+        $imageEffectContainer.empty();
+        if (gridSize === 0) {
+            return;
+        }
+        const totalItems = gridSize * gridSize;
+
+        const revealOrder = revealSequences[totalItems];
+
+        const delayPerItem = totalTransitionTime / totalItems;
+
+        const gridItems = [];
+        for (let i = 0; i < totalItems; i++) {
+            const $gridItem = $('<div></div>')
+                .addClass(`GridRevealWrapper-item item-${gridSize}_${gridSize}`)
+                .css({
+                    'background-color': '#24459b',
+                    'outline': 'none'
+                });
+
+            gridItems.push($gridItem);
+            $imageEffectContainer.append($gridItem);
+        }
+
+        revealOrder.forEach((index, i) => {
+            setTimeout(() => {
+                gridItems[index].css('background-color', 'transparent');
+            }, i * delayPerItem);
+        });
+    }
+    function startCountdown(elementSelector, duration) {
+        let $countdownElement = $(elementSelector);
+
+        let countdownValue = duration;
+
+        $countdownElement.text(countdownValue);
+
+        let countdownInterval = setInterval(function () {
+            countdownValue--;
+            $countdownElement.text(countdownValue);
+
+            if (countdownValue <= 0) {
+                clearInterval(countdownInterval);
+            }
+        }, 1000);
+    }
+    function getDefaultTitle(type) {
+        switch (type) {
+            case 'quiz':
+                return 'Câu đố';
+            case 'true_false':
+                return 'Đúng hay sai';
+            case 'input_answer':
+                return 'Nhập đáp án';
+            default:
+                return 'Câu đố';
+        }
+    }
+    function getDefaultIcon(type) {
+        switch (type) {
+            case 'quiz':
+                return '/src/img/logo-quiz.png';
+            case 'true_false':
+                return '/src/img/logo-true_false.png';
+            case 'input_answer':
+                return '/src/img/logo-type-quiz.png';
+            default:
+                return '/src/img/logo-quiz.png';
+        }
+    }
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+        }
+        return array;
+    }
+    connection.on("StartCountdown", function (exists) {
+        if (exists) { 
+            $(".instructions-with-avatar__PageMainContent").remove();
+            $(".quiz__PageWrapper").remove();
+            $(".bottom-bar__BottomBar").remove();
+            const startTime = new Date().getTime();
+            sessionStorage.setItem('startTime', startTime);
+            RenderQuestion();
+        }
+    });
+    function RenderQuestion(timeCountDown = null) {
+        // Lấy dữ liệu từ sessionStorage
+        const storedData = JSON.parse(sessionStorage.getItem('question-player-params'));
+        let scores = parseInt(sessionStorage.getItem("scores")) || 0;
+        // Gán lại cho questionCurrent
+        const questionCurrent = storedData.question;
+        let choices = questionCurrent.choices;
+        if (storedData.quizOption.isRandomAnswer && questionCurrent.typeQuestion !== "true_false") {
+            choices = shuffleArray(choices);
+        }
+        const checkImg = questionCurrent.image && questionCurrent.image !== "" ? `<div class="question-media__QuestionImage">
+                                                                <img class="question-base__Img" src="${questionCurrent.image}" />
+                                                            <div class="image-question-Effect"></div>
+                                                                </div> `: "";
+        const checkImgEffect = questionCurrent.imageEffect && questionCurrent.imageEffect !== "0" && questionCurrent.imageEffect !== "";
+        const checkIsShowAvatar = storedData.quizOption.isShowAvatar == true ? `<div class="styles__AvatarWrapper" style="width:80px;height:80px;margin-bottom:15px;">
+                                                    <img class="styles__AvatarItem" src="@ViewBag.Player.Accessory" />
+                                                    <img class="styles__AvatarBase" src="@ViewBag.Player.AvatarUrl" />
+                                                    <div class="styles__AvatarFace">
+                                                        <img src="/src/img/eyes-blink.gif" />
+                                                    </div>
+                                                </div>` : "";
+        $(".question-results__PageWrapper").remove();
+        if (questionCurrent.typeQuestion != "input_answer") {
+            $(".instructions__PageWrapper").append(`<main class="question-results__PageWrapper">
+                                        <div class="top-bar__TopBar">
+                                            <div class="top-bar__TitleWrapper">
+                                                <section class="top-bar__Title">
+                                                    <div class="question-title__TitleWrapper">
+                                                        <span class="question-title__Title">${questionCurrent.questionText}</span>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                        <header class="styles__TopContent">
+                                            <div class="countdown__CountdownWrapper">
+                                            <div class="question-countdown__count"></div>
+                                            </div>
+                                            <div class="question-media__QuestionMedia">
+                                                <div class="question-image__ImageWrapper">
+                                                    <div class="question-image__MediaImageWrapper">
+                                                       ${checkImg}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="quiz-question__RightContent">
+                                                <div class="answer-counter__AnswerCounter">
+                                                    ${questionCurrent.typeAnswer === 2 ? `<button class="submit-answer" onclick="submitAnswerChoose(${questionCurrent.id})">Nộp đáp án</button>` : ""}
+                                                </div>
+                                            </div>
+                                        </header>
+                                        <div class="question-results__QuestionChoices">
+                                                ${choices.map(choice => {
+                // Sự kiện `onclick` động cho từng câu trả lời
+                const isChooseAnswer = questionCurrent.typeAnswer === 1
+                    ? `SubmitAnswer(${choice.id}, ${questionCurrent.id})`
+                    : `chooseAnswer(${choice.id})`;
+
+                return `
+                     <button class="card__PassiveCardChoice choice-item" onclick="${isChooseAnswer}">
+                         ${questionCurrent.typeAnswer === 2 ? `
+                             <div class="choice__CornerCheck">
+                                  <span class="icon__Icon">
+                                       <svg style="margin: 4px auto;" viewBox="0 0 32 32" aria-hidden="true">
+                                            <path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: #fff;"></path>
+                                       </svg>
+                                  </span>
+                             </div>` : ""}
+                             <div class="card-icon__IconWrapper">
+                                  <span class="icon__Icon" style="width: 5.95733vmin; height: 5.95733vmin;">
+                                       <svg viewBox="0 0 32 32" aria-hidden="true">
+                                            <path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path>
+                                       </svg>
+                                  </span>
+                             </div>
+                             <span class="question-choice-content__Text">
+                                   <span class="break-long-words__WordBreak">${choice.answer}</span>
+                             </span>
+                        </button>
+                     `;
+                    }).join('')}
+                    </div>
+                          <div class="bottom-bar__BottomBar">
+                              ${checkIsShowAvatar}
+                              <div class="bottom-bar__NameWrapper">
+                                   <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                              </div>
+                              <div class="bottom-bar-score">${scores}</div>
+                         </div>
+                     </main>`);
+        } else {
+            $(".instructions__PageWrapper").append(`<main class="question-results__PageWrapper">
+                                            <div class="top-bar__TopBar">
+                                                <div class="top-bar__TitleWrapper">
+                                                    <section class="top-bar__Title">
+                                                        <div class="question-title__TitleWrapper">
+                                                            <span class="question-title__Title">${questionCurrent.questionText}</span>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            </div>
+                                            <header class="styles__TopContent">
+                                                <div class="countdown__CountdownWrapper">
+                                                <div class="question-countdown__count"></div>
+                                                </div>
+                                                <div class="question-media__QuestionMedia">
+                                                    <div class="question-image__ImageWrapper">
+                                                        <div class="question-image__MediaImageWrapper">
+                                                           ${checkImg}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="quiz-question__RightContent">
+                                                    <div class="answer-counter__AnswerCounter">
+                                                    </div>
+                                                </div>
+                                            </header>
+                                    <div class="question-results__QuestionChoices" style="align-items:center;flex-direction:column;">
+                                        <div class="card-answer" id="anwer-input" contenteditable="true" data-placeholder="Nhập đáp án..."></div>
+                                        <button class="submit-answer" style="max-width:100px" onclick="submitInputAnswer(${questionCurrent.id})">Nộp đáp án</button>
+                                </div>
+                              <div class="bottom-bar__BottomBar">
+                                  ${checkIsShowAvatar}
+                                  <div class="bottom-bar__NameWrapper">
+                                       <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                  </div>
+                                  <div class="bottom-bar-score">${scores}</div>
+                             </div>
+                         </main>`);
+        }
+        checkImgEffect == true ? applyGridRevealEffect(parseInt(questionCurrent.imageEffect), questionCurrent.time * 1000) : "";
+        startCountdown('.question-countdown__count', timeCountDown ?? questionCurrent.time);
+    }
+    function chooseAnswer(value) {
+        const $button = $(`button[onclick="chooseAnswer(${value})"]`);
+        if ($button.hasClass("choose")) {
+            $button.removeClass("choose");
+            arranswer = arranswer.filter(item => item !== value);
+        } else {
+            $button.addClass("choose");
+            arranswer.push(value);
+        }
+    }
+    function submitInputAnswer(quesionId) {
+        const currentTime = new Date().getTime();
+        const startTime = parseInt(sessionStorage.getItem('startTime'), 10);
+        const timeTaken = (currentTime - startTime) / 1000;
+        const answerText = $("#anwer-input").text();
+        // Gửi tất cả các đáp án
+        connection.invoke("SubmitInputAnswer", parseInt(playerid, 10), answerText, quesionId, pin, timeTaken)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+        clearAnswer();
+    }
+    function submitAnswerChoose(quesionId) {
+        const currentTime = new Date().getTime();
+        const startTime = parseInt(sessionStorage.getItem('startTime'), 10);
+        const timeTaken = (currentTime - startTime) / 1000;
+
+        // Gửi tất cả các đáp án
+        connection.invoke("SubmitMultiAnswer", parseInt(playerid, 10), arranswer, quesionId, pin, timeTaken)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+        arranswer = [];
+        clearAnswer();
+    }
+    function SubmitAnswer(choiceId, quesionId) {
+        const currentTime = new Date().getTime();
+        // Lấy thời gian bắt đầu từ sessionStorage
+        const startTime = parseInt(sessionStorage.getItem('startTime'), 10);
+        
+        // Tính toán thời gian đã trôi qua (đơn vị là giây)
+        const timeTaken = (currentTime - startTime) / 1000;
+        connection.invoke("SubmitAnswer", parseInt(playerid, 10), choiceId, quesionId, pin, timeTaken)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+        clearAnswer();
+    }
+    function clearAnswer() {
+        let scores = parseInt(sessionStorage.getItem("scores")) || 0;
+        const storedData = JSON.parse(sessionStorage.getItem('question-player-params'));
+        const checkIsShowAvatar = storedData.quizOption.isShowAvatar == true ? `<div class="styles__AvatarWrapper" style="width:80px;height:80px;margin-bottom:15px;">
+                                                        <img class="styles__AvatarItem" src="@ViewBag.Player.Accessory" />
+                                                        <img class="styles__AvatarBase" src="@ViewBag.Player.AvatarUrl" />
+                                                        <div class="styles__AvatarFace">
+                                                            <img src="/src/img/eyes-blink.gif" />
+                                                        </div>
+                                                    </div>` : "";
+        $(".question-results__PageWrapper").remove();
+        $(".instructions__PageWrapper").append(`<main class="instructions-with-avatar__PageMainContent">
+                <div class="instructions-with-avatar__TextContent">
+                        <h1 class="header-text__HeaderText">
+                            <span class="shadow-text__Container">
+                                <span class="shadow-text__HiddenText">Nhanh như chớp!</span>
+                                <span class="shadow-text__Text">Nhanh như chớp!</span>
+                                <span class="shadow-text__Shadow">Nhanh như chớp!</span>
+                            </span>
+                        </h1>
+                        <div class="spinner__Container">
+                            <svg id="Layer_Loader" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 140 140" enable-background="new 0 0 140 140" xml:space="preserve" color="#fff" aria-label="Merci de patienter" data-functional-selector="spinner" class="spinner__Spinner-sc-r6rcac-1 civXet"><g><circle opacity="0" fill="#FFFFFF" cx="70" cy="70" r="70"></circle><g><path fill="#FFFFFF" d="M70,0C31.3,0,0,31.3,0,70h35c0-19.3,15.7-35,35-35s35,15.7,35,35h35C140,31.3,108.7,0,70,0z"></path></g></g></svg>
+                        </div>
+                        <h2 class="sub-header-text__SubHeaderText">
+                            <span class="shadow-text__Container">
+                                <span class="shadow-text__HiddenText">Chờ những người chơi khác.</span>
+                                <span class="shadow-text__Text">Chờ những người chơi khác.</span>
+                                <span class="shadow-text__Shadow">Chờ những người chơi khác.</span>
+                            </span>
+                        </h2>
+                    </div>
+            </main>
+             <div class="bottom-bar__BottomBar">
+                                            ${checkIsShowAvatar}
+                                            <div class="bottom-bar__NameWrapper">
+                                                <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                            </div>
+                                                <div class="bottom-bar-score">${scores}</div>
+                                        </div>`
+        );
+    }
+    connection.on("SendQuestion", function (quizOption, question) {
+        // Lấy dữ liệu hiện có từ sessionStorage
+        const storedData = JSON.parse(sessionStorage.getItem('question-player-params')) || { quizOption: {}, question: {}, currentQuestionIndex: 0 };
+        // Tăng chỉ số câu hỏi hiện tại
+        storedData.currentQuestionIndex += 1; // Tăng chỉ số câu hỏi
+        // Cập nhật dữ liệu
+        storedData.quizOption = quizOption;
+        storedData.question = question;
+        // Lưu lại vào sessionStorage
+        sessionStorage.setItem('question-player-params', JSON.stringify(storedData));
+      
+        const scores = parseInt(sessionStorage.getItem("scores")) || 0;
+        const checkIsShowAvatar = quizOption.isShowAvatar == true ? `<div class="styles__AvatarWrapper" style="width:80px;height:80px;margin-bottom:15px;">
+                                                    <img class="styles__AvatarItem" src="@ViewBag.Player.Accessory" />
+                                                    <img class="styles__AvatarBase" src="@ViewBag.Player.AvatarUrl" />
+                                                    <div class="styles__AvatarFace">
+                                                        <img src="/src/img/eyes-blink.gif" />
+                                                    </div>
+                                                </div>` : "";
+        $("#avatar-current").remove();
+        $(".bottom-bar__BottomBar").remove();
+        $(".avatar-content__AvatarMenuContainer").remove();
+        $(".instructions-with-avatar__TextContent").remove();
+        if (storedData.currentQuestionIndex == 1) {
+            $(".instructions-with-avatar__PageMainContent").append(`<div class="instructions-with-avatar__TextContent">
+                    <h1 class="header-text__HeaderText">
+                        <span class="shadow-text__Container">
+                            <span class="shadow-text__HiddenText">Chuẩn bị!</span>
+                            <span class="shadow-text__Text">Chuẩn bị!</span>
+                            <span class="shadow-text__Shadow">Chuẩn bị!</span>
+                        </span>
+                    </h1>
+                    <div class="spinner__Container">
+                        <svg id="Layer_Loader" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 140 140" enable-background="new 0 0 140 140" xml:space="preserve" color="#fff" aria-label="Merci de patienter" data-functional-selector="spinner" class="spinner__Spinner-sc-r6rcac-1 civXet"><g><circle opacity="0" fill="#FFFFFF" cx="70" cy="70" r="70"></circle><g><path fill="#FFFFFF" d="M70,0C31.3,0,0,31.3,0,70h35c0-19.3,15.7-35,35-35s35,15.7,35,35h35C140,31.3,108.7,0,70,0z"></path></g></g></svg>
+                    </div>
+                    <h2 class="sub-header-text__SubHeaderText">
+                        <span class="shadow-text__Container">
+                            <span class="shadow-text__HiddenText">Đang tải...</span>
+                            <span class="shadow-text__Text">Đang tải...</span>
+                            <span class="shadow-text__Shadow">Đang tải...</span>
+                        </span>
+                    </h2>
+                </div>
+            `);
+            $(".instructions__PageWrapper").append(`<div class="bottom-bar__BottomBar">
+                                                ${checkIsShowAvatar}
+                                                <div class="bottom-bar__NameWrapper">
+                                                    <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                                </div>
+                                                <div class="bottom-bar-score">${scores}</div>
+                                            </div>`)
+        }
+        setTimeout(() => {
+            $(".instructions-with-avatar__PageMainContent").remove();
+            $(".bottom-bar__BottomBar").remove();
+            $(".instructions__PageWrapper").append(`
+                    <main class="quiz__PageWrapper">
+                        <main class="styles__PageWrapper">
+                            <div class="styles__QuestionIntroWrapper">
+                                <div class="question-intro__QuestionCount">
+                                    ${storedData.currentQuestionIndex} trên ${quizOption.questionLength}
+                                </div>
+                                <div class="styles__QuestionContainer">
+                                    <div class="styles__AnimationContainer">
+                                        <div class="styles__Animation">
+                                            <div class="styles__AnimationImgWrapper">
+                                                <div class="styles__AnimationImgBlock">
+                                                     <img class="styles__AnimationImg" src="${getDefaultIcon(question.typeQuestion)}" />
+                                                </div>
+                                                <div class="styles__WrapperBlock">${getDefaultTitle(question.typeQuestion)}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="block-title__Container styles_BlockTitle">
+                                        <div class="block-title__Wrapper">
+                                                <h1 class="block-title__Title">${question.questionText}</h1>
+                                        </div>
+                                    </div>
+                                    <div class="styles__LoadingWrapper">
+                                        <div class="loading-bar__Bar">
+                                            <div class="loading-bar__ProgressMeter"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </main>
+                        <div class="bottom-bar__BottomBar">
+                                                ${checkIsShowAvatar}
+                                                <div class="bottom-bar__NameWrapper">
+                                                    <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                                </div>
+                                                <div class="bottom-bar-score">${scores}</div>
+                                            </div>
+                    `);
+        }, storedData.currentQuestionIndex == 1? 7500 : 0)
+    });
+
+    connection.on("RoomNotFound", function (exists) {
+        if (exists) {
+            isKicked = true;
+            sessionStorage.removeItem('question-player-params');
+            sessionStorage.removeItem('isLoaded');
+            window.location.href = `/pin`;
+        }
+    });
+    connection.on("RoomDelete", function (exists) {
+        if (exists) {
+            isKicked = true;
+            sessionStorage.removeItem('question-player-params');
+            sessionStorage.removeItem('isLoaded');
+            window.location.href = `/pin`;
+        }
+    });
+    connection.on("PlayerOut", function (exists,playercurrent) {
+        if (exists) {
+            isKicked = true;
+            if (parseInt(playerid, 10) === playercurrent){
+                sessionStorage.removeItem('question-player-params');
+                sessionStorage.removeItem('isLoaded');
+                window.location.href = `/pin`;
+            }
+        }
+    });
+
+    $(document).on('click', '#avatar-current', function () {
+        $(this).addClass("active");
+        $(".avatar-content__AvatarMenu").addClass("open");
+    });
+
+    $(document).on('click', '#close-menu', function () {
+        $("#avatar-current").removeClass("active");
+        $(".avatar-content__AvatarMenu").removeClass("open");
+        changeAvartar(); // Make sure changeAvatar is properly defined elsewhere
+    });
+
+    $(document).on('click', '.avatar-content__AvatarStyleTab', function () {
+        $(".avatar-content__AvatarStyleTab").removeClass("active");
+        $(this).addClass("active");
+        const value = $(this).attr("data-menu");
+        $(".avatar-content__AvatarMenuContent").hide();
+        $(`#${value}`).show();
+    });
+
+    $(document).on('click', '.avatar-content__SelectionButton', function () {
+        if ($(this).hasClass("accessory")) {
+            $(".avatar-content__SelectionButton.accessory").removeClass("focus");
+            $(this).addClass("focus");
+            var urlimg = $(this).find(".styles__AvatarItem").attr("src");
+            $("#avatar-current .styles__AvatarItem").attr("src", urlimg);
+        } else {
+            $(".avatar-content__SelectionButton:not(.accessory)").removeClass("focus");
+            $(this).addClass("focus");
+            var urlimg = $(this).find(".styles__AvatarBase").attr("src");
+            $("#avatar-current .styles__AvatarBase").attr("src", urlimg);
+        }
+    });
+    function OptionAvatar(value) {
+        if (value) {
+            $(".instructions-with-avatar__TextContent").remove();
+            $(".bottom-bar__BottomBar").remove();
+            $(".instructions-with-avatar__PageMainContent").append(`<button id="avatar-current" class="avatar-content__AvatarContainer" style="--scale-size: -225.25px;">
+                <div class="avatar-content__EditButton">
+                    <span class="icon__Icon">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M23.4091683,8.594 C24.1731683,9.359 24.1731683,10.693 23.4091683,11.458 L22.6901683,12.178 L19.8241683,9.313 L20.5451683,8.594 C21.3101683,7.83 22.6441683,7.829 23.4091683,8.594 L23.4091683,8.594 Z M8.37616832,23.626 L8.97116832,21.252 L10.7501683,23.033 L8.37616832,23.626 Z M18.4111683,10.728 L21.2741683,13.591 L12.7061683,22.159 L9.84316832,19.296 L18.4111683,10.728 Z M24.8211683,7.179 C24.0611683,6.418 23.0501683,6 21.9741683,6 C20.9001683,6 19.8881683,6.418 19.1281683,7.179 L7.71916832,18.587 C7.71916832,18.587 7.71816832,18.59 7.71716832,18.591 C7.63616832,18.673 7.49716832,18.889 7.45616832,19.052 L6.03016832,24.757 C5.94416832,25.097 6.04516832,25.458 6.29316832,25.706 L6.29416832,25.707 L6.29616832,25.708 C6.54416832,25.956 6.90416832,26.057 7.24516832,25.972 L12.9491683,24.545 C13.1121683,24.504 13.3291683,24.365 13.4101683,24.284 C13.4111683,24.283 13.4141683,24.282 13.4141683,24.282 L24.8231683,12.873 C25.5831683,12.113 26.0021683,11.102 26.0011683,10.027 C26.0011683,8.951 25.5831683,7.941 24.8231683,7.18 L24.8211683,7.179 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                    </span>
+                </div>
+                <div class="avatar-content__Container">
+                    <div class="styles__AvatarWrapper av-animation" style="width:100%;height:100%">
+                        <img class="styles__AvatarItem" src="${itemcurrent}" />
+                        <img class="styles__AvatarBase" src="${avatarcurrent}" />
+                        <div class="styles__AvatarFace">
+                            <img src="/src/img/eyes-blink.gif" />
+                        </div>
+                    </div>
+                </div>
+            </button>
+            <div class="avatar-content__AvatarMenuContainer">
+                <div class="avatar-content__AvatarMenu">
+                    <div class="avatar-content__AvatarStyleTabs">
+                        <button class="avatar-content__AvatarStyleTab active" data-menu="avatar">
+                            Nhân vật
+                        </button>
+                        <button class="avatar-content__AvatarStyleTab" data-menu="accessory">
+                            Phụ kiện
+                        </button>
+                    </div>
+                    <div class="avatar-content__AvatarMenuContentContainer" >
+                        <div id="avatar" class="avatar-content__AvatarMenuContent">
+                            <button class="avatar-content__SelectionButton">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/avatar1.svg" />
+                                </div>
+                                <div class="styles__StaticFace">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                        <defs>
+                                        </defs>
+                                        <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" ></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/avatar2.svg" />
+                                </div>
+                                <div class="styles__StaticFace">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                        <defs>
+                                        </defs>
+                                        <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/avatar3.svg" />
+                                </div>
+                                <div class="styles__StaticFace">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                        <defs>
+                                        </defs>
+                                        <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/avatar4.svg" />
+                                </div>
+                                <div class="styles__StaticFace">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                        <defs>
+                                        </defs>
+                                        <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/avatar5.svg" />
+                                </div>
+                                <div class="styles__StaticFace">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                        <defs>
+                                        </defs>
+                                        <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/avatar6.svg" />
+                                </div>
+                                <div class="styles__StaticFace">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                        <defs>
+                                        </defs>
+                                        <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/avatar7.svg" />
+                                </div>
+                                <div class="styles__StaticFace">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                        <defs>
+                                        </defs>
+                                        <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/avatar8.svg" />
+                                </div>
+                                <div class="styles__StaticFace">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Assets" viewBox="0 0 800 800">
+                                        <defs>
+                                        </defs>
+                                        <circle cx="523.68" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="517.97" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="506.57" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <circle cx="276.32" cy="455.68" r="59.36" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="282.03" cy="461.36" r="69.39" style="fill:rgb(255, 255, 255)"></circle>
+                                        <circle cx="293.43" cy="461.36" r="33.28" class="right_eye_pupil_color"></circle>
+                                        <path d="M482,652.73c.7-.29,1.2.85.62,1.41-7,6.75-29.55,23.08-82.65,23.08s-75.61-16.33-82.65-23.08c-.58-.56-.08-1.7.62-1.41,9.18,3.85,37.66,14,82,14S472.85,656.58,482,652.73Z" class="lip_color"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
+                        <div id="accessory" class="avatar-content__AvatarMenuContent" style="display:none">
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory1.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory2.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory3.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory4.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory5.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory6.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory7.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory8.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                            <button class="avatar-content__SelectionButton accessory">
+                                <div class="styles__AvatarWrapper" style="width:100%;height:100%">
+                                    <img class="styles__AvatarItem" src="/src/img/accessory/accessory9.svg" />
+                                    <img class="styles__AvatarBase" src="/src/img/avatar/placeholder-avatar.svg" />
+                                </div>
+                            </button>
+                        </div>
+                        <button id="close-menu" class="avatar-content__SelectionDone">Xong</button>
+                    </div>
+                </div>
+            </div>
+            <div class="instructions-with-avatar__TextContent">
+                <h1 class="header-text__HeaderText">
+                    <span class="shadow-text__Container">
+                        <span class="shadow-text__HiddenText">@ViewBag.Player.Nickname</span>
+                        <span class="shadow-text__Text">@ViewBag.Player.Nickname</span>
+                        <span class="shadow-text__Shadow">@ViewBag.Player.Nickname</span>
+                    </span>
+                </h1>
+                <h2 class="sub-header-text__SubHeaderText">
+                    <span class="shadow-text__Container">
+                        <span class="shadow-text__HiddenText">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                        <span class="shadow-text__Text">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                        <span class="shadow-text__Shadow">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                    </span>
+                </h2>
+            </div>
+            `);
+        } else {
+            $("#avatar-current").remove();
+            $(".avatar-content__AvatarMenuContainer").remove();
+            $(".instructions-with-avatar__TextContent").remove();
+            $(".instructions-with-avatar__PageMainContent").append(`<div class="instructions-with-avatar__TextContent">
+                    <h1 class="header-text__HeaderText">
+                        <span class="shadow-text__Container">
+                            <span class="shadow-text__HiddenText">Bạn đã sẵn sàng chưa!</span>
+                            <span class="shadow-text__Text">Bạn đã sẵn sàng chưa!</span>
+                            <span class="shadow-text__Shadow">Bạn đã sẵn sàng chưa!</span>
+                        </span>
+                    </h1>
+                    <h2 class="sub-header-text__SubHeaderText">
+                        <span class="shadow-text__Container">
+                            <span class="shadow-text__HiddenText">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                            <span class="shadow-text__Text">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                            <span class="shadow-text__Shadow">Và thế là xong! Bạn có thấy biệt danh của mình trên màn hình không?</span>
+                        </span>
+                    </h2>
+                </div>`);
+            $(".instructions__PageWrapper").append(` <div class="bottom-bar__BottomBar">
+                <div class="bottom-bar__NameWrapper">
+                            <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                </div>
+            </div>`);
+            
+        }
+    }
+</script>

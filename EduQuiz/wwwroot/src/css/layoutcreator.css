@@ -769,7 +769,7 @@ button:focus{
 }
     .TooltipContent-text-field__input:empty:before {
         content: attr(data-placeholder);
-        color: #d1d1d1;
+        color: #f1f1f1;
     }
 
     .TooltipContent-text-field__input:focus {

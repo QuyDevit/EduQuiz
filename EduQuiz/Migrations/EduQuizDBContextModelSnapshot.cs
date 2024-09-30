@@ -211,6 +211,95 @@ namespace EduQuiz.Migrations
                     b.ToTable("Music");
                 });
 
+            modelBuilder.Entity("EduQuiz.Models.EF.PlayerAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AnswerText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ChoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PlayerSessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TimeTaken")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChoiceId");
+
+                    b.HasIndex("PlayerSessionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("PlayerAnswer");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.PlayerSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Accessory")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AvatarUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConnectionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("FinishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPlayer")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nickname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuizSessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rank")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizSessionId");
+
+                    b.ToTable("PlayerSession");
+                });
+
             modelBuilder.Entity("EduQuiz.Models.EF.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -280,6 +369,60 @@ namespace EduQuiz.Migrations
                     b.HasIndex("FolderId");
 
                     b.ToTable("QuizFolders");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.QuizSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EduQuizId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("HostUserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAuto")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRandomAnswer")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRandomQuestion")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsShowAvatar")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsShowQuestionAndAnswer")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsWaitingRoom")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Pin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EduQuizId");
+
+                    b.HasIndex("HostUserId");
+
+                    b.ToTable("QuizSession");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Role", b =>
@@ -521,6 +664,42 @@ namespace EduQuiz.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("EduQuiz.Models.EF.PlayerAnswer", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.Choice", "Choice")
+                        .WithMany()
+                        .HasForeignKey("ChoiceId");
+
+                    b.HasOne("EduQuiz.Models.EF.PlayerSession", "PlayerSession")
+                        .WithMany()
+                        .HasForeignKey("PlayerSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduQuiz.Models.EF.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Choice");
+
+                    b.Navigation("PlayerSession");
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.PlayerSession", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.QuizSession", "QuizSession")
+                        .WithMany()
+                        .HasForeignKey("QuizSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("QuizSession");
+                });
+
             modelBuilder.Entity("EduQuiz.Models.EF.Question", b =>
                 {
                     b.HasOne("EduQuiz.Models.EF.EduQuiz", "EduQuiz")
@@ -547,6 +726,25 @@ namespace EduQuiz.Migrations
                     b.Navigation("EduQuiz");
 
                     b.Navigation("Folder");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.QuizSession", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.EduQuiz", "EduQuiz")
+                        .WithMany()
+                        .HasForeignKey("EduQuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduQuiz.Models.EF.User", "HostUser")
+                        .WithMany()
+                        .HasForeignKey("HostUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EduQuiz");
+
+                    b.Navigation("HostUser");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.User", b =>

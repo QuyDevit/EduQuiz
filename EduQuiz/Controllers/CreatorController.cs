@@ -46,7 +46,7 @@ namespace EduQuiz.Controllers
 
                     if (check == null)
                     {
-                        ViewBag.Data = new { quizId = id, userId = user.Id };
+                        ViewBag.Data = new { quizId = id, userId = user.Id, subscriptionType = user.SubscriptionType };
                         return View(null);
                     }
                     else
@@ -95,7 +95,7 @@ namespace EduQuiz.Controllers
                             .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
                             .ToList();
 
-                        ViewBag.Data = new { quizId = id, userId = user.Id };
+                        ViewBag.Data = new { quizId = id, userId = user.Id, subscriptionType = user.SubscriptionType };
                         return View(getdata);
                     }
                 }
@@ -248,7 +248,7 @@ namespace EduQuiz.Controllers
                         Uuid = data.Uuid,
                         Description = data.Description,
                         Title = data.Title,
-                        ImageCover = data.ImageCover,
+                        ImageCover = "/src/img/EduQuizDefault.png",
                         Type = data.Type,
                         Visibility = data.Visibility,
                         ThemeId = data.ThemeId,

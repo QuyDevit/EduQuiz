@@ -30,7 +30,7 @@
                             <div class="create-block__ActiveBlocks">
                                 <button type="button" class="create-button__CreateButton" data-example="quiz">
                                     <div class="create-button__ImgWrapper">
-                                        <img src="~/src/img/logo-quiz.jpg" />
+                                        <img src="~/src/img/logo-quiz.png" />
                                     </div>
                                     <div class="create-button__TextGroup">
                                         <span>Đố vui</span>
@@ -38,7 +38,7 @@
                                 </button>
                                 <button type="button" class="create-button__CreateButton" data-example="true_false">
                                     <div class="create-button__ImgWrapper">
-                                        <img src="~/src/img/logo-true_false.jpg" />
+                                        <img src="~/src/img/logo-true_false.png" />
                                     </div>
                                     <div class="create-button__TextGroup">
                                         <span>Đúng hoặc sai</span>
@@ -46,7 +46,7 @@
                                 </button>
                                 <button type="button" class="create-button__CreateButton" data-example="input_answer">
                                     <div class="create-button__ImgWrapper">
-                                        <img src="~/src/img/logo-type-quiz.jpg" />
+                                        <img src="~/src/img/logo-type-quiz.png" />
                                     </div>
                                     <div class="create-button__TextGroup">
                                         <span>Nhập câu trả lời</span>
@@ -133,8 +133,8 @@
                     <div class="col-lg-5">
                         <div class="styles_block-Field">
                             <label class="styles__title-setting">Ảnh bìa</label>
-                            <div class="LayoutImageWrapper" style="max-height:150px;border: 1px solid #ccc;border-radius:3px">
-                                <img style="position:unset" id="btn-ImgEduQuiz" class="image-with-effect" src="~/src/img/market.jpg" />
+                            <div class="LayoutImageWrapper" style="height:150px;border: 1px solid #ccc;border-radius:3px">
+                                <img style="position:unset !important" id="btn-ImgEduQuiz" class="image-with-effect" src="/src/img/EduQuizDefault.png" />
                                 <input id="imgEduQuiz" class="d-none" type="file" accept="image/*" />
                             </div>
                         </div>
@@ -149,17 +149,18 @@
                 </div>
             </div>
             <div class="modal-footer" style="border:none;justify-content:center">
-                <button id="closeInterest" type="button" class="btn" data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
-                <button id="saveInterest" type="button" class="btn " style="background-color:rgb(38, 137, 12)" onclick="saveSettingEduQuiz();">Xong</button>
+                <button id="closeSetting" type="button" class="btn" data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                <button type="button" class="btn " style="background-color:rgb(38, 137, 12)" onclick="saveSettingEduQuiz();">Xong</button>
             </div>
         </div>
     </div>
 </div>
 <script>
-    var viewData = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Data));
-    var dataquizedit = @Html.Raw(JsonConvert.SerializeObject(Model));
+    var viewData = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Data))
+    var dataquizedit = @Html.Raw(JsonConvert.SerializeObject(Model))
     // console.log(dataquizedit);
     // Truy cập các thuộc tính từ đối tượng JSON
     var quizId = viewData.quizId;
     var userId = viewData.userId;
+    var userSubscriptionType = viewData.subscriptionType;
 </script>

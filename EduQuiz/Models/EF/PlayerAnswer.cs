@@ -25,7 +25,7 @@ namespace EduQuiz.Models.EF
         public bool IsCorrect { get; set; } 
         public double TimeTaken { get; set; } 
         public int Points { get; set; } 
-        public bool Unanswered { get; set; }
+        public string? AnswerText { get; set; }
     }
 
 }

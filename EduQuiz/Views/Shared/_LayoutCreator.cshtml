@@ -509,7 +509,7 @@
             UserId : userId,
             Title:"",
             Description:"",
-            ImageCover: "/src/img/EduQuizDefault.png",
+            ImageCover: "",
             Type: 0,
             Visibility: true,
             ThemeId: 1,
@@ -712,32 +712,51 @@
                     errorVip = 'Vui lòng nâng cấp tài khoản để sử dụng Theme Vip.';
                 }
             }
-
-            // Hiển thị thông báo nếu có lỗi
-            if (!valid) {
-                Swal.fire({
-                    title: errorMessage != "" ? "Chưa đủ thông tin" :"Nâng cấp tài khoản để tiếp tục",
-                    text: errorMessage != "" ? errorMessage : errorVip,
-                    icon: "info"
-                });
-                return;
-            } else {
-                $.ajax({
-                    type:"POST",
-                    url: "@Url.Action("SaveTypeEduQuiz", "Creator")",
-                    data:{
-                        idquiz: quizId,
-                        userid: userId
-                    },
-                    success:function(response){
-                        if(response.result ==="PASS"){
-                            location.href = "@Url.Action("Index", "Library")";
-                        }
-                    },error:function(err){
-
-                    }
-                })
+            console.log(userSubscriptionType)
+            if (userSubscriptionType === 'free' && !valid) {
+                if (errorMessage) {
+                    Swal.fire({
+                        title: "Chưa đủ thông tin",
+                        text: errorMessage,
+                        icon: "info"
+                    });
+                    return;
+                } else if (errorVip) {
+                    Swal.fire({
+                        title: "Nâng cấp tài khoản để tiếp tục",
+                        text: errorVip,
+                        icon: "info"
+                    });
+                    return;
+                }
             }
+            // Hiển thị thông báo nếu có lỗi
+            if (userSubscriptionType === 'vip' && !valid) {
+                if (errorMessage) {
+                    Swal.fire({
+                        title: "Chưa đủ thông tin",
+                        text: errorMessage,
+                        icon: "info"
+                    });
+                    return;
+                }
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveTypeEduQuiz", "Creator")",
+                data: {
+                    idquiz: quizId,
+                    userid: userId
+                },
+                success: function (response) {
+                    if (response.result === "PASS") {
+                        location.href = "@Url.Action("Index", "Library")";
+                    }
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
         }
         function updateMusicInfo(musicId) {
             const selectedMusic = arrmusic.find(music => music.id === musicId);
@@ -769,7 +788,7 @@
        
         function setdataSettingEduQuiz(){
             eduquizdata.Title != "" ? $("#eduquizTitle").val(eduquizdata.Title) : "";
-            eduquizdata.ImageCover != "" ? $("#btn-ImgEduQuiz").attr("src", eduquizdata.ImageCover) : "/src/img/EduQuizDefault.png";
+            eduquizdata.ImageCover != "" ? $("#btn-ImgEduQuiz").attr("src", eduquizdata.ImageCover) : $("#btn-ImgEduQuiz").attr("src", "/src/img/EduQuizDefault.png");
             updateMusicInfo(eduquizdata.MusicId);
             eduquizdata.Visibility == true ? $("#radio2").prop("checked", true) : $("#radio1").prop("checked", true);
             eduquizdata.Description != "" ? $("#eduquizDescription").val(eduquizdata.Description) : "";
@@ -781,7 +800,7 @@
             eduquizdata.Visibility = $("#radio1").is(":checked") ? false : true;
             eduquizdata.ImageCover = imgCoverSetting;
             autoSaveEduQuiz();
-            $("#closeInterest").click();
+            $("#closeSetting").click();
         }
         //Lưu ảnh câu hỏi
         function saveImgQuestion(formData) {
@@ -1273,7 +1292,7 @@
                 const $gridItem = $('<div></div>')
                     .addClass(`GridRevealWrapper-item item-${gridSize}_${gridSize}`)
                     .css({
-                        'background-color': 'rgb(70, 23, 143)',
+                        'background-color': '#24459b',
                         'outline':'none'
                     });
 
@@ -1413,8 +1432,8 @@
                 const falseChoice = dataquestion ? dataquestion.Choices.find(c => c.DisplayOrder === 1) : null;
 
                 // Render predefined 'Đúng' and 'Sai' answers
-                const trueCard = createAnswerCard(answerOption[0], "Đúng", true, true, 0);
-                const falseCard = createAnswerCard(answerOption[1],"Sai", true, true, 1);
+                const trueCard = createAnswerCard(answerOption[0], "True", true, true, 0);
+                const falseCard = createAnswerCard(answerOption[1],"False", true, true, 1);
 
                 if (trueChoice && trueChoice.IsCorrect) {
                     trueCard.find('.iconCheck_Answer').append('<img src="/src/img/check-answer.svg" />').addClass('choose-answer');

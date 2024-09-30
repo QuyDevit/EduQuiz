@@ -8,8 +8,8 @@
             <div class="game-logo__LogoArea">
                 <div class="game-logo__GameLogoImg"></div>
             </div>
-            <form action="#" class="enter-pin-form__Form">
-                <input class="enter-pin-form__GameInput" placeholder="Mã PIN trò chơi"/>
+            <form id="join-form" class="enter-pin-form__Form">
+                <input id="pingame" class="enter-pin-form__GameInput" placeholder="Mã PIN trò chơi"/>
                 <button type="submit" class="button__Button bg-dark">Xác nhận</button>
             </form>
         </div>
@@ -19,3 +19,62 @@
         <p style="font-size:13px;">© Copyright 2024, EduQuiz  |  Mọi quyền được bảo lưu bởi <a href="#" target="_blank">eduquiztmdu.com</a> </p>
     </footer>
 </div>
+<script>
+    sessionStorage.removeItem('isLoaded');
+    sessionStorage.removeItem('question-player-params');
+    sessionStorage.removeItem('scores');
+    sessionStorage.removeItem('startTime');
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/gameHub")
+        .build();
+
+    connection.start().then(function () {
+        console.log("SignalR connected.");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+    connection.on("RoomExists", function (exists) {
+        const pingame = $("#pingame").val(); // Lấy mã PIN từ input
+        if (exists) {
+            window.location.href = `/join?pin=${pingame}`;
+        } else {
+            openToast('warning', 'Lỗi', 'Phiên chơi không tồn tại. Vui lòng kiểm tra mã PIN.', 2500);
+        }
+    });
+    $("#join-form").on("submit", function (e) {
+        e.preventDefault(); // Prevent the form from being submitted
+        handleJoinGame();
+    });
+
+    function onPinInput(pin) {
+        connection.invoke("CheckRoomExists", pin)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }
+    function handleJoinGame() {
+        var pingame = $("#pingame").val();
+        if (pingame === "") {
+            openToast('warning', 'Lỗi', 'Vui lòng nhập mã PIN', 2500);
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("CheckPinGame", "UserPlayEduQuiz")',
+            data: {
+                pin: pingame,
+            },
+            success: function (response) {
+                if (response.status === true) {
+                    onPinInput(pingame);
+                } else {
+                    openToast('warning', 'Lỗi', 'Mã Pin Không tồn tại. Vui lòng kiểm lại!', 2500);
+                }
+            },
+            error: function (err) {
+                console.error(err);
+                openToast('error', 'Lỗi', 'Có lỗi xảy ra. Vui lòng thử lại sau.', 2500);
+            }
+        })
+    }
+</script>

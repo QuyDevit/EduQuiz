@@ -16,10 +16,11 @@ namespace EduQuiz.Models.EF
         public string Nickname { get; set; }
         public string AvatarUrl { get; set; } 
         public string Accessory { get; set; }
+        public string ConnectionId { get; set; }
         public int TotalScore { get; set; } = 0;
         public DateTime JoinedAt { get; set; } = DateTime.Now;
         public DateTime? FinishedAt { get; set; } 
         public int Rank { get; set; }
+        public bool IsPlayer { get; set; } = false;
     }
-
 }

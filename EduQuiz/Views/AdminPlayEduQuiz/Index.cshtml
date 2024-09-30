@@ -37,13 +37,13 @@
                     </div>
                     <div class="start-button__StartButtonWrapper">
                         <div class="start-button__EduquizInfo">
-                            <img src="~/src/img/market.jpg" />
+                            <img src="@ViewBag.Quiz.ImageCover" />
                             <div class="start-button__EduquizTitle">
-                                Học tiếng anh cho mọi cấp độ
+                                @ViewBag.Quiz.Title
                             </div>
                         </div>
                         <div class="start-button__ButtonWrapper">
-                            <a href="@Url.Action("Lobby","AdminPlayEduQuiz",new{quizId = Guid.NewGuid()})" class="btn" style="background:#fff;color:#000">Bắt đầu</a>
+                            <a href="@Url.Action("Lobby","AdminPlayEduQuiz",new{quizId = ViewBag.Quiz.Uuid})" class="btn" style="background:#fff;color:#000">Bắt đầu</a>
                         </div>
                     </div>
                 </div>

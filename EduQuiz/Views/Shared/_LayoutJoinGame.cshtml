@@ -13,11 +13,13 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/src/css/paper-dashboard.css" rel="stylesheet" />
-
+    <link href="~/src/css/toast.css" rel="stylesheet" />
     <script src="@("https://unpkg.com/@popperjs/core@2")"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <link href="~/src/css/playeduquiz.css" rel="stylesheet" />
     <link href="~/src/css/auth.css" rel="stylesheet" />
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     @RenderSection("styles", required: false)
 </head>
 <body>
@@ -32,6 +34,17 @@
 			    @RenderBody()
 			</div>
 	</div>
+    <section id="toast" class="info off">
+        <div id="icon-wrapper">
+            <div id="icon"></div>
+        </div>
+        <div id="toast-message">
+            <h4 id="toast-title"></h4>
+            <p id="toast-description"></p>
+        </div>
+        <button id="toast-close"></button>
+        <div id="timer"></div>
+    </section>
     <script src="~/src/js/jquery.min.js"></script>
     <!-- Popper JS -->
     <script src="~/src/js/popper.min.js"></script>
@@ -40,5 +53,6 @@
 
     <script src="~/src/css/js/bootstrap-notify.js"></script>
     <script src="~/src/css/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="~/src/js/toast.js"></script>
 </body>
 </html>

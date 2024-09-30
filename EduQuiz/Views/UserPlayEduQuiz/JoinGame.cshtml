@@ -8,10 +8,74 @@
             <div class="game-logo__LogoArea">
                 <div class="game-logo__GameLogoImg"></div>
             </div>
-            <form action="#" class="enter-pin-form__Form">
-                <input class="enter-pin-form__GameInput" placeholder="Nhập tên" />
+            <form id="join-form" class="enter-pin-form__Form">
+                <input id="nickname" class="enter-pin-form__GameInput" placeholder="Nhập tên" />
                 <button type="submit" class="button__Button bg-dark">Đồng ý, Bắt đầu ngay !</button>
             </form>
         </div>
     </main>
 </div>
+<script>
+    sessionStorage.removeItem('isLoaded');
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/gameHub")
+        .build();
+
+    connection.start().then(function () {
+        console.log("SignalR connected.");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+    connection.on("RoomNotFound", function (exists) {
+        if (exists) {
+            window.location.href = `/pin`;
+        }
+    });
+    connection.on("RoomLock", function (exists) {
+        if (exists) {
+            openToast('warning', 'Lỗi', 'Phòng tham gia đã bị khóa!', 2500);
+        }
+    });
+    connection.on("RoomFull", function (exists) {
+        if (exists) {
+            openToast('warning', 'Lỗi', 'Số lượng người chơi trong phòng đã đầy!', 2500);
+        }
+    });
+    connection.on("NameCheck", function (exists) {
+        if (exists) {
+            openToast('warning', 'Lỗi', 'Tên người chơi đã tồn tại!', 2500);
+        } 
+    });
+    connection.on("PlayerJoined", function (exists, ConnectionId) {
+        if (exists) {
+            window.location.href = `/playquiz?connectId=${ConnectionId}`
+        }
+    });
+    $("#join-form").on("submit", function (e) {
+        e.preventDefault(); // Prevent the form from being submitted
+        handleJoinGame();
+    });
+    function onNameInput(pin, nickname, idquizsession) {
+        connection.invoke("AddPlayerToWaitingRoom", pin, nickname, idquizsession)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }
+    function handleJoinGame() {
+        var quizsessionid = `@ViewBag.QuizSession.Id`;
+        var pin = `@ViewBag.QuizSession.Pin`;
+        var nickname = $("#nickname").val();
+        if (nickname == "") {
+            openToast('warning', 'Lỗi', 'Vui lòng nhập tên người chơi!', 2500);
+            return;
+        } 
+        var parsedQuizSessionId = parseInt(quizsessionid, 10);
+
+        if (isNaN(parsedQuizSessionId)) {
+            console.error("Quiz session ID không hợp lệ.");
+            return;
+        }
+
+        onNameInput(pin, nickname, parsedQuizSessionId);
+    }
+</script>

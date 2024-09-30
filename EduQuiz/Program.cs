@@ -1,4 +1,5 @@
 ﻿using EduQuiz.DatabaseContext;
+using EduQuiz.Hubs;
 using EduQuiz.Models;
 using EduQuiz.Security;
 using EduQuiz.Services;
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages()
 	.AddRazorRuntimeCompilation();
+builder.Services.AddSignalR();
 // Thêm dịch vụ session
 builder.Services.AddSession(options =>
 {
@@ -76,7 +78,7 @@ app.UseStatusCodePages(async context =>
     }
     await Task.CompletedTask;
 });
-
+app.MapHub<GameHub>("/gameHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -17,11 +17,16 @@ namespace EduQuiz.Models.EF
         [ForeignKey("HostUserId")]
         public int HostUserId { get; set; }
         public virtual User HostUser { get; set; }
-
-        public string Pin { get; set; } // Unique PIN for players to join
+        public string Pin { get; set; } 
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public bool IsActive { get; set; } = true;
+        public bool IsWaitingRoom { get; set; } = true;// true: phiên đang trong sảnh chờ
+        public bool IsRandomQuestion { get; set; } = false;
+        public bool IsRandomAnswer { get; set; } = false;
+        public bool IsAuto { get; set; } = false;
+        public bool IsShowQuestionAndAnswer { get; set; } = false;
+        public bool IsShowAvatar { get; set; } = true;
     }
 
 }
