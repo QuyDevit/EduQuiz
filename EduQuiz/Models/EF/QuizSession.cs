@@ -18,6 +18,7 @@ namespace EduQuiz.Models.EF
         public int HostUserId { get; set; }
         public virtual User HostUser { get; set; }
         public string Pin { get; set; } 
+        public string Title { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public bool IsActive { get; set; } = true;
@@ -27,6 +28,7 @@ namespace EduQuiz.Models.EF
         public bool IsAuto { get; set; } = false;
         public bool IsShowQuestionAndAnswer { get; set; } = false;
         public bool IsShowAvatar { get; set; } = true;
+        public int TypeQuizSession { get; set; } = 0; //0:Game , 1:bài tập
     }
 
 }

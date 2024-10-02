@@ -391,16 +391,16 @@ input:focus, textarea:focus {
     white-space: nowrap;
     overflow: hidden;
 }
-.verified-user-profile__eduquizs-tab-link.active {
-   color: rgb(70, 23, 143);
-    border-bottom: 2px solid rgb(70, 23, 143);
-}
+    .verified-user-profile__eduquizs-tab-link.active {
+        color: #052579;
+        border-bottom: 2px solid #052579;
+    }
 .verified-user-profile__eduquizs-tab-link:hover{
     color: #333;
 }
 .verified-user-profile__eduquizs-tab-link.active:hover {
-   color: rgb(70, 23, 143);
-    border-bottom: 2px solid rgb(70, 23, 143);
+   color: #052579;
+    border-bottom: 2px solid #052579;
 }
 .eduquizs-tab__PinnedEduquizsBackground {
     background-color: rgb(233, 233, 233);

@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "_LayoutPlay";
     ViewBag.Title = "Game";
+        @using Newtonsoft.Json
 }
 <main class="lobbystyles__PageWrapper">
     <div id="header-title" class="lobbystyles__GetReadyToJoinWrapper">
@@ -95,7 +96,7 @@
                         <div class="track__right"></div>
                     </div>
                 </div>
-                <audio id="audio-player" src="@ViewBag.QuizId." hidden loop muted ></audio>
+                <audio id="audio-player" src="" hidden loop muted ></audio>
                 <button id="unmuteButton" hidden></button>
             </div>
             <div>
@@ -128,7 +129,7 @@
                             <div class="with-image__SettingDescription">Câu hỏi và câu trả lời hiển thị trên thiết bị của người chơi.</div>
                         </div>
                         <div>
-                            <button id="showQandA" class="styles__Toggle">
+                            <button id="showQandA" class="styles__Toggle active">
                                 <div class="styles__CheckboxSlider"></div>
                             </button>
                         </div>
@@ -203,6 +204,8 @@
     let countDown = 3;
     var countQuestion = 0;
     var questionCurrent;
+    var bg = `@ViewBag.Quiz.Theme.Source`;
+    $(".layout_Fullscreen").css("background", `url(${bg}) center center / cover no-repeat`);
     const revealSequences = {
         9: [2, 6, 0, 3, 8, 1, 4, 7, 5], // 3x3
         25: [23, 1, 12, 19, 7, 8, 0, 24, 17, 15, 11, 4, 20, 2, 9, 13, 5, 21, 6, 10, 14, 3, 16, 18, 22], // 5x5
@@ -283,13 +286,13 @@
             <div class="end-game-screenstyles__PageWrapper">
         <canvas id="spotlightCanvas"></canvas>
         <div class="end-game-screenstyles__ContentWrapper">
-            <main class="podium__PageWrapper">
+            <main class="podium__PageWrapper" style="background: url(${bg}) center center / cover no-repeat;">
                 <div class="background__Background">
                     <div class="podium-styles__PageWrapper">
                         <section class="flex-bar__Bar">
                             <div class="podium-core__TitleWrapper">
                                 <img class="podium-core__Logo" src="/src/img/logotext.png" />
-                                <h1 class="podium-core__Title">Giới thiệu về khoa học</h1>
+                                <h1 class="podium-core__Title">${questionCurrent.quizOption.quizTitle}</h1>
                                 <h2 class="podium-core__SubTitle"><span>Xếp hạng top 3</span></h2>
                             </div>
                         </section>
@@ -632,6 +635,7 @@
             type: 'GET',
             data: {
                 quizid: `@ViewBag.Quiz.Id`,
+                title : `@ViewBag.Quiz.Title`
             },
             success: function (response) {
                 // Tạo URL cho hình ảnh mã QR trả về

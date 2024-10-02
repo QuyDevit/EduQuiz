@@ -83,12 +83,22 @@ namespace EduQuiz.Controllers
                     .ToList();
 
                 var getInfoUser = await _context.Users.FindAsync(getdata.UserId);
+                var quizSessions = await _context.QuizSessions
+                    .Where(q => q.EduQuizId == check.Id)
+                    .ToListAsync();
+                var sessionIds = quizSessions.Select(q => q.Id).ToList();
+                var playerCount = await _context.PlayerSessions
+                    .Where(p => sessionIds.Contains(p.QuizSessionId))
+                    .CountAsync();
                 if (getInfoUser != null)
                 {
                     ViewBag.Data = JsonConvert.SerializeObject(new
                     {
+                        UserCurrent = iduser,
                         UserName = getInfoUser.Username,
-                        Avatar = getInfoUser.ProfilePicture
+                        Avatar = getInfoUser.ProfilePicture,
+                        QuizSessionCount = quizSessions.Count,
+                        PlayerCount = playerCount
                     });
                 }
                 return View(getdata);

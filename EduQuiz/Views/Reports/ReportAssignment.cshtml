@@ -1,0 +1,108 @@
+﻿@{
+    Layout = "_LayoutUser";
+    ViewBag.Title = "Báo cáo - Bài chỉ định";
+}
+@model ICollection<EduQuiz.Models.ReportData>
+@functions {
+    public string Convertime(DateTime? endTime)
+    {
+        if (endTime == null) return "Chưa kết thúc";
+
+        var vietnamCulture = new System.Globalization.CultureInfo("vi-VN");
+        return endTime.Value.ToString("dd 'tháng' M 'năm' yyyy, h:mm tt", vietnamCulture);
+    }
+}
+<link href="~/src/css/js/datatable/datatables.min.css" rel="stylesheet" />
+<script src="~/src/css/js/datatable/datatables.min.js" defer></script>
+<link href="~/src/css/report.css" rel="stylesheet" />
+<div class="content">
+    <div class="layout-index" style="flex-direction:column;">
+        <div class="report-info__Wrapper">
+            <div class="report-info__TextWrapper">
+                <div class="report-info__TextWrapper-Title">
+                    <span>Xem kết quả báo cáo các phiên chơi</span>
+                </div>
+                <div class="report-info__TextWrapper-Description">
+                    Hãy tham quan nhanh EduQuiz! báo cáo và tìm hiểu cách đưa đánh giá quá trình.
+                </div>
+            </div>
+            <div class="report-Img"></div>
+        </div>
+        <div class="styles__TableWrapper">
+            <div class="list__FilterSortWrapper">
+                <div class="reports-list__search-mode__tabs">
+                    <section class="reports-Filter__tabs">
+                        <ul class="list-tab">
+                            <li class="tab-item">
+                                <a href="@Url.Action("Index","Reports")" class="tab-item-btn">
+                                    <div> EduQuiz chế độ chơi trực tiếp</div>
+                                </a>
+                            </li>
+                            <li class="tab-item" style="border-left: 1px solid rgb(233, 233, 233);">
+                                <a href="@Url.Action("ReportAssignment","Reports")" class="tab-item-btn active">
+                                    <div> EduQuiz bài tập chỉ định</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+
+        </div>
+        <div class="report-table__Wrapper">
+            <table id="myTable" class="custom-mytable">
+                <thead>
+                    <tr>
+                        <th>Tên EduQuiz</th>
+                        <th style="text-align:right">Số lượng người tham gia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr onclick="RedirectReport(@item.Pin)">
+                            <td>
+                                <div class="report-Title">
+                                    <div style="font-weight:600">@item.Title</div>
+                                    <div class="report-bottom">
+                                        <span class="report-status @(item.IsActive ? "":"finished")">@(item.IsActive ? "Đang chơi" : "Hoàn thành")</span>
+                                        <span>
+                                            @(item.EndTime != null ? "Kết thúc " + Convertime(item.EndTime) : "Chưa kết thúc")
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="text-align:right">
+                                <div class="report-Detail">
+                                    <div class="report-details__Wrapper">
+                                        <div class="report-details__Container">
+                                            <div style="font-weight:600">EduQuiz</div>
+                                            <div class="report-details__Players">
+                                                <span style="font-weight:600">@item.PlayerCount</span>
+                                                <span class="icon__Icon">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path fill-rule="evenodd" d="M11 12C11 14.7614 13.2386 17 16 17C18.7614 17 21 14.7614 21 12C21 9.23858 18.7614 7 16 7C13.2386 7 11 9.23858 11 12ZM16 18C11.0294 18 7 21.2739 7 25.3125H25C25 21.2739 20.9706 18 16 18Z" style="fill: rgb(121 120 120);"></path></svg>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+    tippy('.icon__Icon', {
+        content: "Số lượng người chơi!",
+    });
+    function RedirectReport(value) {
+        location.href = `/reports/detail?pin=${value}`;
+    }
+</script>

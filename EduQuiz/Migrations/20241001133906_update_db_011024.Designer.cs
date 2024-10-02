@@ -4,6 +4,7 @@ using EduQuiz.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduQuiz.Migrations
 {
     [DbContext(typeof(EduQuizDBContext))]
-    partial class EduQuizDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241001133906_update_db_011024")]
+    partial class update_db_011024
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,10 +419,6 @@ namespace EduQuiz.Migrations
                     b.Property<DateTime?>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TypeQuizSession")
                         .HasColumnType("int");
 
@@ -430,32 +429,6 @@ namespace EduQuiz.Migrations
                     b.HasIndex("HostUserId");
 
                     b.ToTable("QuizSession");
-                });
-
-            modelBuilder.Entity("EduQuiz.Models.EF.QuizSessionQuestion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("QuizSessionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("QuizSessionId");
-
-                    b.ToTable("QuizSessionQuestion");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Role", b =>
@@ -778,21 +751,6 @@ namespace EduQuiz.Migrations
                     b.Navigation("EduQuiz");
 
                     b.Navigation("HostUser");
-                });
-
-            modelBuilder.Entity("EduQuiz.Models.EF.QuizSessionQuestion", b =>
-                {
-                    b.HasOne("EduQuiz.Models.EF.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId");
-
-                    b.HasOne("EduQuiz.Models.EF.QuizSession", "QuizSession")
-                        .WithMany()
-                        .HasForeignKey("QuizSessionId");
-
-                    b.Navigation("Question");
-
-                    b.Navigation("QuizSession");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.User", b =>

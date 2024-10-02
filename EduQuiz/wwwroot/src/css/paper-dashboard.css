@@ -1992,7 +1992,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
         .navbar.navbar-transparent .nav-item .nav-link:not(.btn):hover,
         .navbar.navbar-transparent .nav-item .nav-link:not(.btn):focus:hover,
         .navbar.navbar-transparent .nav-item .nav-link:not(.btn):active {
-            color: rgb(70, 23, 143);
+            color: #24459b;
         }
   .navbar.bg-white a:not(.dropdown-item):not(.btn) {
     color: #66615B; }
@@ -2279,7 +2279,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
     text-decoration: none; }
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-item:focus {
-    background-color: rgb(70, 23, 143);
+    background-color: #24459b;
 }
   .dropdown-menu.dropdown-primary .dropdown-item:hover,
   .dropdown-menu.dropdown-primary .dropdown-item:focus {
@@ -3457,7 +3457,7 @@ License - nucleoapp.com/license/
     .off-canvas-sidebar[data-active-color="danger"] .nav li.active > a[data-toggle="collapse"] i,
     .off-canvas-sidebar[data-active-color="danger"] .nav li.active > a[data-toggle="collapse"] ~ div > ul > li.active .sidebar-mini-icon,
     .off-canvas-sidebar[data-active-color="danger"] .nav li.active > a[data-toggle="collapse"] ~ div > ul > li.active > a {
-        background-color: rgb(70, 23, 143);
+        background-color: #24459b;
         opacity: 1;
         color: rgb(255, 255, 255);
         border-radius: 0.25rem;

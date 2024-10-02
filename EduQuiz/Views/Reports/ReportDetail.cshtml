@@ -1,0 +1,301 @@
+﻿@{
+    Layout = "_LayoutUser";
+    ViewBag.Title = "Báo cáo chi tiết";
+    @using EduQuiz.Helper;
+}
+@model EduQuiz.Models.ReportDetail
+<link href="~/src/css/report.css" rel="stylesheet" />
+<div class="content">
+    <div class="layout-index" style="flex-direction:column;">
+        <div class="report-header__HeaderWrapper">
+            <section class="report-header__LeftPanel">
+                <div class="report-title__ReportTitle">
+                    <div class="report-title__SubtitleWrapper">
+                        <h2 class="report-title__Subtitle">Báo cáo</h2>
+                        <div class="report-title__Menu">
+                            <div class="header__ActionMenu">
+                                <button class="flat-button__FlatButton">
+                                    <span>Tùy chọn báo cáo</span>
+                                    <span class="icon__Icon" style="width:24px;height:24px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,10 C17.1045695,10 18,9.1045695 18,8 C18,6.8954305 17.1045695,6 16,6 C14.8954305,6 14,6.8954305 14,8 C14,9.1045695 14.8954305,10 16,10 Z M16,18 C17.1045695,18 18,17.1045695 18,16 C18,14.8954305 17.1045695,14 16,14 C14.8954305,14 14,14.8954305 14,16 C14,17.1045695 14.8954305,18 16,18 Z M16,26 C17.1045695,26 18,25.1045695 18,24 C18,22.8954305 17.1045695,22 16,22 C14.8954305,22 14,22.8954305 14,24 C14,25.1045695 14.8954305,26 16,26 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="report-title__Title">
+                        <span>@Model.Title</span>
+                        <button class="flat-button__FlatButton" style="margin-left:4px">
+                            <span class="icon__Icon" style="width:32px;height:32px">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M23.4091683,8.594 C24.1731683,9.359 24.1731683,10.693 23.4091683,11.458 L22.6901683,12.178 L19.8241683,9.313 L20.5451683,8.594 C21.3101683,7.83 22.6441683,7.829 23.4091683,8.594 L23.4091683,8.594 Z M8.37616832,23.626 L8.97116832,21.252 L10.7501683,23.033 L8.37616832,23.626 Z M18.4111683,10.728 L21.2741683,13.591 L12.7061683,22.159 L9.84316832,19.296 L18.4111683,10.728 Z M24.8211683,7.179 C24.0611683,6.418 23.0501683,6 21.9741683,6 C20.9001683,6 19.8881683,6.418 19.1281683,7.179 L7.71916832,18.587 C7.71916832,18.587 7.71816832,18.59 7.71716832,18.591 C7.63616832,18.673 7.49716832,18.889 7.45616832,19.052 L6.03016832,24.757 C5.94416832,25.097 6.04516832,25.458 6.29316832,25.706 L6.29416832,25.707 L6.29616832,25.708 C6.54416832,25.956 6.90416832,26.057 7.24516832,25.972 L12.9491683,24.545 C13.1121683,24.504 13.3291683,24.365 13.4101683,24.284 C13.4111683,24.283 13.4141683,24.282 13.4141683,24.282 L24.8231683,12.873 C25.5831683,12.113 26.0021683,11.102 26.0011683,10.027 C26.0011683,8.951 25.5831683,7.941 24.8231683,7.18 L24.8211683,7.179 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                            </span>
+                        </button>
+                    </h1>
+                </div>
+                <ul class="list__List-Tabs">
+                    <li class="item__ListItem">
+                        <button class="tab__Tab active">
+                            <span class="tabs__Label">Bản tóm tắt</span>
+                        </button>
+                    </li>
+                    <li class="item__ListItem">
+                        <button class="tab__Tab">
+                            <span class="tabs__Label">Người chơi</span>
+                        </button>
+                    </li>
+                    <li class="item__ListItem">
+                        <button class="tab__Tab">
+                            <span class="tabs__Label">Câu hỏi</span>
+                        </button>
+                    </li>
+                    <li class="item__ListItem">
+                        <button class="tab__Tab">
+                            <span class="tabs__Label">Nhận xét</span>
+                        </button>
+                    </li>
+                </ul>
+            </section>
+            <section class="report-header__RightPanel">
+                <div class="report-info__ReportInfo">
+                    <div class="report-summary-header">
+                        <div class="game-type__Wrapper">
+                            <div class="game-type__WithEllipsis">Phiên chơi @Model.Type</div>
+                            <img class="game-type__Icon" src="/src/img/logo-quiz.png"/>
+                        </div>
+                    </div>
+                    <div class="report-summary-header">
+                        <div class="game-type__Wrapper">
+                            <div class="game-type__WithEllipsis">@Model.StartTime</div>
+                        </div>
+                    </div>
+                    <div class="report-summary-header">
+                        <div class="game-type__Wrapper">
+                            <div class="game-type__WithEllipsis">Được tạo bởi @Model.NameHost</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="report-detail-summary">
+            <section class="report-detail-summary__OverviewWrapper">
+                <div class="report-detail-summary__ScoreWrapper">
+                    <div class="live-game-summary__LiveGameSummary">
+                        <div class="live-game-summary__Accuracy">
+                            <div class="overview-accuracy-icon__Wrapper">
+                                <div class="progress-icon__Wrapper">
+                                    <svg style="transform: rotate(-90deg);" width="150" height="150" viewBox="0 0 150 150"><circle stroke-dashoffset="0" stroke="#f2f2f2" stroke-dasharray="376.99111843077515" cx="75" cy="75" r="60" fill="transparent" stroke-width="8"></circle><circle stroke-dashoffset="@CalculateHelper.CalculateValueFromPercentage(Model.TotalAccuracy ?? 0)" stroke="#26890c" stroke-linecap="round" stroke-dasharray="376.99111843077515" cx="75" cy="75" r="60" fill="transparent" stroke-width="12"></circle></svg>
+                                </div>
+                                <div class="overview-accuracy-icon__PercentageWrapper">
+                                    <span class="overview-accuracy__Text">@Model.TotalAccuracy%</span>
+                                    <span class="overview-accuracy__Description">Đúng</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="live-game-summary__AccuracyTextWrapper">
+                            <h3 class="live-game-summary__WellPlayed">Chỉ số chính xác</h3>
+                            <p class="summary__note">Đây là tỷ lệ tổng số câu trả lời chính xác so với tổng số câu hỏi được đặt ra và tổng số người chơi tham gia phiên, giúp đánh giá hiệu suất tổng thể của toàn bộ người chơi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-detail-summary__FlexWrapper">
+                    <div class="report-detail-summary__FlexWrapperRow">
+                        <div class="report-detail-summary__SmallerBox">
+                            <div class="stats-card__StatsCard">
+                                <span class="stats-card__StatsRow">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: rgb(134, 76, 191);"></path></svg>
+                                    </span>
+                                    <span class="stats-card__Text">
+                                        <a href="">Người chơi</a>
+                                    </span>
+                                    <span class="stats-card__CountBox">
+                                        <span class="stats-card__CountText">@Model.PlayerCount</span>
+                                    </span>
+                                </span>
+                                <span class="stats-card__StatsRow">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16 6c5.52 0 10 4.48 10 10s-4.48 10-10 10S6 21.52 6 16 10.48 6 16 6zm1 14h-2v2h2v-2zm-1-10c-2.21 0-4 1.79-4 4h2l.006-.149A2.007 2.007 0 0116 12c1.1 0 2 .9 2 2 0 2-3 1.75-3 5h2l.012-.242C17.218 16.728 20 16.408 20 14c0-2.21-1.79-4-4-4z" style="fill: rgb(19, 104, 206);"></path></svg>
+                                    </span>
+                                    <span class="stats-card__Text">
+                                        <a href="">Câu hỏi</a>
+                                    </span>
+                                    <span class="stats-card__CountBox">
+                                        <span class="stats-card__CountText">@Model.QuestionCount</span>
+                                    </span>
+                                </span>
+                                <span class="stats-card__StatsRow">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16 6C21.52 6 26 10.48 26 16S21.52 26 16 26 6 21.52 6 16 10.48 6 16 6ZM17 11H15V18H17V11Z" style="fill: rgb(10, 163, 163);"></path></svg>
+                                    </span>
+                                    <span class="stats-card__Text">
+                                        <a href="">Thời gian</a>
+                                    </span>
+                                    <span class="stats-card__CountBox">
+                                        <span class="stats-card__CountText">@Model.TimeSession phút</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-detail-summary__SmallerBox">
+                            <div class="report-action-view__ReportActionView">
+                                <div class="report-action-view__BoxWrapper">
+                                    <div class="report-action-box__ActionBox">
+                                        <div class="report-action-box__ActionIcon"></div>
+                                        <div class="report-action-box__Actions">
+                                            <div class="report-action-box__ButtonWrapper">
+                                                <a href ="javascript:void(0);" onclick="RedirectToPodiumQuizSession();" class="btn">Xem bục vinh quang</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="tip-note"><strong>Ghi chú</strong>
+                                        Tăng mức độ tương tác của người chơi bằng cách chia sẻ bục giảng.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="advanced-reports__FlexBottomWrapper">
+                <div class="advanced-reports__ReportsHeader">
+                    <h1>Báo cáo chi tiết</h1>
+                </div>
+                <div class="advanced-reports__FlexFirstWrapper">
+                    <div class="report-detail__Card">
+                        <div class="report-detail__CardTitleWrapper">
+                            <h3 class="card__ContentTitle">Câu hỏi khó(@Model.QuestionDifficults.Count)</h3>
+                            <div class="note-detail__CardContent">
+                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M15,22 L17,22 L17,20 L15,20 L15,22 Z M16,6 C10.48,6 6,10.48 6,16 C6,21.52 10.48,26 16,26 C21.52,26 26,21.52 26,16 C26,10.48 21.52,6 16,6 Z M16,24 C11.59,24 8,20.41 8,16 C8,11.59 11.59,8 16,8 C20.41,8 24,11.59 24,16 C24,20.41 20.41,24 16,24 Z M16,10 C13.79,10 12,11.79 12,14 L14,14 C14,12.9 14.9,12 16,12 C17.1,12 18,12.9 18,14 C18,16 15,15.75 15,19 L17,19 C17,16.75 20,16.5 20,14 C20,11.79 18.21,10 16,10 Z" style="fill: rgb(110, 110, 110);"></path></svg>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="summary-card__ContentWrapper">
+                            <div class="difficult-questions-card__InnerWrapper">
+                                @if (Model.QuestionDifficults.Count != 0)
+                                {
+                                <div class="difficult-questions-card__QuestionWrapper">
+                                   
+                                        @foreach (var question in Model.QuestionDifficults)
+                                        {
+                                            <button class="difficult-questions-card__QuestionCard">
+                                                <div class="difficult-questions-card__TopSection">
+                                                    <div class="difficult-questions-card__QuestionDetails">
+                                                        <span class="difficult-questions-card__QuestionType">@question.Order - @question.TypeQuestion</span>
+                                                        <h1 class="difficult-questions-card__QuestionTitle">@question.QuestionTitle</h1>
+                                                    </div>
+                                                    @if (question.QuestionImage != "" && question.QuestionImage != null)
+                                                    {
+                                                        <div class="report-media-image__Question" style="background-image: url(@question.QuestionImage);"></div>
+                                                    }
+                                                </div>
+                                                <div class="difficult-questions-card__GreySection">
+                                                    <div class="difficult-questions-card__Accuracy">
+                                                        <div class="difficult-questions-card__IconWrapper">
+                                                            <div class="progress-icon__Wrapper" style="margin:0;height:30px;min-height:30px;width:30px;min-width:30px">
+                                                                <svg style="transform: rotate(-90deg);" width="30" height="30" viewBox="0 0 30 30" class="progress-icon__DonutSvg-sc-8topvy-0 iPAjKU">
+                                                                    <circle stroke-dashoffset="0" stroke="#e21b3c" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="4"></circle>
+                                                                    <circle stroke-dashoffset="@CalculateHelper.CalculateValueFromPercentageQuestion(question.Accuracy ?? 0)" stroke="#fff" stroke-linecap="round" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="6"></circle>
+                                                                    <circle stroke-dashoffset="@CalculateHelper.CalculateValueFromPercentageQuestion(question.Accuracy ?? 0)" stroke="#26890c" stroke-linecap="round" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="4"></circle>
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                        <span> @question.Accuracy% đúng</span>
+                                                    </div>
+                                                    <div class="difficult-questions-card__AverageTime">
+                                                        <span class="icon__Icon" style="width:32px;height:32px">
+                                                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                                                        </span>
+                                                        <span>Trung bình: @question.AverageTime giây</span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        }
+                                   
+                                </div> 
+                                }else{
+                                    <div class="report-card__EmptyWrapper">Làm tốt lắm! Không ai thấy câu hỏi nào quá khó.</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="advanced-reports__FlexHalfWrapper">
+                    <div class="need-help-card__NeedHelpCard">
+                        <div class="report-detail__CardTitleWrapper">
+                            <h3 class="card__ContentTitle">Trả lời đúng thấp(@Model.PlayersBelowAvg.Count)</h3>
+                            <div class="note-detail__CardContent">
+                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M15,22 L17,22 L17,20 L15,20 L15,22 Z M16,6 C10.48,6 6,10.48 6,16 C6,21.52 10.48,26 16,26 C21.52,26 26,21.52 26,16 C26,10.48 21.52,6 16,6 Z M16,24 C11.59,24 8,20.41 8,16 C8,11.59 11.59,8 16,8 C20.41,8 24,11.59 24,16 C24,20.41 20.41,24 16,24 Z M16,10 C13.79,10 12,11.79 12,14 L14,14 C14,12.9 14.9,12 16,12 C17.1,12 18,12.9 18,14 C18,16 15,15.75 15,19 L17,19 C17,16.75 20,16.5 20,14 C20,11.79 18.21,10 16,10 Z" style="fill: rgb(110, 110, 110);"></path></svg>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="summary-card__ContentWrapper">
+                            <div class="card__PlayersList">
+                                @if (Model.PlayersBelowAvg.Count != 0)
+                                {
+                                    foreach (var playerBlowAvg in Model.PlayersBelowAvg)
+                                    {
+                                        <button class="card__PlayersList-btnRow">
+                                            <span class="card__PlayersList-Name">@playerBlowAvg.PlayerName</span>
+                                            <div class="progress-icon__Wrapper" style="margin:0;height:54px;min-height:54px;width:54px;min-width:54px;justify-content:center;">
+                                                <svg style="transform: rotate(-90deg);" width="30" height="30" viewBox="0 0 30 30" class="progress-icon__DonutSvg-sc-8topvy-0 iPAjKU">
+                                                    <circle stroke-dashoffset="0" stroke="#e21b3c" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="4"></circle>
+                                                    <circle stroke-dashoffset="@CalculateHelper.CalculateValueFromPercentageQuestion(playerBlowAvg.Accuracy ?? 0)" stroke="#fff" stroke-linecap="round" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="6"></circle>
+                                                    <circle stroke-dashoffset="@CalculateHelper.CalculateValueFromPercentageQuestion(playerBlowAvg.Accuracy ?? 0)" stroke="#26890c" stroke-linecap="round" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="4"></circle>
+                                                </svg>
+                                            </div>
+                                            <div class="stats-card__CountText" style="font-size:0.875rem;min-width:fit-content">@playerBlowAvg.Accuracy%</div>
+                                        </button>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="report-card__EmptyWrapper">Không có ai trả lời dưới trung bình.</div>
+                                }
+                            </div>
+                        </div>
+                      
+                    </div>
+                    <div class="not-finish-card__NotFinishCard">
+                        <div class="report-detail__CardTitleWrapper">
+                            <h3 class="card__ContentTitle">Chưa hoàn thành(@Model.PlayersNotFinish.Count)</h3>
+                            <div class="note-detail__CardContent">
+                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M15,22 L17,22 L17,20 L15,20 L15,22 Z M16,6 C10.48,6 6,10.48 6,16 C6,21.52 10.48,26 16,26 C21.52,26 26,21.52 26,16 C26,10.48 21.52,6 16,6 Z M16,24 C11.59,24 8,20.41 8,16 C8,11.59 11.59,8 16,8 C20.41,8 24,11.59 24,16 C24,20.41 20.41,24 16,24 Z M16,10 C13.79,10 12,11.79 12,14 L14,14 C14,12.9 14.9,12 16,12 C17.1,12 18,12.9 18,14 C18,16 15,15.75 15,19 L17,19 C17,16.75 20,16.5 20,14 C20,11.79 18.21,10 16,10 Z" style="fill: rgb(110, 110, 110);"></path></svg>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="summary-card__ContentWrapper">
+                            <div class="card__PlayersList">
+                                @if(Model.PlayersNotFinish.Count != 0)
+                                {
+                                    foreach(var playerNotFinish in Model.PlayersNotFinish)
+                                    {
+                                        <button class="card__PlayersList-btnRow" style="padding:16px;">
+                                            <span class="card__PlayersList-Name">@playerNotFinish.PlayerName</span>
+                                            <div class="stats-card__CountText" style="font-size:0.875rem;min-width:fit-content">@playerNotFinish.CountNotAnswer câu</div>
+                                        </button>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="report-card__EmptyWrapper">Tuyệt vời! Mọi người đã hoàn thành.</div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<script>
+    function RedirectToPodiumQuizSession(slug) {
+        var encodedSlug = btoa(slug); 
+        location.href = `reports/detail/${encodedSlug}/podium`;
+    }
+</script>

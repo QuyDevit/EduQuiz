@@ -1,0 +1,1028 @@
+﻿.styles__TableWrapper
+{
+    position:relative;
+}
+.list__FilterSortWrapper {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.reports-list__search-mode__tabs {
+    display: flex;
+    border-radius: 0.25rem;
+    margin-top: 16px;
+    max-width: fit-content;
+    min-width: 0px;
+    border: 1px solid rgb(204, 204, 204);
+    width: 100%;
+}
+.reports-Filter__tabs {
+    width: 100%;
+    animation: 300ms ease-in 0s 1 normal none running eftab;
+    position: relative;
+    overflow: hidden;
+}
+@keyframes eftab{
+    0% {
+        opacity: 0.01;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+.list-tab {
+    padding: 0px;
+    gap: 0px;
+    max-width: 100%;
+    isolation: isolate;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: both mandatory;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    list-style: none;
+    margin: 0px;
+}
+.tab-item {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    width: fit-content;
+    -webkit-box-pack: start;
+    -webkit-box-align: center
+}
+.tab-item-btn {
+    background: rgb(242, 242, 242);
+    appearance: none;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin: 0px;
+    padding: 8px 16px;
+    font-weight: 700;
+    width: fit-content;
+    border-top: 1px solid rgb(233, 233, 233);
+    border-right: 1px solid rgb(233, 233, 233);
+    border-bottom: 1px solid rgb(233, 233, 233);
+    border-image: initial;
+    border-left: none;
+    color: #000;
+    cursor: pointer;
+}
+.tab-item-btn.active{
+    background-color:#fff;
+    color:#052579;
+}
+.tab-item-btn:hover{
+    color:#052579;
+}
+.report-table__Wrapper {
+    background-color: rgb(242, 242, 242);
+    border-top-right-radius: 0.25rem;
+    border-top-left-radius: 0.25rem;
+    border-top: 1px solid rgb(233, 233, 233);
+    border-right: 1px solid rgb(233, 233, 233);
+    border-left: 1px solid rgb(233, 233, 233);
+    border-image: initial;
+    border-bottom: unset;
+    margin-top: 8px;
+    min-width: 0px;
+    padding: 10px 20px
+}
+.custom-mytable{
+    width:100%;
+}
+.dt-paging-button {
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    margin: 0 4px;
+    font-weight: 700 !important;
+}
+.dt-paging-button:hover{
+    cursor:pointer !important;
+    background-color:#dfdfdf !important;
+}
+div.dt-container .dt-paging .dt-paging-button.disabled, div.dt-container .dt-paging .dt-paging-button.disabled:hover, div.dt-container .dt-paging .dt-paging-button.disabled:active{
+    color:#333 !important;
+}
+div.dt-container .dt-paging .dt-paging-button.current, div.dt-container .dt-paging .dt-paging-button.current:hover {
+    background-color: #24459b !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    border: none;
+}
+div.dt-length label{
+    margin-left:6px;
+}
+table.dataTable thead > tr > th.dt-orderable-asc:hover, table.dataTable thead > tr > th.dt-orderable-desc:hover, table.dataTable thead > tr > td.dt-orderable-asc:hover, table.dataTable thead > tr > td.dt-orderable-desc:hover {
+    outline: 0;
+    outline-offset: -2px;
+    background-color:#fff;
+}
+div.dt-container{
+    background-color:#fff;
+}
+div.dt-container .dt-search {
+    font-weight: 600;
+}
+div.dt-container .dt-search input{
+   border: 1px solid rgb(204, 204, 204);
+}
+div.dt-container .dt-search input:focus{
+    border: 1px solid rgb(19, 104, 206);
+}
+div.dt-search label{
+    margin-right:4px;
+}
+div.dt-container div.dt-layout-row{
+    padding:0 20px;
+}
+.dt-layout-row:first-child div.dt-layout-cell {
+    padding-top: 20px;
+}
+.dt-layout-row:last-child div.dt-layout-cell {
+    padding-bottom: 15px;
+}
+table.dataTable > tbody > tr:hover {
+    background-color: #f7f7f7;
+    cursor:pointer;
+}
+table.dataTable > thead > tr > th {
+    border-bottom: 1px solid rgb(233, 233, 233);
+}
+table.dataTable {
+    border: 1px solid rgb(233, 233, 233);
+}
+table.dataTable > tbody > tr {
+    border-right: 1px solid rgb(233, 233, 233);
+    border-bottom: 1px solid rgb(233, 233, 233);
+    border-left: 1px solid rgb(233, 233, 233);
+}
+.report-Title {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    flex-direction: column;
+    min-width: 0px;
+}
+.report-bottom {
+    font-size: 0.6875rem;
+    line-height: 0.875rem;
+    font-weight: 500;
+    color: rgb(110, 110, 110);
+    display: flex;
+    min-width: 0px;
+    flex-wrap: nowrap;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+}
+.report-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 auto;
+    background: rgb(255, 255, 255);
+    color: #eda000;
+    border: 1px solid #eda000;
+    padding: 0px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: default;
+    height: 18px;
+    margin: 0px !important;
+}
+.report-status.finished{
+       color: rgb(38, 137, 12);
+    border: 1px solid rgb(38, 137, 12);
+}
+.report-Detail {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: end;
+    gap: 8px;
+    margin-right: 8px;
+    min-width: 0px;
+}
+.report-details__Wrapper {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    min-width: 0px;
+    white-space: nowrap;
+}
+.report-details__Container {
+    display: flex;
+    gap: 24px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    min-width: 0px;
+    white-space: nowrap;
+    -webkit-box-align: center;
+    align-items: center;
+}
+.report-details__Players {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 2px;
+    min-width: 0px;
+}
+.icon__Icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+}
+.report-info__Wrapper {
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    padding: 0.5rem 0.5rem 0px 1.5rem;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    box-sizing: border-box;
+    margin: 0px 0px 1.5rem;
+    min-width: 0px;
+    height: 200px;
+}
+.report-info__TextWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 303px);
+}
+.report-info__TextWrapper-Title {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    padding-top: 1rem;
+}
+.report-info__TextWrapper-Title span{
+    font-size:1.5rem;
+    font-weight:bold;
+}
+.report-info__TextWrapper-Description {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    line-height: 1.51;
+}
+.report-Img {
+    background-image: url(/src/img/report.svg);
+    width: 303px;
+    height: 184px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 12px;
+}
+.report-header__HeaderWrapper {
+    display: flex;
+    width: 100%;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    min-height: 200px;
+    background: rgb(255, 255, 255);
+}
+.report-header__LeftPanel {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    flex: 7 1 0%;
+    min-width: 0px;
+    padding: 16px 16px 0px;
+    position: relative;
+    z-index: 101;
+}
+
+.report-title__ReportTitle {
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+.report-title__SubtitleWrapper {
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    display:none;
+}
+.report-title__Subtitle {
+    color: rgb(51, 51, 51);
+    font-size: 1rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+}
+.header__ActionMenu{
+    margin-left:auto;
+}
+.flat-button__FlatButton {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 8px;
+    padding: 0px 8px;
+    width: initial;
+    margin: 0px;
+    border: 0px;
+    cursor: pointer;
+    vertical-align: bottom;
+    background: rgba(0, 0, 0, 0);
+    color: rgb(51, 51, 51);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    min-width: 42px;
+    min-height: 42px;
+    height: 42px;
+    line-height: 42px;
+    position: relative;
+}
+.flat-button__FlatButton:hover{
+    background-color: rgb(153 153 153 / 15%);
+}
+.report-header__RightPanel {
+    box-sizing: border-box;
+    flex: 4 1 0%;
+    position: relative;
+    padding: 16px 0px 0px 16px;
+    display: none;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0) 60px, rgb(242, 242, 242) 60px);
+}
+.report-info__ReportInfo {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-end;
+}
+.report-summary-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    position: relative;
+    -webkit-box-align: center;
+    align-items: center;
+    color: rgb(51, 51, 51);
+    padding: 8px 0px;
+    width: 100%;
+}
+.game-type__Wrapper {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    min-width: 0px;
+    white-space: nowrap;
+}
+.game-type__WithEllipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+}
+.game-type__Icon {
+    max-height: 1.75rem;
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    margin: 0px 4px;
+    border: 0px;
+}
+.report-summary-header:not(:last-of-type) {
+    border-bottom: 1px solid rgb(178, 178, 178);
+}
+.report-title__Title {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    font-weight: 700;
+    color: rgb(51, 51, 51);
+    word-break: break-word;
+    overflow-wrap: break-word;
+    display:flex;
+}
+.list__List-Tabs {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    display: flex;
+    box-shadow: none;
+    min-width: 0px;
+    gap: 16px;
+}
+.item__ListItem {
+    display: list-item;
+    vertical-align: top;
+}
+.tab__Tab {
+    display: inline-block;
+    vertical-align: top;
+    min-width: 12px;
+    height: 42px;
+    line-height: 42px;
+    width: auto;
+    text-decoration: none;
+    outline: 0px;
+    box-shadow: none;
+    background: transparent;
+    max-width: 20rem;
+    border-image: initial;
+    letter-spacing: 0.2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0px 8px 32px;
+    border-top: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    margin: 0px;
+    font-size: 0.875rem;
+    border-bottom:unset;
+}
+.tab__Tab.active {
+    color: #24459b;
+    border-bottom: 3px inset #24459b;
+}   
+.tabs__Label{
+    font-weight:bold;
+}
+.report-detail-summary {
+    display:flex;
+    box-sizing: border-box;
+    margin: 0px;
+    min-width: 0px;
+    flex-direction: column;
+    background-color: rgb(242, 242, 242);
+}
+.report-detail-summary__OverviewWrapper {
+    display: flex;
+    font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0px 16px;
+}
+.report-detail-summary__ScoreWrapper {
+    margin: 24px 0px 0px;
+    display: flex;
+    flex: 1 1 0%;
+}
+.live-game-summary__LiveGameSummary {
+    background-color: rgb(255, 255, 255);
+    border-radius: 0.25rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    width: 100%;
+}
+.live-game-summary__Accuracy {
+    display: flex;
+    position: relative;
+    margin: 0px auto;
+}
+
+.progress-icon__Wrapper {
+    position: relative;
+    display: flex;
+    height: 150px;
+    min-height: 150px;
+    width: 150px;
+    min-width: 150px;
+    margin: 1.25rem;
+    -webkit-box-align: center;
+    align-items: center;
+}
+.overview-accuracy-icon__PercentageWrapper {
+    width: 100px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.overview-accuracy__Text {
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1.1;
+}
+.overview-accuracy__Description{
+    font-weight:600;
+}
+.live-game-summary__AccuracyTextWrapper {
+    display: flex;
+    flex: 2 1 0%;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding: 16px;
+    gap: 16px;
+    -webkit-box-align: center;
+    align-items: center;
+}
+.live-game-summary__WellPlayed {
+    font-size: 2rem;
+    line-height: 1.25;
+    font-weight: 700;
+    margin: 0;
+}
+.summary__note {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin:0;
+}
+.stats-card__StatsCard {
+    background-color: rgb(255, 255, 255);
+    border-radius: 0.25rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    padding: 8px 0px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 100%;
+}
+.stats-card__StatsRow {
+    padding: 0px 16px;
+    gap: 4px;
+    display: flex;
+    white-space: nowrap;
+    height: 54px;
+    -webkit-box-align: center;
+    align-items: center;
+}
+.stats-card__StatsRow:not(:last-of-type) {
+    border-bottom: 1px solid rgb(242, 242, 242);
+}
+.stats-card__Text {
+    flex: 5 1 0%;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+}
+.stats-card__Text a{
+    color: rgb(51, 51, 51);
+    text-decoration: none;
+}
+.stats-card__CountBox {
+    text-align: right;
+    flex: 1 1 0%;
+}
+.stats-card__CountText {
+    font-size: 1rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+}
+.report-detail-summary__FlexWrapper {
+    padding: 24px 0px 12px;
+    gap: 16px;
+    flex-flow: column wrap;
+    flex: 1 1 0%;
+    display: flex;
+    box-sizing: border-box;
+    margin: 0px;
+    min-width: 0px;
+}
+.report-detail-summary__FlexWrapperRow {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+.report-detail-summary__SmallerBox {
+    width: 100%;
+    flex: 1 1 0%;
+    min-width: 230px;
+    z-index: 0;
+}
+.report-action-view__ReportActionView {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    gap: 16px;
+}
+.report-action-view__BoxWrapper {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+}
+.report-action-box__ActionBox {
+    border-radius: 0.25rem;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    background-color: rgb(162, 209, 242);
+    background-image: url(/src/img/report-podium-background.svg);
+    background-size: 900px;
+    background-repeat: no-repeat;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 8px;
+}
+.report-action-box__ActionIcon {
+    background-image: url(/src/img/report-podium.svg);
+    display: flex;
+    flex: 1 1 0%;
+    align-self: flex-end;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 88px;
+    height: 80px;
+}
+.report-action-box__Actions {
+    flex: 2 1 0%;
+    text-align: center;
+}
+.report-action-box__ButtonWrapper {
+    margin-right: 12px;
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    font-size: 0.875rem;
+}
+.tip-note {
+    color: rgb(51, 51, 51);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: normal;
+    padding: 0px 16px;
+}
+.advanced-reports__FlexBottomWrapper {
+    display: flex;
+    width: 100%;
+    flex: 1 1 0%;
+    min-width: 0px;
+    flex-wrap: wrap;
+    padding: 0px 16px;
+    gap: 16px;
+    padding-bottom: 16px;
+}
+.advanced-reports__ReportsHeader {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 24px 0px 8px;
+}
+.advanced-reports__ReportsHeader h1{
+    font-size: 1rem;
+    font-weight: 700;
+    margin:0;
+}
+.advanced-reports__FlexFirstWrapper {
+    display: flex;
+    flex: 1 1 0%;
+    min-width: 0px;
+    min-height: 273px;
+}
+.report-detail__Card {
+    flex: 1 1 0%;
+    display: flex;
+    background-color: rgb(255, 255, 255);
+    border-radius: 0.25rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: normal;
+    height: 100%;
+    position: relative;
+}
+.report-detail__CardTitleWrapper {
+    display: flex;
+    font-size: 1rem;
+    font-weight: 650;
+    border-bottom: 1px solid rgb(242, 242, 242);
+    padding: 1rem;
+    -webkit-box-align: center;
+    align-items: center;
+    flex: 0 0 auto;
+    max-height: 64px;
+}
+.card__ContentTitle {
+    min-height: 2rem;
+    line-height: 2rem;
+    letter-spacing: 0.2px;
+    font-size:16px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    margin:0;
+}
+.note-detail__CardContent {
+    box-sizing: border-box;
+    margin: 0px -0.5rem 0px auto;
+    min-width: 0px;
+    width: auto;
+    text-align: right;
+}
+.summary-card__ContentWrapper {
+    padding: 0px;
+    display: inline-flex;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    align-items: normal;
+    flex-direction: column;
+    height: 100%;
+}
+.difficult-questions-card__InnerWrapper {
+    display: flex;
+    box-sizing: border-box;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    align-items: normal;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+.difficult-questions-card__QuestionWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+}
+.difficult-questions-card__QuestionCard {
+    margin: 0px;
+    padding: 0px;
+    width: auto;
+    overflow: visible;
+    background: rgb(255, 255, 255);
+    outline: none;
+    cursor: pointer;
+    line-height: normal;
+    appearance: none;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    border-radius: 0.25rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px 0px;
+    border: 1px solid rgb(242, 242, 242);
+    text-align: start;
+}
+.difficult-questions-card__TopSection {
+    display: flex;
+    height: 116px;
+}
+.difficult-questions-card__QuestionDetails {
+    display: flex;
+    flex: 2 1 0%;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 2px;
+    padding: 16px;
+}
+.difficult-questions-card__QuestionType {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+}
+.difficult-questions-card__QuestionTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    width: calc(100% - 16px);
+    word-break: break-all;
+    position: relative;
+    line-height: 1.2rem;
+    max-height: 3.6rem;
+    margin-right: -1em;
+    padding-right: 1em;
+}
+.report-media-image__Question {
+    display: block;  
+    max-height: 320px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 112px;
+    width: 192px;
+    background-color: transparent;
+    background-size: cover;
+    border: 0px dashed rgb(178, 178, 178);
+    margin: 2px;
+    position: relative;
+}
+.difficult-questions-card__GreySection {
+    display: flex;
+    background-color: rgb(242, 242, 242);
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    padding: 8px;
+    box-sizing: border-box;
+    min-height: 47px;
+}
+.difficult-questions-card__Accuracy {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    flex: 1 1 0%;
+    gap: 4px;
+}
+.difficult-questions-card__IconWrapper {
+    display: inline-block;
+    margin-right: 10px;
+}
+.difficult-questions-card__AverageTime {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    flex: 1 1 0%;
+    gap: 4px;
+}
+.advanced-reports__FlexHalfWrapper {
+    display: flex;
+    flex: 1 1 0px;
+    gap: 16px;
+    min-width: 0px;
+    min-height: 273px;
+}
+.need-help-card__NeedHelpCard, .not-finish-card__NotFinishCard {
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+    border-radius: 0.25rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+}
+.card__PlayersList {
+    display: flex;
+    flex: 1 1 auto;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+.card__PlayersList-btnRow {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 0px 16px;
+    text-align: start;
+    border: none;
+    background: transparent;
+}
+.card__PlayersList-btnRow:not(:last-of-type){
+    border-bottom: 1px solid rgb(242, 242, 242);
+}
+.card__PlayersList-Name {
+    width: 100%;
+    flex: 1 1 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.report-card__EmptyWrapper {
+    display: flex;
+    box-sizing: border-box;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding: 32px 16px;
+}
+@media (min-width: 600px) {
+    .overview-accuracy-icon__PercentageWrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 160px;
+        height: 160px;
+        padding: 24px;
+    }
+}
+@media (min-width: 500px) {
+    .report-action-view__ReportActionView {
+        margin: 24px 0px 16px;
+    }
+    .live-game-summary__AccuracyTextWrapper {
+        align-items: flex-start;
+        padding: 16px 16px 16px 0px;
+    }
+    .live-game-summary__Accuracy {
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+    .live-game-summary__LiveGameSummary {
+        flex-direction: row;
+    }
+    .report-summary-header {
+        padding: 12px;
+    }
+    .list__List-Tabs {
+        margin: auto auto 0px;
+    }
+}
+@media (min-width: 1200px) {
+   
+    .report-header__LeftPanel {
+        flex: 5 1 0%;
+    }
+    .report-header__RightPanel {
+        flex: 2 1 0%;
+    }
+}
+@media (max-width: 1200px) {
+    .report-detail-summary__OverviewWrapper {
+        flex-direction: column;
+    }
+}
+@media (max-width: 605px) {
+    .report-detail-summary__FlexWrapperRow {
+        flex-direction: column;
+    }
+    .advanced-reports__FlexBottomWrapper{
+        flex-direction:column;
+    }
+    .advanced-reports__FlexHalfWrapper, .advanced-reports__FlexFirstWrapper {
+        flex-direction: column;
+        min-height: unset;
+    }
+}
+@media (min-width: 900px) {
+    .report-detail-summary__ScoreWrapper {
+        flex: 1 1 0%;
+        margin: 24px 16px 12px 0px;
+    }
+
+    .tab__Tab {
+        font-size: 1rem;
+    }
+
+    .list__List-Tabs {
+        margin-left: 0px;
+    }
+
+    .report-title__Title {
+        font-size: 2rem;
+        line-height: 2.5rem;
+        font-weight: 700;
+    }
+
+    .report-summary-header {
+        width: 80%;
+    }
+
+    .report-header__LeftPanel {
+        padding: 24px 32px 0px 16px;
+    }
+
+    .report-title__ReportTitle {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .report-title__SubtitleWrapper {
+        display: flex;
+    }
+
+    .report-header__RightPanel {
+        display: block;
+    }
+}    

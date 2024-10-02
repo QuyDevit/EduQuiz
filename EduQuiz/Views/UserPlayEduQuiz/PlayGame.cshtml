@@ -257,6 +257,7 @@
 </div>
 <script> 
     let isKicked = false;
+    var bg = `@ViewBag.Player.QuizSession.EduQuiz.Theme.Source`;
     var isPlayer = `@ViewBag.Player.IsPlayer`;
     var playerid = `@ViewBag.Player.Id`;
     var pin = `@ViewBag.Player.QuizSession.Pin`;
@@ -270,6 +271,7 @@
         25: [23, 1, 12, 19, 7, 8, 0, 24, 17, 15, 11, 4, 20, 2, 9, 13, 5, 21, 6, 10, 14, 3, 16, 18, 22], // 5x5
         64: [37, 5, 47, 12, 56, 0, 24, 19, 30, 35, 48, 1, 57, 4, 62, 52, 38, 10, 41, 63, 14, 33, 45, 29, 3, 27, 31, 44, 20, 7, 15, 42, 2, 39, 53, 28, 34, 59, 13, 50, 55, 8, 32, 18, 54, 11, 43, 60, 40, 16, 6, 9, 58, 61, 46, 22, 26, 36, 49, 17, 21, 25, 51, 23] // 8x8
     };
+    $(".layout_Fullscreen").css("background", `url(${bg}) center center / cover no-repeat`);
     if (startgame == "False") {
         $(".instructions-with-avatar__PageMainContent").remove();
         setTimeout(() => {
@@ -638,75 +640,9 @@
                                                     </div>
                                                 </div>` : "";
         $(".question-results__PageWrapper").remove();
-        if (questionCurrent.typeQuestion != "input_answer") {
-            $(".instructions__PageWrapper").append(`<main class="question-results__PageWrapper">
-                                        <div class="top-bar__TopBar">
-                                            <div class="top-bar__TitleWrapper">
-                                                <section class="top-bar__Title">
-                                                    <div class="question-title__TitleWrapper">
-                                                        <span class="question-title__Title">${questionCurrent.questionText}</span>
-                                                    </div>
-                                                </section>
-                                            </div>
-                                        </div>
-                                        <header class="styles__TopContent">
-                                            <div class="countdown__CountdownWrapper">
-                                            <div class="question-countdown__count"></div>
-                                            </div>
-                                            <div class="question-media__QuestionMedia">
-                                                <div class="question-image__ImageWrapper">
-                                                    <div class="question-image__MediaImageWrapper">
-                                                       ${checkImg}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="quiz-question__RightContent">
-                                                <div class="answer-counter__AnswerCounter">
-                                                    ${questionCurrent.typeAnswer === 2 ? `<button class="submit-answer" onclick="submitAnswerChoose(${questionCurrent.id})">Nộp đáp án</button>` : ""}
-                                                </div>
-                                            </div>
-                                        </header>
-                                        <div class="question-results__QuestionChoices">
-                                                ${choices.map(choice => {
-                // Sự kiện `onclick` động cho từng câu trả lời
-                const isChooseAnswer = questionCurrent.typeAnswer === 1
-                    ? `SubmitAnswer(${choice.id}, ${questionCurrent.id})`
-                    : `chooseAnswer(${choice.id})`;
-
-                return `
-                     <button class="card__PassiveCardChoice choice-item" onclick="${isChooseAnswer}">
-                         ${questionCurrent.typeAnswer === 2 ? `
-                             <div class="choice__CornerCheck">
-                                  <span class="icon__Icon">
-                                       <svg style="margin: 4px auto;" viewBox="0 0 32 32" aria-hidden="true">
-                                            <path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: #fff;"></path>
-                                       </svg>
-                                  </span>
-                             </div>` : ""}
-                             <div class="card-icon__IconWrapper">
-                                  <span class="icon__Icon" style="width: 5.95733vmin; height: 5.95733vmin;">
-                                       <svg viewBox="0 0 32 32" aria-hidden="true">
-                                            <path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path>
-                                       </svg>
-                                  </span>
-                             </div>
-                             <span class="question-choice-content__Text">
-                                   <span class="break-long-words__WordBreak">${choice.answer}</span>
-                             </span>
-                        </button>
-                     `;
-                    }).join('')}
-                    </div>
-                          <div class="bottom-bar__BottomBar">
-                              ${checkIsShowAvatar}
-                              <div class="bottom-bar__NameWrapper">
-                                   <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
-                              </div>
-                              <div class="bottom-bar-score">${scores}</div>
-                         </div>
-                     </main>`);
-        } else {
-            $(".instructions__PageWrapper").append(`<main class="question-results__PageWrapper">
+        if (storedData.quizOption.isShowQAndA == true) {
+            if (questionCurrent.typeQuestion != "input_answer") {
+                $(".instructions__PageWrapper").append(`<main class="question-results__PageWrapper">
                                             <div class="top-bar__TopBar">
                                                 <div class="top-bar__TitleWrapper">
                                                     <section class="top-bar__Title">
@@ -729,13 +665,41 @@
                                                 </div>
                                                 <div class="quiz-question__RightContent">
                                                     <div class="answer-counter__AnswerCounter">
+                                                        ${questionCurrent.typeAnswer === 2 ? `<button class="submit-answer" onclick="submitAnswerChoose(${questionCurrent.id})">Nộp đáp án</button>` : ""}
                                                     </div>
                                                 </div>
                                             </header>
-                                    <div class="question-results__QuestionChoices" style="align-items:center;flex-direction:column;">
-                                        <div class="card-answer" id="anwer-input" contenteditable="true" data-placeholder="Nhập đáp án..."></div>
-                                        <button class="submit-answer" style="max-width:100px" onclick="submitInputAnswer(${questionCurrent.id})">Nộp đáp án</button>
-                                </div>
+                                            <div class="question-results__QuestionChoices">
+                                                    ${choices.map(choice => {
+                    // Sự kiện `onclick` động cho từng câu trả lời
+                    const isChooseAnswer = questionCurrent.typeAnswer === 1
+                        ? `SubmitAnswer(${choice.id}, ${questionCurrent.id})`
+                        : `chooseAnswer(${choice.id})`;
+
+                    return `
+                         <button class="card__PassiveCardChoice choice-item" onclick="${isChooseAnswer}">
+                             ${questionCurrent.typeAnswer === 2 ? `
+                                 <div class="choice__CornerCheck">
+                                      <span class="icon__Icon">
+                                           <svg style="margin: 4px auto;" viewBox="0 0 32 32" aria-hidden="true">
+                                                <path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: #fff;"></path>
+                                           </svg>
+                                      </span>
+                                 </div>` : ""}
+                                 <div class="card-icon__IconWrapper">
+                                      <span class="icon__Icon" style="width: 5.95733vmin; height: 5.95733vmin;">
+                                           <svg viewBox="0 0 32 32" aria-hidden="true">
+                                                <path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path>
+                                           </svg>
+                                      </span>
+                                 </div>
+                                 <span class="question-choice-content__Text">
+                                       <span class="break-long-words__WordBreak">${choice.answer}</span>
+                                 </span>
+                            </button>
+                         `;
+                }).join('')}
+                        </div>
                               <div class="bottom-bar__BottomBar">
                                   ${checkIsShowAvatar}
                                   <div class="bottom-bar__NameWrapper">
@@ -744,8 +708,136 @@
                                   <div class="bottom-bar-score">${scores}</div>
                              </div>
                          </main>`);
+            } else {
+                $(".instructions__PageWrapper").append(`<main class="question-results__PageWrapper">
+                                                <div class="top-bar__TopBar">
+                                                    <div class="top-bar__TitleWrapper">
+                                                        <section class="top-bar__Title">
+                                                            <div class="question-title__TitleWrapper">
+                                                                <span class="question-title__Title">${questionCurrent.questionText}</span>
+                                                            </div>
+                                                        </section>
+                                                    </div>
+                                                </div>
+                                                <header class="styles__TopContent">
+                                                    <div class="countdown__CountdownWrapper">
+                                                    <div class="question-countdown__count"></div>
+                                                    </div>
+                                                    <div class="question-media__QuestionMedia">
+                                                        <div class="question-image__ImageWrapper">
+                                                            <div class="question-image__MediaImageWrapper">
+                                                               ${checkImg}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="quiz-question__RightContent">
+                                                        <div class="answer-counter__AnswerCounter">
+                                                        </div>
+                                                    </div>
+                                                </header>
+                                        <div class="question-results__QuestionChoices" style="align-items:center;flex-direction:column;">
+                                            <div class="card-answer" id="anwer-input" contenteditable="true" data-placeholder="Nhập đáp án..."></div>
+                                            <button class="submit-answer" style="max-width:100px" onclick="submitInputAnswer(${questionCurrent.id})">Nộp đáp án</button>
+                                    </div>
+                                  <div class="bottom-bar__BottomBar">
+                                      ${checkIsShowAvatar}
+                                      <div class="bottom-bar__NameWrapper">
+                                           <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                      </div>
+                                      <div class="bottom-bar-score">${scores}</div>
+                                 </div>
+                             </main>`);
+            }
+            checkImgEffect == true ? applyGridRevealEffect(parseInt(questionCurrent.imageEffect), questionCurrent.time * 1000) : "";
+        } else {
+            if (questionCurrent.typeQuestion != "input_answer") {
+                $(".instructions__PageWrapper").append(`<main class="question-results__PageWrapper">
+                                                <header class="styles__TopContent">
+                                                    <div class="countdown__CountdownWrapper">
+                                                    <div class="question-countdown__count"></div>
+                                                    </div>
+                                                    <div class="question-media__QuestionMedia">
+                                                        <div class="question-image__ImageWrapper">
+                                                            <div class="question-image__MediaImageWrapper">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="quiz-question__RightContent">
+                                                        <div class="answer-counter__AnswerCounter">
+                                                            ${questionCurrent.typeAnswer === 2 ? `<button class="submit-answer" onclick="submitAnswerChoose(${questionCurrent.id})">Nộp đáp án</button>` : ""}
+                                                        </div>
+                                                    </div>
+                                                </header>
+                                                <div class="question-results__QuestionChoices">
+                    ${choices.map(choice => {
+                    // Sự kiện `onclick` động cho từng câu trả lời
+                    const isChooseAnswer = questionCurrent.typeAnswer === 1
+                        ? `SubmitAnswer(${choice.id}, ${questionCurrent.id})`
+                        : `chooseAnswer(${choice.id})`;
+
+                    return `
+                             <button class="card__PassiveCardChoice choice-item" onclick="${isChooseAnswer}">
+                                 ${questionCurrent.typeAnswer === 2 ? `
+                                     <div class="choice__CornerCheck">
+                                          <span class="icon__Icon">
+                                               <svg style="margin: 4px auto;" viewBox="0 0 32 32" aria-hidden="true">
+                                                    <path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: #fff;"></path>
+                                               </svg>
+                                          </span>
+                                     </div>` : ""}
+                                     <div class="card-icon__IconWrapper">
+                                          <span class="icon__Icon" style="width: 5.95733vmin; height: 5.95733vmin;">
+                                               <svg viewBox="0 0 32 32" aria-hidden="true">
+                                                    <path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path>
+                                               </svg>
+                                          </span>
+                                     </div>
+                                     <span class="question-choice-content__Text">
+                                           <span class="break-long-words__WordBreak">${choice.answer}</span>
+                                     </span>
+                                </button>
+                             `;
+                }).join('')}
+                            </div>
+                                  <div class="bottom-bar__BottomBar">
+                                      ${checkIsShowAvatar}
+                                      <div class="bottom-bar__NameWrapper">
+                                           <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                      </div>
+                                      <div class="bottom-bar-score">${scores}</div>
+                                 </div>
+                             </main>`);
+            } else {
+                $(".instructions__PageWrapper").append(`<main class="question-results__PageWrapper">
+                                                    <header class="styles__TopContent">
+                                                        <div class="countdown__CountdownWrapper">
+                                                        <div class="question-countdown__count"></div>
+                                                        </div>
+                                                        <div class="question-media__QuestionMedia">
+                                                            <div class="question-image__ImageWrapper">
+                                                                <div class="question-image__MediaImageWrapper">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="quiz-question__RightContent">
+                                                            <div class="answer-counter__AnswerCounter">
+                                                            </div>
+                                                        </div>
+                                                    </header>
+                                            <div class="question-results__QuestionChoices" style="align-items:center;flex-direction:column;">
+                                                <div class="card-answer" id="anwer-input" contenteditable="true" data-placeholder="Nhập đáp án..."></div>
+                                                <button class="submit-answer" style="max-width:100px" onclick="submitInputAnswer(${questionCurrent.id})">Nộp đáp án</button>
+                                        </div>
+                                      <div class="bottom-bar__BottomBar">
+                                          ${checkIsShowAvatar}
+                                          <div class="bottom-bar__NameWrapper">
+                                               <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                          </div>
+                                          <div class="bottom-bar-score">${scores}</div>
+                                     </div>
+                                 </main>`);
+            }
         }
-        checkImgEffect == true ? applyGridRevealEffect(parseInt(questionCurrent.imageEffect), questionCurrent.time * 1000) : "";
         startCountdown('.question-countdown__count', timeCountDown ?? questionCurrent.time);
     }
     function chooseAnswer(value) {
@@ -856,83 +948,86 @@
                                                         <img src="/src/img/eyes-blink.gif" />
                                                     </div>
                                                 </div>` : "";
-        $("#avatar-current").remove();
         $(".bottom-bar__BottomBar").remove();
-        $(".avatar-content__AvatarMenuContainer").remove();
-        $(".instructions-with-avatar__TextContent").remove();
-        if (storedData.currentQuestionIndex == 1) {
-            $(".instructions-with-avatar__PageMainContent").append(`<div class="instructions-with-avatar__TextContent">
-                    <h1 class="header-text__HeaderText">
-                        <span class="shadow-text__Container">
-                            <span class="shadow-text__HiddenText">Chuẩn bị!</span>
-                            <span class="shadow-text__Text">Chuẩn bị!</span>
-                            <span class="shadow-text__Shadow">Chuẩn bị!</span>
-                        </span>
-                    </h1>
-                    <div class="spinner__Container">
-                        <svg id="Layer_Loader" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 140 140" enable-background="new 0 0 140 140" xml:space="preserve" color="#fff" aria-label="Merci de patienter" data-functional-selector="spinner" class="spinner__Spinner-sc-r6rcac-1 civXet"><g><circle opacity="0" fill="#FFFFFF" cx="70" cy="70" r="70"></circle><g><path fill="#FFFFFF" d="M70,0C31.3,0,0,31.3,0,70h35c0-19.3,15.7-35,35-35s35,15.7,35,35h35C140,31.3,108.7,0,70,0z"></path></g></g></svg>
-                    </div>
-                    <h2 class="sub-header-text__SubHeaderText">
-                        <span class="shadow-text__Container">
-                            <span class="shadow-text__HiddenText">Đang tải...</span>
-                            <span class="shadow-text__Text">Đang tải...</span>
-                            <span class="shadow-text__Shadow">Đang tải...</span>
-                        </span>
-                    </h2>
-                </div>
-            `);
-            $(".instructions__PageWrapper").append(`<div class="bottom-bar__BottomBar">
-                                                ${checkIsShowAvatar}
-                                                <div class="bottom-bar__NameWrapper">
-                                                    <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
-                                                </div>
-                                                <div class="bottom-bar-score">${scores}</div>
-                                            </div>`)
-        }
-        setTimeout(() => {
-            $(".instructions-with-avatar__PageMainContent").remove();
-            $(".bottom-bar__BottomBar").remove();
+        $(".instructions-with-avatar__PageMainContent").remove();
+        if (!quizOption.isShowQAndA || storedData.currentQuestionIndex == 1) {
             $(".instructions__PageWrapper").append(`
-                    <main class="quiz__PageWrapper">
-                        <main class="styles__PageWrapper">
-                            <div class="styles__QuestionIntroWrapper">
-                                <div class="question-intro__QuestionCount">
-                                    ${storedData.currentQuestionIndex} trên ${quizOption.questionLength}
-                                </div>
-                                <div class="styles__QuestionContainer">
-                                    <div class="styles__AnimationContainer">
-                                        <div class="styles__Animation">
-                                            <div class="styles__AnimationImgWrapper">
-                                                <div class="styles__AnimationImgBlock">
-                                                     <img class="styles__AnimationImg" src="${getDefaultIcon(question.typeQuestion)}" />
+                    <main class="instructions-with-avatar__PageMainContent">
+                <div class="instructions-with-avatar__TextContent">
+                        <h1 class="header-text__HeaderText">
+                            <span class="shadow-text__Container">
+                                <span class="shadow-text__HiddenText">Chuẩn bị!</span>
+                                <span class="shadow-text__Text">Chuẩn bị!</span>
+                                <span class="shadow-text__Shadow">Chuẩn bị!</span>
+                            </span>
+                        </h1>
+                        <div class="spinner__Container">
+                            <svg id="Layer_Loader" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 140 140" enable-background="new 0 0 140 140" xml:space="preserve" color="#fff" aria-label="Merci de patienter" data-functional-selector="spinner" class="spinner__Spinner-sc-r6rcac-1 civXet"><g><circle opacity="0" fill="#FFFFFF" cx="70" cy="70" r="70"></circle><g><path fill="#FFFFFF" d="M70,0C31.3,0,0,31.3,0,70h35c0-19.3,15.7-35,35-35s35,15.7,35,35h35C140,31.3,108.7,0,70,0z"></path></g></g></svg>
+                        </div>
+                        <h2 class="sub-header-text__SubHeaderText">
+                            <span class="shadow-text__Container">
+                                <span class="shadow-text__HiddenText">Đang tải...</span>
+                                <span class="shadow-text__Text">Đang tải...</span>
+                                <span class="shadow-text__Shadow">Đang tải...</span>
+                            </span>
+                        </h2>
+                    </div>
+                  </main>
+                  <div class="bottom-bar__BottomBar">
+                                                    ${checkIsShowAvatar}
+                                                    <div class="bottom-bar__NameWrapper">
+                                                        <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                                    </div>
+                                                    <div class="bottom-bar-score">${scores}</div>
                                                 </div>
-                                                <div class="styles__WrapperBlock">${getDefaultTitle(question.typeQuestion)}</div>
+                `);
+        }
+        if (quizOption.isShowQAndA == true) {
+            setTimeout(() => {
+                $(".instructions-with-avatar__PageMainContent").remove();
+                $(".bottom-bar__BottomBar").remove();
+                $(".instructions__PageWrapper").append(`
+                        <main class="quiz__PageWrapper">
+                            <main class="styles__PageWrapper">
+                                <div class="styles__QuestionIntroWrapper">
+                                    <div class="question-intro__QuestionCount">
+                                        ${storedData.currentQuestionIndex} trên ${quizOption.questionLength}
+                                    </div>
+                                    <div class="styles__QuestionContainer">
+                                        <div class="styles__AnimationContainer">
+                                            <div class="styles__Animation">
+                                                <div class="styles__AnimationImgWrapper">
+                                                    <div class="styles__AnimationImgBlock">
+                                                         <img class="styles__AnimationImg" src="${getDefaultIcon(question.typeQuestion)}" />
+                                                    </div>
+                                                    <div class="styles__WrapperBlock">${getDefaultTitle(question.typeQuestion)}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="block-title__Container styles_BlockTitle">
+                                            <div class="block-title__Wrapper">
+                                                    <h1 class="block-title__Title">${question.questionText}</h1>
+                                            </div>
+                                        </div>
+                                        <div class="styles__LoadingWrapper">
+                                            <div class="loading-bar__Bar">
+                                                <div class="loading-bar__ProgressMeter"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="block-title__Container styles_BlockTitle">
-                                        <div class="block-title__Wrapper">
-                                                <h1 class="block-title__Title">${question.questionText}</h1>
-                                        </div>
-                                    </div>
-                                    <div class="styles__LoadingWrapper">
-                                        <div class="loading-bar__Bar">
-                                            <div class="loading-bar__ProgressMeter"></div>
-                                        </div>
-                                    </div>
                                 </div>
-                            </div>
+                            </main>
                         </main>
-                    </main>
-                        <div class="bottom-bar__BottomBar">
-                                                ${checkIsShowAvatar}
-                                                <div class="bottom-bar__NameWrapper">
-                                                    <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                            <div class="bottom-bar__BottomBar">
+                                                    ${checkIsShowAvatar}
+                                                    <div class="bottom-bar__NameWrapper">
+                                                        <span class="bottom-bar__NicknameSection">@ViewBag.Player.Nickname</span>
+                                                    </div>
+                                                    <div class="bottom-bar-score">${scores}</div>
                                                 </div>
-                                                <div class="bottom-bar-score">${scores}</div>
-                                            </div>
-                    `);
-        }, storedData.currentQuestionIndex == 1? 7500 : 0)
+                        `);
+            }, storedData.currentQuestionIndex == 1 ? 7500 : 0)
+        }
     });
 
     connection.on("RoomNotFound", function (exists) {

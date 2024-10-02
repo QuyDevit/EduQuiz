@@ -22,6 +22,7 @@ namespace EduQuiz.DatabaseContext
         public DbSet<QuizSession> QuizSessions { get; set; }
         public DbSet<PlayerSession> PlayerSessions { get; set; }
         public DbSet<PlayerAnswer> PlayerAnswers { get; set; }
+        public DbSet<QuizSessionQuestion> QuizSessionQuestions { get; set; }
 
         // Cấu hình mô hình khi tạo bảng và quan hệ
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -31,16 +31,12 @@ namespace EduQuiz.Controllers
         [Route("playquiz")]
         public async Task<IActionResult> PlayGame(string connectId)
         {
-            var checkPlayer = await _context.PlayerSessions.Include(q => q.QuizSession).FirstOrDefaultAsync(c=>c.ConnectionId == connectId);
+            var checkPlayer = await _context.PlayerSessions.Include(q => q.QuizSession).ThenInclude(p=>p.EduQuiz).ThenInclude(p=>p.Theme).FirstOrDefaultAsync(c=>c.ConnectionId == connectId);
             if (checkPlayer == null)
             {
                 return RedirectToAction("Index", "UserPlayEduQuiz");
             }
             ViewBag.Player = checkPlayer;
-            return View();
-        }
-        public IActionResult Test()
-        {
             return View();
         }
         public async Task <IActionResult> CheckPinGame(string pin)

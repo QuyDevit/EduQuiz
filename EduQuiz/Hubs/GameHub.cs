@@ -173,6 +173,14 @@ namespace EduQuiz.Hubs
                     }).ToList() : []
                 };
                 int timeRemaining = questionNotChoiceIscorrect.Time ?? 30;
+                var questionOrder = new QuizSessionQuestion
+                {
+                    QuizSessionId = quizOption.QuizSessionId,
+                    QuestionId = question.Id,
+                    Order = i + 1
+                };
+                _context.QuizSessionQuestions.Add(questionOrder);
+                await _context.SaveChangesAsync();
 
                 // Gửi câu hỏi cho các client
                 await Clients.Group(pin).SendAsync("SendQuestion", quizOption, questionNotChoiceIscorrect);
@@ -240,7 +248,10 @@ namespace EduQuiz.Hubs
                        Nickname = n.Nickname,
                        TotalScore = n.TotalScore
                    }).OrderByDescending(q => q.TotalScore).ToListAsync();
-
+            var updateQuizSession = await _context.QuizSessions.FindAsync(quizOption.QuizSessionId);
+            updateQuizSession.EndTime = DateTime.Now;
+            updateQuizSession.IsActive = false;
+            await _context.SaveChangesAsync();
             WaitingRoomPlayers.Remove(pin);
             HostConnections.Remove(pin);
             RoomLockStatus.Remove(pin);
@@ -272,6 +283,16 @@ namespace EduQuiz.Hubs
                     DisplayOrder = c.DisplayOrder
                 }).ToList() : []
             };
+            int currentQuestionIndex = QuestionStates.ContainsKey(pin) ? QuestionStates[pin].CurrentQuestionIndex + 1 : 1;
+            var questionOrder = new QuizSessionQuestion
+            {
+                QuizSessionId = quizOption.QuizSessionId,
+                QuestionId = question.Id,
+                Order = currentQuestionIndex
+            };
+            _context.QuizSessionQuestions.Add(questionOrder);
+            await _context.SaveChangesAsync();
+
             await Clients.Group(pin).SendAsync("SendQuestion", quizOption, questionNotChoiceIscorrect); // Gửi câu hỏi cho các client
             List<int> listaskedquestion = AskedQuestions[pin];
             
@@ -601,7 +622,10 @@ namespace EduQuiz.Hubs
                        Nickname = n.Nickname,
                        TotalScore = n.TotalScore
                    }).OrderByDescending(q => q.TotalScore).ToListAsync();
-
+                var updateQuizSession = await _context.QuizSessions.FindAsync(option.QuizSessionId);
+                updateQuizSession.EndTime = DateTime.Now;
+                updateQuizSession.IsActive = false;
+                await _context.SaveChangesAsync();
                 WaitingRoomPlayers.Remove(pin);
                 HostConnections.Remove(pin);
                 RoomLockStatus.Remove(pin);
@@ -661,7 +685,7 @@ namespace EduQuiz.Hubs
                 }
                 // Kiểm tra gói subscription của người tổ chức quiz
                 var checkQuiz = await _context.QuizSessions
-                    .Include(q => q.HostUser) // Eager load the HostUser entity
+                    .Include(q => q.HostUser) 
                     .FirstOrDefaultAsync(q => q.Id == idquizsession);
 
                 // Nếu là gói 'free', kiểm tra số lượng người chơi trong phòng
@@ -732,20 +756,21 @@ namespace EduQuiz.Hubs
                 var checkquiz= await _context.QuizSessions.FindAsync(idQuizSession);
                 if (checkquiz != null && checkquiz.IsWaitingRoom)
                 {
-                    // Xóa tất cả các PlayerSession của phòng trước
                     var getlistplayer = await _context.PlayerSessions
                         .Where(p => p.IsPlayer == false && p.QuizSessionId == idQuizSession).ToListAsync();
                     if (getlistplayer.Any())
                     {
                         _context.PlayerSessions.RemoveRange(getlistplayer);
                     }
-
-                    // Xóa QuizSession
                     _context.QuizSessions.Remove(checkquiz);
-
-                    // Lưu thay đổi vào cơ sở dữ liệu
-                    await _context.SaveChangesAsync();
                 }
+                else
+                {
+                    checkquiz.EndTime = DateTime.Now;
+                    checkquiz.IsActive = false;
+                }
+                // Lưu thay đổi vào cơ sở dữ liệu
+                await _context.SaveChangesAsync();
                 WaitingRoomPlayers.Remove(pin);
                 HostConnections.Remove(pin);
 

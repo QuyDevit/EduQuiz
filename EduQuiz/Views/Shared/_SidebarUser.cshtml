@@ -39,8 +39,8 @@
                 </a>
             </li>
             
-            <li>
-                <a href="./notifications.html">
+            <li class="@(string.IsNullOrEmpty(currentPath) || currentPath.StartsWith("/reports") ? "active" : "")">
+                <a href ="@Url.Action("Index", "Reports")">
                     <i class="nc-icon nc-chart-bar-32"></i>
                     <p>Báo cáo</p>
                 </a>

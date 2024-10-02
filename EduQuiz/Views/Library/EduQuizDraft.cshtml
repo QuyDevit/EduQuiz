@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "_LayoutUser";
+    ViewBag.Title = "EduQuiz bản nháp";
     @model ICollection<EduQuiz.Models.EF.EduQuiz>;
     @using Newtonsoft.Json;
     var userInfo = JsonConvert.DeserializeObject<dynamic>(ViewBag.Data);

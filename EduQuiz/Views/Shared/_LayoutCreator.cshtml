@@ -792,6 +792,7 @@
             updateMusicInfo(eduquizdata.MusicId);
             eduquizdata.Visibility == true ? $("#radio2").prop("checked", true) : $("#radio1").prop("checked", true);
             eduquizdata.Description != "" ? $("#eduquizDescription").val(eduquizdata.Description) : "";
+            imgCoverSetting = eduquizdata.ImageCover == "" ? "/src/img/EduQuizDefault.png" : eduquizdata.ImageCover;
         }
         function saveSettingEduQuiz() {
             eduquizdata.Title = $("#eduquizTitle").val();

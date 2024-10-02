@@ -30,7 +30,7 @@ namespace EduQuiz.Controllers
         [Route("play")]
         public async Task<IActionResult> Lobby(Guid quizId)
         {
-            var getquiz = await _context.EduQuizs.FirstOrDefaultAsync(f => f.Uuid == quizId);
+            var getquiz = await _context.EduQuizs.Include(p => p.Theme).FirstOrDefaultAsync(f => f.Uuid == quizId);
             if (getquiz == null)
             {
                 return RedirectToAction("Index", "HomeDashboard");
@@ -39,7 +39,7 @@ namespace EduQuiz.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GenerateQRCode(int quizid)
+        public async Task<IActionResult> GenerateQRCode(int quizid,string title)
         {
             var authCookie = Request.Cookies["acToken"];
             int hostUserId = 0;
@@ -59,12 +59,14 @@ namespace EduQuiz.Controllers
                 HostUserId = hostUserId,
                 Pin = pin,
                 StartTime = DateTime.Now,
+                Title = title,
                 IsActive = true,
-                IsWaitingRoom = true // Đánh dấu là sảnh chờ
+                IsWaitingRoom = true, // Đánh dấu là sảnh chờ,
+                IsShowQuestionAndAnswer = true,
             };
             _context.QuizSessions.Add(quizSession);
             await _context.SaveChangesAsync();
-            string url = $"{Request.Scheme}://{Request.Host}{Url.Action("Index", "UserPlayEduQuiz", new { pin = pin })}";
+            string url = $"{Request.Scheme}://{Request.Host}{Url.Action("JoinGame", "UserPlayEduQuiz", new { pin = pin })}";
             var qrGenerator = new QRCodeGenerator();
             var qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
             var qrCode = new QRCode(qrCodeData);
