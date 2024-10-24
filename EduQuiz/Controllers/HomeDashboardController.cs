@@ -1,4 +1,5 @@
 ﻿using EduQuiz.DatabaseContext;
+using EduQuiz.Helper;
 using EduQuiz.Models;
 using EduQuiz.Models.EF;
 using EduQuiz.Security;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Text;
 using BcryptNet = BCrypt.Net.BCrypt;
 
@@ -25,23 +27,115 @@ namespace EduQuiz.Controllers
             _cookieAuth = cookieAuth;
         }
         [Route("")]
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var authCookie = Request.Cookies["acToken"];
 
-            if (authCookie != null)
+            if (authCookie == null)
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
-                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-                // Sử dụng các giá trị trong logic của bạn
-                var iduser = int.Parse(userId ?? "1");
-                var user = await _context.Users.FindAsync(iduser);
-                return View(user);
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var avatar = jwtToken.Claims.FirstOrDefault(c => c.Type == "Avatar")?.Value;
+            var username = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserName")?.Value;
+            var iduser = int.Parse(userId ?? "1");
+
+            var user = await _context.Users.FindAsync(iduser);
+
+            var listGroupbyUserOwner = await _context.Groups
+                .Where(g => g.UserId == iduser)
+                .Select(n => new HomeGroupView
+                {
+                    Id = n.Id,
+                    Name = n.Name,
+                    SumMember = _context.GroupMembers.Count(c => c.GroupId == n.Id),
+                    Uuid = n.Uuid,
+                }).ToListAsync();
+
+            var listGroupbyUserJoin = await _context.GroupMembers
+              .Where(gm => gm.UserId == iduser)
+              .Join(_context.Groups, gm => gm.GroupId, g => g.Id, (gm, g) => new HomeGroupView
+              {
+                  Id = g.Id,
+                  Name = g.Name,
+                  SumMember = _context.GroupMembers.Count(c => c.GroupId == g.Id),
+                  IsHost = g.UserId == iduser,
+                  Uuid = g.Uuid,
+              }).ToListAsync();
+
+            var groupIds = listGroupbyUserJoin.Select(g => g.Id).ToList();
+
+            var listAssignmentbyUser = await (from ag in _context.AssignmentGroups
+                                              join q in _context.QuizSessions on ag.QuizSessionId equals q.Id
+                                              join e in _context.EduQuizs on ag.EduQuizId equals e.Id
+                                              join u in _context.Users on e.UserId equals u.Id
+                                              where groupIds.Contains(ag.GroupId ?? 0) && DateTime.Now < q.EndTime
+                                              select new HomeAssignmentView
+                                              {
+                                                  Id = ag.Id,
+                                                  Pin = q.Pin,
+                                                  Deadline = CalculateHelper.ConvertDeadline(q.EndTime ?? DateTime.Now),
+                                                  Image = e.ImageCover,
+                                                  Title = e.Title,
+                                                  SumQuestion = _context.Questions.Count(q => q.EduQuizId == e.Id),
+                                                  UserName = u.Username
+                                              }).ToListAsync();
+
+            var listEduQuizbyUser = await _context.EduQuizs
+                .Where(g => g.UserId == iduser)
+                .Select(n => new HomeEduQuizView
+                {
+                    Id = n.Id,
+                    Uuid = n.Uuid,
+                    Title = n.Title,
+                    Image = n.ImageCover,
+                    Avatar = avatar,
+                    UserName = username,
+                    SumPlay = _context.QuizSessions.Count(p => p.EduQuizId == n.Id),
+                    SumQuestion = _context.Questions.Count(q => q.EduQuizId == n.Id)
+                }).Take(5).ToListAsync();
+
+            var listEduQuizHot = await _context.EduQuizs.Include(n=>n.User)
+                .Select(n => new HomeEduQuizView
+                {
+                    Id = n.Id,
+                    Uuid = n.Uuid,
+                    Title = n.Title,
+                    Image = n.ImageCover,
+                    Avatar = n.User.ProfilePicture,
+                    UserName = n.User.Username,
+                    SumPlay = _context.QuizSessions.Count(p => p.EduQuizId == n.Id),
+                    SumQuestion = _context.Questions.Count(q => q.EduQuizId == n.Id)
+                }).OrderByDescending(n => n.SumPlay).Take(5).ToListAsync();
+
+            var listReportbyUser = await _context.QuizSessions
+                .Where(r => r.HostUserId == iduser)
+                .Select(n => new HomeReportView
+                {
+                    Id = n.Id,
+                    ReportDate = StringHelper.ConvertDateTimeToCustomString(n.StartTime ?? DateTime.Now),
+                    Title = n.Title,
+                    Pin = n.Pin,
+                }).OrderByDescending(n => n.Id).Take(5).ToListAsync();
+
+            var view = new HomeViewModel
+            {
+                ListAssignment = listAssignmentbyUser,
+                ListEduQuiz = listEduQuizHot,
+                ListEduQuizOwner = listEduQuizbyUser,
+                ListGroupJoin = listGroupbyUserJoin.Where(n => n.IsHost == false).ToList(),
+                ListGroupOwner = listGroupbyUserOwner,
+                User = user,
+                ListReport = listReportbyUser
+            };
+
+            return View(view);
         }
-        
+
+
         [Route("user/profile")]
         public async Task<IActionResult> SettingInfo()
         {

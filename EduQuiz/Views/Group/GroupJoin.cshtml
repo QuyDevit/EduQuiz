@@ -1,0 +1,96 @@
+﻿@{
+    Layout = "_LayoutAuth";
+    ViewBag.Title = "Lời mời vào nhóm";
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+    var slug = currentPath.Split("/")[currentPath.Split("/").Length - 2];
+}
+<style>
+    .landing-page__Card{
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        max-width: 448px;
+        box-sizing: border-box;
+        background-color: rgb(255, 255, 255);
+        border-radius: 4px;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    }
+
+    .landing-page__Title{
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin:0;
+    }
+
+    .landing-page__Description {
+        color: rgb(51, 51, 51);
+        line-height: 1.71;
+        text-align: center;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+        max-width: 23rem;
+        margin-bottom:0;
+    }
+
+    .landing-page__ButtonContainer{
+        display: flex;
+        margin-top: 2rem;
+    }
+
+    button:focus{
+        box-shadow:none !important;
+    }
+</style>
+
+<div class="landing-page__Card">
+    <h1 class="landing-page__Title">Lời mời tham gia nhóm của bạn đã sẵn sàng! 😊</h1>
+    <img style="margin-top:16px;" src="/src/img/invite-group.png"/>
+    <p class="landing-page__Description">Chấp nhận lời mời và tham gia nhóm ngay.</p>
+    <div class="landing-page__ButtonContainer">
+        <button class="btn" style="background-color:rgb(242, 242, 242);color:#000;margin-right:8px;" onclick="Cancel()">Hủy bỏ</button>
+        <button class="btn" style="background-color:rgb(38, 137, 12);" onclick="RedirectAction()">Chấp nhận lời mời</button>
+    </div>
+</div>
+<script>
+    const hasAccount = `@ViewBag.HasAccount`;
+    function RedirectAction(){
+        if (hasAccount == "False") {
+            window.location.href = '/auth/login';
+        } else {
+            $.ajax({
+                typeof: "POST",
+                url: "@Url.Action("AddMemberGroup", "Group")",
+                data: {
+                    groupid: "@ViewBag.Data.GroupId",
+                    userid: "@ViewBag.Data.UserId"
+                },
+                success: function (response) {
+                    if (response.redirectUrl) {
+                        Swal.fire({
+                            title: 'Hết phiên đăng nhập',
+                            text: 'Vui lòng đăng nhập lại',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = response.redirectUrl;
+                            }
+                        });
+                    } else {
+                        if (response.status == true) {
+                            window.location.href = '/groups/@slug/activity';
+                        }
+                    }
+                }
+            })
+        }
+    }
+    function Cancel() {
+        window.location.href = '/home';
+    }
+</script>

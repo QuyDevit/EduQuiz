@@ -48,6 +48,13 @@ namespace EduQuiz.Controllers
             return Json(new { status = true});
 
         }
+        public async Task<IActionResult> SaveFeedback(FeedbackQuizSession data)
+        {
+            _context.FeedbackQuizSessions.Add(data);
+            var result = await _context.SaveChangesAsync();
+           
+            return Json(new { status = result });
 
+        }
     }
 }

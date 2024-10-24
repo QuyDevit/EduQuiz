@@ -47,7 +47,7 @@
                         </div>
                     </div>
                    <div style="min-height:42px;margin-top:10px">
-                        <button type="button" class="btn" style="width:fit-content;background-color:rgb(183, 141, 0)">Bắt đầu chơi</button>
+                        <button type="button" class="btn" style="width:fit-content;background-color:rgb(183, 141, 0)" onclick="RedirectPlay(`@Model.Uuid`)">Bắt đầu chơi</button>
                    </div>
                     
                     <div class="EduQuiz-description__Wrapper">
@@ -227,32 +227,34 @@
         </div>
     </div>
 </div>
+<script>
+    function RedirectPlay(value) {
+        location.href = `/playmode?quizId=${value}`;
+    }
+    $(".styles__Group-Quesion-btn").click(function () {
+        let id = $(this).attr("data-question");
+        let $element = $(`#question-${id}`);
 
-@section scripts{
-    <script>
-        $(".styles__Group-Quesion-btn").click(function () {
-            let id = $(this).attr("data-question");
-            let $element = $(`#question-${id}`);
+        if ($element.hasClass("d-none")) {
+            $element.removeClass("d-none");
+        } else {
+            $element.addClass("d-none");
+        }
+    })
+    $(".header__ShowAnswers").click(function () {
+        let isHidden = $(this).hasClass("show-all");
+        if (isHidden) {
+            $(".styles__Choices-wrapper").each(function () {
+                $(this).addClass("d-none");
+            });
+            $(this).text("Hiển thị câu trả lời").removeClass("show-all");
+        } else {
+            $(".styles__Choices-wrapper").each(function () {
+                $(this).removeClass("d-none");
+            });
+            $(this).text("Ẩn câu trả lời").addClass("show-all");
+        }
+    });
+</script>
 
-            if ($element.hasClass("d-none")) {
-                $element.removeClass("d-none");
-            } else {
-                $element.addClass("d-none");
-            }
-        })
-        $(".header__ShowAnswers").click(function () {
-            let isHidden = $(this).hasClass("show-all"); 
-            if (isHidden) {
-                $(".styles__Choices-wrapper").each(function () {
-                    $(this).addClass("d-none");
-                });
-                $(this).text("Hiển thị câu trả lời").removeClass("show-all");
-            } else {
-                $(".styles__Choices-wrapper").each(function () {
-                    $(this).removeClass("d-none");
-                });
-                $(this).text("Ẩn câu trả lời").addClass("show-all");
-            }
-        });
-    </script>
-}
+    

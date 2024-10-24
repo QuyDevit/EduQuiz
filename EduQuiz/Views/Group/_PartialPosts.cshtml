@@ -1,0 +1,100 @@
+﻿
+@{
+    @model ICollection<EduQuiz.Models.PostData>;
+}
+
+@foreach(var post in Model)
+{
+    <div class="activity-card__Container">
+        <div class="activity-card__Header">
+            <div class="activity-card__InfoWrapper">
+                <img class="activity-card__InfoWrapper-Img" src="/src/img/profiles/ce146eab-cfa3-4bf9-9e55-6f206792a675_user.jpg" />
+                <span style="margin-left:4px;font-weight:600;">@post.UserName</span>
+                <span style="margin-left:4px;">đã đăng bài viết</span>
+            </div>
+            <div class="activity-card__InfoWrapper">
+                <span class="mr-2">@post.PostedDate</span>
+                @if(post.CurrentUser == post.UserCreate){
+                    <div class="actionmenu__Post">
+                        <button class="action-postBtn" data-target="#menu-post-@post.PostId">
+                            <span class="action-postIcon" style="width:24px;height:24px;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,10 C17.1045695,10 18,9.1045695 18,8 C18,6.8954305 17.1045695,6 16,6 C14.8954305,6 14,6.8954305 14,8 C14,9.1045695 14.8954305,10 16,10 Z M16,18 C17.1045695,18 18,17.1045695 18,16 C18,14.8954305 17.1045695,14 16,14 C14.8954305,14 14,14.8954305 14,16 C14,17.1045695 14.8954305,18 16,18 Z M16,26 C17.1045695,26 18,25.1045695 18,24 C18,22.8954305 17.1045695,22 16,22 C14.8954305,22 14,22.8954305 14,24 C14,25.1045695 14.8954305,26 16,26 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                            </span>
+                        </button>
+                        <ul id="menu-post-@post.PostId" class="group-action-menu__list d-none">
+                            <li class="menu__list-item">
+                                <button class="menu__list-itemBtn" data-target="@post.PostId">
+                                    <span class="menu__list-itemIcon">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M9,24 C9,25.103 9.897,26 11,26 L21,26 C22.103,26 23,25.103 23,24 L23,12 L9,12 L9,24 Z M11,14 L21,14 L21.001,24 L11,24 L11,14 Z M19,9 L25,9 L25,11 L7,11 L7,9 L13,9 L13,7 L19,7 L19,9 Z M13,16 L13,22 L15,22 L15,16 L13,16 Z M17,16 L17,22 L19,22 L19,16 L17,16 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                                    </span>
+                                    <p class="menu__list-itemTitle">Xóa bài viết</p>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="activity-card__Content">
+            <div>@post.Content</div>
+            @if(post.Image != "")
+            {
+                <div class="preview-img mt-3">
+                    <img src="@post.Image" />
+                </div>
+            }
+        </div>
+        <div class="interactions">
+            <div class="like-interactions__Wrapper">
+                <div id="post-@post.PostId">@post.SumLike Lượt thích</div>
+            </div>
+            <div class="like-interactions__Wrapper" style="border-top: 1px solid rgb(233, 233, 233);">
+                <button class="interaction__Wrapper @(post.IsLiked ?"liked" :"")" onclick="LikePost(this,@post.PostId)">
+                    <span class="style-Icons">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title>
+                            <path d="M25.768,12.359 C25.578,12.132 25.297,12 25,12 L19,12 L19,8 C19,7.448 18.553,7 18,7 L15,7 C14.6,7 14.238,7.238 14.081,7.605 L11.341,14 L11,14 C11,13.448 10.553,13 10,13 L6,13 C5.447,13 5,13.448 5,14 L5,24 C5,24.552 5.447,25 6,25 L10,25 C10.553,25 11,24.552 11,24 L11,23.478 L14.629,24.929 C14.746,24.976 14.873,25 15,25 L23,25 C23.483,25 23.897,24.654 23.984,24.179 L25.984,13.179 C26.037,12.887 25.957,12.587 25.768,12.359 Z M9,23 L7,23 L7,15 L9,15 L9,23 Z M22.166,23 L15.192,23 L11,21.323 L11,16 L12,16 C12.4,16 12.762,15.762 12.919,15.394 L15.659,9 L17,9 L17,13 C17,13.552 17.447,14 18,14 L23.802,14 L22.166,23 Z" style="fill: rgb(110, 110, 110);"></path>
+                        </svg>
+                    </span>
+                    <span style="font-weight:600;">Thích </span>
+                </button>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function LikePost(button,postid,groupid){
+        const isLiked = $(button).hasClass("liked");
+        if (isLiked) {
+            $(button).removeClass("liked");
+        } else {
+            $(button).addClass("liked");
+        }
+        $.ajax({
+            url: '@Url.Action("LikePost", "Group")',
+            type: 'POST',
+            data: { 
+                postid: postid
+            },
+            success: function (response) {
+                $(`#post-${postid}`).text(`${response.data} lượt thích`)
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX error:', status, error);
+            }
+        })
+    }
+    $(".action-postBtn").click(function (event) {
+        event.stopPropagation();
+        $(".group-action-menu__list").addClass("d-none");
+        var targetMenu = $(this).data("target");
+        $(targetMenu).toggleClass("d-none");
+    });
+
+    $(document).click(function (event) {
+        $(".group-action-menu__list").each(function () {
+            if (!$(this).is(event.target) && $(this).has(event.target).length === 0) {
+                $(this).addClass("d-none"); // Ẩn menu
+            }
+        });
+    });
+</script>

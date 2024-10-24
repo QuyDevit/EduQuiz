@@ -1,0 +1,143 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "chat";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Gemini</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        form {
+            margin: 2rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.5rem;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button:disabled {
+                background: #ccc;
+            }
+
+        #response-list {
+            list-style: none;
+            padding: 0;
+        }
+
+            #response-list li {
+                padding: 1rem;
+                background: #f8f9fa;
+                margin: 0.5rem 0;
+                border-radius: 4px;
+            }
+
+        .error {
+            background: #fee !important;
+            color: #c00;
+        }
+
+        .loading {
+            display: none;
+            margin: 1rem 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trò truyện với Gemini</h1>
+    <form id="chat-form">
+        <input type="text" id="user-input" name="user-input" placeholder="Enter your message" required>
+        <button type="submit">Gửi</button>
+    </form>
+    <div id="loading" class="loading">Đang suy nghĩ.</div>
+    <ul id="response-list"></ul>
+
+    <script>
+        $(document).ready(function () {
+            let isSubmitting = false;
+
+            $('#chat-form').on('submit', async function (event) {
+                event.preventDefault();
+
+                if (isSubmitting) return;
+
+                const userInput = $('#user-input').val();
+                const $button = $(this).find('button');
+                const $loading = $('#loading');
+
+                $('#response-list').append(`<li><strong>You:</strong> ${userInput}</li>`);
+                $('#user-input').val('');
+
+                isSubmitting = true;
+                $button.prop('disabled', true);
+                $loading.show();
+
+                try {
+                    const response = await $.ajax({
+                        url: '@Url.Action("Chat", "Home")',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            model: 'gemini-1.5-pro',
+                            max_tokens: 2048, 
+                            messages: [{
+                                role: 'user',
+                                content: userInput
+                            }]
+                        })
+                    });
+
+                    const jsonResponse = JSON.parse(response);
+
+                    // Lấy phần "text" từ phản hồi
+                    const assistantResponse = jsonResponse.candidates[0].content.parts[0].text;
+
+                    // Thêm kết quả vào danh sách phản hồi
+                    $('#response-list').append(
+                        `<li><strong>Assistant:</strong><pre>${assistantResponse}</pre></li>`
+                    );
+                } catch (error) {
+                    let errorMessage = 'Đã xảy ra lỗi khi kết nối với Gemini';
+
+                    try {
+                        const errorResponse = JSON.parse(error.responseText);
+                        errorMessage = errorResponse.error?.message || errorMessage;
+                    } catch (e) {
+                        errorMessage = error.statusText || errorMessage;
+                    }
+
+                    $('#response-list').append(
+                        `<li class="error">Error: ${errorMessage}</li>`
+                    );
+                } finally {
+                    isSubmitting = false;
+                    $button.prop('disabled', false);
+                    $loading.hide();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

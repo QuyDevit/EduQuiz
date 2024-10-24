@@ -25,7 +25,7 @@ namespace EduQuiz.Hubs
         private static Dictionary<string, List<int>> AskedQuestions = new Dictionary<string, List<int>>(); // Thêm từ điển để lưu các câu hỏi đã hỏi
         public async Task CreateRoom(string pin)
         {
-            // Kiểm tra xem phòng đã tồn tại chưa
+            // Kiểm tra xem phòng đã tồn tại chưa 
             if (!WaitingRoomPlayers.ContainsKey(pin))
             {
                 WaitingRoomPlayers[pin] = new List<PlayerData>();
@@ -646,7 +646,6 @@ namespace EduQuiz.Hubs
             }
             QuestionState questionState = QuestionStates[pin];
             await Clients.Caller.SendAsync("ReloadQuestion",questionState.CountDowntime.TotalSeconds, questionState.CurrentQuestionIndex);
-
         }
         // Kiểm tra phòng tồn tại khi người dùng nhập mã PIN
         public async Task CheckRoomExists(string pin)
@@ -773,7 +772,11 @@ namespace EduQuiz.Hubs
                 await _context.SaveChangesAsync();
                 WaitingRoomPlayers.Remove(pin);
                 HostConnections.Remove(pin);
-
+                RoomLockStatus.Remove(pin);
+                OptionQuizzes.Remove(pin);
+                QuestionStates.Remove(pin);
+                QuestionsRoom.Remove(pin);
+                AskedQuestions.Remove(pin);
 
                 // Gửi thông báo cho nhóm
                 await Clients.Group(pin).SendAsync("RoomDelete", true);
@@ -980,6 +983,10 @@ namespace EduQuiz.Hubs
                 Console.WriteLine($"Error adding player: {ex.Message}");
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
             }
+        }
+        public async Task GetFeedback(string pin)
+        {
+            await Clients.Group(pin).SendAsync("GetFeedback");
         }
     }
 }

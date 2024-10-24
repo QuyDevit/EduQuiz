@@ -1,0 +1,216 @@
+﻿@{
+    @using System.Web
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+    var slug = currentPath.Split("/")[currentPath.Split("/").Length - 1];
+}
+@model EduQuiz.Models.ReportDetail
+<div class="report-header__HeaderWrapper">
+    <section class="report-header__LeftPanel">
+        <div class="report-title__ReportTitle">
+            <div class="report-title__SubtitleWrapper">
+                <h2 class="report-title__Subtitle">Báo cáo</h2>
+                <div class="report-title__Menu">
+                    <div class="header__ActionMenu">
+                        <button id="action-menu" class="flat-button__FlatButton">
+                            <span>Tùy chọn báo cáo</span>
+                            <span class="icon__Icon" style="width:24px;height:24px">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,10 C17.1045695,10 18,9.1045695 18,8 C18,6.8954305 17.1045695,6 16,6 C14.8954305,6 14,6.8954305 14,8 C14,9.1045695 14.8954305,10 16,10 Z M16,18 C17.1045695,18 18,17.1045695 18,16 C18,14.8954305 17.1045695,14 16,14 C14.8954305,14 14,14.8954305 14,16 C14,17.1045695 14.8954305,18 16,18 Z M16,26 C17.1045695,26 18,25.1045695 18,24 C18,22.8954305 17.1045695,22 16,22 C14.8954305,22 14,22.8954305 14,24 C14,25.1045695 14.8954305,26 16,26 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                            </span>
+                        </button>
+                        <ul class="list-action__menu d-none">
+                            <li class="list-action__menu-item">
+                                <button class="styles__Button-menu" onclick="DownloadReport()">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M21.707,14.707 L20.293,13.293 L17,16.586 L17,6 L15,6 L15,16.586 L11.707,13.293 L10.293,14.707 L16,20.414 L21.707,14.707 Z M22,22 L22,24 L10,24 L10,22 L8,22 L8,24 C8,25.102 8.896,26 10,26 L22,26 C23.104,26 24,25.102 24,24 L24,22 L22,22 Z" style="fill: rgb(115, 115, 115);"></path></svg>
+                                    </span>
+                                    <p class="action-title">Tải xuống báo cáo</p>
+                                </button>
+                            </li>
+                            <li class="list-action__menu-item">
+                                <button class="styles__Button-menu" onclick="PrintReport()">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="m24 21.5-1 0 0-2-14 0 0 2-1 0 0-7c0-.552.449-1 1-1l0 2 14 0 0-2c.551 0 1 .448 1 1l0 7zm-3 4-10 0 0-4 10 0 0 4zm5-11c0-1.654-1.346-3-3-3l-2 0 0 2-10 0 0-2-2 0c-1.654 0-3 1.346-3 3l0 9 3 0 0 4 14 0 0-4 3 0 0-9zm-5 2c-.552 0-1 .448-1 1 0 .553.448 1 1 1 .552 0 1-.447 1-1 0-.552-.448-1-1-1m-10-10 10 0 0 4 2 0 0-6-14 0 0 6 2 0 0-4z" style="fill: rgb(115, 115, 115);"></path></svg>
+                                    </span>
+                                    <p class="action-title">In bản tóm tắt</p>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <h1 class="report-title__Title">
+                <span id="title-report">@Model.Title</span>
+                <button class="flat-button__FlatButton" style="margin-left:4px" data-toggle="modal" data-target="#modalReNameReport" onclick="SetName()">
+                    <span class="icon__Icon" style="width:32px;height:32px">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M23.4091683,8.594 C24.1731683,9.359 24.1731683,10.693 23.4091683,11.458 L22.6901683,12.178 L19.8241683,9.313 L20.5451683,8.594 C21.3101683,7.83 22.6441683,7.829 23.4091683,8.594 L23.4091683,8.594 Z M8.37616832,23.626 L8.97116832,21.252 L10.7501683,23.033 L8.37616832,23.626 Z M18.4111683,10.728 L21.2741683,13.591 L12.7061683,22.159 L9.84316832,19.296 L18.4111683,10.728 Z M24.8211683,7.179 C24.0611683,6.418 23.0501683,6 21.9741683,6 C20.9001683,6 19.8881683,6.418 19.1281683,7.179 L7.71916832,18.587 C7.71916832,18.587 7.71816832,18.59 7.71716832,18.591 C7.63616832,18.673 7.49716832,18.889 7.45616832,19.052 L6.03016832,24.757 C5.94416832,25.097 6.04516832,25.458 6.29316832,25.706 L6.29416832,25.707 L6.29616832,25.708 C6.54416832,25.956 6.90416832,26.057 7.24516832,25.972 L12.9491683,24.545 C13.1121683,24.504 13.3291683,24.365 13.4101683,24.284 C13.4111683,24.283 13.4141683,24.282 13.4141683,24.282 L24.8231683,12.873 C25.5831683,12.113 26.0021683,11.102 26.0011683,10.027 C26.0011683,8.951 25.5831683,7.941 24.8231683,7.18 L24.8211683,7.179 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                    </span>
+                </button>
+            </h1>
+        </div>
+        <ul class="list__List-Tabs">
+            <li class="item__ListItem">
+                <button onclick="Redirect(1)" class="tab__Tab @(currentPath.StartsWith("/reports/detail") && !currentPath.Contains("/player") && !currentPath.Contains("/question") && !currentPath.Contains("/feedback") ? " active" : "" )">
+                    <span class="tabs__Label">Bản tóm tắt</span>
+                </button>
+            </li>
+            <li class="item__ListItem">
+                <button onclick="Redirect(2)" class="tab__Tab @(currentPath.Contains("/player") ? " active" : "" )">
+                    <span class="tabs__Label">Người chơi(@Model.PlayerCount)</span>
+                </button>
+            </li>
+            <li class="item__ListItem">
+                <button onclick="Redirect(3)" class="tab__Tab @(currentPath.Contains("/question") ? " active" : "" )">
+                    <span class="tabs__Label">Câu hỏi(@Model.QuestionCount)</span>
+                </button>
+            </li>
+            <li class="item__ListItem">
+                <button onclick="Redirect(4)" class="tab__Tab  @(currentPath.Contains("/feedback") ? " active" : "" )">
+                    <span class="tabs__Label">Nhận xét</span>
+                </button>
+            </li>
+        </ul>
+    </section>
+    <section class="report-header__RightPanel">
+        <div class="report-info__ReportInfo">
+            <div class="report-summary-header">
+                <div class="game-type__Wrapper">
+                    <div class="game-type__WithEllipsis">Phiên chơi @Model.Type</div>
+                    <img class="game-type__Icon" src="/src/img/logo-quiz.png" />
+                </div>
+            </div>
+            <div class="report-summary-header">
+                <div class="game-type__Wrapper">
+                    <div class="game-type__WithEllipsis">@Model.StartTime</div>
+                </div>
+            </div>
+            <div class="report-summary-header">
+                <div class="game-type__Wrapper">
+                    <div class="game-type__WithEllipsis">Được tạo bởi @Model.NameHost</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="modal" id="modalReNameReport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border:none">
+                <h3 class="modal-title">Sửa tên Báo cáo</h3>
+            </div>
+            <div class="modal-body">
+                <span>Vui lòng nhập tên Báo cáo mới bên dưới</span>
+                <input style="padding:10px 16px;font-weight:600;color: #000;" id="rename" type="text" class="form-control mt-4" placeholder="Nhập tên báo cáo mới" value="">
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                <button type="button" class="btn " onclick="SaveName()" style="background-color:rgb(38, 137, 12)">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest("#action-menu, .list-action__menu").length) {
+            $(".list-action__menu").addClass("d-none");
+        }
+    });
+    $(document).on("click", "#action-menu", function () {
+        $(".list-action__menu").toggleClass("d-none");
+    })
+    function PrintReport() {
+        var url = "/reports/detail/print/@slug";
+        var newTab = window.open(url, '_blank');
+        newTab.focus();
+    }
+    function Redirect(type) {
+        switch (type) {
+            case 1: location.href = `/reports/detail/@slug`;
+                break;
+            case 2: location.href = `/reports/detail/player/all/@slug`; 
+                break;
+            case 3: location.href = `/reports/detail/question/all/@slug`;
+                break;
+            case 4: location.href = `/reports/detail/feedback/@slug`;
+                break;
+            default:
+                location.href = `/reports/detail/@slug`;
+        } 
+    }
+    function SetName() {
+        $("#rename").val($("#title-report").text());
+    }
+    function SaveName() {
+        var name = $("#rename").val();
+        if (name == "") {
+            openToast('info', 'Lỗi', 'Vui lòng nhập tên báo cáo!', 3000);
+            return;
+        }
+        $.ajax({
+            typeof: "POST",
+            url: "@Url.Action("SaveNameReport", "Reports")",
+            data: {
+                id: "@Model.QuizSessionId",
+                name: name
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        $("#title-report").text(name);
+                        $("#modalReNameReport").modal("hide")
+                    }
+                }
+            }
+        })
+    }
+    function DownloadReport(){
+        $.ajax({
+            typeof: "POST",
+            url: "@Url.Action("ExportReport", "Reports")",
+            data: {
+                id: "@Model.QuizSessionId"
+            },
+            xhrFields: {
+                responseType: 'blob' 
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    // Tạo blob từ response (đã định nghĩa 'blob')
+                    var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    var link = document.createElement('a');
+                    var url = window.URL.createObjectURL(blob);
+                    link.href = url;
+                    link.download = 'Report.xlsx';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                }
+            }
+        })
+    }
+
+</script>

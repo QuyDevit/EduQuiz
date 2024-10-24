@@ -1,0 +1,152 @@
+﻿@{
+    Layout = "_LayoutUser";
+    ViewBag.Title = "Báo cáo chi tiết";
+}
+@model EduQuiz.Models.ReportDetail
+<link href="~/src/css/js/datatable/datatables.min.css" rel="stylesheet" />
+<script src="~/src/css/js/datatable/datatables.min.js" defer></script>
+<link href="~/src/css/report.css" rel="stylesheet" />
+<div class="content">
+    <div class="layout-index" style="flex-direction:column;">
+        <partial name="_TabReport" model="@Model" />
+        <div class="report-detail-summary">
+            <div class="question-answers-table__TableWrapper" style="margin: 2rem 0;">
+                <partial name="_TabReportPlayer" />
+                <table id="tablePlayer" class="custom-mytable" style="padding: 0;">
+                    <thead>
+                        <tr>
+                            <th>Người chơi</th>
+                            <th style="text-align:center;">Xếp hạng</th>
+                            <th style="text-align:left;">Tỷ lệ chính xác</th>
+                            <th style="text-align:center;">Chưa trả lời</th>
+                            <th>Điểm cuối cùng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var player in Model.ReportPlayers)
+                        {
+                            <tr class="openmodal" onclick="OpenModalReportPlayer(@player.Id)">
+                                <td>@player.NickName</td>
+                                <td style="text-align:center;">@player.Rank</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress-icon__Wrapper" style="margin:0;height:54px;min-height:54px;width:54px;min-width:54px;justify-content:center;">
+                                            <svg style="transform: rotate(-90deg);" width="30" height="30" viewBox="0 0 30 30" class="progress-icon__DonutSvg-sc-8topvy-0 iPAjKU">
+                                                <circle stroke-dashoffset="0" stroke="#e21b3c" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="4"></circle>
+                                                <circle stroke-dashoffset="@player.ValueAccuracy" stroke="#fff" stroke-linecap="round" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="6"></circle>
+                                                <circle stroke-dashoffset="@player.ValueAccuracy" stroke="#26890c" stroke-linecap="round" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="4"></circle>
+                                            </svg>
+                                        </div>
+                                        <span>@player.Accuracy</span>
+                                    </div>
+                                </td>
+                                <td style="text-align:center;">@(player.Unanwered != 0 ? player.Unanwered : "--") </td>
+                                <td><span class="mr-3">@player.TotalScore</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#tablePlayer').DataTable({
+            "order": [[1, "asc"]]
+        });
+    });
+    const svgTrueFalse = [
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M12.926 22.652L8 17.725 9.767 15.957 12.841 19.031 21.959 9 23.808 10.682z" style="fill: rgb(38, 137, 12);"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(226, 27, 60);"></path></svg>'
+    ];
+    const svgOption = [
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M8.584 27 4 12.786 16 3.982 28 12.786 23.417 27z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M5 8L16 26.857 27 8z" style="fill: #fff;"></path></svg>'
+    ];
+
+    function OpenModalReportPlayer(value) {
+        $.ajax({
+            typeof: "POST",
+            url: "@Url.Action("GetReportbyPlayer", "Reports")",
+            data: {
+                idplayer: value,
+                quizsessionId: "@Model.QuizSessionId"
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        const data = response.data;
+                        $("#circle-player-white").attr("stroke-dashoffset", data.valueAccuracy);
+                        $("#circle-player-green").attr("stroke-dashoffset", data.valueAccuracy);
+                        $("#full-screen-modal-player .dialog__header_title").text(data.nickName);
+                        $(".player-detail-dialog__PrimaryLabel").text(data.accuracy);
+                        $("#ranked").text(data.rank);
+                        $("#player-answered").text(data.answered);
+                        $("#final-score").text(data.totalScore);
+                        if ($.fn.DataTable.isDataTable('#myTable')) {
+                            $('#myTable').DataTable().clear().destroy(); // Hủy bỏ DataTable cũ
+                        }
+                        $("#full-screen-modal-player #myTablePlayer tbody").empty();
+                        $("#full-screen-modal-player #myTablePlayer tbody").append(`
+                                    ${data.detailedAnswers.map((playeranswer) => `
+                                               <tr>
+                                                    <td>
+                                                        <div class="d-flex">
+                                                            <span style="margin-inline: 0.7rem 1.3rem;">${playeranswer.questionOrder}</span>
+                                                            <strong>${playeranswer.questionText}</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td>${playeranswer.typeQuestion}</td>
+                                                    <td>${playeranswer.answer}</td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="styles__IconWrapper" style="margin:0">
+                                                                <span class="icon__Icon" style="width:32px;height:32px">
+                                                                   ${playeranswer.isCorrect ? svgTrueFalse[0] : svgTrueFalse[1]}
+                                                                </span>
+                                                            </div>
+                                                                    <span>${playeranswer.isCorrect ? "Đúng" : "Sai"}</span>
+                                                        </div>
+                                                        </td>
+                                                        <td>${playeranswer.timeTaken != "--" ? playeranswer.timeTaken + " s" : "--"}</td>
+                                                    <td>${playeranswer.point}</td>
+                                                </tr>
+                                                `).join('')}
+                                `);
+                        $('#myTablePlayer').DataTable();
+                    }
+
+                }
+            }
+        })
+        $("#full-screen-modal-player").removeClass("d-none");
+        $("body").addClass("modal-open");
+    }
+    $(document).on("click", "#full-screen-modal-player .dialog__close-button", function () {
+        $('#full-screen-modal-player').addClass('d-none');
+        $("body").removeClass("modal-open");
+    });
+    $(document).on('click', function (event) {
+        if (!$(event.target).closest('.modal-custom__Report,.difficult-questions-card__QuestionCard,.openmodal').length) {
+            $('#full-screen-modal-question').addClass('d-none');
+            $('#full-screen-modal-player').addClass('d-none');
+            $("body").removeClass("modal-open");
+        }
+    });
+</script>

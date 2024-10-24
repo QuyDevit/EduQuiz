@@ -4,7 +4,7 @@
     @using Newtonsoft.Json;
     @using Microsoft.AspNetCore.Http
     @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
-    @model EduQuiz.Models.FolderModelView;
+    @model EduQuiz.Models.FolderViewModel;
     var userInfo = JsonConvert.DeserializeObject<dynamic>(ViewBag.Data);
     var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
     Guid idfolderCurrentPath;
@@ -69,7 +69,7 @@
                     </h3>
                     <div class="library-eduquiz__TextFilterWrapper">
                         <div class="styles__TextField">
-                           <select class="styles__selectField">
+                            <select class="styles__selectField" onchange="sortCards()">
                                 <option value="idDesc">Mới nhất</option>
                                 <option value="idAsc">Cũ nhất</option>
                                 <option value="titleAsc">Theo tên (a-z)</option>
@@ -154,7 +154,7 @@
                     </div>     
                         @foreach (var item in Model.EduQuizs)
                         {
-                            <div class="styles__BaseCard">
+                            <div class="styles__BaseCard" data-id="@item.Id">
                                 <div class="styles__CheckboxWrapper">
                                     <div class="checkbox__Wrapper">
                                         <input type="checkbox" class="checkbox item" data-id="@item.Id" />
@@ -347,7 +347,31 @@
             }
         });
     }
+    function sortCards() {
+        const sortOption = $(".styles__selectField").val();
+        const cards = $(".styles__BaseCard");
 
+        const sortedCards = cards.sort(function (a, b) {
+            const idA = $(a).data("id");
+            const idB = $(b).data("id");
+            const titleA = $(a).find(".styles__BaseCard_Body-title").text().toLowerCase();
+            const titleB = $(b).find(".styles__BaseCard_Body-title").text().toLowerCase();
+
+            switch (sortOption) {
+                case "idDesc":
+                    return idB - idA;
+                case "idAsc":
+                    return idA - idB;
+                case "titleAsc":
+                    return titleA.localeCompare(titleB);
+                case "titleDesc":
+                    return titleB.localeCompare(titleA);
+            }
+        });
+
+        $(".eduquiz-list__Content").html(sortedCards);
+    }
+    sortCards();
     function setdataFolder(idfolder,type){
         if (type == 1) {
             $(`#editnamefolder`).val(`@Html.Raw(foldercurrent.Name)`);

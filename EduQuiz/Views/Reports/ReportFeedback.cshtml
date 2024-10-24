@@ -1,0 +1,151 @@
+﻿@{
+    Layout = "_LayoutUser";
+    ViewBag.Title = "Báo cáo chi tiết";
+}
+@model EduQuiz.Models.ReportDetail
+<link href="~/src/css/js/datatable/datatables.min.css" rel="stylesheet" />
+<script src="~/src/css/js/datatable/datatables.min.js" defer></script>
+<link href="~/src/css/report.css" rel="stylesheet" />
+<div class="content">
+    <div class="layout-index" style="flex-direction:column;">
+        <partial name="_TabReport" model="@Model" />
+        <div class="report-detail-summary">
+            <div class="report-detail-feedback__FeedbackWrapper">
+                <div class="report-detail-feedback__TwoCardWrapper">
+                    <div class="report-detail-feedback__FeedbackBox">
+                        <div class="summary-card__Wrapper">
+                            <div class="summary-card__CardTitleWrapper">
+                                <h3 class="summary-card__ContentTitle">Đánh giá phiên chơi</h3>
+                            </div>
+                            <div class="summary-card__ContentWrapper">
+                                @if (ViewBag.Feedback.FlagRating)
+                                {
+                                    <div class="report-detail-feedback__ContentWrapper">
+                                        <span class="report-feedback__Info">Người chơi đánh giá EduQuiz này như thế nào trên 5?</span>
+                                        <div class="icon__Icon" style="width:100px;height:100px;align-self: center;position:relative">
+                                            <svg height="100px" width="100px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                 viewBox="0 0 47.94 47.94" xml:space="preserve">
+                                            <path style="fill:rgb(255, 192, 10);" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757
+                                                c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042
+                                                c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685
+                                                c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528
+                                                c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956
+                                                C22.602,0.567,25.338,0.567,26.285,2.486z" />
+                                            </svg>
+                                            <span class="feedback__RatingStar">@ViewBag.Feedback.Rating</span>
+                                        </div>
+                                    </div>
+                                }else{
+                                    <div class="report-feedback-empty">Không có người chơi nào phản hồi.</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report-detail-feedback__FeedbackBox">
+                        <div class="summary-card__Wrapper">
+                            <div class="summary-card__CardTitleWrapper">
+                                <h3 class="summary-card__ContentTitle">Kết quả học tập tích cực</h3>
+                            </div>
+                            <div class="summary-card__ContentWrapper">
+                                @if (ViewBag.Feedback.FlagLearning)
+                                {
+                                    <div class="report-detail-feedback__ContentWrapper">
+                                        <span class="report-feedback__Info">Người chơi có thích EduQuiz này không?</span>
+                                        <div class="report-detail-feedback__RowsWrapper">
+                                            <div class="report-detail-feedback__FeedbackRow">
+                                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 Z M21.8181818,17.0909091 C21.8181818,16.4 21.2727273,15.8181818 20.5818182,15.8181818 C21.2727273,15.8181818 21.8181818,15.2727273 21.8181818,14.5818182 C21.8181818,13.8909091 21.2727273,13.3454545 20.5818182,13.3454545 L15.6727273,13.3454545 L16.6181818,10.8363636 C17.1272727,9.45454545 16.4727273,7.96363636 15.1272727,7.45454545 C13.7818182,6.98181818 12.2909091,7.67272727 11.7818182,9.05454545 L10.1818182,13.3454545 L10.1818182,23.3090909 L15.4181818,23.3090909 L20.5818182,23.3090909 C21.2727273,23.3090909 21.8181818,22.7272727 21.8181818,22.0363636 C21.8181818,21.3454545 21.2727273,20.8 20.5818182,20.8 C21.2727273,20.8 21.8181818,20.2545455 21.8181818,19.5636364 C21.8181818,18.8727273 21.2727273,18.3272727 20.5818182,18.3272727 C21.2727273,18.3272727 21.8181818,17.7818182 21.8181818,17.0909091 Z" style="fill: #26890c;"></path></svg>
+                                                </span>
+                                                <span>@ViewBag.Feedback.CountYesLearning</span>
+                                            </div>
+                                            <div class="report-detail-feedback__FeedbackRow">
+                                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 Z M10.1818182,14.9090909 C10.1818182,15.6 10.7272727,16.1818182 11.4181818,16.1818182 C10.7272727,16.1818182 10.1818182,16.7272727 10.1818182,17.4181818 C10.1818182,18.1090909 10.7272727,18.6545455 11.4181818,18.6545455 L16.3272727,18.6545455 L15.3818182,21.1636364 C14.8727273,22.5454545 15.5272727,24.0363636 16.8727273,24.5454545 C18.2181818,25.0181818 19.7090909,24.3272727 20.2181818,22.9454545 L21.8181818,18.6545455 L21.8181818,8.69090909 L16.5818182,8.69090909 L11.4181818,8.69090909 C10.7272727,8.69090909 10.1818182,9.27272727 10.1818182,9.96363636 C10.1818182,10.6545455 10.7272727,11.2 11.4181818,11.2 C10.7272727,11.2 10.1818182,11.7454545 10.1818182,12.4363636 C10.1818182,13.1272727 10.7272727,13.6727273 11.4181818,13.6727273 C10.7272727,13.6727273 10.1818182,14.2181818 10.1818182,14.9090909 Z" style="fill: #e21b3c;"></path></svg>
+                                                </span>
+                                                <span>@ViewBag.Feedback.CountNoLearning</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }else{
+                                     <div class="report-feedback-empty">Không có người chơi nào phản hồi.</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-detail-feedback__TwoCardWrapper">
+                    <div class="report-detail-feedback__FeedbackBox">
+                        <div class="summary-card__Wrapper">
+                            <div class="summary-card__CardTitleWrapper">
+                                <h3 class="summary-card__ContentTitle">Lượt thích</h3>
+                            </div>
+                            <div class="summary-card__ContentWrapper">
+                                @if (ViewBag.Feedback.FlagLiked)
+                                {
+                                    <div class="report-detail-feedback__ContentWrapper">
+                                        <span class="report-feedback__Info">Người chơi có thích EduQuiz này không?</span>
+                                        <div class="report-detail-feedback__RowsWrapper">
+                                            <div class="report-detail-feedback__FeedbackRow">
+                                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 Z M21.8181818,17.0909091 C21.8181818,16.4 21.2727273,15.8181818 20.5818182,15.8181818 C21.2727273,15.8181818 21.8181818,15.2727273 21.8181818,14.5818182 C21.8181818,13.8909091 21.2727273,13.3454545 20.5818182,13.3454545 L15.6727273,13.3454545 L16.6181818,10.8363636 C17.1272727,9.45454545 16.4727273,7.96363636 15.1272727,7.45454545 C13.7818182,6.98181818 12.2909091,7.67272727 11.7818182,9.05454545 L10.1818182,13.3454545 L10.1818182,23.3090909 L15.4181818,23.3090909 L20.5818182,23.3090909 C21.2727273,23.3090909 21.8181818,22.7272727 21.8181818,22.0363636 C21.8181818,21.3454545 21.2727273,20.8 20.5818182,20.8 C21.2727273,20.8 21.8181818,20.2545455 21.8181818,19.5636364 C21.8181818,18.8727273 21.2727273,18.3272727 20.5818182,18.3272727 C21.2727273,18.3272727 21.8181818,17.7818182 21.8181818,17.0909091 Z" style="fill: #26890c;"></path></svg>
+                                                </span>
+                                                <span>@ViewBag.Feedback.CountYesLiked</span>
+                                            </div>
+                                            <div class="report-detail-feedback__FeedbackRow">
+                                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 Z M10.1818182,14.9090909 C10.1818182,15.6 10.7272727,16.1818182 11.4181818,16.1818182 C10.7272727,16.1818182 10.1818182,16.7272727 10.1818182,17.4181818 C10.1818182,18.1090909 10.7272727,18.6545455 11.4181818,18.6545455 L16.3272727,18.6545455 L15.3818182,21.1636364 C14.8727273,22.5454545 15.5272727,24.0363636 16.8727273,24.5454545 C18.2181818,25.0181818 19.7090909,24.3272727 20.2181818,22.9454545 L21.8181818,18.6545455 L21.8181818,8.69090909 L16.5818182,8.69090909 L11.4181818,8.69090909 C10.7272727,8.69090909 10.1818182,9.27272727 10.1818182,9.96363636 C10.1818182,10.6545455 10.7272727,11.2 11.4181818,11.2 C10.7272727,11.2 10.1818182,11.7454545 10.1818182,12.4363636 C10.1818182,13.1272727 10.7272727,13.6727273 11.4181818,13.6727273 C10.7272727,13.6727273 10.1818182,14.2181818 10.1818182,14.9090909 Z" style="fill: #e21b3c;"></path></svg>
+                                                </span>
+                                                <span>@ViewBag.Feedback.CountNoLiked</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="report-feedback-empty">Không có người chơi nào phản hồi.</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report-detail-feedback__FeedbackBox">
+                        <div class="summary-card__Wrapper">
+                            <div class="summary-card__CardTitleWrapper">
+                                <h3 class="summary-card__ContentTitle">Nhận xét</h3>
+                            </div>
+                            <div class="summary-card__ContentWrapper">
+                                @if (ViewBag.Feedback.FlagFeeling)
+                                {
+                                    <div class="report-detail-feedback__ContentWrapper">
+                                        <span class="report-feedback__Info">EduQuiz này khiến người chơi cảm thấy thế nào?</span>
+                                        <div class="report-detail-feedback__RowsWrapper">
+                                            <div class="report-detail-feedback__FeedbackRow">
+                                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C7.16363636,0 0,7.16363636 0,16 C0,24.8363636 7.16363636,32 16,32 C24.8363636,32 32,24.8363636 32,16 C32,7.16363636 24.8363636,0 16,0 Z M10.1818182,9.45454545 C11.3818182,9.45454545 12.3636364,10.4363636 12.3636364,11.6363636 C12.3636364,12.8363636 11.3818182,13.8181818 10.1818182,13.8181818 C8.98181818,13.8181818 8,12.8363636 8,11.6363636 C8,10.4363636 8.98181818,9.45454545 10.1818182,9.45454545 Z M16,24 C11.5636364,24 8,20.2181818 8,16 L24,16 C24,20.2181818 20.4363636,24 16,24 Z M21.8181818,13.8181818 C20.6181818,13.8181818 19.6363636,12.8363636 19.6363636,11.6363636 C19.6363636,10.4363636 20.6181818,9.45454545 21.8181818,9.45454545 C23.0181818,9.45454545 24,10.4363636 24,11.6363636 C24,12.8363636 23.0181818,13.8181818 21.8181818,13.8181818 Z" style="fill:#26890c;"></path></svg>
+                                                </span>
+                                                <span>@ViewBag.Feedback.CountYesFeeling</span>
+                                            </div>
+                                            <div class="report-detail-feedback__FeedbackRow">
+                                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C7.15428571,0 0,7.15428571 0,16 C0,24.8457143 7.15428571,32 16,32 C24.8457143,32 32,24.8457143 32,16 C32,7.15428571 24.8457143,0 16,0 Z M10.1714286,9.46285714 C11.36,9.46285714 12.3428571,10.4457143 12.3428571,11.6342857 C12.3428571,12.8228571 11.36,13.8057143 10.1714286,13.8057143 C8.98285714,13.8057143 8,12.8457143 8,11.6342857 C8,10.4228571 8.98285714,9.46285714 10.1714286,9.46285714 Z M24,21.8285714 L8,21.8285714 L8,18.1714286 L24,18.1714286 L24,21.8285714 Z M21.8285714,13.8285714 C20.64,13.8285714 19.6571429,12.8457143 19.6571429,11.6571429 C19.6571429,10.4685714 20.64,9.48571429 21.8285714,9.48571429 C23.0171429,9.48571429 24,10.4685714 24,11.6571429 C24,12.8457143 23.0171429,13.8285714 21.8285714,13.8285714 Z" style="fill: #d89e00;"></path></svg>
+                                                </span>
+                                                <span>@ViewBag.Feedback.CountNorFeeling</span>
+                                            </div>
+                                            <div class="report-detail-feedback__FeedbackRow">
+                                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C7.16363636,0 0,7.16363636 0,16 C0,24.8363636 7.16363636,32 16,32 C24.8363636,32 32,24.8363636 32,16 C32,7.16363636 24.8363636,0 16,0 Z M10.1818182,9.45454545 C11.3818182,9.45454545 12.3636364,10.4363636 12.3636364,11.6363636 C12.3636364,12.8363636 11.3818182,13.8181818 10.1818182,13.8181818 C8.98181818,13.8181818 8,12.8363636 8,11.6363636 C8,10.4363636 8.98181818,9.45454545 10.1818182,9.45454545 Z M20.5090909,24 C20.5090909,21.4909091 18.4727273,19.4909091 16,19.4909091 C13.4909091,19.4909091 11.4909091,21.5272727 11.4909091,24 L8,24 C8,19.5636364 11.5636364,16 16,16 C20.4363636,16 24,19.5636364 24,24 L20.5090909,24 Z M21.8181818,13.8181818 C20.6181818,13.8181818 19.6363636,12.8363636 19.6363636,11.6363636 C19.6363636,10.4363636 20.6181818,9.45454545 21.8181818,9.45454545 C23.0181818,9.45454545 24,10.4363636 24,11.6363636 C24,12.8363636 23.0181818,13.8181818 21.8181818,13.8181818 Z" style="fill: #e21b3c;"></path></svg>
+                                                </span>
+                                                <span>@ViewBag.Feedback.CountNoFeeling</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }else{
+                                    <div class="report-feedback-empty">Không có người chơi nào phản hồi.</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

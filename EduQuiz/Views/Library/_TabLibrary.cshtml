@@ -15,14 +15,14 @@
         <a href="#">Yêu thích</a>
     </div>
     <div class="eduquiz-root__Tabs">
-        <a href="#">Chia sẻ với bạn</a>
+        <a href="@Url.Action("EduQuizShare","Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/share" ? "active" : "")">Chia sẻ với bạn</a>
     </div>
 </div>
 <script>
     $(".eduquiz-root__Tabs a").click(function (event) {
-        if($(this).hasClass("active")){
+        if ($(this).hasClass("active")) {
             event.preventDefault();
         }
     })
 </script>
-   
+

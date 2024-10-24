@@ -1,0 +1,257 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "In Báo cáo";
+}
+@model EduQuiz.Models.ReportDetail
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        html,body{
+            height:100%;
+        }
+
+        .report__Wrapper{
+            display:flex;
+            justify-content:center;
+        }
+        /*Print report*/
+        .style__PrintWrapper {
+            display: flex;
+            align-items: flex-start;
+            -webkit-box-pack: start;
+            justify-content: flex-start;
+            flex-direction: column;
+            position: relative;
+            margin: 1.3cm;
+        }
+
+        .styles__ReportHeader {
+            width: 100%;
+            font-size: 28pt;
+            font-weight: bold;
+            line-height: 1;
+            color: rgb(0, 0, 0);
+        }
+
+        .styles__ReportSubheader{
+            width: 80%;
+            margin-top: 1rem;
+            font-size: 1rem;
+            line-height: 1;
+            color: rgb(110, 110, 110);
+        }
+
+        .type_eduquiz{
+            display: flex;
+            -webkit-box-align: center;
+            align-items: center;
+            min-width: 0px;
+            white-space: nowrap;
+        }
+
+        .type_eduquiz{
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            font-weight: 500;
+        }
+
+        .style__Dot{
+            display: inline-block;
+            font-weight: 700;
+            margin: 0px 4px;
+        }
+
+        .styles__ReportStatistics {
+            display: flex;
+            place-content: center flex-start;
+            -webkit-box-pack: start;
+            margin: 2rem 0px;
+        }
+
+        .styles__StatsBlock{
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            -webkit-box-pack: end;
+            justify-content: flex-end;
+            margin: 8px;
+        }
+
+        .styles__Value{
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: rgb(0, 0, 0);
+        }
+
+        .styles__Bar {
+            width: 100%;
+            height: 5px;
+            margin-top: 5px;
+            background-color: #24459b;
+        }
+
+        .styles__Description{
+            margin-top: 8px;
+        }
+
+        .styles__PlayersTable, .styles__QuestionTable {
+            width: 100%;
+        }
+
+        .styles__TableTitle{
+            padding: 1rem 0px;
+            font-weight: 700;
+        }
+
+        .styles__Table{
+            max-width: 1280px;
+            width: 100%;
+            max-height: 986px;
+            font-size: 0.875rem;
+            box-sizing: border-box;
+            border-collapse: collapse;
+            border-spacing: 0px;
+        }
+
+        .styles__TableHeader {
+            background-color: rgb(249, 249, 249);
+        }
+
+        .styles__TR{
+            font-size: 0.875rem;
+            letter-spacing: normal;
+            color: rgb(51, 51, 51);
+            background-color: rgb(249, 249, 249);
+            height: 32px;
+            border-bottom: 1px solid rgb(242, 242, 242);
+            transition: 0.2s ease-in;
+        }
+
+        .styles__TH{
+            text-align: left;
+            font-weight: bold;
+            padding: 0.125rem 1rem;
+            border-top: 1px solid rgb(204, 204, 204);
+            border-bottom: 1px solid rgb(204, 204, 204);
+            vertical-align: middle;
+            height: 32px;
+            white-space: nowrap;
+        }
+
+        .styles__TD{
+            padding: 0px 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid rgb(242, 242, 242);
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="report__Wrapper">
+        <div class="style__PrintWrapper">
+            <div class="styles__ReportHeader">@Model.Title</div>
+            <div class="styles__ReportSubheader">
+                <div class="type_eduquiz">
+                    <div class="type_eduquiz">Phiên chơi @Model.Type</div>
+                </div>
+                <span class="style__Dot">•</span>
+                Được tạo bởi @Model.NameHost
+            </div>
+            <div class="styles__ReportStatistics">
+                <div class="styles__StatsBlock">
+                    <div class="styles__Value">@Model.TotalAccuracy%</div>
+                    <div class="styles__Bar"></div>
+                    <div class="styles__Description">Tỷ lệ chính xác</div>
+                </div>
+                <div class="styles__StatsBlock">
+                    <div class="styles__Value">@Model.TotalUnfinish</div>
+                    <div class="styles__Bar"></div>
+                    <div class="styles__Description">Chưa hoàn thành</div>
+                </div>
+                <div class="styles__StatsBlock">
+                    <div class="styles__Value">@Model.TotalBelowAvg</div>
+                    <div class="styles__Bar"></div>
+                    <div class="styles__Description">Dưới trung bình</div>
+                </div>
+                <div class="styles__StatsBlock">
+                    <div class="styles__Value">@Model.TotalQuestionDifficults</div>
+                    <div class="styles__Bar"></div>
+                    <div class="styles__Description">Câu hỏi khó</div>
+                </div>
+            </div>
+            <div class="styles__PlayersTable">
+                <div class="styles__TableTitle">Người chơi(@Model.PlayerCount)</div>
+                <table class="styles__Table">
+                    <thead class="styles__TableHeader">
+                        <tr class="styles__TR">
+                            <th class="styles__TH" scope="col">Tên người chơi</th>
+                            <th class="styles__TH" scope="col">Xếp hạng</th>
+                            <th class="styles__TH" scope="col">Tỷ lệ đúng</th>
+                            <th class="styles__TH" scope="col">Chưa trả lời</th>
+                            <th class="styles__TH" scope="col">Điểm cuối cùng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var player in Model.ReportPlayers)
+                        {
+                            <tr class="styles__TR" style="background:#fff">
+                                <td class="styles__TD">@player.NickName</td>
+                                <td class="styles__TD">@player.Rank</td>
+                                <td class="styles__TD">@player.Accuracy</td>
+                                <td class="styles__TD">@player.Unanwered</td>
+                                <td class="styles__TD">@player.TotalScore</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="styles__QuestionTable mt-5">
+                <div class="styles__TableTitle">Câu hỏi(4)</div>
+                <table class="styles__Table">
+                    <thead class="styles__TableHeader">
+                        <tr class="styles__TR">
+                            <th class="styles__TH" width="3%" scope="col">#</th>
+                            <th class="styles__TH" scope="col">Câu hỏi</th>
+                            <th class="styles__TH" scope="col">Loại</th>
+                            <th class="styles__TH" scope="col">Tỷ lệ đúng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach(var question in Model.ReportQuestions)
+                        { 
+                            <tr class="styles__TR" style="background:#fff">
+                                <td class="styles__TD">@count</td>
+                                <td class="styles__TD">@question.QuestionTitle</td>
+                                <td class="styles__TD">@question.TypeQuestion</td>
+                                <td class="styles__TD">@question.Accuracy</td>
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script defer>
+        window.addEventListener('load', function () {
+            document.title = "Báo cáo chi tiết" + "- @Html.Raw(Model.Title)"
+            window.focus();
+            window.print();
+        });
+    </script>
+</body>
+
+</html>

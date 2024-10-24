@@ -2,11 +2,19 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext filterContext)
     {
+        var allowAnonymous = filterContext.ActionDescriptor.EndpointMetadata
+            .Any(em => em.GetType() == typeof(AllowAnonymousAttribute));
+
+        if (allowAnonymous)
+        {
+            return; 
+        }
         var cookieAuth = filterContext.HttpContext.RequestServices.GetRequiredService<CookieAuth>(); 
         var urlHelperFactory = filterContext.HttpContext.RequestServices.GetRequiredService<IUrlHelperFactory>();
         var urlHelper = urlHelperFactory.GetUrlHelper(filterContext);

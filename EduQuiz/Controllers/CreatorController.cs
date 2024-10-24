@@ -1,6 +1,8 @@
-﻿using EduQuiz.DatabaseContext;
+﻿using Azure.Core;
+using EduQuiz.DatabaseContext;
 using EduQuiz.Models;
 using EduQuiz.Models.EF;
+using EduQuiz.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -19,10 +21,13 @@ namespace EduQuiz.Controllers
     {
         private readonly EduQuizDBContext _context;
         private readonly HttpClient _httpClient;
-        public CreatorController(EduQuizDBContext context, HttpClient httpClient)
+        private readonly GeminiAiService _geminiAiService;
+        private readonly string content = "Vui lòng chọn đúng 1 thể loại phù hợp với bộ câu hỏi dưới không cần giải thích ví dụ output [{\"id\":...,\"name\":\"...\"}]: [ { \"id\": 1, \"name\": \"Nghệ thuật\" }, { \"id\": 2, \"name\": \"Sinh học\" }, { \"id\": 3, \"name\": \"Kinh doanh\" }, { \"id\": 4, \"name\": \"Hóa học\" }, { \"id\": 5, \"name\": \"Tin tức hiện tại\" }, { \"id\": 6, \"name\": \"Kinh tế\" }, { \"id\": 7, \"name\": \"Tiếng Anh\" }, { \"id\": 8, \"name\": \"Giải trí\" }, { \"id\": 9, \"name\": \"Kiến thức tổng hợp\" }, { \"id\": 10, \"name\": \"Địa lý\" }, { \"id\": 11, \"name\": \"Lịch sử\" }, { \"id\": 12, \"name\": \"Ngôn ngữ\" }, { \"id\": 13, \"name\": \"Luật\" }, { \"id\": 14, \"name\": \"Toán học\" }, { \"id\": 15, \"name\": \"Âm nhạc\" }, { \"id\": 16, \"name\": \"Vật lý\" }, { \"id\": 17, \"name\": \"Chính trị\" }, { \"id\": 18, \"name\": \"Văn hóa phổ biến\" }, { \"id\": 19, \"name\": \"Tâm lý học\" }, { \"id\": 20, \"name\": \"Tôn giáo\" }, { \"id\": 21, \"name\": \"Khoa học\" }, { \"id\": 22, \"name\": \"Nghiên cứu xã hội\" }, { \"id\": 23, \"name\": \"Thể thao\" }, { \"id\": 24, \"name\": \"Công nghệ\" } ] Bộ câu hỏi:";
+        public CreatorController(EduQuizDBContext context, HttpClient httpClient, GeminiAiService geminiAiService)
         {
             _context = context;
             _httpClient = httpClient;
+            _geminiAiService = geminiAiService;
         }
         [Route("creator/{id:guid}")]
         public async Task<IActionResult> Index(Guid id)
@@ -399,7 +404,7 @@ namespace EduQuiz.Controllers
                 await _context.SaveChangesAsync(); // Lưu mọi thay đổi một lần duy nhất
                 await transaction.CommitAsync();
 
-                var eduQuiz = await _context.EduQuizs
+                var eduQuiz = await _context.EduQuizs.AsNoTracking()
                     .Include(d => d.Questions)
                         .ThenInclude(q => q.Choices)
                     .FirstOrDefaultAsync(d => d.Uuid == data.Uuid);
@@ -434,7 +439,6 @@ namespace EduQuiz.Controllers
                     }).ToList()
                 };
 
-                // Sort questions based on `orderid`
                 if (!orderid.Contains(0))
                 {
                     var orderLookup = orderid.Select((id, index) => new { id, index })
@@ -451,20 +455,17 @@ namespace EduQuiz.Controllers
                     var zeroIndex = orderid.IndexOf(0);
                     var lastQuestion = getdata.Questions.Last();
 
-                    // Replace 0 with last question's ID
                     orderid[zeroIndex] = lastQuestion.Id;
 
                     var orderedQuestions = getdata.Questions
                         .OrderBy(q => orderid.IndexOf(q.Id))
                         .ToList();
 
-                    // Update the order question data in the tracked entity
                     eduQuiz.OrderQuestion = JsonConvert.SerializeObject(orderid);
                     getdata.Questions = orderedQuestions;
                 }
                 else
                 {
-                    // Update order question if orderid has more than one 0
                     eduQuiz.OrderQuestion = JsonConvert.SerializeObject(getdata.Questions.Select(q => q.Id).ToList());
                 }
                 await _context.SaveChangesAsync();
@@ -482,25 +483,67 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var geteduquiz = await _context.EduQuizs.FirstOrDefaultAsync(q=>q.Uuid == idquiz);
+                var geteduquiz = await _context.EduQuizs.Where(q => q.Uuid == idquiz).Include(n=>n.Questions).ThenInclude(n=>n.Choices).FirstOrDefaultAsync();
                 if(geteduquiz == null)
                 {
                     return Json(new { result = "FAIL", msg = "Eduquiz không tồn tại" });
                 }
-                else
+                if (geteduquiz.UserId != userid)
                 {
-                    if(geteduquiz.UserId != userid)
-                    {
-                        return Json(new { result = "FAIL", msg = "Bạn không có quyền chỉnh sửa" });
-                    }
-                    else
-                    {
-                        geteduquiz.Type = 1;
-                        await _context.SaveChangesAsync();
-                        return Json(new { result = "PASS" });
-                    }
+                    return Json(new { result = "FAIL", msg = "Bạn không có quyền chỉnh sửa" });
                 }
-                
+                geteduquiz.Type = 1;
+                await _context.SaveChangesAsync();
+                var getdata = new EduQuizData
+                {
+                    Uuid = geteduquiz.Uuid,
+                    Description = geteduquiz.Description,
+                    Title = geteduquiz.Title,
+                    ImageCover = geteduquiz.ImageCover,
+                    Type = geteduquiz.Type ?? 0,
+                    Visibility = geteduquiz.Visibility,
+                    ThemeId = geteduquiz.ThemeId ?? 0,
+                    MusicId = geteduquiz.MusicId ?? 0,
+                    UserId = geteduquiz.UserId ?? 0,
+                    Questions = geteduquiz.Questions.Select(q => new QuestionData
+                    {
+                        Id = q.Id,
+                        QuestionText = q.QuestionText,
+                        TypeQuestion = q.TypeQuestion,
+                        TypeAnswer = q.TypeAnswer ?? 0,
+                        Time = q.Time ?? 0,
+                        PointsMultiplier = q.PointsMultiplier ?? 0,
+                        Image = q.Image,
+                        ImageEffect = q.ImageEffect,
+                        Choices = q.Choices.OrderBy(c => c.DisplayOrder).Select(c => new ChoiceData
+                        {
+                            Id = c.Id,
+                            Answer = c.Answer,
+                            IsCorrect = c.IsCorrect,
+                            DisplayOrder = c.DisplayOrder
+                        }).ToList()
+                    }).ToList()
+                };
+                var request = new ChatRequest
+                {
+                    Model = "gemini-1.5-pro",
+                    MaxTokens = 2048,
+                    Messages = new[]
+                    {
+                        new Message
+                        {
+                            Role = "user",
+                            Content =  $"{content}{getdata}"
+                        }
+                    }
+                };
+
+                var responseContent = await _geminiAiService.GenerateResponse(request);
+                var geminiResponse = JsonConvert.DeserializeObject<GeminiResponse>(responseContent);
+
+                // Trích xuất text
+                string extractedText = geminiResponse.Candidates[0].Content.Parts[0].Text;
+                return Json(new { result = "PASS", data = extractedText });
             }
             catch (Exception ex) {
                 return Json(new { result = "FAIL", msg = $"Lưu thất bại: {ex.Message}" });

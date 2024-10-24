@@ -1,0 +1,222 @@
+﻿@{
+    Layout = "_LayoutUser";
+    ViewBag.Title = "Nhóm - Hoạt động";
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+    var slug = currentPath.Split("/")[currentPath.Split("/").Length - 2];
+}
+@model EduQuiz.Models.GroupViewModel
+<link href="~/src/css/library.css" rel="stylesheet" />
+<link href="~/src/css/group.css" rel="stylesheet" />
+<div class="content" style="padding:0;margin-top:63px;">
+    <div class="layout-library">
+        <partial name="_SidebarGroup" />
+        <div class="library-layout__Content" style="padding:32px">
+            <div class="groups-page-content__Content">
+                <section class="group-settings-page__Wrapper">
+                    <header class="group-detail-page-title__Header">
+                        <a class="button__Button" href="@Url.Action("GroupActivity","Group",new{id = slug})">
+                            <span class="icon__Icon">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M10.707 11.293L12.121 12.707 9.828 15 25.414 15 25.414 17 9.828 17 12.121 19.293 10.707 20.707 6 16z" style="fill: currentcolor;"></path></svg>
+                            </span>
+                        </a>
+                        <h2 class="group-detail-page-title__HeaderText">Thiết lập nhóm</h2>
+                        <div id="autosave" style="position:absolute;right:0"></div>
+                    </header>
+                    <div class="layout-card__StyledLayoutCard">
+                        <div class="header__StyledLayoutCardHeader">
+                            <h3 class="settings-form__CardHeader">Tùy chỉnh nhóm</h3>
+                        </div>
+                        <div class="body__LayoutCardBody">
+                            <div class="settings-form__Row">
+                                <div class="settings-form__IconWrapper">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M16,13.25 C15.3096441,13.25 14.75,12.6903559 14.75,12 C14.75,11.3096441 15.3096441,10.75 16,10.75 C16.6903559,10.75 17.25,11.3096441 17.25,12 C17.25,12.6903559 16.6903559,13.25 16,13.25 Z M15,15 L17,15 L17,21 L15,21 L15,15 Z" style="fill: currentcolor;"></path></svg>
+                                    </span>
+                                </div>
+                                <div class="settings-form__DescriptionBlock">
+                                    <h4 class="settings-form__DescriptionHeader">Tên và mô tả</h4>
+                                    <p>Hãy cho mọi người biết nhóm của bạn hoạt động như thế nào.</p>
+                                </div>
+                                <button class="flat-button__FlatButton" data-toggle="modal" data-target="#modalEditGroup" style="line-height:26px;min-height:26px;height:26px;">Chỉnh sửa</button>
+                            </div>
+                            <hr class="settings-form__Hr" style="margin-bottom:0"/>
+                        </div>
+                        <div class="header__StyledLayoutCardHeader">
+                            <h3 class="settings-form__CardHeader">Mọi người</h3>
+                        </div>
+                        <div class="body__LayoutCardBody">
+                            <div class="settings-form__Row">
+                                <div class="settings-form__IconWrapper">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M21,26 L5,26 L5,25 C5,21.467 8.289,19 13,19 C17.711,19 21,21.467 21,25 L21,26 Z M13,18 C10.795,18 9,16.205 9,14 C9,11.795 10.795,10 13,10 C15.205,10 17,11.795 17,14 C17,16.205 15.206,18 13,18 Z M7.159,24 L18.843,24 C18.244,22.192 16.009,21 13.001,21 C9.993,21 7.757,22.192 7.159,24 Z M13,12 C11.896,12 11,12.896 11,14 C11,15.103 11.896,16 13,16 C14.104,16 15,15.103 15,14 C15,12.896 14.104,12 13,12 Z M27,9 L24,9 L24,6 L22,6 L22,9 L19,9 L19,11 L22,11 L22,14 L24,14 L24,11 L27,11 L27,9 Z" style="fill: currentcolor;"></path></svg>
+                                    </span>
+                                </div>
+                                <div class="settings-form__DescriptionBlock">
+                                    <h4 class="settings-form__DescriptionHeader">Thành viên có thể mời người mới</h4>
+                                    <p>Cho phép thành viên mời người mới tham gia.</p>
+                                </div>
+                                <button class="styles__Toggle @(Model.Group.CanInviteNewMembers ? "active":"")" style=" margin-left: 60px; border-radius: 6px;" onclick="SaveRoleGroup(1,this)">
+                                    <div class="styles__CheckboxSlider"></div>
+                                </button>
+                            </div>
+                            <hr class="settings-form__Hr" />
+                            <div class="settings-form__Row">
+                                <div class="settings-form__IconWrapper">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M26.817,15.425 C26.633,15.162 22.222,9 16,9 C9.778,9 5.367,15.162 5.183,15.425 C4.939,15.77 4.939,16.231 5.183,16.576 C5.367,16.838 9.778,23 16,23 C22.222,23 26.633,16.838 26.817,16.576 C27.061,16.23 27.061,15.77 26.817,15.425 Z M16,21 C11.834,21 8.451,17.425 7.269,15.999 C8.448,14.573 11.82,11 16,11 C20.166,11 23.549,14.576 24.731,16.001 C23.552,17.428 20.18,21 16,21 Z M16,12 C13.794,12 12,13.795 12,16 C12,18.206 13.794,20 16,20 C18.206,20 20,18.206 20,16 C20,13.795 18.206,12 16,12 Z M16,18 C14.897,18 14,17.103 14,16 C14,14.898 14.897,14 16,14 C17.103,14 18,14.898 18,16 C18,17.103 17.103,18 16,18 Z" style="fill: currentcolor;"></path></svg>
+                                    </span>
+                                </div>
+                                <div class="settings-form__DescriptionBlock">
+                                    <h4 class="settings-form__DescriptionHeader">Các thành viên có thể xem những ai khác trong nhóm</h4>
+                                    <p>Danh sách thành viên sẽ hiển thị cho tất cả mọi người trong nhóm.</p>
+                                </div>
+                                <button class="styles__Toggle @(Model.Group.CanSeeMemberList ? "active":"")" style=" margin-left: 60px; border-radius: 6px;" onclick="SaveRoleGroup(2,this)">
+                                    <div class="styles__CheckboxSlider"></div>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="header__StyledLayoutCardHeader">
+                            <h3 class="settings-form__CardHeader">Nội dung được chia sẻ</h3>
+                        </div>
+                        <div class="body__LayoutCardBody">
+                            <div class="settings-form__Row">
+                                <div class="settings-form__IconWrapper">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,14 C17.6568542,14 19,12.6568542 19,11 C19,9.34314575 17.6568542,8 16,8 C14.3431458,8 13,9.34314575 13,11 C13,12.6568542 14.3431458,14 16,14 Z M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M16,19 C13.0269583,19 10.5610282,20.4075601 9.52516483,22.3125 L22.4748352,22.3125 C21.4389718,20.4075601 18.9730417,19 16,19 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: currentcolor;"></path></svg>
+                                    </span>
+                                </div>
+                                <div class="settings-form__DescriptionBlock">
+                                    <h4 class="settings-form__DescriptionHeader">Các thành viên có thể chia sẻ nội dung</h4>
+                                    <p>Cho phép thành viên chia sẻ nội dung với nhóm. Khi tắt, chỉ quản trị viên mới có thể chia sẻ nội dung.</p>
+                                </div>
+                                <button class="styles__Toggle @(Model.Group.CanShareContent ? "active":"")" style=" margin-left: 60px; border-radius: 6px;" onclick="SaveRoleGroup(3,this)">
+                                    <div class="styles__CheckboxSlider"></div>
+                                </button>
+                            </div>
+                            <hr class="settings-form__Hr" />
+                            <div class="settings-form__Row">
+                                <div class="settings-form__IconWrapper">
+                                    <span class="icon__Icon" style="width:32px;height:32px">
+                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,14 C17.6568542,14 19,12.6568542 19,11 C19,9.34314575 17.6568542,8 16,8 C14.3431458,8 13,9.34314575 13,11 C13,12.6568542 14.3431458,14 16,14 Z M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M16,19 C13.0269583,19 10.5610282,20.4075601 9.52516483,22.3125 L22.4748352,22.3125 C21.4389718,20.4075601 18.9730417,19 16,19 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: currentcolor;"></path></svg>
+                                    </span>
+                                </div>
+                                <div class="settings-form__DescriptionBlock">
+                                    <h4 class="settings-form__DescriptionHeader">Các thành viên có thể đăng bài</h4>
+                                    <p>Cho phép thành viên đăng bài với nhóm. Khi tắt, chỉ quản trị viên mới có thể đăng bài.</p>
+                                </div>
+                                <button class="styles__Toggle @(Model.Group.CanPostContent ? "active":"")" style=" margin-left: 60px; border-radius: 6px;" onclick="SaveRoleGroup(4,this)">
+                                    <div class="styles__CheckboxSlider"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalEditGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border:none">
+                <h3 class="modal-title">Tên và mô tả</h3>
+            </div>
+            <div class="modal-body">
+                <div class="styles__TextField">
+                    <span style="font-weight:bold;margin-bottom:6px">Tên</span>
+                    <input id="namegroup" class="input__Input" style="appearance:auto;color:#333" value="@Model.Group.Name" />
+                </div>
+                <div class="styles__TextField">
+                    <span style="font-weight:bold;margin-bottom:6px">Mô tả</span>
+                    <textarea rows="3" id="descriptiongroup" class="input__Input" style="appearance:auto;color:#333;padding: 0.75rem 3rem 0.75rem 1rem;">@Model.Group.Description</textarea>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button id="close" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                <button type="button" class="btn " style="background-color:rgb(38, 137, 12)" onclick="SaveEdit()">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function SaveEdit() {
+        const name = $("#namegroup").val();
+        const description = $("#descriptiongroup").val();
+        if (name == "") {
+            openToast('info', 'Lỗi', 'Tên nhóm không được để trống!', 3000);
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditGroup", "Group")",
+            data: {
+                groupid: "@Model.Group.Id",
+                name: name,
+                description: description
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        $("#modalEditGroup").modal("hide");
+                    }
+                }
+            }
+        })
+    }
+    function SaveRoleGroup(value,button){
+        var isflag = $(button).hasClass("active");
+        if (isflag) {
+            $(button).removeClass("active");
+            isflag = false;
+        } else {
+            $(button).addClass("active");
+            isflag = true;
+        }
+        showAutoSaveStatus('saving');
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditRoleGroup", "Group")",
+            data: {
+                groupid: "@Model.Group.Id",
+                role: value,
+                value: isflag
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        setTimeout(() => {
+                            showAutoSaveStatus('saved');
+                            setTimeout(()=>{
+                                $("#autosave").empty();
+                            },500)
+                        },600)
+                    }
+                }
+            }
+        })
+    }
+</script>

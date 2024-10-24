@@ -39,7 +39,7 @@
                     <partial name="_TabLibrary" />
                     <div class="library-eduquiz__TextFilterWrapper">
                         <div class="styles__TextField">
-                            <input class="input__Search" placeholder="Tìm kiếm" />
+                            <input class="input__Search" placeholder="Tìm kiếm" onkeyup="filterCards()" />
                             <span class="icon_Field"><svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M25.707,24.293 L20.314,18.9 C21.403,17.504 22,15.799 22,14 C22,11.863 21.167,9.854 19.656,8.344 C18.146,6.832 16.137,6 14,6 C11.863,6 9.854,6.832 8.344,8.344 C6.833,9.854 6,11.863 6,14 C6,16.137 6.833,18.146 8.344,19.656 C9.854,21.168 11.863,22 14,22 C15.799,22 17.504,21.404 18.9,20.314 L24.293,25.706 L25.707,24.293 Z M14,20 C12.397,20 10.891,19.376 9.758,18.243 C8.624,17.11 8,15.603 8,14 C8,12.398 8.624,10.891 9.758,9.758 C10.891,8.624 12.397,8 14,8 C15.603,8 17.109,8.624 18.242,9.758 C19.376,10.891 20,12.398 20,14 C20,15.603 19.376,17.11 18.242,18.243 C17.109,19.376 15.603,20 14,20 Z" style="fill: rgb(110, 110, 110);"></path></svg></span>
                         </div>
                     </div>
@@ -169,7 +169,18 @@
             location.href = `/detail/${questionId}`;
         }
     });
-
+    function filterCards(){
+        const input = $(".input__Search").val().toLowerCase();
+        const cards = $(".styles__BaseCard");
+        cards.each(function () {
+            const title = $(this).find(".styles__BaseCard_Body-title").text().toLowerCase();
+            if (title.includes(input)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
     function removeEduQuiz(idquiz) {
         Swal.fire({
             title: "Bạn thực sự muốn xóa EduQuiz này?",

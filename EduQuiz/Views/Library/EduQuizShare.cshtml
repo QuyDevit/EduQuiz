@@ -1,0 +1,90 @@
+﻿@{
+    Layout = "_LayoutUser";
+    ViewBag.Title = "EduQuiz bản nháp";
+    @model ICollection<EduQuiz.Models.EduQuizView>;
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+}
+@section styles {
+    <link href="~/src/css/library.css" rel="stylesheet" />
+}
+<div class="content" style="padding:0;margin-top:63px;">
+    <div class="layout-library">
+        <div class="col-md-3 sidebar-wrapper__library" style="min-height:400px;padding:0;">
+            <div class="layout-card" style="padding:0;margin:0;height:calc(100vh - 63px) ">
+                <div class="sidebar-wrapper__library-Block">
+                    <ul class="sidebar-Link__Container">
+                        <li class="sidebar-Link__Wrapper">
+                            <a class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/all" ? "active" : "")" href="@Url.Action("Index","Library")">
+                                <span class="sidebar-Link__Icon">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M10,20.6c0-0.9,0.7-1.6,1.6-1.6s1.6,0.7,1.6,1.6s-0.7,1.6-1.6,1.6S10,21.5,10,20.6z M11.5,9.8l-2,3.2h4  L11.5,9.8z M26,9v14c0,1.7-1.3,3-3,3H9c-1.7,0-3-1.3-3-3V9c0-1.7,1.3-3,3-3h14C24.7,6,26,7.3,26,9z M15,17H8v6c0,0.6,0.4,1,1,1h6V17  z M15,8H9C8.4,8,8,8.4,8,9v6h7V8z M24,17h-7v7h6c0.6,0,1-0.4,1-1V17z M24,9c0-0.6-0.4-1-1-1h-6v7h7V9z M22,19h-3v3h3V19z M18.5,11.5  l2,2l2-2l-2-2L18.5,11.5z" style="fill: rgb(110, 110, 110);"></path></svg>
+                                </span>
+                                <span class="ml-2">EduQuizs</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="library-sidebar__Separator"></div>
+                    <div id="partialfolder-container">
+                        <partial name="_PartialFolders" model="@ViewBag.Folders" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="library-layout__Content">
+            <div class="library-eduquiz__Content">
+                <div class="library-eduquiz__Filter">
+                    <partial name="_TabLibrary" />
+                    <div class="library-eduquiz__TextFilterWrapper">
+                        <div class="styles__TextField">
+                            <input class="input__Search" placeholder="Tìm kiếm" onkeyup="filterCards()" />
+                            <span class="icon_Field"><svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M25.707,24.293 L20.314,18.9 C21.403,17.504 22,15.799 22,14 C22,11.863 21.167,9.854 19.656,8.344 C18.146,6.832 16.137,6 14,6 C11.863,6 9.854,6.832 8.344,8.344 C6.833,9.854 6,11.863 6,14 C6,16.137 6.833,18.146 8.344,19.656 C9.854,21.168 11.863,22 14,22 C15.799,22 17.504,21.404 18.9,20.314 L24.293,25.706 L25.707,24.293 Z M14,20 C12.397,20 10.891,19.376 9.758,18.243 C8.624,17.11 8,15.603 8,14 C8,12.398 8.624,10.891 9.758,9.758 C10.891,8.624 12.397,8 14,8 C15.603,8 17.109,8.624 18.242,9.758 C19.376,10.891 20,12.398 20,14 C20,15.603 19.376,17.11 18.242,18.243 C17.109,19.376 15.603,20 14,20 Z" style="fill: rgb(110, 110, 110);"></path></svg></span>
+                        </div>
+                    </div>
+                </div>
+                @if (Model.Count != 0)
+                {
+                    <div class="eduquiz-list__Content">
+
+                        @foreach (var item in Model)
+                        {
+                            <div class="styles__BaseCard">
+                                <div class="link-action" data-question="@item.Uuid">
+                                    <div class="styles__Image" style="@($"background: url({item.Image}) center center / cover no-repeat;")">
+                                        <span class="styles__Questions">@item.SumQuestion câu hỏi</span>
+                                    </div>
+                                    <div class="styles__BaseCard_Body">
+                                        <div class="styles__BaseCard_Body flex-row">
+                                            <h3 id="title-@item.Id" class="styles__BaseCard_Body-title">@(item.Title != "" ? item.Title : "Đặt tên cho EduQuiz")</h3>
+                                        </div>
+                                        <div class="styles__BaseCard_Body Basecard-footer">
+                                            <div class="styles-InfoUser">
+                                                <div class="profile-imageUser" style="@($"background: url({@item.Avatar}) center center / cover no-repeat;")"></div>
+                                                <span>@item.UserName</span>
+                                            </div>
+                                            <div class="styles_eduquizInfo justify-content-center">
+                                                <a href="@Url.Action("Index","AdminPlayEduQuiz",new {quizId = item.Uuid})" class="styles__eduquizInfo-Btn" style="background: rgb(19, 104, 206);margin:0 4px;">Chơi ngay</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-prompt__Container">
+                        <img src="/src/img/empty-prompt.svg" style="max-width: 100%;max-height: 105px; margin-bottom: 8px;" />
+                        <div>Ở đây có vẻ rất trống rỗng, Bạn không có EduQuiz nào được chia sẻ!.</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+</script>
+<script src="~/src/js/mainlibrary.js"></script>
+

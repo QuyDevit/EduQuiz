@@ -2,12 +2,13 @@
     Layout = "_LayoutUser";
     ViewBag.Title = "Trang chủ";
 }
-@model EduQuiz.Models.EF.User
+@model EduQuiz.Models.HomeViewModel
 @{
     @using Newtonsoft.Json;
-    var favoriteList = JsonConvert.DeserializeObject<List<InterestUser>>(Model.Favorite);
+    var favoriteList = JsonConvert.DeserializeObject<List<InterestUser>>(Model.User.Favorite);
     var countInterest = favoriteList?.Count;
 }
+<link href="~/src/css/profile.css" rel="stylesheet" />
 <!-- End Navbar -->
 <div class="content">
     <div class="layout-index">
@@ -15,12 +16,12 @@
             <div class="left-layout">
                 <div class="container d-flex">
                     <div class="d-flex align-items-center">
-                        <img class="profile-image" src="~/src/img/defaultimguser.png" />
+                        <img class="profile-image" src="@Model.User.ProfilePicture" />
                     </div>
                     <div class="pl-2 d-flex flex-column justify-content-center">
-                        @if (!string.IsNullOrEmpty(Model.FirstName) || !string.IsNullOrEmpty(Model.LastName))
+                        @if (!string.IsNullOrEmpty(Model.User.FirstName) || !string.IsNullOrEmpty(Model.User.LastName))
                         {
-                            <span id="nameshow" style="color: rgb(110, 110, 110);font-weight:600;font-size:13px">@Model.FirstName @Model.LastName</span>
+                            <span id="nameshow" style="color: rgb(110, 110, 110);font-weight:600;font-size:13px">@Model.User.FirstName @Model.User.LastName</span>
                         }
                         else
                         {
@@ -29,7 +30,7 @@
                                 <i style="font-size:16px;margin-left:6px" class="fa fa-plus" aria-hidden="true"></i>
                             </button>
                         }
-                        <span style="color: rgb(110, 110, 110);font-weight:600;font-size:13px">@Model.Email</span>
+                        <span style="color: rgb(110, 110, 110);font-weight:600;font-size:13px">@Model.User.Email</span>
                     </div>
                 </div>
                 <div class="profile-infomation">
@@ -85,23 +86,122 @@
         </div>
     </div>
     <div class="col-md-6 view-center" style="min-height:600px;padding:0">
-        <div class="center-view_wrapper">
-            <h3 class="title-center-view">Giao cho tôi(0)</h3>
-            <a class="see-all" href="#">Xem tất cả các bài tập</a>
+        <div class="layout-card">
+            <div class="center-view_wrapper">
+                <h3 class="title-center-view">Giao cho tôi(0)</h3>
+                <a class="see-all" href="#">Xem tất cả các bài tập</a>
+
+            </div>
+            <div class="layout-card_body">
+                <div class="profile-eduquizs-native-carouse" style="max-width:max-content;display: grid;grid-template-columns: repeat(2, minmax(0px, 1fr))">
+                    @foreach(var item in Model.ListAssignment)
+                    {
+                        <div class="native-carousel-item" style="background-color: #24459b;max-width:234px;">
+                            <div class="styles__Top">
+                                <div class="d-flex align-items-center">
+                                    <span class="styles_Icon-EduQuiz">
+                                        <svg x="0px" y="0px" viewBox="0 0 16 16">
+                                            <path fill="#fff" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
+                                                      z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
+                                                      C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
+                                                      V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
+                                        </svg>
+                                    </span>
+                                    <h4 class="label-top">EduQuiz</h4>
+                                </div>
+                                <div class="styles_eduquiz-price">@item.Deadline</div>
+                            </div>
+                            <a href="@Url.Action("Challenge","Group",new{pin = item.Pin})" class="native-carousel-item__Body">
+                                <div class="styles_CenterWithLandscapeImage">
+                                    <img src="@item.Image" />
+                                    <div class="styles_BottomRightLabel">@item.SumQuestion câu hỏi</div>
+                                </div>
+                                <div class="styles_Bottom">
+                                    <div class="eduquiz-title">@item.Title</div>
+                                    <div style="font-size:11px">@item.UserName</div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
+       
         <div class="layout-card mt-3">
             <div class="layout-card_header">
                 <div class="d-flex">
-                    <button type="button" class="tabs-button">Nhóm của tôi</button>
-                    <button type="button" class="tabs-button">Các nhóm tham gia</button>
+                    <button type="button" class="tabs-button group active" onclick="TabGroup(this,1)">Nhóm của tôi</button>
+                    <button type="button" class="tabs-button group" onclick="TabGroup(this,2)">Các nhóm tham gia</button>
                 </div>
             </div>
             <div class="layout-card_body">
-                <div class="layout-card_body-style">
-                    <div class="onboarding-container">
-                        <p>Chào mừng đến với Nhóm học! Khi một nhóm học được tạo, bạn có thể tổ chức các buổi học, chỉ định học viên và bắt đầu các hoạt động học tập ngay lập tức!</p>
-                        <a href="#" class="btn"> Tạo nhóm</a>
-                    </div>
+                <div id="groupowner">
+                    @if(Model.ListGroupOwner.Count > 0)
+                    {
+                        foreach(var groupowner in Model.ListGroupOwner)
+                        {
+                            <div class="group-card__Wrapper">
+                                <div class="layout-card__StyledLayoutCard" style="margin:8px;box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;background-color:#fff">
+                                    <div class="d-flex">
+                                        <div class="layoutcard-item_img">
+                                            <img src="/src/img/school3.png" />
+                                        </div>
+                                        <div class="card-body__Center">
+                                            <span class="group-title">@groupowner.Name</span>
+                                            <span class="group-member">@groupowner.SumMember thành viên</span>
+                                        </div>
+                                        <div class="manage__ButtonWrapper">
+                                            <a href="@Url.Action("GroupActivity","Group", new{id = groupowner.Uuid})" class="flat-button__FlatButton">
+                                                Đi đến nhóm
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        } 
+                    }else{
+                         <div class="layout-card_body-style">
+                            <div class="onboarding-container">
+                            <p>Chào mừng đến với Nhóm học! Khi một nhóm học được tạo, bạn có thể tổ chức các buổi học, chỉ định học viên và bắt đầu các hoạt động học tập ngay lập tức!</p>
+                                <a href="@Url.Action("GroupOwned","Group")" class="btn"> Tạo nhóm</a>
+                            </div>
+                        </div>
+                    }
+                    
+                </div>
+                <div id="groupjoin" class="d-none">
+                    @if (Model.ListGroupJoin.Count > 0)
+                    {
+                        foreach (var groupjoin in Model.ListGroupJoin)
+                        {
+                            <div class="group-card__Wrapper">
+                                <div class="layout-card__StyledLayoutCard" style="margin:8px;box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;background-color:#fff">
+                                    <div class="d-flex">
+                                        <div class="layoutcard-item_img">
+                                            <img src="/src/img/school3.png" />
+                                        </div>
+                                        <div class="card-body__Center">
+                                            <span class="group-title">@groupjoin.Name</span>
+                                            <span class="group-member">@groupjoin.SumMember thành viên</span>
+                                        </div>
+                                        <div class="manage__ButtonWrapper">
+                                            <a href="@Url.Action("GroupActivity","Group", new{id = groupjoin.Uuid})" class="flat-button__FlatButton">
+                                                Đi đến nhóm
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="layout-card_body-style">
+                            <div class="onboarding-container">
+                                <p>Bạn chưa tham gia Nhóm học nào cả! Bạn có thể tham gia nhóm thông qua liên kết mời của nhóm đó!</p>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -110,94 +210,31 @@
                 <button type="button" class="tabs-button" style="border-bottom:none">Chủ đề hot</button>
             </div>
             <div class="layout-card_body">
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item_img">
-                            <img src="~/src/img/market.jpg" />
-                            <span>10 câu hỏi</span>
-                        </div>
-                        <div class="d-flex flex-column" style="flex:1">
-                            <div class="card-item_title">
-                                <span>Hóa học là gì</span>
+                @foreach(var eduquizhot in Model.ListEduQuiz)
+                {
+                    <div class="layoutcard-item">
+                        <a class="d-flex" href="@Url.Action("Index","Detail",new{id = eduquizhot.Uuid})">
+                            <div class="layoutcard-item_img">
+                                <img src="@eduquizhot.Image" />
+                                <span>@eduquizhot.SumQuestion câu hỏi</span>
                             </div>
-                            <div class="card-item_footer">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-item_footer-img">
-                                        <img src="~/src//img/defaultimguser.png" />
-                                    </div>
-                                    <span class="card-item_footer-name">tuannguyen_ok123</span>
+                            <div class="d-flex flex-column" style="flex:1">
+                                <div class="card-item_title">
+                                    <span>@eduquizhot.Title</span>
                                 </div>
-                                <span class="count-playquiz">100k lượt chơi</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item_img">
-                            <img src="~/src/img/market.jpg" />
-                            <span>10 câu hỏi</span>
-                        </div>
-                        <div class="d-flex flex-column" style="flex:1">
-                            <div class="card-item_title">
-                                <span>Hóa học là gì</span>
-                            </div>
-                            <div class="card-item_footer">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-item_footer-img">
-                                        <img src="~/src//img/defaultimguser.png" />
+                                <div class="card-item_footer">
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-item_footer-img">
+                                            <img src="@eduquizhot.Avatar" />
+                                        </div>
+                                        <span class="card-item_footer-name">@eduquizhot.UserName</span>
                                     </div>
-                                    <span class="card-item_footer-name">tuannguyen_ok123</span>
+                                    <span class="count-playquiz">@eduquizhot.SumPlay lượt chơi</span>
                                 </div>
-                                <span class="count-playquiz">100k lượt chơi</span>
                             </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item_img">
-                            <img src="~/src/img/market.jpg" />
-                            <span>10 câu hỏi</span>
-                        </div>
-                        <div class="d-flex flex-column" style="flex:1">
-                            <div class="card-item_title">
-                                <span>Hóa học là gì</span>
-                            </div>
-                            <div class="card-item_footer">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-item_footer-img">
-                                        <img src="~/src//img/defaultimguser.png" />
-                                    </div>
-                                    <span class="card-item_footer-name">tuannguyen_ok123</span>
-                                </div>
-                                <span class="count-playquiz">100k lượt chơi</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item_img">
-                            <img src="~/src/img/market.jpg" />
-                            <span>10 câu hỏi</span>
-                        </div>
-                        <div class="d-flex flex-column" style="flex:1">
-                            <div class="card-item_title">
-                                <span>Hóa học là gì</span>
-                            </div>
-                            <div class="card-item_footer">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-item_footer-img">
-                                        <img src="~/src//img/defaultimguser.png" />
-                                    </div>
-                                    <span class="card-item_footer-name">tuannguyen_ok123</span>
-                                </div>
-                                <span class="count-playquiz">100k lượt chơi</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
+                }      
             </div>
         </div>
     </div>
@@ -207,53 +244,34 @@
                 <button type="button" class="tabs-button">EduQuiz của bạn</button>
             </div>
             <div class="layout-card_body">
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item_img">
-                            <img src="~/src/img/market.jpg" />
-                            <span>10 câu hỏi</span>
-                        </div>
-                        <div class="d-flex flex-column" style="flex:1">
-                            <div class="card-item_title">
-                                <span>Hóa học là gì</span>
+                @foreach(var eduquizowner in Model.ListEduQuizOwner)
+                {
+                    <div class="layoutcard-item">
+                        <a class="d-flex" href="@Url.Action("Index","Detail",new{id = eduquizowner.Uuid})">
+                            <div class="layoutcard-item_img">
+                                <img src="@eduquizowner.Image" />
+                                <span>@eduquizowner.SumQuestion câu hỏi</span>
                             </div>
-                            <div class="card-item_footer">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-item_footer-img">
-                                        <img src="~/src//img/defaultimguser.png" />
-                                    </div>
-                                    <span class="card-item_footer-name">tuan_ok123</span>
+                            <div class="d-flex flex-column" style="flex:1">
+                                <div class="card-item_title">
+                                    <span>@eduquizowner.Title</span>
                                 </div>
-                                <span class="count-playquiz">10 lượt</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item_img">
-                            <img src="~/src/img/market.jpg" />
-                            <span>10 câu hỏi</span>
-                        </div>
-                        <div class="d-flex flex-column" style="flex:1">
-                            <div class="card-item_title">
-                                <span>Hóa học là gì</span>
-                            </div>
-                            <div class="card-item_footer">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-item_footer-img">
-                                        <img src="~/src//img/defaultimguser.png" />
+                                <div class="card-item_footer">
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-item_footer-img">
+                                            <img src="@eduquizowner.Avatar" />
+                                        </div>
+                                        <span class="card-item_footer-name">@eduquizowner.UserName</span>
                                     </div>
-                                    <span class="card-item_footer-name">tuan</span>
+                                    <span class="count-playquiz">@eduquizowner.SumPlay lượt</span>
                                 </div>
-                                <span class="count-playquiz">8 lượt</span>
                             </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
+                }
             </div>
             <div class="layout-card_footter">
-                <a class="footer-link" href="#">Xem tất cả(5)</a>
+                <a class="footer-link" href="@Url.Action("Index","Library")">Xem tất cả(5)</a>
             </div>
         </div>
         <div class="layout-card mt-3">
@@ -261,64 +279,24 @@
                 <button style="border-bottom:none" type="button" class="tabs-button">Báo cáo mới nhất</button>
             </div>
             <div class="layout-card_body">
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item-report_img">
-                            <img src="~/src/img/logoplayquiz.svg" />
-                        </div>
-                        <div class="layoutcard-item-report_footer">
-                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
-                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
-                       </div>
-                    </a>
-                </div>
-                 <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item-report_img">
-                            <img src="~/src/img/logoplayquiz.svg" />
-                        </div>
-                        <div class="layoutcard-item-report_footer">
-                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
-                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
-                       </div>
-                    </a>
-                </div>
-                 <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item-report_img">
-                            <img src="~/src/img/logoplayquiz.svg" />
-                        </div>
-                        <div class="layoutcard-item-report_footer">
-                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
-                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
-                       </div>
-                    </a>
-                </div>
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item-report_img">
-                            <img src="~/src/img/logoplayquiz.svg" />
-                        </div>
-                        <div class="layoutcard-item-report_footer">
-                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
-                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="layoutcard-item">
-                    <a class="d-flex" href="#">
-                        <div class="layoutcard-item-report_img">
-                            <img src="~/src/img/logoplayquiz.svg" />
-                        </div>
-                        <div class="layoutcard-item-report_footer">
-                            <span class="time-report">Ngày 11 tháng 8 năm 2024</span>
-                            <span class="name-report">Kiểm tra trắc nghiệm EduQuiz</span>
-                        </div>
-                    </a>
-                </div>
+                @foreach(var report in Model.ListReport)
+                {
+                    <div class="layoutcard-item">
+                        <a class="d-flex" href="javascript:void(0);" onclick="RedirectReport(@report.Id,@report.Pin)">
+                            <div class="layoutcard-item-report_img">
+                                <img src="/src/img/logoplayquiz.svg" />
+                            </div>
+                            <div class="layoutcard-item-report_footer">
+                                <span class="time-report">@report.ReportDate</span>
+                                <span class="name-report">@report.Title</span>
+                            </div>
+                        </a>
+                    </div>
+                }
+                
             </div>
             <div class="layout-card_footter">
-                <a class="footer-link" href="#">Xem tất cả(5)</a>
+                <a class="footer-link" href="@Url.Action("Index","Reports")">Xem tất cả(5)</a>
             </div>
         </div>
     </div>
@@ -367,171 +345,184 @@
         </div>
     </div>
 </div>
+<script>
+    function RedirectReport(id, value) {
+        var slug = btoa(id + '-' + value);
+        location.href = `/reports/detail/${slug}`;
+    }
+    function TabGroup(button, value) {
+        $(".tabs-button.group").removeClass("active");
+        $(button).addClass("active");
+        if (value == 2) {
+            $("#groupowner").addClass("d-none");
+            $("#groupjoin").removeClass("d-none");
+        } else {
+            $("#groupjoin").addClass("d-none");
+            $("#groupowner").removeClass("d-none");
+        }
 
-@section scripts {
-    <script>
-        $(document).ready(function () {
-            var userid = `@Model.Id`;
-            var userFavorite = JSON.parse('@Html.Raw(Model.Favorite)');
-            var arrInterestCheck = [];
-            var arrInterest = [];
-            getListInterest()
-            function getListInterest() {
-                $.ajax({
-                    type: 'GET',
-                    url: "@Url.Action("GetListInterest", "HomeDashboard")",
-                    success: function (response) {
-                        if (response.result == "PASS") {
-                            arrInterest = response.data;
-                        }
-                    },
-                    error: function (err) {
-
+    }
+    $(document).ready(function () {
+        var userid = `@Model.User.Id`;
+        var userFavorite = JSON.parse('@Html.Raw(Model.User.Favorite)');
+        var arrInterestCheck = [];
+        var arrInterest = [];
+        getListInterest()
+        function getListInterest() {
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("GetListInterest", "HomeDashboard")",
+                success: function (response) {
+                    if (response.result == "PASS") {
+                        arrInterest = response.data;
                     }
-                })
-            }
-            $(document).on('click', '#changeInterest', function () {
-                arrInterestCheck = JSON.parse(JSON.stringify(userFavorite));
-                renderInterest();
-                $("#modalEditInterest").show();
-            });
-            $(document).on("click", "#showInterest", function () {
-                var interestContainer = $("#myinterest");
-                if (interestContainer.children('.interest-item').length > 0) {
-                    interestContainer.empty();
-                    $(this).text("Hiển thị")
-                } else {
-                    userFavorite.forEach(function (item) {
-                        var interestItem = `<span class="interest-item">${item.name}</span>`;
-                        interestContainer.append(interestItem);
-                    });
-                    interestContainer.append(` <span id="changeInterest" style="padding: 4px 0 4px 4px;font-size: 12px;width: 100%;text-align: center;font-weight: 600;" class="profile-link" data-toggle="modal" data-target="#modalEditInterest">
-                                    Chỉnh sửa sở thích
-                            </span>`)
-                    $(this).text("Ẩn")
+                },
+                error: function (err) {
+
                 }
-            });
-
-            function renderInterest() {
-                var interestContainer = $('#interestContainer');
-                interestContainer.empty();
-                // Duyệt qua danh sách sở thích và tạo các phần tử HTML
-                arrInterest.forEach(function (interest) {
-                    var isActive = arrInterestCheck.some(fav => fav.id === interest.id);
-                    var iconClass = isActive ? 'fa-times' : 'fa-plus'; // Chọn biểu tượng dựa trên trạng thái active
-
-                    var interestItem = `
-                                <button class="btn-interest ${isActive ? 'active' : ''}" data-id="${interest.id}" data-name="${interest.name}">
-                                    ${interest.name} <i class="fa ${iconClass}" aria-hidden="true"></i>
-                                </button>
-                            `;
-                    interestContainer.append(interestItem); // Thêm phần tử vào container
-                });
-            }
-            $(document).on('click', '.btn-interest', function () {
-                var button = $(this);
-                var interestId = button.data('id');
-                var interestName = button.data('name');
-                var isActive = button.hasClass('active');
-
-                button.toggleClass('active');
-
-                var icon = button.find('i');
-                icon.toggleClass('fa-plus fa-times');
-
-                if (isActive) {
-                    // Xóa sở thích khỏi danh sách yêu thích
-                    arrInterestCheck = arrInterestCheck.filter(fav => fav.id !== interestId);
-                } else {
-                    // Thêm sở thích vào danh sách yêu thích
-                    arrInterestCheck.push({ id: interestId, name: interestName });
-                }
-                console.log(arrInterestCheck)
-            });
-
-            $("#saveInterest").click(function () {
-                if (arrInterestCheck.length <= 0) {
-                    openToast('warning', 'Lỗi', "Vui lòng chọn ít nhất 1 sở thích!", 2500);
-                    return;
-                }
-                $.ajax({
-                    type: 'POST',
-                    url: "@Url.Action("EditInterestUser", "HomeDashboard")",
-                    data: {
-                        userid: userid,
-                        listfavorite: arrInterestCheck
-                    },
-                    success: function (response) {
-                        if (response.redirectUrl) {
-                            Swal.fire({
-                                title: 'Hết phiên đăng nhập',
-                                text: 'Vui lòng đăng nhập lại',
-                                icon: 'warning',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = response.redirectUrl;  // Chuyển hướng sau khi ấn OK
-                                }
-                            });
-                        } else {
-                            if (response.result == "PASS") {
-                                userFavorite = response.data;
-                                if (userFavorite.length > 0) {
-                                    $("#myinterest").empty();
-                                    $("#checkmodal").empty();
-                                    $("#checkmodal").append(`<span id="showInterest" style="padding:4px 0 4px 4px" class="profile-link">
-                                            Hiển thị
-                                        </span>`)
-                                    $("#countInterest").text(`Sở thích của bạn(${userFavorite.length})`)
-                                }
-                                $("#closeInterest").click();
-                            }
-                        }
-                        
-                    },
-                    error: function (xhr, status, error) {
-                      
-                    }
-                })
             })
+        }
+        $(document).on('click', '#changeInterest', function () {
+            arrInterestCheck = JSON.parse(JSON.stringify(userFavorite));
+            renderInterest();
+            $("#modalEditInterest").show();
+        });
+        $(document).on("click", "#showInterest", function () {
+            var interestContainer = $("#myinterest");
+            if (interestContainer.children('.interest-item').length > 0) {
+                interestContainer.empty();
+                $(this).text("Hiển thị")
+            } else {
+                userFavorite.forEach(function (item) {
+                    var interestItem = `<span class="interest-item">${item.name}</span>`;
+                    interestContainer.append(interestItem);
+                });
+                interestContainer.append(` <span id="changeInterest" style="padding: 4px 0 4px 4px;font-size: 12px;width: 100%;text-align: center;font-weight: 600;" class="profile-link" data-toggle="modal" data-target="#modalEditInterest">
+                                        Chỉnh sửa sở thích
+                                </span>`)
+                $(this).text("Ẩn")
+            }
+        });
 
-            $("#savename").click(function () {
-                var name = $("#editname").val();
-                if (name == "") {
-                    openToast('warning', 'Lỗi', "Vui lòng nhập tên!", 2500);
-                    return;
-                }
-                $.ajax({
-                    type: 'POST',
-                    url: "@Url.Action("EditName", "HomeDashboard")",
-                    data: {
-                        userid: userid,
-                        name: name
-                    },
-                    success: function (response) {
-                        if (response.result == "PASS") {
-                            console.log(response.data)
-                            if (response.data != "") {
-                                $('<span>', {
-                                    id: 'nameshow',
-                                    style: 'color: rgb(110, 110, 110); font-weight: 600;font-size:13px;',
-                                    html: response.data
-                                }).insertBefore(".button-add");
-                                $(".button-add").remove();
-                            } else {
-                                $("#editname").val("")
+        function renderInterest() {
+            var interestContainer = $('#interestContainer');
+            interestContainer.empty();
+            // Duyệt qua danh sách sở thích và tạo các phần tử HTML
+            arrInterest.forEach(function (interest) {
+                var isActive = arrInterestCheck.some(fav => fav.id === interest.id);
+                var iconClass = isActive ? 'fa-times' : 'fa-plus'; // Chọn biểu tượng dựa trên trạng thái active
+
+                var interestItem = `
+                                    <button class="btn-interest ${isActive ? 'active' : ''}" data-id="${interest.id}" data-name="${interest.name}">
+                                        ${interest.name} <i class="fa ${iconClass}" aria-hidden="true"></i>
+                                    </button>
+                                `;
+                interestContainer.append(interestItem); // Thêm phần tử vào container
+            });
+        }
+        $(document).on('click', '.btn-interest', function () {
+            var button = $(this);
+            var interestId = button.data('id');
+            var interestName = button.data('name');
+            var isActive = button.hasClass('active');
+
+            button.toggleClass('active');
+
+            var icon = button.find('i');
+            icon.toggleClass('fa-plus fa-times');
+
+            if (isActive) {
+                // Xóa sở thích khỏi danh sách yêu thích
+                arrInterestCheck = arrInterestCheck.filter(fav => fav.id !== interestId);
+            } else {
+                // Thêm sở thích vào danh sách yêu thích
+                arrInterestCheck.push({ id: interestId, name: interestName });
+            }
+            console.log(arrInterestCheck)
+        });
+
+        $("#saveInterest").click(function () {
+            if (arrInterestCheck.length <= 0) {
+                openToast('warning', 'Lỗi', "Vui lòng chọn ít nhất 1 sở thích!", 2500);
+                return;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("EditInterestUser", "HomeDashboard")",
+                data: {
+                    userid: userid,
+                    listfavorite: arrInterestCheck
+                },
+                success: function (response) {
+                    if (response.redirectUrl) {
+                        Swal.fire({
+                            title: 'Hết phiên đăng nhập',
+                            text: 'Vui lòng đăng nhập lại',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = response.redirectUrl;  // Chuyển hướng sau khi ấn OK
                             }
-                            $("#close").click();
-                        } else {
-                            openToast('warning', 'Lỗi', response.msg, 2500);
+                        });
+                    } else {
+                        if (response.result == "PASS") {
+                            userFavorite = response.data;
+                            if (userFavorite.length > 0) {
+                                $("#myinterest").empty();
+                                $("#checkmodal").empty();
+                                $("#checkmodal").append(`<span id="showInterest" style="padding:4px 0 4px 4px" class="profile-link">
+                                                Hiển thị
+                                            </span>`)
+                                $("#countInterest").text(`Sở thích của bạn(${userFavorite.length})`)
+                            }
+                            $("#closeInterest").click();
                         }
-                    },
-                    error: function (err) {
-                        openToast('error', 'Error', 'Đã có lỗi xảy ra.', 2500);
                     }
-                })
 
+                },
+                error: function (xhr, status, error) {
+
+                }
             })
         })
-    </script>
-}
+
+        $("#savename").click(function () {
+            var name = $("#editname").val();
+            if (name == "") {
+                openToast('warning', 'Lỗi', "Vui lòng nhập tên!", 2500);
+                return;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("EditName", "HomeDashboard")",
+                data: {
+                    userid: userid,
+                    name: name
+                },
+                success: function (response) {
+                    if (response.result == "PASS") {
+                        console.log(response.data)
+                        if (response.data != "") {
+                            $('<span>', {
+                                id: 'nameshow',
+                                style: 'color: rgb(110, 110, 110); font-weight: 600;font-size:13px;',
+                                html: response.data
+                            }).insertBefore(".button-add");
+                            $(".button-add").remove();
+                        } else {
+                            $("#editname").val("")
+                        }
+                        $("#close").click();
+                    } else {
+                        openToast('warning', 'Lỗi', response.msg, 2500);
+                    }
+                },
+                error: function (err) {
+                    openToast('error', 'Error', 'Đã có lỗi xảy ra.', 2500);
+                }
+            })
+
+        })
+    })
+</script>

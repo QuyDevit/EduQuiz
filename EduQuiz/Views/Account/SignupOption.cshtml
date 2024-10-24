@@ -1,7 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     ViewBag.Title = "Đăng ký";
     Layout = "_LayoutAuth";
 }
@@ -63,7 +60,6 @@
                 content: 'Hiển thị mật khẩu',
             });
 
-            // Tạo một hàm để kiểm tra trạng thái của nút "Đăng ký"
             function toggleSubmitButton() {
                 const email = $(".email-signup .input-field").val();
                 const password = $(".pass-signup .input-field").val();
@@ -75,29 +71,28 @@
                 }
             }
 
-            // Bắt sự kiện click vào nút để hiển thị hoặc ẩn mật khẩu
             $(".btn-checkpass").on('click', function () {
                 var passwordField = $(".pass-signup .input-field");
                 var icon = $(this).find('i');
 
                 if (passwordField.attr('type') === 'password') {
-                    passwordField.attr('type', 'text');  // Hiển thị mật khẩu
-                    icon.removeClass('fa-eye').addClass('fa-eye-slash');  // Đổi icon thành eye-slash
-                    tippyInstance[0].setContent('Ẩn mật khẩu'); // Đổi nội dung tooltip
+                    passwordField.attr('type', 'text'); 
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');  
+                    tippyInstance[0].setContent('Ẩn mật khẩu'); 
                 } else {
-                    passwordField.attr('type', 'password');  // Ẩn mật khẩu
-                    icon.removeClass('fa-eye-slash').addClass('fa-eye');  // Đổi icon thành eye
-                    tippyInstance[0].setContent('Hiển thị mật khẩu'); // Đổi nội dung tooltip
+                    passwordField.attr('type', 'password');  
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');  
+                    tippyInstance[0].setContent('Hiển thị mật khẩu'); 
                 }
             });
 
-            // Gọi hàm kiểm tra khi người dùng nhập liệu
             $(".email-signup .input-field, .pass-signup .input-field").on('input', function () {
                 toggleSubmitButton();
             });
             $("#signupform").on("submit", function (e) {
-                e.preventDefault(); // Prevent the form from being submitted
+                e.preventDefault(); 
             });
+
             //Đăng ký tài khoản
             $("#submitsignup").click(function () {
                 var password = $("#pass").val();
@@ -107,7 +102,6 @@
                     return;
                 }
 
-                 // Kiểm tra định dạng email
                 var emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
 
                 if (!emailPattern.test(email)) {
@@ -115,8 +109,6 @@
                     return;
                 }
 
-                // Kiểm tra mật khẩu đủ mạnh
-                // Mật khẩu cần ít nhất 6 ký tự, gồm chữ và số
                 var passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
                 if (!passwordPattern.test(password)) {
                     openToast('warning', 'Lỗi', 'Mật khẩu phải dài ít nhất 6 ký tự và bao gồm cả chữ và số', 2500);
@@ -125,7 +117,6 @@
 
                 var captcharesponse = grecaptcha.getResponse();
 
-                // Kiểm tra xem reCAPTCHA có được giải hay chưa
                 if (captcharesponse.length === 0) {
                     openToast('warning', 'Lỗi', 'Vui lòng xác minh reCAPTCHA.', 2500);
                     return false;

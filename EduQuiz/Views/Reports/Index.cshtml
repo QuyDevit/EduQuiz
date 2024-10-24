@@ -90,7 +90,9 @@
 
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({
+            "order": []
+        });
     });
     tippy('.icon__Icon', {
         content: "Số lượng người chơi!",

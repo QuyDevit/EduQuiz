@@ -1,182 +1,202 @@
 ﻿@{
     Layout = "_LayoutUser";
     ViewBag.Title = "Nhóm - Bài tập";
+    @using EduQuiz.Helper
     @using Microsoft.AspNetCore.Http
     @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
     var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
 }
-@section styles {
-    <link href="~/src/css/library.css" rel="stylesheet" />
-}
+<style>
+    .cards-with-search__CardsListWrapper .styles__ContainerCard:hover{
+        cursor:pointer;
+    }
+</style>
+@model EduQuiz.Models.GroupViewModel
+<link href="~/src/css/library.css" rel="stylesheet" />
+<link href="~/src/css/group.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <div class="content" style="padding:0;margin-top:63px;">
     <div class="layout-library">
-        <div class="col-md-3 sidebar-wrapper__library" style="min-height:400px;padding:0;">
-            <div class="layout-card" style="padding:0;margin:0;height:calc(100vh - 63px) ">
-                <div class="sidebar-wrapper__library-Block">
-                    <ul class="sidebar-Link__Container">
-                        <li class="sidebar-Link__Wrapper">
-                            <a class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/groups/owned" ? "active" : "")" href="@Url.Action("GroupOwned","Group")">
-                                <span class="sidebar-Link__Icon">
-                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M26,16 C24.897,16 24,15.103 24,14 C24,12.897 24.897,12 26,12 C27.103,12 28,12.897 28,14 C28,15.103 27.103,16 26,16 L26,16 Z M10,23 C10,22.298 10.127,21.627 10.35,21 C10.487,20.615 10.661,20.248 10.87,19.904 C11.923,18.167 13.825,17 16,17 C18.175,17 20.077,18.167 21.13,19.904 C21.339,20.248 21.513,20.615 21.65,21 C21.873,21.627 22,22.298 22,23 L10,23 Z M16,9 C17.654,9 19,10.346 19,12 C19,13.654 17.654,15 16,15 C14.346,15 13,13.654 13,12 C13,10.346 14.346,9 16,9 L16,9 Z M6,16 C4.897,16 4,15.103 4,14 C4,12.897 4.897,12 6,12 C7.103,12 8,12.897 8,14 C8,15.103 7.103,16 6,16 L6,16 Z M28.793,16.855 C29.536,16.128 30,15.119 30,14 C30,11.794 28.206,10 26,10 C23.794,10 22,11.794 22,14 C22,15.119 22.464,16.128 23.207,16.855 C22.795,17.133 22.444,17.486 22.132,17.871 C21.367,16.958 20.4,16.223 19.305,15.723 C20.336,14.807 21,13.485 21,12 C21,9.243 18.757,7 16,7 C13.243,7 11,9.243 11,12 C11,13.485 11.664,14.807 12.695,15.723 C11.6,16.223 10.633,16.958 9.868,17.871 C9.556,17.486 9.205,17.133 8.793,16.855 C9.536,16.128 10,15.119 10,14 C10,11.794 8.206,10 6,10 C3.794,10 2,11.794 2,14 C2,15.119 2.464,16.128 3.207,16.855 C1.876,17.754 1,19.277 1,21 L3,21 C3,19.346 4.346,18 6,18 C7.198,18 8.227,18.711 8.707,19.729 C8.257,20.729 8,21.834 8,23 L8,24 C8,24.552 8.448,25 9,25 L23,25 C23.552,25 24,24.552 24,24 L24,23 C24,21.834 23.743,20.729 23.293,19.729 C23.773,18.711 24.802,18 26,18 C27.654,18 29,19.346 29,21 L31,21 C31,19.277 30.124,17.754 28.793,16.855 L28.793,16.855 Z" style="fill: rgb(110, 110, 110);"></path></svg>
-                                </span>
-                                <span class="ml-2">Nhóm sở hữu</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-Link__Wrapper">
-                            <a class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/groups/joined" ? "active" : "")" href="@Url.Action("Index","Group")">
-                                <span class="sidebar-Link__Icon">
-                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,14 C17.6568542,14 19,12.6568542 19,11 C19,9.34314575 17.6568542,8 16,8 C14.3431458,8 13,9.34314575 13,11 C13,12.6568542 14.3431458,14 16,14 Z M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M16,19 C13.0269583,19 10.5610282,20.4075601 9.52516483,22.3125 L22.4748352,22.3125 C21.4389718,20.4075601 18.9730417,19 16,19 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: rgb(110, 110, 110);"></path></svg>
-                                </span>
-                                <span class="ml-2">Nhóm đã tham gia</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="library-sidebar__Separator"></div>
-
-                </div>
-            </div>
-        </div>
+        <partial name="_SidebarGroup" />
         <div class="library-layout__Content">
             <div class="library-eduquiz__Content">
-                <div class="group-detail__Container">
-                    <div class="group-detail-page-header__Title">Triết học Mác - Lê Nin</div>
-                    <div class="group-detail-page-header__Option">
-                        <a class="group-link" href="#">
-                            <span class="group-detail-page-header__OptionIcon">
-                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7.83159109,16 C7.83159109,15.637 7.85915912,15.266 7.91429518,14.893 L6.51036785,14.099 C6.27655014,13.967 6.10501575,13.748 6.03456412,13.492 C5.9641125,13.236 6.00086987,12.963 6.13666793,12.733 L8.17874403,9.27 C8.46157157,8.792 9.08440478,8.627 9.57348201,8.903 L10.9804724,9.698 C11.5788007,9.24 12.2383913,8.865 12.9367814,8.585 L12.9367814,7 C12.9367814,6.448 13.3931854,6 13.9578194,6 L18.0419716,6 C18.6066057,6 19.0630097,6.448 19.0630097,7 L19.0630097,8.586 C19.7613997,8.864 20.4209903,9.24 21.0193186,9.697 L22.426309,8.902 C22.6601267,8.769 22.9398912,8.734 23.2012769,8.802 C23.4626626,8.87 23.6852489,9.038 23.821047,9.267 L25.8631231,12.731 C26.1449296,13.209 25.9774794,13.821 25.4904442,14.097 L24.0854959,14.892 C24.1406319,15.265 24.1681999,15.636 24.1681999,16 C24.1681999,16.364 24.1406319,16.735 24.0854959,17.108 L25.4904442,17.903 C25.9774794,18.179 26.1449296,18.791 25.8631231,19.269 L23.821047,22.733 C23.6852489,22.962 23.4626626,23.13 23.2012769,23.198 C22.9398912,23.266 22.6601267,23.231 22.426309,23.098 L21.0193186,22.303 C20.4209903,22.76 19.7613997,23.136 19.0630097,23.414 L19.0630097,25 C19.0630097,25.552 18.6066057,26 18.0419716,26 L13.9578194,26 C13.3931854,26 12.9367814,25.552 12.9367814,25 L12.9367814,23.415 C12.2383913,23.135 11.5788007,22.76 10.9804724,22.302 L9.57348201,23.097 C9.08440478,23.373 8.46157157,23.208 8.17874403,22.73 L6.13666793,19.267 C6.00086987,19.037 5.9641125,18.764 6.03456412,18.508 C6.10501575,18.252 6.27655014,18.033 6.51036785,17.901 L7.91429518,17.107 C7.85915912,16.734 7.83159109,16.363 7.83159109,16 Z M9.8736672,16 C9.8736672,16.455 9.92982429,16.908 10.0452016,17.39 C10.1493475,17.82 9.95330817,18.265 9.56225059,18.485 L8.41562486,19.133 L9.43666291,20.865 L10.5843097,20.217 C10.9784304,19.997 11.4695497,20.053 11.7962819,20.357 C12.4936508,21.002 13.3431545,21.483 14.2498363,21.749 C14.6827564,21.875 14.9788575,22.266 14.9788575,22.707 L14.9788575,24 L17.0209336,24 L17.0209336,22.707 C17.0209336,22.265 17.3180556,21.875 17.7509758,21.749 C18.6556155,21.484 19.5030771,21.003 20.2035092,20.357 C20.5322834,20.053 21.0254448,19.996 21.4154813,20.217 L22.5631281,20.866 L23.5841662,19.135 L22.4375404,18.484 C22.0464829,18.264 21.8504436,17.819 21.9545894,17.39 C22.0699667,16.908 22.1261238,16.454 22.1261238,16 C22.1261238,15.546 22.0699667,15.092 21.9545894,14.61 C21.8504436,14.181 22.0464829,13.736 22.4375404,13.516 L23.5841662,12.865 L22.5631281,11.134 L21.4154813,11.783 C21.0254448,12.004 20.5322834,11.947 20.2035092,11.643 C19.5030771,10.997 18.6556155,10.516 17.7509758,10.251 C17.3180556,10.125 17.0209336,9.735 17.0209336,9.293 L17.0209336,8 L14.9788575,8 L14.9788575,9.293 C14.9788575,9.734 14.6827564,10.125 14.2498363,10.251 C13.3431545,10.517 12.4936508,10.998 11.7962819,11.643 C11.4695497,11.947 10.9784304,12.003 10.5843097,11.783 L9.43666291,11.135 L8.41562486,12.867 L9.56225059,13.515 C9.95330817,13.735 10.1493475,14.18 10.0452016,14.61 C9.92982429,15.092 9.8736672,15.545 9.8736672,16 Z M16,18 C14.8954305,18 14,17.1045695 14,16 C14,14.8954305 14.8954305,14 16,14 C17.1045695,14 18,14.8954305 18,16 C18,17.1045695 17.1045695,18 16,18 Z" style="fill: currentcolor;"></path></svg>
-                            </span>
-                        </a>
-
-                        <div class="group-detail-page-header__ActionMenu">
-                            <button id="openmenuOption" class="group-detail-page-header__ActionMenu-btn">
-                                <span class="group-detail-page-header__OptionIcon" style="width:20px;height:20px">
-                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,10 C17.1045695,10 18,9.1045695 18,8 C18,6.8954305 17.1045695,6 16,6 C14.8954305,6 14,6.8954305 14,8 C14,9.1045695 14.8954305,10 16,10 Z M16,18 C17.1045695,18 18,17.1045695 18,16 C18,14.8954305 17.1045695,14 16,14 C14.8954305,14 14,14.8954305 14,16 C14,17.1045695 14.8954305,18 16,18 Z M16,26 C17.1045695,26 18,25.1045695 18,24 C18,22.8954305 17.1045695,22 16,22 C14.8954305,22 14,22.8954305 14,24 C14,25.1045695 14.8954305,26 16,26 Z" style="fill: rgb(0, 0, 0);"></path></svg>
-                                </span>
-                            </button>
-                            <ul id="menuOption" class="group-action-menu__list d-none">
-                                <li class="menu__list-item">
-                                    <button class="menu__list-itemBtn">
-                                        <span class="menu__list-itemIcon">
-                                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M26,16 C24.897,16 24,15.103 24,14 C24,12.897 24.897,12 26,12 C27.103,12 28,12.897 28,14 C28,15.103 27.103,16 26,16 L26,16 Z M10,23 C10,22.298 10.127,21.627 10.35,21 C10.487,20.615 10.661,20.248 10.87,19.904 C11.923,18.167 13.825,17 16,17 C18.175,17 20.077,18.167 21.13,19.904 C21.339,20.248 21.513,20.615 21.65,21 C21.873,21.627 22,22.298 22,23 L10,23 Z M16,9 C17.654,9 19,10.346 19,12 C19,13.654 17.654,15 16,15 C14.346,15 13,13.654 13,12 C13,10.346 14.346,9 16,9 L16,9 Z M6,16 C4.897,16 4,15.103 4,14 C4,12.897 4.897,12 6,12 C7.103,12 8,12.897 8,14 C8,15.103 7.103,16 6,16 L6,16 Z M28.793,16.855 C29.536,16.128 30,15.119 30,14 C30,11.794 28.206,10 26,10 C23.794,10 22,11.794 22,14 C22,15.119 22.464,16.128 23.207,16.855 C22.795,17.133 22.444,17.486 22.132,17.871 C21.367,16.958 20.4,16.223 19.305,15.723 C20.336,14.807 21,13.485 21,12 C21,9.243 18.757,7 16,7 C13.243,7 11,9.243 11,12 C11,13.485 11.664,14.807 12.695,15.723 C11.6,16.223 10.633,16.958 9.868,17.871 C9.556,17.486 9.205,17.133 8.793,16.855 C9.536,16.128 10,15.119 10,14 C10,11.794 8.206,10 6,10 C3.794,10 2,11.794 2,14 C2,15.119 2.464,16.128 3.207,16.855 C1.876,17.754 1,19.277 1,21 L3,21 C3,19.346 4.346,18 6,18 C7.198,18 8.227,18.711 8.707,19.729 C8.257,20.729 8,21.834 8,23 L8,24 C8,24.552 8.448,25 9,25 L23,25 C23.552,25 24,24.552 24,24 L24,23 C24,21.834 23.743,20.729 23.293,19.729 C23.773,18.711 24.802,18 26,18 C27.654,18 29,19.346 29,21 L31,21 C31,19.277 30.124,17.754 28.793,16.855 L28.793,16.855 Z" style="fill: rgb(0, 0, 0);"></path></svg>
-                                        </span>
-                                        <p class="menu__list-itemTitle">Xem thành viên</p>
-                                    </button>
-                                </li>
-                                <li class="menu__list-item">
-                                    <button class="menu__list-itemBtn">
-                                        <span class="menu__list-itemIcon">
-                                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M21,6 C22.103,6 23,6.898 23,8 L23,11 L21,11 L21,8 L10,8 L10,24 L21,24 L21,21 L23,21 L23,24 C23,25.103 22.103,26 21,26 L10,26 C8.897,26 8,25.103 8,24 L8,8 C8,6.898 8.897,6 10,6 L21,6 Z M16.293,11.292 L17.707,12.708 L15.41,15 L24,15 L24,17 L15.418,17 L17.708,19.294 L16.292,20.706 L11.586,15.991 L16.293,11.292 Z" style="fill: rgb(0, 0, 0);"></path></svg>
-                                        </span>
-                                        <p class="menu__list-itemTitle">Rời khỏi nhóm</p>
-                                    </button>
-                                </li>
-                                <li class="menu__list-item">
-                                    <button class="menu__list-itemBtn">
-                                        <span class="menu__list-itemIcon">
-                                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M9,24 C9,25.103 9.897,26 11,26 L21,26 C22.103,26 23,25.103 23,24 L23,12 L9,12 L9,24 Z M11,14 L21,14 L21.001,24 L11,24 L11,14 Z M19,9 L25,9 L25,11 L7,11 L7,9 L13,9 L13,7 L19,7 L19,9 Z M13,16 L13,22 L15,22 L15,16 L13,16 Z M17,16 L17,22 L19,22 L19,16 L17,16 Z" style="fill: rgb(0, 0, 0);"></path></svg>
-                                        </span>
-                                        <p class="menu__list-itemTitle">Xóa nhóm</p>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="group-detail-tabs__Container">
-                    <div class="group-detail-tabsWrapper">
-                        <div class="group-detail-tab_Tab">
-                            <a href="@Url.Action("GroupActivity","Group",new{id = Guid.NewGuid()})" class="group-detail-tab_TabLink">
-                                Hoạt động
-                            </a>
-                        </div>
-                        <div class="group-detail-tab_Tab">
-                            <a href="@Url.Action("GroupShared","Group",new{id = Guid.NewGuid()})" class="group-detail-tab_TabLink">
-                                Chia sẻ
-                            </a>
-                        </div>
-                        <div class="group-detail-tab_Tab">
-                            <a href="@Url.Action("GroupAssignments","Group",new{id = Guid.NewGuid()})" class="group-detail-tab_TabLink active">
-                                Bài tập
-                            </a>
-                        </div>
-                    </div>
-                    <button class="btn">Giao bài tập</button>
-                </div>
-               @*  <div class="styles__ContainerCard">
-                    <div class="style__ImgWrapper">
-                        <img src="~/src/img/EduQuizDefault.png" />
-                        <div class="extra-info">
-                            <div class="extra-info__Label">5 câu hỏi</div>
-                        </div>
-
-                    </div>
-                    <div class="styles__ContentContainer">
-                        <div class="styles__LeftContentContainer">
-                            <div class="styles__TopContent">
-                                <div class="styles__MainInfo">
-                                    <div class="title__Wrapper">Bài học tiếng anh mọi cấp độ</div>
-                                    <p class="description">bài học cho mọi lứa tuổi</p>
+                <partial name="_TabGroup" model="Model" />
+                @if(Model.ListEduQuiAssignment.Count > 0)
+                {
+                    foreach (var eduquiz in Model.ListEduQuiAssignment)
+                    {
+                        <div class="styles__ContainerCard">
+                            <div class="style__ImgWrapper">
+                                <img src="@eduquiz.Image" />
+                                <div class="extra-info">
+                                    <div class="extra-info__Label">@eduquiz.CountQuestion Câu hỏi</div>
                                 </div>
+
                             </div>
-                            <div class="styles__BottomContent">
-                                <div class="styles__BottomInnerWrapper">
-                                    <div class="creator">
-                                        <img src="~/src/img/defaultimguser.png" />
-                                        <div>pingvocuc333</div>
+                            <div class="styles__ContentContainer">
+                                <div class="styles__LeftContentContainer">
+                                    <div class="styles__TopContent">
+                                        <div class="styles__MainInfo">
+                                            <div class="title__Wrapper">@eduquiz.Title</div>
+                                            <p class="description">@eduquiz.Description</p>
+                                        </div>
+                                    </div>
+                                    <div class="styles__BottomContent" style="height:30px">
+                                        <div class="styles__BottomInnerWrapper">
+                                            <div class="creator">
+                                                <img src="@eduquiz.Avatar" />
+                                                <div>@eduquiz.Username</div>
+                                            </div>
+                                            <div class="d-flex flex-column ml-4">
+                                                <div><strong>Thời gian bắt đầu</strong>: @eduquiz.StartTime</div>
+                                                <div><strong>Thời gian kết thúc</strong>: @StringHelper.ConvertDateTimeToCustomString(eduquiz.EndTime)</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="styles__ActionsWrapper">
-                            <button class="btn">Chơi ngay</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="styles__ContainerCard">
-                    <div class="style__ImgWrapper">
-                        <img src="~/src/img/EduQuizDefault.png" />
-                        <div class="extra-info">
-                            <div class="extra-info__Label">5 câu hỏi</div>
-                        </div>
-
-                    </div>
-                    <div class="styles__ContentContainer">
-                        <div class="styles__LeftContentContainer">
-                            <div class="styles__TopContent">
-                                <div class="styles__MainInfo">
-                                    <div class="title__Wrapper">Bài học tiếng anh mọi cấp độ</div>
-                                    <p class="description">bài học cho mọi lứa tuổi</p>
-                                </div>
-                            </div>
-                            <div class="styles__BottomContent">
-                                <div class="styles__BottomInnerWrapper">
-                                    <div class="creator">
-                                        <img src="~/src/img/defaultimguser.png" />
-                                        <div>pingvocuc333</div>
+                                @if (DateTime.Now <= eduquiz.EndTime)
+                                {
+                                    <div class="styles__ActionsWrapper">
+                                        <a href="@Url.Action("Challenge","Group",new{pin = eduquiz.Pin})" target="_blank" class="btn">Chơi ngay</a>
                                     </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="group-empty-view" style="width:85%;margin-top:10px;">
+                        <div class="group-empty-view__Container">
+                            <div class="groups-empty-view__Icons">
+                                <div class="groups-empty-view__Icon m-0">
+                                    <svg width="89" height="48" viewBox="0 0 89 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.000244141" y="16" width="40" height="8" rx="4" fill="white"></rect><rect x="0.000244141" y="32" width="88" height="8" rx="4" fill="white"></rect><rect x="0.000244141" width="72" height="8" rx="4" fill="#45A3E5"></rect><mask id="mask0_635_22151" maskUnits="userSpaceOnUse" x="33" y="9" width="31" height="30" style="mask-type: alpha;"><path fill-rule="evenodd" clip-rule="evenodd" d="M60.0002 16.5585C60.0002 17.016 59.7947 17.445 59.4377 17.73L56.9912 19.6875C56.9927 19.6245 57.0002 19.563 57.0002 19.5V13.5H60.0002V16.5585ZM48.0002 25.5C44.6912 25.5 42.0002 22.809 42.0002 19.5V12H54.0002V19.5C54.0002 22.809 51.3092 25.5 48.0002 25.5ZM36.5642 17.7315C36.2057 17.445 36.0002 17.016 36.0002 16.5585V13.5H39.0002V19.5C39.0002 19.563 39.0077 19.6245 39.0092 19.6875L36.5642 17.7315ZM51.0002 36H45.0002V34.5H51.0002V36ZM61.5002 10.5H56.5832C56.0627 9.6075 55.1057 9 54.0002 9H42.0002C40.8947 9 39.9377 9.6075 39.4172 10.5H34.5002C33.6722 10.5 33.0002 11.172 33.0002 12V16.5585C33.0002 17.9325 33.6152 19.2135 34.6892 20.073L40.9562 25.086C42.3107 26.79 44.2652 27.9885 46.5002 28.365V31.5H43.5002C42.6722 31.5 42.0002 32.172 42.0002 33V36H40.5002V39H43.5002H52.5002H55.5002V36H54.0002V33C54.0002 32.172 53.3282 31.5 52.5002 31.5H49.5002V28.365C51.7352 27.9885 53.6897 26.79 55.0442 25.086L61.3127 20.073C62.3852 19.2135 63.0002 17.9325 63.0002 16.5585V12C63.0002 11.172 62.3282 10.5 61.5002 10.5Z" fill="white"></path></mask><g mask="url(#mask0_635_22151)"><rect width="48" height="48" transform="translate(24.0002)" fill="#0542B9"></rect><rect x="24.0002" width="48" height="48" fill="#0542B9"></rect></g></svg>
+                                    <div class="groups-empty-view__IconLabel">Hoàn thành</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="styles__ActionsWrapper">
-                            <button class="btn">Chơi ngay</button>
-                        </div>
-                    </div>
-                </div> *@
-                <div class="group-empty-view" style="width:85%;margin-top:10px;">
-                    <div class="group-empty-view__Container">
-                        <div class="groups-empty-view__Icons">
-                            <div class="groups-empty-view__Icon m-0">
-                                <svg width="89" height="48" viewBox="0 0 89 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.000244141" y="16" width="40" height="8" rx="4" fill="white"></rect><rect x="0.000244141" y="32" width="88" height="8" rx="4" fill="white"></rect><rect x="0.000244141" width="72" height="8" rx="4" fill="#45A3E5"></rect><mask id="mask0_635_22151" maskUnits="userSpaceOnUse" x="33" y="9" width="31" height="30" style="mask-type: alpha;"><path fill-rule="evenodd" clip-rule="evenodd" d="M60.0002 16.5585C60.0002 17.016 59.7947 17.445 59.4377 17.73L56.9912 19.6875C56.9927 19.6245 57.0002 19.563 57.0002 19.5V13.5H60.0002V16.5585ZM48.0002 25.5C44.6912 25.5 42.0002 22.809 42.0002 19.5V12H54.0002V19.5C54.0002 22.809 51.3092 25.5 48.0002 25.5ZM36.5642 17.7315C36.2057 17.445 36.0002 17.016 36.0002 16.5585V13.5H39.0002V19.5C39.0002 19.563 39.0077 19.6245 39.0092 19.6875L36.5642 17.7315ZM51.0002 36H45.0002V34.5H51.0002V36ZM61.5002 10.5H56.5832C56.0627 9.6075 55.1057 9 54.0002 9H42.0002C40.8947 9 39.9377 9.6075 39.4172 10.5H34.5002C33.6722 10.5 33.0002 11.172 33.0002 12V16.5585C33.0002 17.9325 33.6152 19.2135 34.6892 20.073L40.9562 25.086C42.3107 26.79 44.2652 27.9885 46.5002 28.365V31.5H43.5002C42.6722 31.5 42.0002 32.172 42.0002 33V36H40.5002V39H43.5002H52.5002H55.5002V36H54.0002V33C54.0002 32.172 53.3282 31.5 52.5002 31.5H49.5002V28.365C51.7352 27.9885 53.6897 26.79 55.0442 25.086L61.3127 20.073C62.3852 19.2135 63.0002 17.9325 63.0002 16.5585V12C63.0002 11.172 62.3282 10.5 61.5002 10.5Z" fill="white"></path></mask><g mask="url(#mask0_635_22151)"><rect width="48" height="48" transform="translate(24.0002)" fill="#0542B9"></rect><rect x="24.0002" width="48" height="48" fill="#0542B9"></rect></g></svg>
-                                <div class="groups-empty-view__IconLabel">Hoàn thành</div>
+                            <div class="groups-empty-view__Title">
+                                Chỉ định EduQuiz cho nhóm và để các thành viên tìm bài tập của họ tại đây.
                             </div>
                         </div>
-                        <div class="groups-empty-view__Title">
-                            Chỉ định EduQuiz cho nhóm và để các thành viên tìm bài tập của họ tại đây.
-                        </div>
-                        <button class="btn">Giao bài tập</button>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
 </div>
+<div class="modal" id="modalEduQuizAssignment" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="margin-top:200px" role="document">
+        <div class="modal-content" style=" height: 500px;">
+            <div class="modal-header" style="border:none">
+                <h3 class="modal-title">Thiết lập bài kiểm tra</h3>
+            </div>
+            <div class="modal-body">
+                <label>Thời gian bắt đầu</label>
+                <div style="display:flex;gap:20px;margin-bottom:20px">
+                    <input class="input__Input" type="text" id="datepickerstart" placeholder="Bắt đầu" />
+                    <input class="input__Input" type="text" id="datepickerend" placeholder="Kết thúc" />
+                </div>
+                <span style="font-weight:bold">Tùy chọn</span>
+                <div class="challenge-settings__Label">
+                    <div class="challenge-settings__Group">
+                        Ngẫu nhiên thứ tự câu hỏi
+                    </div>
+                    <button class="styles__Toggle" style=" margin-left: 60px; border-radius: 6px;" onclick="settingRole(this,1)">
+                        <div class="styles__CheckboxSlider"></div>
+                    </button>
+                </div>
+                <div class="challenge-settings__Label">
+                    <div class="challenge-settings__Group">
+                        Ngẫu nhiên thứ tự câu trả lời
+                    </div>
+                    <button class="styles__Toggle" style=" margin-left: 60px; border-radius: 6px;" onclick="settingRole(this,2)">
+                        <div class="styles__CheckboxSlider"></div>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                <button type="button" class="btn " style="background-color:rgb(38, 137, 12)" onclick="SaveAssignment()">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var isRandomQuestion = false;
+    var isRandomAnswer = false;
+    flatpickr("#datepickerstart", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+    });
+
+    flatpickr("#datepickerend", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+    });
+    function settingRole(button,flag) {
+        let isflag = $(button).hasClass("active");
+        if (isflag) {
+            $(button).removeClass("active");
+            flag == 1 ? isRandomQuestion = false : isRandomAnswer = false;
+        } else {
+            $(button).addClass("active");
+            flag == 1 ? isRandomQuestion = true : isRandomAnswer = true;
+        }
+    }
+    $(document).on("click", ".cards-with-search__CardsListWrapper .styles__ContainerCard",function(){
+        const id = $(this).attr("data-id");
+        arrEduQuizId.push(id);
+        $("#modalEduQuizShare").modal("hide");
+        $('#datepickerstart').val('');
+        $('#datepickerend').val('');
+        $("#modalEduQuizAssignment").modal("show");
+    })
+
+    function SaveAssignment() {
+        const startdate = $('#datepickerstart').val();
+        const enddate = $('#datepickerend').val();
+        if (arrEduQuizId.length == 0) {
+            openToast('info', 'Lỗi', 'Vui lòng chọn EduQuiz!', 3000);
+            return;
+        }
+        if (startdate == "" || enddate == "") {
+            openToast('info', 'Lỗi', 'Vui lòng chọn thời gian làm bài!', 3000);
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveAssignment", "Group")",
+            data: {
+                groupid: "@Model.Group.Id",
+                listeduquizid: arrEduQuizId,
+                startdate: startdate,
+                enddate: enddate,
+                isRandomQuestion: isRandomQuestion,
+                isRandomAnswer: isRandomAnswer,
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        window.location.reload();
+                    }
+                }
+            }
+        })
+    }
+
+</script>

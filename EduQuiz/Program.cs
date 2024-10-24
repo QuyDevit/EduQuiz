@@ -40,6 +40,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddDbContext<EduQuizDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EduQuizDBConnection")));
 builder.Services.AddScoped<UsernameService>(); // Đăng ký UsernameService
+builder.Services.AddScoped<GeminiAiService>(); // Đăng ký GeminiAiService
 builder.Services.AddScoped<CookieAuth>();// Đăng ký CookieAuth
 // Đọc cấu hình từ appsettings.json và thêm vào container DI
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -80,6 +81,7 @@ app.UseStatusCodePages(async context =>
     await Task.CompletedTask;
 });
 app.MapHub<GameHub>("/gameHub");
+app.MapHub<SoloGameHub>("/sologameHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

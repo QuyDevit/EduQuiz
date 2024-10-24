@@ -1,0 +1,663 @@
+﻿@using EduQuiz.Helper
+@{
+    Layout = "_LayoutPlay";
+    ViewBag.Title = "Eduquiz! Bài tập";
+}
+@model EduQuiz.Models.ChallengeViewModel
+<main class="style__PageWrapper">
+    <div class="styles__ZIndexWrapper">
+        <div class="eduquiz__ComponentWrapper">
+            <div class="eduquiz__CoverImage" style=" background: url(@Model.Challenge.ImageCover) center center / cover no-repeat;"></div>
+            <div class="eduquiz__InformationWrapper">
+                <h2 class="eduquiz-title__Title">@Model.Challenge.Title</h2>
+                <div class="timedeadline__Title">
+                    <span class="timedeadline__Text">Mở đến : <span class="timedeadline__CountDown">@StringHelper.ConvertDateTimeToCustomString(Model.Challenge.EndTime)</span></span>
+                </div>
+                <div class="eduquiz-title__Footer">
+                    <span style="font-weight:700;">@Model.Challenge.QuestionCount câu hỏi</span>
+                    <span>Tạo bởi: @Model.Challenge.UserCreate</span>
+                </div>
+            </div>
+        </div>
+        <img class="logo__Text" src="/src/img/logotext.png" />
+        <aside class="player-count__PlayerCountWrapper">
+            <span class="icon__Icon">
+                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: rgb(255, 255, 255);"></path></svg>
+            </span>
+            <span id="sumplayer">@Model.ListPlayer.Count</span>
+        </aside>
+        <ul id="listplayer" class="controller-list__ControllerList">
+            @foreach(var item in Model.ListPlayer)
+            {
+                <li class="controller-list__Controller">
+                    <span class="controller-list__ControllerName">@item.Name</span>
+                </li>
+            }  
+        </ul>
+    </div>
+    <section class="styles__JoinChallengeSection">
+        @if (Model.IsPlayer)
+        {
+            if (Model.QuestionChallengeCount < Model.Challenge.QuestionCount)
+            {
+                <h3 class="nickname-sectionstyles__Nickname">Chưa hoàn thành bài tập!</h3>
+                <div class="styles__Form">
+                    <form id="formname">
+                        <button type="button" class="styles__ChallengeButton" onclick="continueGame()">Tiếp tục làm bài!</button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <h3 class="nickname-sectionstyles__Nickname">Bạn đã hoàn thành bài tập</h3> 
+            }
+        }
+        else
+        {
+            <h3 class="nickname-sectionstyles__Nickname">Tham gia trò chơi</h3>
+            <div class="styles__Form">
+                <form id="formname">
+                    <input id="nameplayer" class="styles__GameInput" type="text" placeholder="Nhập biệt hiệu" />
+                    <button type="button" class="styles__ChallengeButton" onclick="startGame()">Bắt đầu!</button>
+                </form>
+            </div>
+        }
+        
+    </section>
+</main>
+<script>
+    var idQuizSession = `@Model.Challenge.QuizSessionId`;
+    var countQuestion = parseInt(`@Model.QuestionChallengeCount`) != 0 ? parseInt(`@Model.QuestionChallengeCount`) - 1 : 0 || 0;
+    var listChoicesCurrent;
+    var questionCurrent;
+    var playerid = parseInt(`@Model.PlayerId`);
+    var timeTaken;
+    let angle = 0;
+    let countDown = 3;
+    var arranswer = [];
+    let countdownInterval;
+    const revealSequences = {
+        9: [2, 6, 0, 3, 8, 1, 4, 7, 5], // 3x3
+        25: [23, 1, 12, 19, 7, 8, 0, 24, 17, 15, 11, 4, 20, 2, 9, 13, 5, 21, 6, 10, 14, 3, 16, 18, 22], // 5x5
+        64: [37, 5, 47, 12, 56, 0, 24, 19, 30, 35, 48, 1, 57, 4, 62, 52, 38, 10, 41, 63, 14, 33, 45, 29, 3, 27, 31, 44, 20, 7, 15, 42, 2, 39, 53, 28, 34, 59, 13, 50, 55, 8, 32, 18, 54, 11, 43, 60, 40, 16, 6, 9, 58, 61, 46, 22, 26, 36, 49, 17, 21, 25, 51, 23] // 8x8
+    };
+    const svgOption = [
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: inherit;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: inherit;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: inherit;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M8.584 27 4 12.786 16 3.982 28 12.786 23.417 27z" style="fill: inherit;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M5 8L16 26.857 27 8z" style="fill: inherit;"></path></svg>'
+    ];
+    window.addEventListener('beforeunload', function (event) {
+        event.preventDefault();
+        event.returnValue = 'Các thay đổi bạn đã thực hiện có thể không được lưu.';
+    });
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/sologameHub")
+        .build();
+    connection.start().then(function () {
+        console.log("SignalR connected.");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+    $("#formname").on("submit", function (e) {
+        e.preventDefault();
+        startGame();
+    })
+    function continueGame() {
+        connection.invoke("ContinueGame", playerid, parseInt(idQuizSession, 10))
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }
+    function startGame() {
+        const element = $("#nameplayer");
+        const name = element.val().trim();
+        if (name == "") {
+            element.addClass("error");
+            return;
+        }
+        element.removeClass("error");
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("JoinChallenge", "Group")",
+            data: {
+                quizsessionid: "@Model.Challenge.QuizSessionId",
+                name: name,
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        playerid = response.data.id;
+                        $("#listplayer").append(` <li class="controller-list__Controller">
+                                            <span class="controller-list__ControllerName">${name}</span>
+                                </li>`);
+                        $("#sumplayer").text(parseInt($("#sumplayer").text()) + 1);
+                        connection.invoke("StartGame", playerid, parseInt(idQuizSession, 10))
+                            .catch(function (err) {
+                                console.error(err.toString());
+                            });
+                    } else {
+                        Swal.fire({
+                            title: 'Tên đã tồn tại',
+                            text: 'Vui lòng nhập lại tên',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        })
+                    }
+                }
+            }
+        })
+    }
+    function getDefaultTitle(type) {
+        switch (type) {
+            case 'quiz':
+                return 'Câu đố';
+            case 'true_false':
+                return 'Đúng hay sai';
+            case 'input_answer':
+                return 'Nhập đáp án';
+            default:
+                return 'Câu đố';
+        }
+    }
+    function getDefaultIcon(type) {
+        switch (type) {
+            case 'quiz':
+                return '/src/img/logo-quiz.png';
+            case 'true_false':
+                return '/src/img/logo-true_false.png';
+            case 'input_answer':
+                return '/src/img/logo-type-quiz.png';
+            default:
+                return '/src/img/logo-quiz.png';
+        }
+    }
+    connection.on("StartCountdown", function (exists) {
+        if (exists) {
+            const startTime = new Date().getTime();
+            timeTaken = startTime;
+            $(".styles__PageWrapper").remove();
+
+            let choices = questionCurrent.question.choices;
+            if (questionCurrent.quizOption.isRandomAnswer && questionCurrent.question.typeQuestion !== "true_false") {
+                choices = shuffleArray(choices);
+            }
+            listChoicesCurrent = choices;
+            const checkImg = questionCurrent.question.image && questionCurrent.question.image !== "" ? `<div class="question-media__QuestionImage">
+                                                <img class="question-base__Img" src="${questionCurrent.question.image}" />
+                                            <div class="image-question-Effect"></div>
+                                                </div> ` : "";
+            const checkImgEffect = questionCurrent.question.imageEffect && questionCurrent.question.imageEffect !== "0" && questionCurrent.question.imageEffect !== "";
+            if(questionCurrent.question.typeQuestion != "input_answer") {
+                $(".quiz__PageWrapper").append(`<main class="question-results__PageWrapper">
+                                                <div class="top-bar__TopBar">
+                                                    <div class="top-bar__TitleWrapper">
+                                                        <section class="top-bar__Title">
+                                                            <div class="question-title__TitleWrapper">
+                                                                <span class="question-title__Title">${questionCurrent.question.questionText}</span>
+                                                            </div>
+                                                        </section>
+                                                    </div>
+                                                    <div class="top-bar__TopRightContainer d-none">
+                                                            <div class="top-bar__RightButtons">
+                                                                <button id="countNextScoreBoard" class="button__Button" onclick="scoreBoard()">Kế tiếp</button>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <header class="styles__TopContent">
+                                                    <div class="countdown__CountdownWrapper">
+                                                    <div class="question-countdown__count"></div>
+                                                    </div>
+                                                    <div class="question-media__QuestionMedia">
+                                                        <div class="question-image__ImageWrapper">
+                                                            <div class="question-image__MediaImageWrapper">
+                                                               ${checkImg}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="quiz-question__RightContent">
+                                                        <div class="answer-counter__AnswerCounter">
+                                                            ${questionCurrent.question.typeAnswer === 2 ? `<button class="submit-answer" onclick="submitAnswerChoose(${questionCurrent.question.id})">Nộp đáp án</button>` : ""}
+                                                        </div>
+                                                    </div>
+                                                </header>
+                                                <div class="question-results__QuestionChoices">
+                                                        ${choices.map(choice => {
+                    // Sự kiện `onclick` động cho từng câu trả lời
+                    const isChooseAnswer = questionCurrent.question.typeAnswer === 1
+                        ? `SubmitAnswer(${choice.id}, ${questionCurrent.question.id})`
+                        : `chooseAnswer(${choice.id})`;
+
+                    return `
+                             <button class="card__PassiveCardChoice choice-item" onclick="${isChooseAnswer}" data-choice-id="${choice.id}">
+                                 ${questionCurrent.question.typeAnswer === 2 ? `
+                                     <div class="choice__CornerCheck">
+                                          <span class="icon__Icon">
+                                               <svg style="margin: 4px auto;" viewBox="0 0 32 32" aria-hidden="true">
+                                                    <path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: #fff;"></path>
+                                               </svg>
+                                          </span>
+                                     </div>` : ""}
+                                     <div class="card-icon__IconWrapper">
+                                          <span class="icon__Icon" style="width: 5.95733vmin; height: 5.95733vmin;">
+                                               <svg viewBox="0 0 32 32" aria-hidden="true">
+                                                    <path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: inherit;"></path>
+                                               </svg>
+                                          </span>
+                                     </div>
+                                     <span class="question-choice-content__Text">
+                                           <span class="break-long-words__WordBreak">${choice.answer}</span>
+                                     </span>
+                                </button>
+                             `;
+                }).join('')}
+                            </div>
+                             </main>`);
+            } else {
+                $(".quiz__PageWrapper").append(`<main class="question-results__PageWrapper">
+                                                    <div class="top-bar__TopBar">
+                                                        <div class="top-bar__TitleWrapper">
+                                                            <section class="top-bar__Title">
+                                                                <div class="question-title__TitleWrapper">
+                                                                    <span class="question-title__Title">${questionCurrent.question.questionText}</span>
+                                                                </div>
+                                                            </section>
+                                                        </div>
+                                                        <div class="top-bar__TopRightContainer d-none">
+                                                            <div class="top-bar__RightButtons">
+                                                                <button id="countNextScoreBoard" class="button__Button" onclick="scoreBoard()">Kế tiếp</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <header class="styles__TopContent">
+                                                        <div class="countdown__CountdownWrapper">
+                                                        <div class="question-countdown__count"></div>
+                                                        </div>
+                                                        <div class="question-media__QuestionMedia">
+                                                            <div class="question-image__ImageWrapper">
+                                                                <div class="question-image__MediaImageWrapper">
+                                                                   ${checkImg}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="quiz-question__RightContent">
+                                                            <div class="answer-counter__AnswerCounter">
+                                                            </div>
+                                                        </div>
+                                                    </header>
+                                            <div class="question-results__QuestionChoices" style="align-items:center;flex-direction:column;">
+                                                <div class="card-answer" id="anwer-input" contenteditable="true" data-placeholder="Nhập đáp án..."></div>
+                                                <button class="submit-answer" style="max-width:100px" onclick="submitInputAnswer(${questionCurrent.question.id})">Nộp đáp án</button>
+                                        </div>
+                                 </main>`);
+            }
+            startCountdown('.question-countdown__count', questionCurrent.question.time);
+            checkImgEffect == true ? applyGridRevealEffect(parseInt(questionCurrent.question.imageEffect), questionCurrent.question.time * 1000) : "";
+        }
+    });
+    connection.on("SendQuestion", function (quizOption, question) {
+        questionCurrent = {
+            quizOption: quizOption,
+            question: question
+        }
+        $(".style__PageWrapper").remove();
+        $(".quiz__PageWrapper").remove();
+        if (countQuestion == 0) {
+            setTimeout(() => {
+                $(".layout_Fullscreen").append(`<main class="start__PageWrapper">
+                                        <div class="block-title__ContainerQuestion">
+                                            <div class="block-title__WrapperQuestion">
+                                                <h1 class="block-title__Title">${questionCurrent.quizOption.quizTitle}</h1>
+                                            </div>
+                                        </div>
+                                    </main>`);
+                setTimeout(() => {
+                    $(".block-title__ContainerQuestion").remove();
+                    $(".start__PageWrapper").append(` <div class="spinning-count-down__Container">
+                                                        <div class="spinning-count-down__Background"></div>
+                                                        <div class="spinning-count-down__Count">3</div>
+                                                    </div>`)
+                    rotateElement();
+                }, 3000)
+            }, 1000)
+        }
+        setTimeout(() => {
+            $(".start__PageWrapper").remove();
+            $(".layout_Fullscreen").append(`
+                                    <main class="quiz__PageWrapper">
+                                        <main class="styles__PageWrapper">
+                                            <div class="styles__QuestionIntroWrapper">
+                                                <div class="question-intro__QuestionCount">
+                                                    ${countQuestion} trên ${questionCurrent.quizOption.questionLength}
+                                                </div>
+                                                <div class="styles__QuestionContainer">
+                                                    <div class="styles__AnimationContainer">
+                                                        <div class="styles__Animation">
+                                                            <div class="styles__AnimationImgWrapper">
+                                                                <div class="styles__AnimationImgBlock">
+                                                                     <img class="styles__AnimationImg" src="${getDefaultIcon('quiz')}" />
+                                                                </div>
+                                                                <div class="styles__WrapperBlock">${getDefaultTitle('quiz')}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="block-title__Container styles_BlockTitle">
+                                                        <div class="block-title__Wrapper">
+                                                             <h1 class="block-title__Title">${questionCurrent.question.questionText}</h1>
+                                                        </div>
+                                                    </div>
+                                                    <div class="styles__LoadingWrapper">
+                                                        <div class="loading-bar__Bar">
+                                                            <div class="loading-bar__ProgressMeter"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </main>
+                                    </main>
+                                    `);
+        }, countQuestion == 0 ? 7500 : 0)
+        countQuestion++;
+    });
+    function chooseAnswer(value) {
+        const $button = $(`button[onclick="chooseAnswer(${value})"]`);
+        if ($button.hasClass("choose")) {
+            $button.removeClass("choose");
+            arranswer = arranswer.filter(item => item !== value);
+        } else {
+            $button.addClass("choose");
+            arranswer.push(value);
+        }
+    }
+    function submitInputAnswer(quesionId) {
+        clearInterval(countdownInterval);
+        const currentTime = new Date().getTime();
+        const startTime = parseInt(timeTaken, 10);
+        const timeTakenQuestion = (currentTime - startTime) / 1000;
+        const answerText = $("#anwer-input").text();
+        // Gửi tất cả các đáp án
+        connection.invoke("SubmitInputAnswer", parseInt(playerid, 10), answerText, quesionId,timeTakenQuestion)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }
+    function submitAnswerChoose(quesionId) {
+        clearInterval(countdownInterval);
+        const currentTime = new Date().getTime();
+        const startTime = parseInt(timeTaken, 10);
+        const timeTakenQuestion = (currentTime - startTime) / 1000;
+
+        // Gửi tất cả các đáp án
+        connection.invoke("SubmitMultiAnswer", parseInt(playerid, 10), arranswer, quesionId,timeTakenQuestion)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+        arranswer = [];
+    }
+    function SubmitAnswer(choiceId, quesionId) {
+        clearInterval(countdownInterval);
+        const currentTime = new Date().getTime();
+        const startTime = parseInt(timeTaken, 10);
+
+        // Tính toán thời gian đã trôi qua (đơn vị là giây)
+        const timeTakenQuestion = (currentTime - startTime) / 1000;
+        connection.invoke("SubmitAnswer", parseInt(playerid, 10), choiceId, quesionId,timeTakenQuestion)
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }
+    function scoreBoard() {
+        connection.invoke("ScoreBoard", parseInt(playerid, 10), parseInt(idQuizSession, 10))
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }
+    function applyGridRevealEffect(gridSize, totalTransitionTime) {
+
+        const $imageEffectContainer = $('.image-question-Effect');
+        $imageEffectContainer.removeClass('d-none');
+        $imageEffectContainer.empty();
+        if (gridSize === 0) {
+            return;
+        }
+        const totalItems = gridSize * gridSize;
+
+        const revealOrder = revealSequences[totalItems];
+
+        const delayPerItem = totalTransitionTime / totalItems;
+
+        const gridItems = [];
+        for (let i = 0; i < totalItems; i++) {
+            const $gridItem = $('<div></div>')
+                .addClass(`GridRevealWrapper-item item-${gridSize}_${gridSize}`)
+                .css({
+                    'background-color': '#24459b',
+                    'outline': 'none'
+                });
+
+            gridItems.push($gridItem);
+            $imageEffectContainer.append($gridItem);
+        }
+
+        revealOrder.forEach((index, i) => {
+            setTimeout(() => {
+                gridItems[index].css('background-color', 'transparent');
+            }, i * delayPerItem);
+        });
+    }
+    function startCountdown(elementSelector, duration) {
+        let $countdownElement = $(elementSelector);
+
+        let countdownValue = duration;
+
+        $countdownElement.text(countdownValue);
+
+        countdownInterval = setInterval(function () {
+            countdownValue--;
+            $countdownElement.text(countdownValue);
+
+            if (countdownValue <= 0) {
+                clearInterval(countdownInterval);
+                connection.invoke("TimeUpQuestion", parseInt(playerid, 10))
+                    .catch(function (err) {
+                        console.error(err.toString());
+                    });
+            }
+        }, 1000);
+    }
+    connection.on("ScoreBoardList", function (data) {
+        countQuestion == questionCurrent.quizOption.questionLength ? $("#countNextQuestion").remove() : "";
+        $(".question-results__PageWrapper").remove();
+        $(".layout_Fullscreen").removeClass("score_Result");
+
+        $(".quiz__PageWrapper").append(`
+                <main class="animated-scoreboard__PageWrapper">
+                    <div class="top-bar__TopBar">
+                        <div class="top-bar__TitleWrapper">
+                            <section class="top-bar__Title">
+                                <div class="question-title__TitleWrapper">
+                                    <span class="question-title__Title">Bảng xếp hạng</span>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="top-bar__TopRightContainer">
+                            <div class="top-bar__RightButtons">
+                                <button id="countNextQuestion" class="button__Button" onclick="NextQuestion()">Kế tiếp</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animated-scoreboard__CenterContent">
+                        <div class="scoreboard__Scoreboard">
+                            <div class="scoreboard__Entries">
+                                ${data.map((player, index) => `
+                                    <div class="entry__Entry ${index === 0 ? 'top1' : ''}">
+                                        <div class="entry__NameSection">
+                                            ${questionCurrent.quizOption.isShowAvatar ? `
+                                                <div class="entry__AvatarContainer">
+                                                    <div class="styles__AvatarWrapper">
+                                                        <img class="styles__AvatarItem" src="${player.accessory}" />
+                                                        <img class="styles__AvatarBase" src="${player.avatarUrl}" />
+                                                        <div class="styles__AvatarFace">
+                                                            <img src="/src/img/eyes-blink.gif" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ` : ''}
+                                            <button class="entry__Name">${player.nickname}</button>
+                                        </div>
+                                        <div class="entry__ScoreSection">
+                                            <div class="entry__PointsSection">${player.totalScore}</div>
+                                            <div class="entry__RankUp">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+                                                    <g fill="none" fill-rule="evenodd">
+                                                            <g fill="transparent">
+                                                            <path d="M1634 434l20-32 20 32h-12v8h-16v-8h-12z" transform="translate(-1634 -402)"></path>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            `);
+    });
+    connection.on("TimeUp", function (data,result) {
+        $("#anwer-input").remove();
+        $(".submit-answer").remove();
+        $(".top-bar__TopRightContainer").removeClass("d-none");
+        $(".card__PassiveCardChoice.choice-item").removeAttr("onclick");
+        skipResult(data, result);
+    });
+    function NextQuestion() {
+        connection.invoke("NextQuestion", parseInt(playerid, 10), parseInt(idQuizSession, 10))
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+    }
+    function skipResult(data,result) {
+        const orderMap = new Map(listChoicesCurrent.map((choice, index) => [choice.id, index]));
+        let sortedData = data.sort((a, b) => orderMap.get(a.choiceId) - orderMap.get(b.choiceId));
+        let totalPoints = 0;
+        let isCorrect = false;
+        if (result.length > 0) {
+            result.forEach(playerAnswer => {
+                totalPoints += playerAnswer.isCorrect ? playerAnswer.score : 0;
+                if (playerAnswer.isCorrect) {
+                    isCorrect = true;
+                }
+            });
+            var resultDiv = $(
+                `<div class="styles__QuestionFeedback" style="background-color: ${isCorrect ? 'rgb(102, 191, 57)' : 'rgb(255, 51, 85)'};">
+                <div class="styles__MessageWrapper">
+                    ${isCorrect == true ? "Câu trả lời đúng":"Câu trả lời sai"}
+                    <div class="styles__PointMessageWrapper">+ ${totalPoints}</div>
+                </div>
+            </div>`
+            );
+            resultDiv.insertAfter($(".question-results__PageWrapper").find(".top-bar__TopBar"));
+        } else {
+            var resultDiv = $(
+                `<div class="styles__QuestionFeedback" style="background-color: rgb(255, 51, 85)">
+                    <div class="styles__MessageWrapper">
+                        Không có câu trả lời
+                        <div class="styles__PointMessageWrapper">Hãy tập trung hơn!</div>
+                    </div>
+                </div>`
+            );
+            resultDiv.insertAfter($(".question-results__PageWrapper").find(".top-bar__TopBar"));
+        }
+        const questionWrapper = $(".question-results__QuestionChoices");
+        // Tính tỷ lệ phần trăm cho mỗi đáp án trên thang 70%
+        sortedData = sortedData.map((item, index) => {
+            const isCorrect = item.answerCorrect ? true : false;
+            const choiceSelector = `.card__PassiveCardChoice.choice-item[data-choice-id="${item.choiceId}"]`;
+            if (questionCurrent.question.typeQuestion != "input_answer") {
+                if (isCorrect) {
+                    $(choiceSelector).append(`
+                            <div class="question-choice-content__IconWrapper">
+                                <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;">
+                                        <title>Icon</title>
+                                        <path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: rgb(255, 255, 255);"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                        `);
+                } else {
+                    $(choiceSelector).attr("disabled", true).append(`
+                            <div class="question-choice-content__IconWrapper">
+                                <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;">
+                                        <title>Icon</title>
+                                        <path d="M21.4352896,7.29315397 L16.4852814,12.2358635 L11.5352732,7.29315397 L7.29390115,11.534526 L12.216469,16.4852814 L7.29390115,21.4360368 L11.5339288,25.6760644 L16.4852814,20.7695678 L21.4366339,25.6760644 L25.6750612,21.4376372 L20.7955092,16.4852814 L25.6750612,11.5329256 L21.4352896,7.29315397 Z" style="fill: rgb(255, 255, 255);"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                        `);
+                }
+            } else {
+                questionWrapper.append(`<div class="card__PassiveCardChoice choice-item">
+                                        <div class="card-icon__IconWrapper">
+                                            <span class="icon__Icon" style="width: 5.95733vmin; height: 5.95733vmin;">
+                                                ${svgOption[index % svgOption.length]}
+                                            </span>
+                                        </div>
+                                        <span class="question-choice-content__Text">
+                                            <span class="break-long-words__WordBreak">${item.answerText}</span>
+                                        </span>
+                                       <div class="question-choice-content__IconWrapper">
+                                            <span class="icon__Icon" style="width:100%;height:100%;display:flex;">
+                                                <svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;">
+                                                    <title>Icon</title>
+                                                    <path d="M21.9659268,7.29355403 L13.4414162,16.6716376 L9.95856573,13.6333101 L6.28048804,17.3134693 L13.6554761,24.1926221 L25.8261396,10.805116 L21.9659268,7.29355403 Z" style="fill: rgb(255, 255, 255);"></path>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                    `)
+            }
+        });
+        $(".countdown__CountdownWrapper").remove();
+        $(".question-media__QuestionMedia").remove();
+        $(".quiz-question__RightContent").remove();
+        $(".styles__TopContent").append(`<div class="question-results__CenterContent">
+                        <div class="answers-histogram__AnswersHistogram">
+                        </div>
+                    </div>`);
+
+        $(".layout_Fullscreen").addClass("score_Result");
+    }
+    
+    function rotateElement() {
+        if (angle <= 90) {
+            $(".spinning-count-down__Background").css({
+                'transform': 'rotate(' + angle + 'deg)'
+            });
+            $(".spinning-count-down__Count").remove();
+            $(".spinning-count-down__Container").append(`
+                             <div class="spinning-count-down__Count">${countDown}</div>`)
+            countDown--;
+            angle += 45;
+            if (angle <= 90) {
+                setTimeout(rotateElement, 1000);
+            }
+        }
+    }
+</script>

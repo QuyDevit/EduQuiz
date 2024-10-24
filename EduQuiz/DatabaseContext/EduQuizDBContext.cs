@@ -23,6 +23,14 @@ namespace EduQuiz.DatabaseContext
         public DbSet<PlayerSession> PlayerSessions { get; set; }
         public DbSet<PlayerAnswer> PlayerAnswers { get; set; }
         public DbSet<QuizSessionQuestion> QuizSessionQuestions { get; set; }
+        public DbSet<FeedbackQuizSession> FeedbackQuizSessions { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<GroupMember> GroupMembers { get; set; }
+        public DbSet<ShareGroup> ShareGroups { get; set; }
+        public DbSet<AssignmentGroup> AssignmentGroups { get; set; }
+        public DbSet<GroupPost> GroupPosts { get; set; }
+        public DbSet<GroupPostLike> GroupPostLikes { get; set; }
+        public DbSet<PlayerQuizSessionQuestion> PlayerQuizSessionQuestions { get; set; }
 
         // Cấu hình mô hình khi tạo bảng và quan hệ
         protected override void OnModelCreating(ModelBuilder modelBuilder)

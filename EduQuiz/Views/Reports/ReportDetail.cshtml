@@ -4,78 +4,12 @@
     @using EduQuiz.Helper;
 }
 @model EduQuiz.Models.ReportDetail
+<link href="~/src/css/js/datatable/datatables.min.css" rel="stylesheet" />
+<script src="~/src/css/js/datatable/datatables.min.js" defer></script>
 <link href="~/src/css/report.css" rel="stylesheet" />
 <div class="content">
     <div class="layout-index" style="flex-direction:column;">
-        <div class="report-header__HeaderWrapper">
-            <section class="report-header__LeftPanel">
-                <div class="report-title__ReportTitle">
-                    <div class="report-title__SubtitleWrapper">
-                        <h2 class="report-title__Subtitle">Báo cáo</h2>
-                        <div class="report-title__Menu">
-                            <div class="header__ActionMenu">
-                                <button class="flat-button__FlatButton">
-                                    <span>Tùy chọn báo cáo</span>
-                                    <span class="icon__Icon" style="width:24px;height:24px">
-                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,10 C17.1045695,10 18,9.1045695 18,8 C18,6.8954305 17.1045695,6 16,6 C14.8954305,6 14,6.8954305 14,8 C14,9.1045695 14.8954305,10 16,10 Z M16,18 C17.1045695,18 18,17.1045695 18,16 C18,14.8954305 17.1045695,14 16,14 C14.8954305,14 14,14.8954305 14,16 C14,17.1045695 14.8954305,18 16,18 Z M16,26 C17.1045695,26 18,25.1045695 18,24 C18,22.8954305 17.1045695,22 16,22 C14.8954305,22 14,22.8954305 14,24 C14,25.1045695 14.8954305,26 16,26 Z" style="fill: rgb(0, 0, 0);"></path></svg>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="report-title__Title">
-                        <span>@Model.Title</span>
-                        <button class="flat-button__FlatButton" style="margin-left:4px">
-                            <span class="icon__Icon" style="width:32px;height:32px">
-                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M23.4091683,8.594 C24.1731683,9.359 24.1731683,10.693 23.4091683,11.458 L22.6901683,12.178 L19.8241683,9.313 L20.5451683,8.594 C21.3101683,7.83 22.6441683,7.829 23.4091683,8.594 L23.4091683,8.594 Z M8.37616832,23.626 L8.97116832,21.252 L10.7501683,23.033 L8.37616832,23.626 Z M18.4111683,10.728 L21.2741683,13.591 L12.7061683,22.159 L9.84316832,19.296 L18.4111683,10.728 Z M24.8211683,7.179 C24.0611683,6.418 23.0501683,6 21.9741683,6 C20.9001683,6 19.8881683,6.418 19.1281683,7.179 L7.71916832,18.587 C7.71916832,18.587 7.71816832,18.59 7.71716832,18.591 C7.63616832,18.673 7.49716832,18.889 7.45616832,19.052 L6.03016832,24.757 C5.94416832,25.097 6.04516832,25.458 6.29316832,25.706 L6.29416832,25.707 L6.29616832,25.708 C6.54416832,25.956 6.90416832,26.057 7.24516832,25.972 L12.9491683,24.545 C13.1121683,24.504 13.3291683,24.365 13.4101683,24.284 C13.4111683,24.283 13.4141683,24.282 13.4141683,24.282 L24.8231683,12.873 C25.5831683,12.113 26.0021683,11.102 26.0011683,10.027 C26.0011683,8.951 25.5831683,7.941 24.8231683,7.18 L24.8211683,7.179 Z" style="fill: rgb(51, 51, 51);"></path></svg>
-                            </span>
-                        </button>
-                    </h1>
-                </div>
-                <ul class="list__List-Tabs">
-                    <li class="item__ListItem">
-                        <button class="tab__Tab active">
-                            <span class="tabs__Label">Bản tóm tắt</span>
-                        </button>
-                    </li>
-                    <li class="item__ListItem">
-                        <button class="tab__Tab">
-                            <span class="tabs__Label">Người chơi</span>
-                        </button>
-                    </li>
-                    <li class="item__ListItem">
-                        <button class="tab__Tab">
-                            <span class="tabs__Label">Câu hỏi</span>
-                        </button>
-                    </li>
-                    <li class="item__ListItem">
-                        <button class="tab__Tab">
-                            <span class="tabs__Label">Nhận xét</span>
-                        </button>
-                    </li>
-                </ul>
-            </section>
-            <section class="report-header__RightPanel">
-                <div class="report-info__ReportInfo">
-                    <div class="report-summary-header">
-                        <div class="game-type__Wrapper">
-                            <div class="game-type__WithEllipsis">Phiên chơi @Model.Type</div>
-                            <img class="game-type__Icon" src="/src/img/logo-quiz.png"/>
-                        </div>
-                    </div>
-                    <div class="report-summary-header">
-                        <div class="game-type__Wrapper">
-                            <div class="game-type__WithEllipsis">@Model.StartTime</div>
-                        </div>
-                    </div>
-                    <div class="report-summary-header">
-                        <div class="game-type__Wrapper">
-                            <div class="game-type__WithEllipsis">Được tạo bởi @Model.NameHost</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+        <partial name="_TabReport" model="@Model" />
         <div class="report-detail-summary">
             <section class="report-detail-summary__OverviewWrapper">
                 <div class="report-detail-summary__ScoreWrapper">
@@ -83,11 +17,14 @@
                         <div class="live-game-summary__Accuracy">
                             <div class="overview-accuracy-icon__Wrapper">
                                 <div class="progress-icon__Wrapper">
-                                    <svg style="transform: rotate(-90deg);" width="150" height="150" viewBox="0 0 150 150"><circle stroke-dashoffset="0" stroke="#f2f2f2" stroke-dasharray="376.99111843077515" cx="75" cy="75" r="60" fill="transparent" stroke-width="8"></circle><circle stroke-dashoffset="@CalculateHelper.CalculateValueFromPercentage(Model.TotalAccuracy ?? 0)" stroke="#26890c" stroke-linecap="round" stroke-dasharray="376.99111843077515" cx="75" cy="75" r="60" fill="transparent" stroke-width="12"></circle></svg>
+                                    <svg style="transform: rotate(-90deg);" width="150" height="150" viewBox="0 0 150 150">
+                                        <circle stroke-dashoffset="0" stroke="#f2f2f2" stroke-dasharray="376.99111843077515" cx="75" cy="75" r="60" fill="transparent" stroke-width="8"></circle>
+                                        <circle stroke-dashoffset="@CalculateHelper.CalculateValueFromPercentage((Model.TotalAccuracy >0 ? Model.TotalAccuracy : 0) ?? 0)" stroke="#26890c" stroke-linecap="round" stroke-dasharray="376.99111843077515" cx="75" cy="75" r="60" fill="transparent" stroke-width="12"></circle>
+                                    </svg>
                                 </div>
                                 <div class="overview-accuracy-icon__PercentageWrapper">
-                                    <span class="overview-accuracy__Text">@Model.TotalAccuracy%</span>
-                                    <span class="overview-accuracy__Description">Đúng</span>
+                                    <span class="overview-accuracy__Text">@(Model.TotalAccuracy > 0 ? Model.TotalAccuracy : 0)%</span>
+                                    <span class="overview-accuracy__Description">Chính xác</span>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +103,7 @@
                         <div class="report-detail__CardTitleWrapper">
                             <h3 class="card__ContentTitle">Câu hỏi khó(@Model.QuestionDifficults.Count)</h3>
                             <div class="note-detail__CardContent">
-                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                <span id="note-question" class="icon__Icon" style="width:32px;height:32px;">
                                     <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M15,22 L17,22 L17,20 L15,20 L15,22 Z M16,6 C10.48,6 6,10.48 6,16 C6,21.52 10.48,26 16,26 C21.52,26 26,21.52 26,16 C26,10.48 21.52,6 16,6 Z M16,24 C11.59,24 8,20.41 8,16 C8,11.59 11.59,8 16,8 C20.41,8 24,11.59 24,16 C24,20.41 20.41,24 16,24 Z M16,10 C13.79,10 12,11.79 12,14 L14,14 C14,12.9 14.9,12 16,12 C17.1,12 18,12.9 18,14 C18,16 15,15.75 15,19 L17,19 C17,16.75 20,16.5 20,14 C20,11.79 18.21,10 16,10 Z" style="fill: rgb(110, 110, 110);"></path></svg>
                                 </span>
                             </div>
@@ -175,11 +112,10 @@
                             <div class="difficult-questions-card__InnerWrapper">
                                 @if (Model.QuestionDifficults.Count != 0)
                                 {
-                                <div class="difficult-questions-card__QuestionWrapper">
-                                   
+                                    <div class="difficult-questions-card__QuestionWrapper">
                                         @foreach (var question in Model.QuestionDifficults)
                                         {
-                                            <button class="difficult-questions-card__QuestionCard">
+                                            <button class="difficult-questions-card__QuestionCard" onclick="OpenModalReportQuestion(@question.QuestionId)">
                                                 <div class="difficult-questions-card__TopSection">
                                                     <div class="difficult-questions-card__QuestionDetails">
                                                         <span class="difficult-questions-card__QuestionType">@question.Order - @question.TypeQuestion</span>
@@ -212,8 +148,7 @@
                                                 </div>
                                             </button>
                                         }
-                                   
-                                </div> 
+                                    </div> 
                                 }else{
                                     <div class="report-card__EmptyWrapper">Làm tốt lắm! Không ai thấy câu hỏi nào quá khó.</div>
                                 }
@@ -226,7 +161,7 @@
                         <div class="report-detail__CardTitleWrapper">
                             <h3 class="card__ContentTitle">Trả lời đúng thấp(@Model.PlayersBelowAvg.Count)</h3>
                             <div class="note-detail__CardContent">
-                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                <span id="note-belowavg" class="icon__Icon" style="width:32px;height:32px;">
                                     <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M15,22 L17,22 L17,20 L15,20 L15,22 Z M16,6 C10.48,6 6,10.48 6,16 C6,21.52 10.48,26 16,26 C21.52,26 26,21.52 26,16 C26,10.48 21.52,6 16,6 Z M16,24 C11.59,24 8,20.41 8,16 C8,11.59 11.59,8 16,8 C20.41,8 24,11.59 24,16 C24,20.41 20.41,24 16,24 Z M16,10 C13.79,10 12,11.79 12,14 L14,14 C14,12.9 14.9,12 16,12 C17.1,12 18,12.9 18,14 C18,16 15,15.75 15,19 L17,19 C17,16.75 20,16.5 20,14 C20,11.79 18.21,10 16,10 Z" style="fill: rgb(110, 110, 110);"></path></svg>
                                 </span>
                             </div>
@@ -237,7 +172,7 @@
                                 {
                                     foreach (var playerBlowAvg in Model.PlayersBelowAvg)
                                     {
-                                        <button class="card__PlayersList-btnRow">
+                                        <button class="card__PlayersList-btnRow" onclick="OpenModalReportPlayer(@playerBlowAvg.PlayerId)">
                                             <span class="card__PlayersList-Name">@playerBlowAvg.PlayerName</span>
                                             <div class="progress-icon__Wrapper" style="margin:0;height:54px;min-height:54px;width:54px;min-width:54px;justify-content:center;">
                                                 <svg style="transform: rotate(-90deg);" width="30" height="30" viewBox="0 0 30 30" class="progress-icon__DonutSvg-sc-8topvy-0 iPAjKU">
@@ -262,7 +197,7 @@
                         <div class="report-detail__CardTitleWrapper">
                             <h3 class="card__ContentTitle">Chưa hoàn thành(@Model.PlayersNotFinish.Count)</h3>
                             <div class="note-detail__CardContent">
-                                <span class="icon__Icon" style="width:32px;height:32px;">
+                                <span id="note-notfinish" class="icon__Icon" style="width:32px;height:32px;">
                                     <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M15,22 L17,22 L17,20 L15,20 L15,22 Z M16,6 C10.48,6 6,10.48 6,16 C6,21.52 10.48,26 16,26 C21.52,26 26,21.52 26,16 C26,10.48 21.52,6 16,6 Z M16,24 C11.59,24 8,20.41 8,16 C8,11.59 11.59,8 16,8 C20.41,8 24,11.59 24,16 C24,20.41 20.41,24 16,24 Z M16,10 C13.79,10 12,11.79 12,14 L14,14 C14,12.9 14.9,12 16,12 C17.1,12 18,12.9 18,14 C18,16 15,15.75 15,19 L17,19 C17,16.75 20,16.5 20,14 C20,11.79 18.21,10 16,10 Z" style="fill: rgb(110, 110, 110);"></path></svg>
                                 </span>
                             </div>
@@ -274,7 +209,7 @@
                                 {
                                     foreach(var playerNotFinish in Model.PlayersNotFinish)
                                     {
-                                        <button class="card__PlayersList-btnRow" style="padding:16px;">
+                                        <button class="card__PlayersList-btnRow" onclick="OpenModalReportPlayer(@playerNotFinish.PlayerId)" style="padding:16px;">
                                             <span class="card__PlayersList-Name">@playerNotFinish.PlayerName</span>
                                             <div class="stats-card__CountText" style="font-size:0.875rem;min-width:fit-content">@playerNotFinish.CountNotAnswer câu</div>
                                         </button>
@@ -294,8 +229,209 @@
     </div>
 </div>
 <script>
-    function RedirectToPodiumQuizSession(slug) {
-        var encodedSlug = btoa(slug); 
-        location.href = `reports/detail/${encodedSlug}/podium`;
+    const svgTrueFalse = [
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M12.926 22.652L8 17.725 9.767 15.957 12.841 19.031 21.959 9 23.808 10.682z" style="fill: rgb(38, 137, 12);"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(226, 27, 60);"></path></svg>'
+    ];
+    const svgOption = [
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M8.584 27 4 12.786 16 3.982 28 12.786 23.417 27z" style="fill: #fff;"></path></svg>',
+        '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M5 8L16 26.857 27 8z" style="fill: #fff;"></path></svg>'
+    ];
+   
+    function OpenModalReportQuestion(value) {
+        $.ajax({
+            typeof: "POST",
+            url: "@Url.Action("GetReportbyQuestion", "Reports")",
+            data: {
+                idquestion: value,
+                quizsessionId: "@Model.QuizSessionId"
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        const data = response.data;
+                        $("#full-screen-modal-question .dialog-header__IndexWrapper").text(data.order + " - " + data.typeQuestion);
+                        $("#full-screen-modal-question .dialog__header_title").text(data.questionText);
+                        $("#full-screen-modal-question .report-media-image__Wrapper").css("background-image", `url(${data.image})`);
+                        $("#timequestion").text(data.time);
+                        $("#typeanswer").text(data.typeAnswer);
+                        $("#full-screen-modal-question .report-media-image__Wrapper").css("background-image", `url(${data.image == "" ? '/src/img/img-default.png' : data.image});`);
+                        $("#full-screen-modal-question .styles__StatTable").empty();
+                        $("#full-screen-modal-question .styles__StatTable").append(`
+                                ${data.choices.map((choice, index) => `
+                                    <div class="styles__StatRow">
+                                            <div class="styles__IconWrapper">
+                                                <div class="styles__ChoiceIcon">
+                                                    <span class="icon__Icon" style="width: 26px;height: 26px;">
+                                                          ${index === data.choices.length - 1 ? '' : svgOption[index % svgOption.length]}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="styles__AnswerText">
+                                                <span class="styles__Text">${choice.answer}</span>
+                                            </div>
+                                            <div class="styles__IconWrapper">
+                                                <span class="icon__Icon" style="width:32px;height:32px">
+                                                    ${choice.isCorrect ? svgTrueFalse[0] : svgTrueFalse[1]}
+                                                </span>
+                                            </div>
+                                            <div class="styles__ProgressBarWrapper">
+                                                    <div class="progress-bar__ProgressBar ${choice.isCorrect ? 'correct' : ''}" style="${'--width:' + choice.percent + '%'}"></div>
+                                            </div>
+                                                <div class="styles__CountBox">${choice.count}</div>
+                                        </div>
+                                    `).join('')}
+                            `);
+                        $("#percent").text(data.correctAccuracy + "%");
+                        $("#avgtime").text(data.avgTime + " giây");
+                        $("#countanswered").text(data.playerAnsweredCount);
+                        $("#circle-white").attr("stroke-dashoffset", data.valueAccuracy);
+                        $("#circle-green").attr("stroke-dashoffset", data.valueAccuracy);
+                        if ($.fn.DataTable.isDataTable('#myTable')) {
+                            $('#myTable').DataTable().clear().destroy(); // Hủy bỏ DataTable cũ
+                        }
+                        $("#full-screen-modal-question #myTable tbody").empty();
+                        $("#full-screen-modal-question #myTable tbody").append(`
+                                ${data.playerAnswers.map((playeranswer) => `
+                                           <tr>
+                                                <td>${playeranswer.nickname}</td>
+                                                <td>${playeranswer.answered}</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="styles__IconWrapper" style="margin:0">
+                                                            <span class="icon__Icon" style="width:32px;height:32px">
+                                                               ${playeranswer.isCorrect ? svgTrueFalse[0] : svgTrueFalse[1]}
+                                                            </span>
+                                                        </div>
+                                                                <span>${playeranswer.isCorrect ? "Đúng" : "Sai"}</span>
+                                                    </div>
+                                                    </td>
+                                                    <td>${playeranswer.timeTaken != "--" ? playeranswer.timeTaken + " s" : "--"}</td>
+                                                <td>${playeranswer.points}</td>
+                                            </tr>
+                                            `).join('')}
+                            `);
+                        $('#myTable').DataTable();
+                    }
+                }
+            }
+        });
+        $("#full-screen-modal-question").removeClass("d-none");
+        $("body").addClass("modal-open");
+    }
+    function OpenModalReportPlayer(value) {
+        $.ajax({
+            typeof: "POST",
+            url: "@Url.Action("GetReportbyPlayer", "Reports")",
+            data: {
+                idplayer: value,
+                quizsessionId: "@Model.QuizSessionId"
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        const data= response.data;
+                        $("#circle-player-white").attr("stroke-dashoffset", data.valueAccuracy);
+                        $("#circle-player-green").attr("stroke-dashoffset", data.valueAccuracy);
+                        $("#full-screen-modal-player .dialog__header_title").text(data.nickName);
+                        $(".player-detail-dialog__PrimaryLabel").text(data.accuracy);
+                        $("#ranked").text(data.rank);
+                        $("#player-answered").text(data.answered);
+                        $("#final-score").text(data.totalScore);
+                        if ($.fn.DataTable.isDataTable('#myTable')) {
+                            $('#myTable').DataTable().clear().destroy(); // Hủy bỏ DataTable cũ
+                        }
+                        $("#full-screen-modal-player #myTablePlayer tbody").empty();
+                        $("#full-screen-modal-player #myTablePlayer tbody").append(`
+                                ${data.detailedAnswers.map((playeranswer) => `
+                                           <tr>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <span style="margin-inline: 0.7rem 1.3rem;">${playeranswer.questionOrder}</span>
+                                                        <strong>${playeranswer.questionText}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>${playeranswer.typeQuestion}</td>
+                                                <td>${playeranswer.answer}</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="styles__IconWrapper" style="margin:0">
+                                                            <span class="icon__Icon" style="width:32px;height:32px">
+                                                               ${playeranswer.isCorrect ? svgTrueFalse[0] : svgTrueFalse[1]}
+                                                            </span>
+                                                        </div>
+                                                                <span>${playeranswer.isCorrect ? "Đúng" : "Sai"}</span>
+                                                    </div>
+                                                    </td>
+                                                    <td>${playeranswer.timeTaken != "--" ? playeranswer.timeTaken + " s" : "--"}</td>
+                                                <td>${playeranswer.point}</td>
+                                            </tr>
+                                            `).join('')}
+                            `);
+                        $('#myTablePlayer').DataTable();
+                    }
+                    
+                }
+            }
+        })
+        $("#full-screen-modal-player").removeClass("d-none");
+        $("body").addClass("modal-open");
+    }
+    $(document).on("click", "#full-screen-modal-player .dialog__close-button", function () {
+        $('#full-screen-modal-player').addClass('d-none');
+        $("body").removeClass("modal-open");
+    });
+    $(document).on("click", "#full-screen-modal-question .dialog__close-button", function () {
+        $('#full-screen-modal-question').addClass('d-none');
+        $("body").removeClass("modal-open");
+    });
+    $(document).on('click', function (event) {
+        if (!$(event.target).closest('.modal-custom__Report,.difficult-questions-card__QuestionCard,.card__PlayersList-btnRow').length) {
+            $('#full-screen-modal-question').addClass('d-none');
+            $('#full-screen-modal-player').addClass('d-none');
+            $("body").removeClass("modal-open");
+        }
+    });
+  
+    tippy('#note-question', {
+        content: "Một câu hỏi được coi là khó nếu có ít hơn 35 % người tham gia trả lời đúng.",
+    });
+    tippy('#note-belowavg', {
+        content: "Phần này nêu bật những người tham gia trả lời đúng dưới 50% trong toàn bộ trò chơi",
+    });
+    tippy('#note-notfinish', {
+        content: "Người chơi có câu hỏi chưa hoàn thành hoặc là không nộp câu trả lời đúng hạn hoặc là họ đã rời khỏi trò chơi trước khi hoàn thành.",
+    });
+   
+        
+    var currentUrl = window.location.href;
+    function RedirectToPodiumQuizSession() {
+        location.href = `${currentUrl}/podium`;
     }
 </script>

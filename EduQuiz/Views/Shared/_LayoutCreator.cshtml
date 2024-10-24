@@ -561,7 +561,18 @@
                         $(".wrapper-Image_Info-block").hide();
                         $("#removeImg").removeClass("d-none");
                     }
-                    $("#question-text-field").text(eduquizdata.Questions[0].QuestionText)
+                    $("#question-text-field").text(eduquizdata.Questions[0].QuestionText);
+                    $('.styles__LayoutsImage .style__StyledImageEffectButton').removeClass('focused');
+                    $('.styles__LayoutsImage .StyledImageEffectButton_Title').removeClass('focused');
+                    applyGridRevealEffect(0, timeQuestionFocus);
+
+                    $('.styles__LayoutsImage .style__StyledImageEffectButton').each(function () {
+                        var effectdata = $(this).attr("data-effect");
+                        if (effectdata == eduquizdata.Questions[0].ImageEffect) {
+                            $(this).addClass("focused");
+                            $(this).find('.StyledImageEffectButton_Title').addClass('focused');
+                        }
+                    });
                     // $("#question-1").click();
                     renderWrapperAnswer(eduquizdata.Questions[0].TypeQuestion, eduquizdata.Questions[0])
                 }
@@ -750,7 +761,7 @@
                 },
                 success: function (response) {
                     if (response.result === "PASS") {
-                        location.href = "@Url.Action("Index", "Library")";
+                        console.log(response.data)
                     }
                 },
                 error: function (err) {
@@ -1198,7 +1209,7 @@
                             case 2:
                                 return "Nhân đôi";
                             default:
-                                return ""; // hoặc một giá trị mặc định khác nếu cần
+                                return "Tiêu chuẩn"; 
                         }
                     });
                     $("#answerlimit").attr("data-answer", optionAnswerFocus).find('label').text(optionAnswerFocus == 1 ?"Chọn đơn":"Chọn nhiều");

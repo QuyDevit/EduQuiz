@@ -1,0 +1,70 @@
+﻿@{
+    Layout = "_LayoutUser";
+    ViewBag.Title = "Nhóm - Thành viên nhóm";
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value; 
+    var slug = currentPath.Split("/")[currentPath.Split("/").Length - 2];
+}
+@model EduQuiz.Models.GroupViewModel
+<link href="~/src/css/js/datatable/datatables.min.css" rel="stylesheet" />
+<script src="~/src/css/js/datatable/datatables.min.js" defer></script>
+
+<link href="~/src/css/library.css" rel="stylesheet" />
+<link href="~/src/css/group.css" rel="stylesheet" />
+<link href="~/src/css/report.css" rel="stylesheet" />
+<div class="content" style="padding:0;margin-top:63px;">
+    <div class="layout-library">
+        <partial name="_SidebarGroup" />
+        <div class="library-layout__Content" style="padding:32px">
+            <div class="groups-page-content__Content">
+                <section class="group-settings-page__Wrapper" style="max-width:808px; margin:0 0 0 auto;">
+                    <header class="group-detail-page-title__Header">
+                        <a class="button__Button" href="@Url.Action("GroupActivity","Group",new{id = slug})">
+                            <span class="icon__Icon">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M10.707 11.293L12.121 12.707 9.828 15 25.414 15 25.414 17 9.828 17 12.121 19.293 10.707 20.707 6 16z" style="fill: currentcolor;"></path></svg>
+                            </span>
+                        </a>
+                        <h2 class="group-detail-page-title__HeaderText">Thành viên nhóm</h2>
+                        <div id="autosave" style="position:absolute;right:0"></div>
+                    </header>
+                    <table id="myTable" class="custom-mytable">
+                        <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th style="text-align:right">Ngày tham gia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var member in Model.ListMember)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="report-Title">
+                                            <div class="report-bottom">
+                                                <div class="avatar-member" style="background: url(@member.Avatar) 100% center / cover no-repeat rgb(242, 242, 242);"></div>
+                                                <div style="font-size:14px">@member.Name</div>
+                                                <span class="report-status @(member.Role == "Admin" ?"finished":"")">@member.Role</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="text-align:right">
+                                        <div>@member.JoinDate</div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "order": []
+        });
+    });
+</script>

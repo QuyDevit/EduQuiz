@@ -278,11 +278,70 @@ button:hover {
     width: 100%;
     padding: 10px;
     justify-content: space-around;
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
-    margin-top: 1rem;
     align-items: center;
+    border-bottom: 1px solid rgb(242, 242, 242);
 }
-
+.group-card__Wrapper {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: rgb(242, 242, 242);
+}
+.layout-card__StyledLayoutCard {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    box-sizing: border-box;
+    border: 1px solid rgb(242, 242, 242);
+    background-color: rgb(242, 242, 242);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    margin: 0rem;
+}
+.card-body__Center{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    margin-inline-start:30px;
+}
+.group-member {
+    color: #000;
+}
+.group-title {
+    color: #000;
+    font-weight: 600;
+}
+.manage__ButtonWrapper {
+    display: flex;
+    -webkit-box-pack: end;
+    justify-content: flex-end;
+    align-items:center;
+    margin-inline-end:20px;
+    flex:1;
+}
+.flat-button__FlatButton {
+    width: initial;
+    margin: 0px;
+    border: 0px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: bottom;
+    background: rgb(19, 104, 206);
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    min-width: 32px;
+    min-height: 32px;
+    height: 32px;
+    padding: 0px 16px 4px;
+    line-height: 32px;
+    position: relative;
+}
+.flat-button__FlatButton:hover{
+    background-color: rgb(18, 96, 190);
+    color:#fff;
+}
 .title-center-view {
     font-size: 1rem;
     font-weight: 700;
@@ -337,10 +396,12 @@ button:hover {
     margin-bottom: -8px;
     padding-bottom: 8px;
     color: rgb(51, 51, 51);
-    border-bottom: 2px solid rgb(19, 104, 206);
     cursor: pointer;
+    border-bottom: 2px solid transparent;
 }
-
+.tabs-button.active{
+    border-bottom: 2px solid rgb(19, 104, 206);
+}
 .layout-card_body {
     padding: 12px 16px 0;
 }

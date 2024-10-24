@@ -1,5 +1,8 @@
 ﻿<!DOCTYPE html>
-
+@{
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+}
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -39,50 +42,294 @@
         <button id="toast-close"></button>
         <div id="timer"></div>
     </section>
-    <div class="modal" id="modalReNameEduQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="border:none">
-                    <h3 class="modal-title">Sửa tên EduQuiz</h3>
-                </div>
-                <div class="modal-body">
-                    <span>Vui lòng nhập tên EduQuiz bên dưới</span>
-                    <input style="padding:10px 16px;font-weight:600" id="editname" type="text" class="form-control mt-4" placeholder="Nhập tên EduQuiz mới" value="">
-                </div>
-                <div class="modal-footer" style="border:none;justify-content:center">
-                    <button id="close" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
-                    <button id="savename" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
+    @if (currentPath.Contains("/reports/detail"))
+    {
+        <div id="full-screen-modal-question" class="d-none">
+            <div class="modal-report">
+                <div class="box-flag__Center"></div>
+                <div class="modal-custom__Report">
+                    <div class="dialog__Dialog">
+                        <div class="dialog__DialogWrapper">
+                            <div class="dialog-header__DialogHeader">
+                                <h2 class="dialog-navigation__Title">
+                                    <span class="dialog-header__EllipsisBox">
+                                        <span class="dialog-header__IndexWrapper">1 - Câu đố</span>
+                                        <span class="dialog__header_title">Con bò có mấy chân</span>
+                                    </span>
+                                </h2>
+                                <nav class="dialog-navigation__Wrapper">
+
+                                </nav>
+                            </div>
+                            <div class="dialog__DialogContent">
+                                <div class="styles__Wrapper">
+                                    <div class="left__DialogContent">
+                                        <div class="report-media-image__Wrapper" style="background-image: url(/src/img/img-default.png);"></div>
+                                        <div class="duration__Wrapper">
+                                            <div class="styles__Duration">
+                                                <span class="icon__Icon" style="height:32px;width:32px;">
+                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                                                </span>
+                                                <span id="timequestion">Thời gian 20 giây</span>
+                                            </div>
+                                            <div class="styles__Duration">
+                                                <span><strong>Đáp án: </strong><span id="typeanswer">Chọn một</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="styles__StatTable">
+                                    </div>
+                                </div>
+                                <div class="dialog__DialogMidleContent">
+                                    <div class="question-details-MidleWrapper">
+                                        <div class="question-details-Accuracy__Text">Câu trả lời đúng</div>
+                                        <div class="question-details-Accuracy__Row">
+                                            <div class="progress-icon__Wrapper" style="margin:0;height:30px;min-height:30px;width:30px;min-width:30px;justify-content:center;">
+                                                <svg style="transform: rotate(-90deg);" width="30" height="30" viewBox="0 0 30 30" class="progress-icon__DonutSvg-sc-8topvy-0 iPAjKU">
+                                                    <circle stroke-dashoffset="0" stroke="#e21b3c" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="4"></circle>
+                                                    <circle id="circle-white" stroke-dashoffset="75.39822368615503" stroke="#fff" stroke-linecap="round" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="6"></circle>
+                                                    <circle id="circle-green" stroke-dashoffset="75.39822368615503" stroke="#26890c" stroke-linecap="round" stroke-dasharray="75.39822368615503" cx="15" cy="15" r="12" fill="transparent" stroke-width="4"></circle>
+                                                </svg>
+                                            </div>
+                                            <div id="percent" class="stats-card__CountText">2%</div>
+                                        </div>
+                                    </div>
+                                    <div class="question-details-MidleWrapper">
+                                        <div class="question-details-Accuracy__Text">Thời gian trung bình</div>
+                                        <div class="question-details-Accuracy__Row">
+                                            <span class="icon__Icon" style="width:32px;height:32px">
+                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16 6C21.52 6 26 10.48 26 16S21.52 26 16 26 6 21.52 6 16 10.48 6 16 6ZM17 11H15V18H17V11Z" style="fill: rgb(10, 163, 163);"></path></svg>
+                                            </span>
+                                            <div id="avgtime" class="stats-card__CountText">2.52 giây</div>
+                                        </div>
+                                    </div>
+                                    <div class="question-details-MidleWrapper">
+                                        <div class="question-details-Accuracy__Text">Người chơi trả lời</div>
+                                        <div class="question-details-Accuracy__Row">
+                                            <span class="icon__Icon" style="width:32px;height:32px">
+                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: rgb(134, 76, 191);"></path></svg>
+                                            </span>
+                                            <div id="countanswered" class="stats-card__CountText">2 trên 3</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="question-answers-table__TableWrapper">
+                                    <table id="myTable" class="custom-mytable">
+                                        <thead>
+                                            <tr>
+                                                <th>Người chơi</th>
+                                                <th>Đáp án đã chọn</th>
+                                                <th>Đúng/Sai</th>
+                                                <th>Thời gian</th>
+                                                <th>Điểm</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dialog__CloseButton">
+                            <button class="dialog__close-button">
+                                <span class="icon__Icon" style="width:32px;height:32px">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal" id="modalMoveEduQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="border:none">
-                    <h3 class="modal-title">Di chuyển EduQuiz</h3>
-                </div>
-                <div class="modal-body">
-                    <button class="back-folder d-none">
-                        <span class="styles-button__Icon">
-                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M10.707 11.293L12.121 12.707 9.828 15 25.414 15 25.414 17 9.828 17 12.121 19.293 10.707 20.707 6 16z" style="fill: rgb(110, 110, 110);"></path></svg>
-                        </span>
-                        Quay lại
-                    </button>
-                    <div class="folder__Container">
-                        <div class="folder__Name"></div>
-                        <div class="folder-container">
-                        </div>
+        <div id="full-screen-modal-player" class="d-none">
+            <div class="modal-report">
+                <div class="box-flag__Center"></div>
+                <div class="modal-custom__Report">
+                    <div class="dialog__Dialog">
+                        <div class="dialog__DialogWrapper">
+                            <div class="dialog-header__DialogHeader">
+                                <h2 class="dialog-navigation__Title" style="height:48px">
+                                    <span class="dialog-header__EllipsisBox">
+                                        <span class="dialog-header__IndexWrapper">
+                                            <span class="icon__Icon" style="width:30px;height:30px">
+                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,14 C17.6568542,14 19,12.6568542 19,11 C19,9.34314575 17.6568542,8 16,8 C14.3431458,8 13,9.34314575 13,11 C13,12.6568542 14.3431458,14 16,14 Z M16,16 C13.2385763,16 11,13.7614237 11,11 C11,8.23857625 13.2385763,6 16,6 C18.7614237,6 21,8.23857625 21,11 C21,13.7614237 18.7614237,16 16,16 Z M16,19 C13.0269583,19 10.5610282,20.4075601 9.52516483,22.3125 L22.4748352,22.3125 C21.4389718,20.4075601 18.9730417,19 16,19 Z M25,24.3125 L7,24.3125 C7,20.2739178 11.0294373,17 16,17 C20.9705627,17 25,20.2739178 25,24.3125 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                            </span>
+                                        </span>
+                                        <span class="dialog__header_title">Nguyễn Văn A</span>
+                                    </span>
+                                </h2>
+                                <nav class="dialog-navigation__Wrapper" style="height:49px">
 
+                                </nav>
+                            </div>
+                            <div class="dialog__DialogContent">
+                                <div class="styles__Wrapper">
+                                    <div class="player-detail-dialog-middle__AccuracyWrapper">
+                                        <div class="progress-icon__Wrapper" style="width:87.5px;height:87.5px;min-height:87.5px;min-width:87.5px;">
+                                            <svg style="transform: rotate(-90deg);" width="87.5" height="87.5" viewBox="0 0 87.5 87.5">
+                                                <circle stroke-dashoffset="0" stroke="#e21b3c" stroke-dasharray="219.9114857512855" cx="43.75" cy="43.75" r="35" fill="transparent" stroke-width="7"></circle>
+                                                <circle id="circle-player-white" stroke-dashoffset="219.9114857512855" stroke="#fff" stroke-linecap="round" stroke-dasharray="219.9114857512855" cx="43.75" cy="43.75" r="35" fill="transparent" stroke-width="16.5"></circle>
+                                                <circle id="circle-player-green" stroke-dashoffset="219.9114857512855" stroke="#26890c" stroke-linecap="round" stroke-dasharray="219.9114857512855" cx="43.75" cy="43.75" r="35" fill="transparent" stroke-width="11"></circle>
+                                            </svg>
+                                        </div>
+                                        <div class="player-detail-dialog__AccuracyTextWrapper">
+                                            <span class="player-detail-dialog__PrimaryLabel">0%</span>
+                                            <span class="player-detail-dialog__SecondaryLabel">Chính xác</span>
+                                        </div>
+                                    </div>
+                                    <div class="player-detail-dialog-middle__RowWrapper">
+                                        <div class="player-detail-dialog-middle__RowsWrapper">
+                                            <div class="player-detail-dialog-middle__Row">
+                                                <div class="player-detail-dialog-middle__RowTitle">Xếp hạng</div>
+                                                <div class="player-detail-dialog-middle__RowValue">
+                                                    <span class="icon__Icon" style="width:32px;height:32px;">
+                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="m11,13.5l-4,0c-0.553,0 -1,0.448 -1,1l0,7c0,0.552 0.447,1 1,1l4,0c0.553,0 1,-0.448 1,-1l0,-7c0,-0.552 -0.447,-1 -1,-1m7,-4l-4,0c-0.553,0 -1,0.448 -1,1l0,11c0,0.552 0.447,1 1,1l4,0c0.553,0 1,-0.448 1,-1l0,-11c0,-0.552 -0.447,-1 -1,-1m7,5l-4,0c-0.553,0 -1,0.448 -1,1l0,6c0,0.552 0.447,1 1,1l4,0c0.553,0 1,-0.448 1,-1l0,-6c0,-0.552 -0.447,-1 -1,-1" style="fill: #24459b;"></path></svg>
+                                                    </span>
+                                                    <span id="ranked">2 trên 5</span>
+                                                </div>
+                                            </div>
+                                            <div class="player-detail-dialog-middle__Row">
+                                                <div class="player-detail-dialog-middle__RowTitle">Điểm cuối cùng</div>
+                                                <div class="player-detail-dialog-middle__RowValue">
+                                                    <span class="icon__Icon" style="width:32px;height:32px;">
+                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="m16,6.307361c3.86,0 7,3.14 7,7c0,2.326 -1.145,4.384 -2.897,5.659l0.887,6.2c0.053,0.367 -0.104,0.734 -0.406,0.952c-0.173,0.125 -0.378,0.19 -0.584,0.19c-0.153,0 -0.306,-0.036 -0.448,-0.107l-3.552,-1.774l-3.553,1.776c-0.332,0.166 -0.73,0.134 -1.03,-0.084c-0.304,-0.218 -0.46,-0.584 -0.407,-0.953l0.886,-6.2c-1.752,-1.275 -2.896,-3.333 -2.896,-5.657c0,-3.86 3.14,-7 7,-7l0,-0.002zm2.222,13.634c-0.699,0.234 -1.445,0.366 -2.222,0.366c-0.778,0 -1.524,-0.133 -2.223,-0.37l-0.518,3.62l2.293,-1.146c0.282,-0.14 0.614,-0.14 0.895,0l2.293,1.146l-0.518,-3.616zm-3.222,-7.634l-3,0l2,2l-1,3l3,-2l3,2l-1,-3l2,-2l-3,0l-1,-3l-1,3z" style="fill: rgb(10, 163, 163);"></path></svg>
+                                                    </span>
+                                                    <span id="final-score">1348</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="player-detail-dialog-middle__RowsWrapper">
+                                            <div class="player-detail-dialog-middle__Row">
+                                                <div class="player-detail-dialog-middle__RowTitle">Câu hỏi đã trả lời</div>
+                                                <div class="player-detail-dialog-middle__RowValue">
+                                                    <span class="icon__Icon" style="width:32px;height:32px;">
+                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16 6c5.52 0 10 4.48 10 10s-4.48 10-10 10S6 21.52 6 16 10.48 6 16 6zm1 14h-2v2h2v-2zm-1-10c-2.21 0-4 1.79-4 4h2l.006-.149A2.007 2.007 0 0116 12c1.1 0 2 .9 2 2 0 2-3 1.75-3 5h2l.012-.242C17.218 16.728 20 16.408 20 14c0-2.21-1.79-4-4-4z" style="fill: rgb(19, 104, 206);"></path></svg>
+                                                    </span>
+                                                    <span id="player-answered">2 trên 5</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="question-answers-table__TableWrapper">
+                                    <table id="myTablePlayer" class="custom-mytable">
+                                        <thead>
+                                            <tr>
+                                                <th>Câu hỏi</th>
+                                                <th>Loại</th>
+                                                <th>Đáp án đã chọn</th>
+                                                <th>Đúng/Sai</th>
+                                                <th>Thời gian</th>
+                                                <th>Điểm</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dialog__CloseButton">
+                            <button class="dialog__close-button">
+                                <span class="icon__Icon" style="width:32px;height:32px">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(51, 51, 51);"></path></svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+    else if(currentPath.Contains("/my-library/eduquizs")){
+        <div class="modal" id="modalReNameEduQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="border:none">
+                        <h3 class="modal-title">Sửa tên EduQuiz</h3>
+                    </div>
+                    <div class="modal-body">
+                        <span>Vui lòng nhập tên EduQuiz bên dưới</span>
+                        <input style="padding:10px 16px;font-weight:600;color: #000;" id="editname" type="text" class="form-control mt-4" placeholder="Nhập tên EduQuiz mới" value="">
+                    </div>
+                    <div class="modal-footer" style="border:none;justify-content:center">
+                        <button id="close" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                        <button id="savename" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
                     </div>
                 </div>
-                <div class="modal-footer" style="border:none;justify-content:center">
-                    <button id="closemenufolder" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
-                    <button id="savefolder" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Lưu ở đây</button>
+            </div>
+        </div>
+        <div class="modal" id="modalMoveEduQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="border:none">
+                        <h3 class="modal-title">Di chuyển EduQuiz</h3>
+                    </div>
+                    <div class="modal-body">
+                        <button class="back-folder d-none">
+                            <span class="styles-button__Icon">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M10.707 11.293L12.121 12.707 9.828 15 25.414 15 25.414 17 9.828 17 12.121 19.293 10.707 20.707 6 16z" style="fill: rgb(110, 110, 110);"></path></svg>
+                            </span>
+                            Quay lại
+                        </button>
+                        <div class="folder__Container">
+                            <div class="folder__Name"></div>
+                            <div class="folder-container">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="border:none;justify-content:center">
+                        <button id="closemenufolder" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                        <button id="savefolder" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Lưu ở đây</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
+    else if (currentPath.Contains("/groups/owned") || currentPath.Contains("/groups/joined"))
+    {
+        <div class="modal" id="modalCreateGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="border:none">
+                        <h3 class="modal-title">Tạo Nhóm mới</h3>
+                    </div>
+                    <div class="modal-body">
+                        <span>Vui lòng nhập tên Nhóm bên dưới</span>
+                        <input style="padding:10px 16px;font-weight:600;color: #000;" id="namegroup" type="text" class="form-control mt-4" placeholder="Nhập tên Nhóm mới" value="">
+                    </div>
+                    <div class="modal-footer" style="border:none;justify-content:center">
+                        <button id="close" type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                        <button id="btn-submit" type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (currentPath.Contains("/shared") || currentPath.Contains("/assignments"))
+    {
+        <div class="modal" id="modalEduQuizShare" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" style="margin-top:100px;max-width:640px" role="document">
+                <div class="modal-content" style="width: 640px; height: 720px;">
+                    <div class="modal-header" style="border:none">
+                        <h3 class="modal-title">Chọn EduQuiz</h3>
+                    </div>
+                    <div class="modal-body">
+                        <input style="padding:10px 16px;color: #000;" id="searcheduquiz" type="text" class="form-control mb-3" placeholder="Tìm kiếm EduQuiz" value="">
+                        <div class="cards-with-search__CardsListWrapper">
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="border:none;justify-content:center">
+                        <button type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                        <button id="btn-submitshare" disabled type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     <script src="~/src/js/jquery.min.js"></script>
     <!-- Popper JS -->
     <script src="~/src/js/popper.min.js"></script>
@@ -164,7 +411,7 @@
         function getFolder(id = null) {
             $.ajax({
                 type: "POST",
-                url: "/Library/GetFolderbyUser",
+                url: "@Url.Action("GetFolderbyUser", "Library")",
                 data: {
                     idfolder: id ? id : 0,
                 },
@@ -235,6 +482,12 @@
             var parentFolderId = $(this).attr("data-id");
             getFolder(parentFolderId);
         });
+        $("#searcheduquiz").on("input", function () {
+                var searchValue = $(this).val().toLowerCase();
+                $(".cards-with-search__CardsListWrapper .styles__ContainerCard").filter(function () {
+                    $(this).toggle($(this).find(".title__Wrapper").text().toLowerCase().indexOf(searchValue) > -1);
+                });
+            });
         </script>
     @RenderSection("scripts", required: false)
 </body>

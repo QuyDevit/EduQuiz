@@ -1,0 +1,28 @@
+﻿@{
+    @using System.Web
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+    var slug = currentPath.Split("/")[currentPath.Split("/").Length - 1];
+    
+}
+<ul class="list__List-Tabs" style="border-radius: 0.2rem 0.2rem 0px 0px;border: 1px solid rgb(204, 204, 204);background-color: #fff;width: 100%;">
+    <li class="item__ListItem">
+        <button onclick="RedirectSubQuestion(1)" class="tab__Tab @(currentPath.Contains("/question/all") ? " subactive" : "" )"><span class="tabs__Label">Tất cả</span></button>
+    </li>
+    <li class="item__ListItem">
+        <button onclick="RedirectSubQuestion(2)" class="tab__Tab @(currentPath.Contains("/question/difficult") ? " subactive" : "" )"><span class="tabs__Label">Câu hỏi khó</span></button>
+    </li>
+</ul>
+<script>
+    function RedirectSubQuestion(type) {
+        switch (type) {
+            case 1: location.href = `/reports/detail/question/all/@slug`;
+                break;
+            case 2: location.href = `/reports/detail/question/difficult/@slug`;
+                break;
+            default:
+                location.href = `/reports/detail/question/all/@slug`;
+        }
+    }
+</script>

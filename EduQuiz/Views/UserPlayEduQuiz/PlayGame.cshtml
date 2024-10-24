@@ -257,6 +257,7 @@
 </div>
 <script> 
     let isKicked = false;
+    var flagfeedback = false;
     var bg = `@ViewBag.Player.QuizSession.EduQuiz.Theme.Source`;
     var isPlayer = `@ViewBag.Player.IsPlayer`;
     var playerid = `@ViewBag.Player.Id`;
@@ -264,8 +265,11 @@
     var avatarcurrent = `@ViewBag.Player.AvatarUrl`;
     var itemcurrent = `@ViewBag.Player.Accessory`;
     var startgame = `@ViewBag.Player.QuizSession.IsWaitingRoom`;
+    var quizsessionId = `@ViewBag.Player.QuizSession.Id`;
     var isShowAvatar = `@ViewBag.Player.QuizSession.IsShowAvatar`;
+    var isActive = `@ViewBag.Player.QuizSession.IsActive`;
     var arranswer = [];
+    const state = {};
     const revealSequences = {
         9: [2, 6, 0, 3, 8, 1, 4, 7, 5], // 3x3
         25: [23, 1, 12, 19, 7, 8, 0, 24, 17, 15, 11, 4, 20, 2, 9, 13, 5, 21, 6, 10, 14, 3, 16, 18, 22], // 5x5
@@ -290,12 +294,16 @@
             if (isLoaded && isPlayer === 'False') {
                 window.location.href = "/pin";
             }else{ 
-                setTimeout(()=>{
-                    connection.invoke("ReloadConnect", pin)
-                        .catch(function (err) {
-                            console.error(err.toString());
-                        });
-                },150) 
+                if (isActive == "True"){
+                    setTimeout(() => {
+                        connection.invoke("ReloadConnect", pin)
+                            .catch(function (err) {
+                                console.error(err.toString());
+                            });
+                    }, 150)
+                }else{
+                    window.location.href = "/pin";
+                }
             }
         }
     })
@@ -339,6 +347,207 @@
     });
     connection.on("OptionAvatar", function (option) {  
         OptionAvatar(option);
+    });
+    $(document).on("click", '.rating', function () {
+        $('.rating').removeClass('selected');
+        $(this).nextAll().addBack().addClass('selected');
+        $('#submitfeedback').attr("disabled", false);
+    });
+    function changeColor(button, category, type) {
+        const buttons = document.querySelectorAll(`.btn-feedback.${category} .icon__Icon path`);
+        buttons.forEach(btn => btn.style.fill = 'rgb(178, 178, 178)');
+        if (type === 'yes') {
+            button.querySelector('.icon__Icon path').style.fill = 'rgb(102, 191, 57)';
+        } else if (type === 'no') {
+            button.querySelector('.icon__Icon path').style.fill = 'rgb(226, 27, 60)';
+        } else {
+            button.querySelector('.icon__Icon path').style.fill = 'rgb(255, 166, 2)';
+        }
+        state[category] = type;
+        console.log(state);
+        toggleSubmitButton();
+    }
+    function toggleSubmitButton() {
+        const submitButton = $('#submitfeedback');
+        // Kiểm tra nếu state không rỗng
+        if (Object.keys(state).length > 0) {
+            submitButton.attr("disabled", false);
+        } else {
+            submitButton.attr("disabled", true);
+        }
+    }
+    function sendFeedback() {
+        let rating = $('.rating.selected').length;
+        let data = {
+            QuizSessionId: quizsessionId,
+        };
+        if (rating != 0) {
+            data["Rating"] = rating;
+        }
+
+        if (state['learning']) {
+            data['PositiveLearningOutcome'] = state['learning'] === 'yes' ? true : false;
+        }
+
+        if (state['liking']) {
+            data['Liked'] = state['liking'] === 'yes' ? true : false;
+        }
+
+        if (state['feeling']) {
+            data['PositiveFeeling'] = state['feeling'] === 'yes' ? 1 : state['feeling'] === 'nor' ? 2 : 0;
+        }
+        $.ajax({
+            url: '@Url.Action("SaveFeedback", "UserPlayEduQuiz")',
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $(".feedback__Form").remove();
+                $(".feedback__PageMainContent").append(`<div class="result__Feedback">
+                    <h1 class="result__Feedback-Title">Cảm ơn bạn đã tham gia đánh giá phản hồi</h1>
+                    <span style="font-weight:bold;font-size:24px">Tốt lắm!</span>
+                    <span class="icon__Icon" style="width:50px;height:50px;">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 Z M21.8181818,17.0909091 C21.8181818,16.4 21.2727273,15.8181818 20.5818182,15.8181818 C21.2727273,15.8181818 21.8181818,15.2727273 21.8181818,14.5818182 C21.8181818,13.8909091 21.2727273,13.3454545 20.5818182,13.3454545 L15.6727273,13.3454545 L16.6181818,10.8363636 C17.1272727,9.45454545 16.4727273,7.96363636 15.1272727,7.45454545 C13.7818182,6.98181818 12.2909091,7.67272727 11.7818182,9.05454545 L10.1818182,13.3454545 L10.1818182,23.3090909 L15.4181818,23.3090909 L20.5818182,23.3090909 C21.2727273,23.3090909 21.8181818,22.7272727 21.8181818,22.0363636 C21.8181818,21.3454545 21.2727273,20.8 20.5818182,20.8 C21.2727273,20.8 21.8181818,20.2545455 21.8181818,19.5636364 C21.8181818,18.8727273 21.2727273,18.3272727 20.5818182,18.3272727 C21.2727273,18.3272727 21.8181818,17.7818182 21.8181818,17.0909091 Z" style="fill: rgb(102, 191, 57);"></path></svg>
+                    </span>
+                    <span style="font-size:16px;margin-top:1rem;">Chúng tôi sẽ làm việc chăm chỉ để cải thiện trải nghiệm của người chơi.</span>
+                </div>`);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+    connection.on("Getfeedback", function () {
+        if (!flagfeedback) {
+            $(".instructions__PageWrapper").remove();
+            $(".layout_Fullscreen").append(`<div class="feedback__PageMainContent">
+                <div class="feedback__Form">
+                    <h1 class="feedback__Title">Lấy ý kiến đánh giá</h1>
+                    <div class="styles__InputField">
+                        <div class="styles__InputField-Title">Bạn đánh giá thế nào về EduQuiz này?</div>
+                        <div class="styles__InputField-Wrapper">
+                            <button class="btn-feedback rating">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg height="40px" width="40px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                         viewBox="0 0 47.94 47.94" xml:space="preserve">
+                                    <path style="fill:rgb(178, 178, 178);" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757
+                                        c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042
+                                        c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685
+                                        c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528
+                                        c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956
+                                        C22.602,0.567,25.338,0.567,26.285,2.486z" />
+                                    </svg>
+                                </span>
+                            </button>
+                            <button class="btn-feedback rating">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg height="40px" width="40px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                         viewBox="0 0 47.94 47.94" xml:space="preserve">
+                                    <path style="fill:rgb(178, 178, 178);" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757
+                                        c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042
+                                        c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685
+                                        c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528
+                                        c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956
+                                        C22.602,0.567,25.338,0.567,26.285,2.486z" />
+                                    </svg>
+                                </span>
+                            </button>
+                            <button class="btn-feedback rating">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg height="40px" width="40px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                         viewBox="0 0 47.94 47.94" xml:space="preserve">
+                                    <path style="fill:rgb(178, 178, 178);" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757
+                                        c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042
+                                        c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685
+                                        c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528
+                                        c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956
+                                        C22.602,0.567,25.338,0.567,26.285,2.486z" />
+                                    </svg>
+                                </span>
+                            </button>
+                            <button class="btn-feedback rating">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg height="40px" width="40px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                         viewBox="0 0 47.94 47.94" xml:space="preserve">
+                                    <path style="fill:rgb(178, 178, 178);" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757
+                                        c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042
+                                        c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685
+                                        c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528
+                                        c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956
+                                        C22.602,0.567,25.338,0.567,26.285,2.486z" />
+                                    </svg>
+                                </span>
+                            </button>
+                            <button class="btn-feedback rating">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg height="40px" width="40px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                         viewBox="0 0 47.94 47.94" xml:space="preserve">
+                                    <path style="fill:rgb(178, 178, 178);" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757
+                                        c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042
+                                        c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685
+                                        c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528
+                                        c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956
+                                        C22.602,0.567,25.338,0.567,26.285,2.486z" />
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="styles__InputField">
+                        <div class="styles__InputField-Title">Bạn có học được điều gì không?</div>
+                        <div class="styles__InputField-Wrapper">
+                            <button class="btn-feedback learning" onclick="changeColor(this,'learning', 'no')">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 Z M10.1818182,14.9090909 C10.1818182,15.6 10.7272727,16.1818182 11.4181818,16.1818182 C10.7272727,16.1818182 10.1818182,16.7272727 10.1818182,17.4181818 C10.1818182,18.1090909 10.7272727,18.6545455 11.4181818,18.6545455 L16.3272727,18.6545455 L15.3818182,21.1636364 C14.8727273,22.5454545 15.5272727,24.0363636 16.8727273,24.5454545 C18.2181818,25.0181818 19.7090909,24.3272727 20.2181818,22.9454545 L21.8181818,18.6545455 L21.8181818,8.69090909 L16.5818182,8.69090909 L11.4181818,8.69090909 C10.7272727,8.69090909 10.1818182,9.27272727 10.1818182,9.96363636 C10.1818182,10.6545455 10.7272727,11.2 11.4181818,11.2 C10.7272727,11.2 10.1818182,11.7454545 10.1818182,12.4363636 C10.1818182,13.1272727 10.7272727,13.6727273 11.4181818,13.6727273 C10.7272727,13.6727273 10.1818182,14.2181818 10.1818182,14.9090909 Z" style="fill: rgb(178, 178, 178);"></path></svg>
+                                </span>
+                            </button>
+                            <button class="btn-feedback learning" onclick="changeColor(this,'learning', 'yes')">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 Z M21.8181818,17.0909091 C21.8181818,16.4 21.2727273,15.8181818 20.5818182,15.8181818 C21.2727273,15.8181818 21.8181818,15.2727273 21.8181818,14.5818182 C21.8181818,13.8909091 21.2727273,13.3454545 20.5818182,13.3454545 L15.6727273,13.3454545 L16.6181818,10.8363636 C17.1272727,9.45454545 16.4727273,7.96363636 15.1272727,7.45454545 C13.7818182,6.98181818 12.2909091,7.67272727 11.7818182,9.05454545 L10.1818182,13.3454545 L10.1818182,23.3090909 L15.4181818,23.3090909 L20.5818182,23.3090909 C21.2727273,23.3090909 21.8181818,22.7272727 21.8181818,22.0363636 C21.8181818,21.3454545 21.2727273,20.8 20.5818182,20.8 C21.2727273,20.8 21.8181818,20.2545455 21.8181818,19.5636364 C21.8181818,18.8727273 21.2727273,18.3272727 20.5818182,18.3272727 C21.2727273,18.3272727 21.8181818,17.7818182 21.8181818,17.0909091 Z" style="fill: rgb(178, 178, 178);"></path></svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="styles__InputField">
+                        <div class="styles__InputField-Title">Bạn có thích nó không?</div>
+                        <div class="styles__InputField-Wrapper">
+                            <button class="btn-feedback liking" onclick="changeColor(this,'liking', 'no')">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 Z M10.1818182,14.9090909 C10.1818182,15.6 10.7272727,16.1818182 11.4181818,16.1818182 C10.7272727,16.1818182 10.1818182,16.7272727 10.1818182,17.4181818 C10.1818182,18.1090909 10.7272727,18.6545455 11.4181818,18.6545455 L16.3272727,18.6545455 L15.3818182,21.1636364 C14.8727273,22.5454545 15.5272727,24.0363636 16.8727273,24.5454545 C18.2181818,25.0181818 19.7090909,24.3272727 20.2181818,22.9454545 L21.8181818,18.6545455 L21.8181818,8.69090909 L16.5818182,8.69090909 L11.4181818,8.69090909 C10.7272727,8.69090909 10.1818182,9.27272727 10.1818182,9.96363636 C10.1818182,10.6545455 10.7272727,11.2 11.4181818,11.2 C10.7272727,11.2 10.1818182,11.7454545 10.1818182,12.4363636 C10.1818182,13.1272727 10.7272727,13.6727273 11.4181818,13.6727273 C10.7272727,13.6727273 10.1818182,14.2181818 10.1818182,14.9090909 Z" style="fill: rgb(178, 178, 178);"></path></svg>
+                                </span>
+                            </button>
+                            <button class="btn-feedback liking" onclick="changeColor(this,'liking', 'yes')">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C24.8363636,0 32,7.16363636 32,16 C32,24.8363636 24.8363636,32 16,32 C7.16363636,32 0,24.8363636 0,16 C0,7.16363636 7.16363636,0 16,0 Z M21.8181818,17.0909091 C21.8181818,16.4 21.2727273,15.8181818 20.5818182,15.8181818 C21.2727273,15.8181818 21.8181818,15.2727273 21.8181818,14.5818182 C21.8181818,13.8909091 21.2727273,13.3454545 20.5818182,13.3454545 L15.6727273,13.3454545 L16.6181818,10.8363636 C17.1272727,9.45454545 16.4727273,7.96363636 15.1272727,7.45454545 C13.7818182,6.98181818 12.2909091,7.67272727 11.7818182,9.05454545 L10.1818182,13.3454545 L10.1818182,23.3090909 L15.4181818,23.3090909 L20.5818182,23.3090909 C21.2727273,23.3090909 21.8181818,22.7272727 21.8181818,22.0363636 C21.8181818,21.3454545 21.2727273,20.8 20.5818182,20.8 C21.2727273,20.8 21.8181818,20.2545455 21.8181818,19.5636364 C21.8181818,18.8727273 21.2727273,18.3272727 20.5818182,18.3272727 C21.2727273,18.3272727 21.8181818,17.7818182 21.8181818,17.0909091 Z" style="fill: rgb(178, 178, 178);"></path></svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="styles__InputField">
+                        <div class="styles__InputField-Title">Hãy cho chúng tôi biết bạn cảm thấy thế nào?</div>
+                        <div class="styles__InputField-Wrapper">
+                            <button class="btn-feedback feeling" onclick="changeColor(this,'feeling', 'no')">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C7.16363636,0 0,7.16363636 0,16 C0,24.8363636 7.16363636,32 16,32 C24.8363636,32 32,24.8363636 32,16 C32,7.16363636 24.8363636,0 16,0 Z M10.1818182,9.45454545 C11.3818182,9.45454545 12.3636364,10.4363636 12.3636364,11.6363636 C12.3636364,12.8363636 11.3818182,13.8181818 10.1818182,13.8181818 C8.98181818,13.8181818 8,12.8363636 8,11.6363636 C8,10.4363636 8.98181818,9.45454545 10.1818182,9.45454545 Z M20.5090909,24 C20.5090909,21.4909091 18.4727273,19.4909091 16,19.4909091 C13.4909091,19.4909091 11.4909091,21.5272727 11.4909091,24 L8,24 C8,19.5636364 11.5636364,16 16,16 C20.4363636,16 24,19.5636364 24,24 L20.5090909,24 Z M21.8181818,13.8181818 C20.6181818,13.8181818 19.6363636,12.8363636 19.6363636,11.6363636 C19.6363636,10.4363636 20.6181818,9.45454545 21.8181818,9.45454545 C23.0181818,9.45454545 24,10.4363636 24,11.6363636 C24,12.8363636 23.0181818,13.8181818 21.8181818,13.8181818 Z" style="fill: rgb(178, 178, 178);"></path></svg>
+                                </span>
+                            </button>
+                            <button class="btn-feedback feeling" onclick="changeColor(this,'feeling', 'nor')">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C7.15428571,0 0,7.15428571 0,16 C0,24.8457143 7.15428571,32 16,32 C24.8457143,32 32,24.8457143 32,16 C32,7.15428571 24.8457143,0 16,0 Z M10.1714286,9.46285714 C11.36,9.46285714 12.3428571,10.4457143 12.3428571,11.6342857 C12.3428571,12.8228571 11.36,13.8057143 10.1714286,13.8057143 C8.98285714,13.8057143 8,12.8457143 8,11.6342857 C8,10.4228571 8.98285714,9.46285714 10.1714286,9.46285714 Z M24,21.8285714 L8,21.8285714 L8,18.1714286 L24,18.1714286 L24,21.8285714 Z M21.8285714,13.8285714 C20.64,13.8285714 19.6571429,12.8457143 19.6571429,11.6571429 C19.6571429,10.4685714 20.64,9.48571429 21.8285714,9.48571429 C23.0171429,9.48571429 24,10.4685714 24,11.6571429 C24,12.8457143 23.0171429,13.8285714 21.8285714,13.8285714 Z" style="fill: rgb(178, 178, 178);"></path></svg>
+                                </span>
+                            </button>
+                            <button class="btn-feedback feeling" onclick="changeColor(this,'feeling', 'yes')">
+                                <span class="icon__Icon" style="width:40px;height:40px;">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,0 C7.16363636,0 0,7.16363636 0,16 C0,24.8363636 7.16363636,32 16,32 C24.8363636,32 32,24.8363636 32,16 C32,7.16363636 24.8363636,0 16,0 Z M10.1818182,9.45454545 C11.3818182,9.45454545 12.3636364,10.4363636 12.3636364,11.6363636 C12.3636364,12.8363636 11.3818182,13.8181818 10.1818182,13.8181818 C8.98181818,13.8181818 8,12.8363636 8,11.6363636 C8,10.4363636 8.98181818,9.45454545 10.1818182,9.45454545 Z M16,24 C11.5636364,24 8,20.2181818 8,16 L24,16 C24,20.2181818 20.4363636,24 16,24 Z M21.8181818,13.8181818 C20.6181818,13.8181818 19.6363636,12.8363636 19.6363636,11.6363636 C19.6363636,10.4363636 20.6181818,9.45454545 21.8181818,9.45454545 C23.0181818,9.45454545 24,10.4363636 24,11.6363636 C24,12.8363636 23.0181818,13.8181818 21.8181818,13.8181818 Z" style="fill:rgb(178, 178, 178);"></path></svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="feedback__ButtonWrapper">
+                        <button id="submitfeedback" class="btn" disabled style="background:rgb(38, 137, 12)" onclick="sendFeedback()">Gửi</button>
+                    </div>
+                </div>
+            </div>`);
+        }
     });
     connection.on("FinishedQuiz", function (data) { 
         $(".instructions-with-avatar__PageMainContent").remove();

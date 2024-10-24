@@ -1,17 +1,9 @@
 ﻿@{
     Layout = "_LayoutUser";
     ViewBag.Title = "Báo cáo - Bài chỉ định";
+    @using EduQuiz.Helper;
 }
 @model ICollection<EduQuiz.Models.ReportData>
-@functions {
-    public string Convertime(DateTime? endTime)
-    {
-        if (endTime == null) return "Chưa kết thúc";
-
-        var vietnamCulture = new System.Globalization.CultureInfo("vi-VN");
-        return endTime.Value.ToString("dd 'tháng' M 'năm' yyyy, h:mm tt", vietnamCulture);
-    }
-}
 <link href="~/src/css/js/datatable/datatables.min.css" rel="stylesheet" />
 <script src="~/src/css/js/datatable/datatables.min.js" defer></script>
 <link href="~/src/css/report.css" rel="stylesheet" />
@@ -60,14 +52,14 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr onclick="RedirectReport(@item.Pin)">
+                        <tr onclick="RedirectReport(@item.QuizSessionId,@item.Pin)">
                             <td>
                                 <div class="report-Title">
                                     <div style="font-weight:600">@item.Title</div>
                                     <div class="report-bottom">
                                         <span class="report-status @(item.IsActive ? "":"finished")">@(item.IsActive ? "Đang chơi" : "Hoàn thành")</span>
                                         <span>
-                                            @(item.EndTime != null ? "Kết thúc " + Convertime(item.EndTime) : "Chưa kết thúc")
+                                            @(item.EndTime != null ? "Kết thúc " + StringHelper.ConvertDateTimeToCustomString(item.EndTime ?? DateTime.Now) : "Chưa kết thúc")
                                         </span>
                                     </div>
                                 </div>
@@ -102,7 +94,8 @@
     tippy('.icon__Icon', {
         content: "Số lượng người chơi!",
     });
-    function RedirectReport(value) {
-        location.href = `/reports/detail?pin=${value}`;
+    function RedirectReport(id, value) {
+        var slug = btoa(id + '-' + value);
+        location.href = `/reports/detail/${slug}`;
     }
 </script>

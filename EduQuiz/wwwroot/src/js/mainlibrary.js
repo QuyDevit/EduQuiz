@@ -260,7 +260,7 @@
         if (check) {
             inputfolder.focus();
         } else {
-            inputfolder.val(""); // Clear input if the wrapper is hidden
+            inputfolder.val(""); 
         }
     });
 

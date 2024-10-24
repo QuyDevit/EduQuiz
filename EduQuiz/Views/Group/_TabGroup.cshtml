@@ -1,0 +1,230 @@
+﻿@{
+    @using System.Web
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+    var slug = currentPath.Split("/")[currentPath.Split("/").Length - 2];
+}
+@model EduQuiz.Models.GroupViewModel
+<div class="group-detail__Container">
+    <div class="group-detail-page-header__Title">@Model.Group.Name</div>
+    <div class="group-detail-page-header__Option">
+        @if (Model.IsHost)
+        {
+            <a class="group-link" href="@Url.Action("GroupSetting","Group",new{id = slug})">
+                <span class="group-detail-page-header__OptionIcon">
+                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7.83159109,16 C7.83159109,15.637 7.85915912,15.266 7.91429518,14.893 L6.51036785,14.099 C6.27655014,13.967 6.10501575,13.748 6.03456412,13.492 C5.9641125,13.236 6.00086987,12.963 6.13666793,12.733 L8.17874403,9.27 C8.46157157,8.792 9.08440478,8.627 9.57348201,8.903 L10.9804724,9.698 C11.5788007,9.24 12.2383913,8.865 12.9367814,8.585 L12.9367814,7 C12.9367814,6.448 13.3931854,6 13.9578194,6 L18.0419716,6 C18.6066057,6 19.0630097,6.448 19.0630097,7 L19.0630097,8.586 C19.7613997,8.864 20.4209903,9.24 21.0193186,9.697 L22.426309,8.902 C22.6601267,8.769 22.9398912,8.734 23.2012769,8.802 C23.4626626,8.87 23.6852489,9.038 23.821047,9.267 L25.8631231,12.731 C26.1449296,13.209 25.9774794,13.821 25.4904442,14.097 L24.0854959,14.892 C24.1406319,15.265 24.1681999,15.636 24.1681999,16 C24.1681999,16.364 24.1406319,16.735 24.0854959,17.108 L25.4904442,17.903 C25.9774794,18.179 26.1449296,18.791 25.8631231,19.269 L23.821047,22.733 C23.6852489,22.962 23.4626626,23.13 23.2012769,23.198 C22.9398912,23.266 22.6601267,23.231 22.426309,23.098 L21.0193186,22.303 C20.4209903,22.76 19.7613997,23.136 19.0630097,23.414 L19.0630097,25 C19.0630097,25.552 18.6066057,26 18.0419716,26 L13.9578194,26 C13.3931854,26 12.9367814,25.552 12.9367814,25 L12.9367814,23.415 C12.2383913,23.135 11.5788007,22.76 10.9804724,22.302 L9.57348201,23.097 C9.08440478,23.373 8.46157157,23.208 8.17874403,22.73 L6.13666793,19.267 C6.00086987,19.037 5.9641125,18.764 6.03456412,18.508 C6.10501575,18.252 6.27655014,18.033 6.51036785,17.901 L7.91429518,17.107 C7.85915912,16.734 7.83159109,16.363 7.83159109,16 Z M9.8736672,16 C9.8736672,16.455 9.92982429,16.908 10.0452016,17.39 C10.1493475,17.82 9.95330817,18.265 9.56225059,18.485 L8.41562486,19.133 L9.43666291,20.865 L10.5843097,20.217 C10.9784304,19.997 11.4695497,20.053 11.7962819,20.357 C12.4936508,21.002 13.3431545,21.483 14.2498363,21.749 C14.6827564,21.875 14.9788575,22.266 14.9788575,22.707 L14.9788575,24 L17.0209336,24 L17.0209336,22.707 C17.0209336,22.265 17.3180556,21.875 17.7509758,21.749 C18.6556155,21.484 19.5030771,21.003 20.2035092,20.357 C20.5322834,20.053 21.0254448,19.996 21.4154813,20.217 L22.5631281,20.866 L23.5841662,19.135 L22.4375404,18.484 C22.0464829,18.264 21.8504436,17.819 21.9545894,17.39 C22.0699667,16.908 22.1261238,16.454 22.1261238,16 C22.1261238,15.546 22.0699667,15.092 21.9545894,14.61 C21.8504436,14.181 22.0464829,13.736 22.4375404,13.516 L23.5841662,12.865 L22.5631281,11.134 L21.4154813,11.783 C21.0254448,12.004 20.5322834,11.947 20.2035092,11.643 C19.5030771,10.997 18.6556155,10.516 17.7509758,10.251 C17.3180556,10.125 17.0209336,9.735 17.0209336,9.293 L17.0209336,8 L14.9788575,8 L14.9788575,9.293 C14.9788575,9.734 14.6827564,10.125 14.2498363,10.251 C13.3431545,10.517 12.4936508,10.998 11.7962819,11.643 C11.4695497,11.947 10.9784304,12.003 10.5843097,11.783 L9.43666291,11.135 L8.41562486,12.867 L9.56225059,13.515 C9.95330817,13.735 10.1493475,14.18 10.0452016,14.61 C9.92982429,15.092 9.8736672,15.545 9.8736672,16 Z M16,18 C14.8954305,18 14,17.1045695 14,16 C14,14.8954305 14.8954305,14 16,14 C17.1045695,14 18,14.8954305 18,16 C18,17.1045695 17.1045695,18 16,18 Z" style="fill: currentcolor;"></path></svg>
+                </span>
+            </a>
+        }
+        <div class="group-detail-page-header__ActionMenu">
+            <button id="openmenuOption" class="group-detail-page-header__ActionMenu-btn">
+                <span class="group-detail-page-header__OptionIcon" style="width:20px;height:20px">
+                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16,10 C17.1045695,10 18,9.1045695 18,8 C18,6.8954305 17.1045695,6 16,6 C14.8954305,6 14,6.8954305 14,8 C14,9.1045695 14.8954305,10 16,10 Z M16,18 C17.1045695,18 18,17.1045695 18,16 C18,14.8954305 17.1045695,14 16,14 C14.8954305,14 14,14.8954305 14,16 C14,17.1045695 14.8954305,18 16,18 Z M16,26 C17.1045695,26 18,25.1045695 18,24 C18,22.8954305 17.1045695,22 16,22 C14.8954305,22 14,22.8954305 14,24 C14,25.1045695 14.8954305,26 16,26 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                </span>
+            </button>
+            <ul id="menuOption" class="group-action-menu__list d-none">
+                @if (Model.IsHost || Model.Group.CanSeeMemberList)
+                {
+                    <li class="menu__list-item">
+                        <button class="menu__list-itemBtn" onclick="RedirectToMember()">
+                            <span class="menu__list-itemIcon">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M26,16 C24.897,16 24,15.103 24,14 C24,12.897 24.897,12 26,12 C27.103,12 28,12.897 28,14 C28,15.103 27.103,16 26,16 L26,16 Z M10,23 C10,22.298 10.127,21.627 10.35,21 C10.487,20.615 10.661,20.248 10.87,19.904 C11.923,18.167 13.825,17 16,17 C18.175,17 20.077,18.167 21.13,19.904 C21.339,20.248 21.513,20.615 21.65,21 C21.873,21.627 22,22.298 22,23 L10,23 Z M16,9 C17.654,9 19,10.346 19,12 C19,13.654 17.654,15 16,15 C14.346,15 13,13.654 13,12 C13,10.346 14.346,9 16,9 L16,9 Z M6,16 C4.897,16 4,15.103 4,14 C4,12.897 4.897,12 6,12 C7.103,12 8,12.897 8,14 C8,15.103 7.103,16 6,16 L6,16 Z M28.793,16.855 C29.536,16.128 30,15.119 30,14 C30,11.794 28.206,10 26,10 C23.794,10 22,11.794 22,14 C22,15.119 22.464,16.128 23.207,16.855 C22.795,17.133 22.444,17.486 22.132,17.871 C21.367,16.958 20.4,16.223 19.305,15.723 C20.336,14.807 21,13.485 21,12 C21,9.243 18.757,7 16,7 C13.243,7 11,9.243 11,12 C11,13.485 11.664,14.807 12.695,15.723 C11.6,16.223 10.633,16.958 9.868,17.871 C9.556,17.486 9.205,17.133 8.793,16.855 C9.536,16.128 10,15.119 10,14 C10,11.794 8.206,10 6,10 C3.794,10 2,11.794 2,14 C2,15.119 2.464,16.128 3.207,16.855 C1.876,17.754 1,19.277 1,21 L3,21 C3,19.346 4.346,18 6,18 C7.198,18 8.227,18.711 8.707,19.729 C8.257,20.729 8,21.834 8,23 L8,24 C8,24.552 8.448,25 9,25 L23,25 C23.552,25 24,24.552 24,24 L24,23 C24,21.834 23.743,20.729 23.293,19.729 C23.773,18.711 24.802,18 26,18 C27.654,18 29,19.346 29,21 L31,21 C31,19.277 30.124,17.754 28.793,16.855 L28.793,16.855 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                            </span>
+                            <p class="menu__list-itemTitle">Xem thành viên</p>
+                        </button>
+                    </li>
+                }
+                <li class="menu__list-item">
+                    <button class="menu__list-itemBtn">
+                        <span class="menu__list-itemIcon">
+                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M21,6 C22.103,6 23,6.898 23,8 L23,11 L21,11 L21,8 L10,8 L10,24 L21,24 L21,21 L23,21 L23,24 C23,25.103 22.103,26 21,26 L10,26 C8.897,26 8,25.103 8,24 L8,8 C8,6.898 8.897,6 10,6 L21,6 Z M16.293,11.292 L17.707,12.708 L15.41,15 L24,15 L24,17 L15.418,17 L17.708,19.294 L16.292,20.706 L11.586,15.991 L16.293,11.292 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                        </span>
+                        <p class="menu__list-itemTitle">Rời khỏi nhóm</p>
+                    </button>
+                </li>
+                <li class="menu__list-item">
+                    <button class="menu__list-itemBtn">
+                        <span class="menu__list-itemIcon">
+                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M9,24 C9,25.103 9.897,26 11,26 L21,26 C22.103,26 23,25.103 23,24 L23,12 L9,12 L9,24 Z M11,14 L21,14 L21.001,24 L11,24 L11,14 Z M19,9 L25,9 L25,11 L7,11 L7,9 L13,9 L13,7 L19,7 L19,9 Z M13,16 L13,22 L15,22 L15,16 L13,16 Z M17,16 L17,22 L19,22 L19,16 L17,16 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                        </span>
+                        <p class="menu__list-itemTitle">Xóa nhóm</p>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+@if (Model.Group.Description != null && Model.Group.Description != "")
+{
+    <p style="margin:10px 0">@Model.Group.Description</p>
+}
+<div class="group-detail-tabs__Container">
+    <div class="group-detail-tabsWrapper">
+        <div class="group-detail-tab_Tab">
+            <a href="@Url.Action("GroupActivity","Group",new{id =slug})" class="group-detail-tab_TabLink @(currentPath.Contains("/activity") ? " active" : "" )">
+                Hoạt động
+            </a>
+        </div>
+        <div class="group-detail-tab_Tab">
+            <a href="@Url.Action("GroupShared","Group",new{id = slug})" class="group-detail-tab_TabLink @(currentPath.Contains("/shared") ? " active" : "" )">
+                Chia sẻ
+            </a>
+        </div>
+        <div class="group-detail-tab_Tab">
+            <a href="@Url.Action("GroupAssignments","Group",new{id = slug})" class="group-detail-tab_TabLink @(currentPath.Contains("/assignments") ? " active" : "" )">
+                Bài tập
+            </a>
+        </div>
+    </div>
+    @{
+        string buttonText = "";
+        string modal = "";
+        bool showButton = false;
+        string buttonid = null;
+        int dataid = 0;
+
+        if (currentPath.Contains("/activity"))
+        {
+            if (Model.IsHost || Model.Group.CanInviteNewMembers)
+            {
+                buttonText = "Mời";
+                modal = "#modalInviteGroup";
+                showButton = true;
+            }
+        }
+        else if (currentPath.Contains("/shared"))
+        {
+            if (Model.IsHost || Model.Group.CanShareContent)
+            {
+                buttonText = "Chia sẻ";
+                modal = "#modalEduQuizShare";
+                showButton = true;
+                buttonid = "geteduquiz";
+                dataid = 1;
+            }
+        }
+        else
+        {
+            if (Model.IsHost)
+            {
+                buttonText = "Giao bài tập";
+                modal = "#modalEduQuizShare";
+                showButton = true;
+                buttonid = "geteduquiz";
+                dataid = 2;
+            }
+        }
+    }
+    @if (showButton)
+    {
+        <button id="@buttonid" class="btn" data-id="@dataid" data-toggle="modal" data-target="@modal">@buttonText</button>
+    }
+
+</div>
+<script>
+    var arrEduQuizId = [];
+    function SelectEduQuiz(id, button) {
+        var index = arrEduQuizId.indexOf(id);
+        if (index === -1) {
+            arrEduQuizId.push(id);
+            $(button).text("Đã chọn").addClass("selected");
+        } else {
+            arrEduQuizId.splice(index, 1);
+            $(button).text("Chọn").removeClass("selected");
+        }
+
+        arrEduQuizId.length > 0 ? $("#btn-submitshare").removeAttr("disabled") : $("#btn-submitshare").attr("disabled", true);
+
+        console.log(arrEduQuizId);
+    }
+    function RedirectToMember() {
+        location.href = "/groups/@slug/members"
+    }
+    $("#openmenuOption").click(function (e) {
+        e.stopPropagation();
+        $("#menuOption").removeClass("d-none");
+    });
+
+    $("#menuOption").click(function (e) {
+        e.stopPropagation();
+    });
+    $("#btn-post").click(function (e) {
+        e.stopPropagation();
+        $("#menu-post").removeClass("d-none");
+    });
+
+    $("#menu-post").click(function (e) {
+        e.stopPropagation();
+    });
+
+    $(document).click(function () {
+        $('#menuOption').addClass('d-none');
+        $("#menu-post").addClass('d-none');
+    });
+
+    $(document).on("click", "#geteduquiz", function () {
+        arrEduQuizId = [];
+        const datacheck = $(this).attr("data-id");
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetEduQuizByUser", "Group")",
+            data: {
+                groupid: "@Model.Group.Id",
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        $(".cards-with-search__CardsListWrapper").empty();
+                        response.data.forEach(item => {
+                            $(".cards-with-search__CardsListWrapper").append(`
+                                <div class="styles__ContainerCard" style="width:100%" data-id="${item.id}">
+                                    <div class="style__ImgWrapper">
+                                        <img src="${item.image}" />
+                                        <div class="extra-info">
+                                            <div class="extra-info__Label">${item.countQuestion} câu hỏi</div>
+                                        </div>
+                                    </div>
+                                    <div class="styles__ContentContainer">
+                                        <div class="styles__LeftContentContainer">
+                                            <div class="styles__TopContent">
+                                                <div class="styles__MainInfo">
+                                                    <div class="title__Wrapper">${item.title}</div>
+                                                    <p class="description">${item.description}</p>
+                                                </div>
+                                            </div>
+                                            <div class="styles__BottomContent">
+                                                <div class="styles__BottomInnerWrapper">
+                                                    <div class="creator">
+                                                        <img src="${item.avatart}" />
+                                                        <div>${item.username}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                            ${datacheck == 1 ? `<div class="styles__ActionsWrapper">
+                                                <button class="btn" ${item.isSelected ? "disabled" : ""} onclick="SelectEduQuiz(${item.id},this)">Chọn</button>
+                                            </div>` : "" }
+                                    </div>
+                                </div>
+                            `);
+                            datacheck != 1 ? $("#btn-submitshare").remove() : "";
+                        });
+                    }
+                }
+            }
+        })
+    })
+    
+</script>

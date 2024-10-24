@@ -2,7 +2,7 @@
     Layout = "_LayoutPlay";
     ViewBag.Title = "Eduquiz! Game";
 }
-
+@model ICollection<EduQuiz.Models.ReportPodium>
 <div class="end-game-screenstyles__PageWrapper">
     <canvas id="spotlightCanvas"></canvas>
     <div class="end-game-screenstyles__ContentWrapper">
@@ -18,87 +18,47 @@
                     </section>
                     <section class="podium-core__Center">
                         <div class="podium-charts__Charts">
-                            <div class="bar-styles__Bar place-1">
-                                <div class="player-name__PlayerWrapper">
-                                    <div class="player-name__AnimationWrapper ef-av1">
-                                        <div class="avatar__Container">
-                                            <div class="styles__AvatarWrapper">
-                                                <img class="styles__AvatarItem" src="~/src/img/accessory/accessory4.svg" />
-                                                <img class="styles__AvatarBase" src="~/src/img/avatar/avatar4.svg" />
-                                                <div class="styles__AvatarFace">
-                                                    <img src="~/src/img/eyes-blink.gif" />
+                            @{
+                                int count = 1;
+                            }
+                            @foreach(var item in Model)
+                            {
+                                <div class="bar-styles__Bar place-@count">
+                                    <div class="player-name__PlayerWrapper">
+                                        <div class="player-name__AnimationWrapper ef-av@(count)">
+                                            <div class="avatar__Container">
+                                                <div class="styles__AvatarWrapper">
+                                                    @if (item.Nickname != "")
+                                                    {
+                                                        <img class="styles__AvatarItem" src="@item.Accessory" />
+                                                        <img class="styles__AvatarBase" src="@item.AvatarUrl" />
+                                                        <div class="styles__AvatarFace">
+                                                            <img src="~/src/img/eyes-blink.gif" />
+                                                        </div>
+                                                    }  
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="medal__Medal gold">
-                                </div>
-                                <div class="bar-styles__UserNameBelow efname-1">Đẳng cấp top 1</div>
-                                <div class="bar-styles__Score">25000</div>
-                            </div>
-                            <div class="bar-styles__Bar place-2">
-                                <div class="player-name__PlayerWrapper">
-                                    <div class="player-name__AnimationWrapper ef-av2">
-                                        <div class="avatar__Container">
-                                            <div class="styles__AvatarWrapper">
-                                                <img class="styles__AvatarItem" src="~/src/img/accessory/accessory4.svg" />
-                                                <img class="styles__AvatarBase" src="~/src/img/avatar/avatar4.svg" />
-                                                <div class="styles__AvatarFace">
-                                                    <img src="~/src/img/eyes-blink.gif" />
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="medal__Medal @(count == 1 ? "gold" : count == 2 ?"silver" :"bronze")">
                                     </div>
+                                    <div class="bar-styles__UserNameBelow efname-@count">@item.Nickname</div>
+                                    <div class="bar-styles__Score">@(item.TotalScore != 0 ? item.TotalScore : "")</div>
                                 </div>
-                                <div class="medal__Medal silver">
-                                </div>
-                                <div class="bar-styles__UserNameBelow efname-2">Đẳng cấp top 2</div>
-                                <div class="bar-styles__Score">12000</div>
-                            </div>
-                            <div class="bar-styles__Bar place-3">
-                                <div class="player-name__PlayerWrapper">
-                                    <div class="player-name__AnimationWrapper ef-av3">
-                                        <div class="avatar__Container">
-                                            <div class="styles__AvatarWrapper">
-                                                <img class="styles__AvatarItem" src="~/src/img/accessory/accessory4.svg" />
-                                                <img class="styles__AvatarBase" src="~/src/img/avatar/avatar4.svg" />
-                                                <div class="styles__AvatarFace">
-                                                    <img src="~/src/img/eyes-blink.gif" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="medal__Medal bronze">
-                                </div>
-                                <div class="bar-styles__UserNameBelow efname-3">Đẳng cấp top 3</div>
-                                <div class="bar-styles__Score">5000</div>
-                            </div>
+                                count++;
+                            }
                         </div>
                     </section>
                 </div>
             </div>
         </main>
     </div>
-    <div class="styles__SidebarWrapper">
-        <div class="styles__ScrollWrapper">
-            <button class="podium-sidebar-button__Button">
-                <span class="icon__Icon">
-                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M16.0048 25H6.00479C5.60479 25 5.24479 24.76 5.08479 24.4C4.92479 24.03 4.99479 23.61 5.26479 23.32L7.57479 20.84C6.54479 19.39 6.00479 17.74 6.00479 16C6.00479 11.04 10.4948 7 16.0048 7C21.5148 7 26.0048 11.04 26.0048 16C26.0048 20.96 21.5148 25 16.0048 25Z" style="fill: rgb(255, 255, 255);"></path></svg>
-                </span>
-                <div class="podium-sidebar-button__TextWrapper">Xem đánh giá</div>
-            </button>
-            <button class="podium-sidebar-button__Button">
-                <span class="icon__Icon">
-                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M26.25 11.25V23.75C26.25 24.413 25.9866 25.0489 25.5178 25.5178C25.0489 25.9866 24.413 26.25 23.75 26.25H8.75C8.08696 26.25 7.45107 25.9866 6.98223 25.5178C6.51339 25.0489 6.25 24.413 6.25 23.75V17.5H8.75V23.75H23.75V11.25H10V15L5 10L10 5V8.75H23.75C24.413 8.75 25.0489 9.01339 25.5178 9.48223C25.9866 9.95107 26.25 10.587 26.25 11.25ZM14.375 21.25L19.675 17.5L14.375 13.75V21.25Z" style="fill: rgb(255, 255, 255);"></path></svg>
-                </span>
-                <div class="podium-sidebar-button__TextWrapper">Thoát trò chơi</div>
-            </button>
-        </div>
-    </div>
 </div>
 <script>
+    var currentUrl = window.location.href;
+    function Redirect() {
+        location.href = currentUrl.replace("/podium", "");
+    }
     const canvas = document.getElementById('spotlightCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -196,7 +156,7 @@
                         <span class="icon__Icon">
                             <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M26.25 11.25V23.75C26.25 24.413 25.9866 25.0489 25.5178 25.5178C25.0489 25.9866 24.413 26.25 23.75 26.25H8.75C8.08696 26.25 7.45107 25.9866 6.98223 25.5178C6.51339 25.0489 6.25 24.413 6.25 23.75V17.5H8.75V23.75H23.75V11.25H10V15L5 10L10 5V8.75H23.75C24.413 8.75 25.0489 9.01339 25.5178 9.48223C25.9866 9.95107 26.25 10.587 26.25 11.25ZM14.375 21.25L19.675 17.5L14.375 13.75V21.25Z" style="fill: rgb(255, 255, 255);"></path></svg>
                         </span>
-                        <div class="podium-sidebar-button__TextWrapper">Thoát trò chơi</div>
+                        <div class="podium-sidebar-button__TextWrapper" onclick="Redirect()">Thoát trò chơi</div>
                     </button>
                 </div>
                 </div>`).addClass("pdw-2");
