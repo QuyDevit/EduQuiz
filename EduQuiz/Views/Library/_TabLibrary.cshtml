@@ -12,7 +12,7 @@
         <a id="tab_draft" href="@Url.Action("EduQuizDraft","Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/drafts" ? "active" : "")">Bản nháp</a>
     </div>
     <div class="eduquiz-root__Tabs">
-        <a href="#">Yêu thích</a>
+        <a href ="@Url.Action("EduQuizFavorite", "Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/favorite" ? "active" : "")">Yêu thích</a>
     </div>
     <div class="eduquiz-root__Tabs">
         <a href="@Url.Action("EduQuizShare","Library")" class="@(string.IsNullOrEmpty(currentPath) || currentPath == "/my-library/eduquizs/share" ? "active" : "")">Chia sẻ với bạn</a>

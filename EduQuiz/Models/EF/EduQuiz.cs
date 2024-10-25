@@ -21,6 +21,9 @@ namespace EduQuiz.Models.EF
         [ForeignKey("ThemeId")]
         public int? ThemeId { get; set; } // Chủ đề
         public virtual Theme Theme { get; set; }
+        public int? TopicId { get; set; } // Thể loại
+        [ForeignKey("TopicId")]
+        public virtual Interest Topic { get; set; }
         [ForeignKey("MusicId")]
         public int? MusicId { get; set; } // Nhạc sảnh
         public virtual Music Music { get; set; }

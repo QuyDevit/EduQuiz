@@ -33,80 +33,78 @@ namespace EduQuiz.Controllers
         public async Task<IActionResult> Index(Guid id)
         {
             var authCookie = Request.Cookies["acToken"];
-            if (authCookie != null)
+            if (authCookie == null)
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
-                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-                // Sử dụng các giá trị trong logic của bạn
-                var iduser = int.Parse(userId ?? "1");
-
-                var user = await _context.Users.FindAsync(iduser);
-                if (user != null)
-                {
-                    var check = await _context.EduQuizs
-                        .Include(e => e.Questions)
-                        .ThenInclude(q => q.Choices)
-                        .FirstOrDefaultAsync(d => d.Uuid == id && d.Status == true);
-
-                    if (check == null)
-                    {
-                        ViewBag.Data = new { quizId = id, userId = user.Id, subscriptionType = user.SubscriptionType };
-                        return View(null);
-                    }
-                    else
-                    {
-                        if (check.UserId != user.Id)
-                        {
-                            return RedirectToAction("Index", "HomeDashboard");
-                        }
-                        List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion);
-
-                        var getdata = new Models.EduQuizData
-                        {
-                            Uuid = check.Uuid,
-                            Description = check.Description,
-                            Title = check.Title,
-                            ImageCover = check.ImageCover,
-                            Type = check.Type ?? 0,
-                            Visibility = check.Visibility,
-                            ThemeId = check.ThemeId ?? 0,
-                            MusicId = check.MusicId ?? 0,
-                            UserId = check.UserId ?? 0,
-                            Questions = check.Questions.Select(q => new QuestionData
-                            {
-                                Id = q.Id,
-                                QuestionText = q.QuestionText,
-                                TypeQuestion = q.TypeQuestion,
-                                TypeAnswer = q.TypeAnswer ?? 0,
-                                Time = q.Time ?? 0,
-                                PointsMultiplier = q.PointsMultiplier ?? 0,
-                                Image = q.Image,
-                                ImageEffect = q.ImageEffect,
-                                Choices = q.Choices.OrderBy(c => c.DisplayOrder).Select(c => new ChoiceData
-                                {
-                                    Id = c.Id,
-                                    Answer = c.Answer,
-                                    IsCorrect = c.IsCorrect,
-                                    DisplayOrder = c.DisplayOrder
-                                }).ToList()
-                            }).ToList()
-                        };
-                        var orderLookup = orderquestion.Select((id, index) => new { id, index })
-                         .ToDictionary(x => x.id, x => x.index);
-
-                        // Sắp xếp danh sách câu hỏi theo thứ tự trong orderid
-                        getdata.Questions = getdata.Questions
-                            .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
-                            .ToList();
-
-                        ViewBag.Data = new { quizId = id, userId = user.Id, subscriptionType = user.SubscriptionType };
-                        return View(getdata);
-                    }
-                }
-
+                return RedirectToAction("Index", "HomeDashboard");
             }
-            return RedirectToAction("Index", "HomeDashboard");
+            
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            // Sử dụng các giá trị trong logic của bạn
+            var iduser = int.Parse(userId ?? "1");
+
+            var user = await _context.Users.FindAsync(iduser);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "HomeDashboard");
+            }
+            var check = await _context.EduQuizs
+                    .Include(e => e.Questions)
+                    .ThenInclude(q => q.Choices)
+                    .FirstOrDefaultAsync(d => d.Uuid == id && d.Status == true);
+
+            if (check == null)
+            {
+                ViewBag.Data = new { quizId = id, userId = user.Id, subscriptionType = user.SubscriptionType };
+                return View(null);
+            }
+            if (check.UserId != user.Id)
+            {
+                return RedirectToAction("Index", "HomeDashboard");
+            }
+            List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion);
+
+            var getdata = new Models.EduQuizData
+            {
+                Uuid = check.Uuid,
+                Description = check.Description,
+                Title = check.Title,
+                ImageCover = check.ImageCover,
+                Type = check.Type ?? 0,
+                Visibility = check.Visibility,
+                ThemeId = check.ThemeId ?? 0,
+                MusicId = check.MusicId ?? 0,
+                UserId = check.UserId ?? 0,
+                Questions = check.Questions.Select(q => new QuestionData
+                {
+                    Id = q.Id,
+                    QuestionText = q.QuestionText,
+                    TypeQuestion = q.TypeQuestion,
+                    TypeAnswer = q.TypeAnswer ?? 0,
+                    Time = q.Time ?? 0,
+                    PointsMultiplier = q.PointsMultiplier ?? 0,
+                    Image = q.Image,
+                    ImageEffect = q.ImageEffect,
+                    Choices = q.Choices.OrderBy(c => c.DisplayOrder).Select(c => new ChoiceData
+                    {
+                        Id = c.Id,
+                        Answer = c.Answer,
+                        IsCorrect = c.IsCorrect,
+                        DisplayOrder = c.DisplayOrder
+                    }).ToList()
+                }).ToList()
+            };
+            var orderLookup = orderquestion.Select((id, index) => new { id, index })
+             .ToDictionary(x => x.id, x => x.index);
+
+            // Sắp xếp danh sách câu hỏi theo thứ tự trong orderid
+            getdata.Questions = getdata.Questions
+                .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
+                .ToList();
+
+            ViewBag.Data = new { quizId = id, userId = user.Id, subscriptionType = user.SubscriptionType };
+            return View(getdata);
         }
         #region handle
         public async Task<IActionResult> saveImgQuestion([FromForm] IFormFile image, [FromForm] string quizid)
@@ -524,30 +522,39 @@ namespace EduQuiz.Controllers
                         }).ToList()
                     }).ToList()
                 };
-                var request = new ChatRequest
-                {
-                    Model = "gemini-1.5-pro",
-                    MaxTokens = 2048,
-                    Messages = new[]
-                    {
-                        new Message
-                        {
-                            Role = "user",
-                            Content =  $"{content}{getdata}"
-                        }
-                    }
-                };
 
-                var responseContent = await _geminiAiService.GenerateResponse(request);
-                var geminiResponse = JsonConvert.DeserializeObject<GeminiResponse>(responseContent);
+                await ProcessEduQuizAsync(geteduquiz, getdata);
 
-                // Trích xuất text
-                string extractedText = geminiResponse.Candidates[0].Content.Parts[0].Text;
-                return Json(new { result = "PASS", data = extractedText });
+                return Json(new { result = "PASS"});
             }
             catch (Exception ex) {
                 return Json(new { result = "FAIL", msg = $"Lưu thất bại: {ex.Message}" });
             }
+        }
+        private async Task ProcessEduQuizAsync(Models.EF.EduQuiz geteduquiz, EduQuizData getdata)
+        {
+            var request = new ChatRequest
+            {
+                Model = "gemini-1.5-pro",
+                MaxTokens = 2048,
+                Messages = new[]
+                {
+                    new Message
+                    {
+                        Role = "user",
+                        Content = $"{content}{getdata}"
+                    }
+                }
+            };
+
+            var responseContent = await _geminiAiService.GenerateResponse(request);
+            var geminiResponse = JsonConvert.DeserializeObject<GeminiResponse>(responseContent);
+
+            string extractedText = geminiResponse.Candidates[0].Content.Parts[0].Text;
+            var getid = int.Parse(extractedText.Split(',')[0][^1].ToString());
+
+            geteduquiz.TopicId = getid;
+            await _context.SaveChangesAsync();
         }
         #endregion
     }

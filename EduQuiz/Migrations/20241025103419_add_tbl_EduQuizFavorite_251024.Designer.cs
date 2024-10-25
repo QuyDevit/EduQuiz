@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduQuiz.Migrations
 {
     [DbContext(typeof(EduQuizDBContext))]
-    [Migration("20240926075150_update_db_260924")]
-    partial class update_db_260924
+    [Migration("20241025103419_add_tbl_EduQuizFavorite_251024")]
+    partial class add_tbl_EduQuizFavorite_251024
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,42 @@ namespace EduQuiz.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("EduQuiz.Models.EF.AssignmentGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AssignedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("EduQuizId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QuizSessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EduQuizId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("QuizSessionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AssignmentGroup");
+                });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Choice", b =>
                 {
@@ -86,6 +122,9 @@ namespace EduQuiz.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TopicId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Type")
                         .HasColumnType("int");
 
@@ -107,9 +146,67 @@ namespace EduQuiz.Migrations
 
                     b.HasIndex("ThemeId");
 
+                    b.HasIndex("TopicId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("EduQuiz");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.EduQuizFavorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("EduQuizId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EduQuizId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EduQuizFavorite");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.FeedbackQuizSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Liked")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("PositiveFeeling")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("PositiveLearningOutcome")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("QuizSessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizSessionId");
+
+                    b.ToTable("FeedbackQuizSession");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Folder", b =>
@@ -149,6 +246,139 @@ namespace EduQuiz.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Folders");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("CanInviteNewMembers")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanPostContent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanSeeMemberList")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanShareContent")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("InviteCode")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Group");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.GroupMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("JoinedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupMember");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.GroupPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PostedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupPost");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.GroupPostLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GroupPostId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LikedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupPostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupPostLike");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Interest", b =>
@@ -222,6 +452,9 @@ namespace EduQuiz.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AnswerText")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ChoiceId")
                         .HasColumnType("int");
 
@@ -249,6 +482,28 @@ namespace EduQuiz.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("PlayerAnswer");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.PlayerQuizSessionQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ListQuestionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PlayerSessionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerSessionId");
+
+                    b.ToTable("PlayerQuizSessionQuestion");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.PlayerSession", b =>
@@ -416,6 +671,13 @@ namespace EduQuiz.Migrations
                     b.Property<DateTime?>("StartTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TypeQuizSession")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EduQuizId");
@@ -423,6 +685,32 @@ namespace EduQuiz.Migrations
                     b.HasIndex("HostUserId");
 
                     b.ToTable("QuizSession");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.QuizSessionQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QuizSessionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("QuizSessionId");
+
+                    b.ToTable("QuizSessionQuestion");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Role", b =>
@@ -453,6 +741,37 @@ namespace EduQuiz.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.ShareGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EduQuizId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SharedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EduQuizId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ShareGroup");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Theme", b =>
@@ -617,6 +936,33 @@ namespace EduQuiz.Migrations
                     b.ToTable("WorkplaceType");
                 });
 
+            modelBuilder.Entity("EduQuiz.Models.EF.AssignmentGroup", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.EduQuiz", "EduQuiz")
+                        .WithMany()
+                        .HasForeignKey("EduQuizId");
+
+                    b.HasOne("EduQuiz.Models.EF.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("EduQuiz.Models.EF.QuizSession", "QuizSession")
+                        .WithMany()
+                        .HasForeignKey("QuizSessionId");
+
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("EduQuiz");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("QuizSession");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EduQuiz.Models.EF.Choice", b =>
                 {
                     b.HasOne("EduQuiz.Models.EF.Question", "Question")
@@ -637,6 +983,10 @@ namespace EduQuiz.Migrations
                         .WithMany()
                         .HasForeignKey("ThemeId");
 
+                    b.HasOne("EduQuiz.Models.EF.Interest", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId");
+
                     b.HasOne("EduQuiz.Models.EF.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -645,7 +995,33 @@ namespace EduQuiz.Migrations
 
                     b.Navigation("Theme");
 
+                    b.Navigation("Topic");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.EduQuizFavorite", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.EduQuiz", "EduQuiz")
+                        .WithMany()
+                        .HasForeignKey("EduQuizId");
+
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("EduQuiz");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.FeedbackQuizSession", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.QuizSession", "QuizSession")
+                        .WithMany()
+                        .HasForeignKey("QuizSessionId");
+
+                    b.Navigation("QuizSession");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Folder", b =>
@@ -660,6 +1036,70 @@ namespace EduQuiz.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("ParentFolder");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.Group", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.GroupMember", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.Group", "Group")
+                        .WithMany("Members")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.GroupPost", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.GroupPostLike", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.GroupPost", "GroupPost")
+                        .WithMany("Likes")
+                        .HasForeignKey("GroupPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("GroupPost");
 
                     b.Navigation("User");
                 });
@@ -687,6 +1127,15 @@ namespace EduQuiz.Migrations
                     b.Navigation("PlayerSession");
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.PlayerQuizSessionQuestion", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.PlayerSession", "PlayerSession")
+                        .WithMany()
+                        .HasForeignKey("PlayerSessionId");
+
+                    b.Navigation("PlayerSession");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.PlayerSession", b =>
@@ -747,6 +1196,48 @@ namespace EduQuiz.Migrations
                     b.Navigation("HostUser");
                 });
 
+            modelBuilder.Entity("EduQuiz.Models.EF.QuizSessionQuestion", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId");
+
+                    b.HasOne("EduQuiz.Models.EF.QuizSession", "QuizSession")
+                        .WithMany()
+                        .HasForeignKey("QuizSessionId");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("QuizSession");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.ShareGroup", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.EduQuiz", "EduQuiz")
+                        .WithMany()
+                        .HasForeignKey("EduQuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduQuiz.Models.EF.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EduQuiz");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EduQuiz.Models.EF.User", b =>
                 {
                     b.HasOne("EduQuiz.Models.EF.Role", "Role")
@@ -774,6 +1265,16 @@ namespace EduQuiz.Migrations
                     b.Navigation("ChildFolders");
 
                     b.Navigation("QuizFolders");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.Group", b =>
+                {
+                    b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.GroupPost", b =>
+                {
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Question", b =>

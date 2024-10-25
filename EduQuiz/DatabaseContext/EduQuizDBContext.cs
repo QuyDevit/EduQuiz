@@ -31,8 +31,8 @@ namespace EduQuiz.DatabaseContext
         public DbSet<GroupPost> GroupPosts { get; set; }
         public DbSet<GroupPostLike> GroupPostLikes { get; set; }
         public DbSet<PlayerQuizSessionQuestion> PlayerQuizSessionQuestions { get; set; }
-
-        // Cấu hình mô hình khi tạo bảng và quan hệ
+        public DbSet<EduQuizFavorite> EduQuizFavorite { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -18,7 +18,7 @@
                     <div class="d-flex align-items-center">
                         <img class="profile-image" src="@Model.User.ProfilePicture" />
                     </div>
-                    <div class="pl-2 d-flex flex-column justify-content-center">
+                    <div class="pl-2 d-flex flex-column justify-content-center" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
                         @if (!string.IsNullOrEmpty(Model.User.FirstName) || !string.IsNullOrEmpty(Model.User.LastName))
                         {
                             <span id="nameshow" style="color: rgb(110, 110, 110);font-weight:600;font-size:13px">@Model.User.FirstName @Model.User.LastName</span>
@@ -88,8 +88,8 @@
     <div class="col-md-6 view-center" style="min-height:600px;padding:0">
         <div class="layout-card">
             <div class="center-view_wrapper">
-                <h3 class="title-center-view">Giao cho tôi(0)</h3>
-                <a class="see-all" href="#">Xem tất cả các bài tập</a>
+                <h3 class="title-center-view">Giao cho tôi(@Model.ListAssignment.Count)</h3>
+                <a class="see-all" href="@Url.Action("Index","Group")">Xem tất cả các bài tập</a>
 
             </div>
             <div class="layout-card_body">

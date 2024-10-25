@@ -59,62 +59,7 @@ namespace EduQuiz.Controllers
                 return StatusCode(500, new { error = new { message = ex.Message } });
             }
         }
-        //public async Task<IActionResult> Chat([FromBody] ChatRequest request)
-        //{
-        //    try
-        //    {
-        //        var client = _clientFactory.CreateClient();
-        //        var apiKey = _configuration["GoogleGenerativeAI:ApiKey"];
-
-        //        int maxTokens = request.MaxTokens <= 0 ? 2048 : request.MaxTokens;
-
-        //        var geminiRequest = new
-        //        {
-        //            contents = new[]
-        //            {
-        //                new
-        //                {
-        //                    parts = new[]
-        //                    {
-        //                        new
-        //                        {
-        //                            text = request.Messages[0].Content
-        //                        }
-        //                    }
-        //                }
-        //            },
-        //            generationConfig = new
-        //            {
-        //                maxOutputTokens = maxTokens,
-        //                temperature = 0.7,
-        //                topP = 0.8,
-        //                topK = 40
-        //            }
-        //        };
-
-        //        var requestUrl = $"{GEMINI_API_URL}?key={apiKey}";
-        //        var requestContent = new StringContent(
-        //            JsonSerializer.Serialize(geminiRequest),
-        //            Encoding.UTF8,
-        //            "application/json"
-        //        );
-
-        //        var geminiResponse = await client.PostAsync(requestUrl, requestContent);
-
-        //        var responseContent = await geminiResponse.Content.ReadAsStringAsync();
-
-        //        if (!geminiResponse.IsSuccessStatusCode)
-        //        {
-        //            throw new Exception($"Gemini API error: {responseContent}");
-        //        }
-
-        //        return Ok(responseContent);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new { error = new { message = ex.Message } });
-        //    }
-        //}
+      
         #endregion
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduQuiz.Migrations
 {
     [DbContext(typeof(EduQuizDBContext))]
-    [Migration("20241010045323_update_db_101024")]
-    partial class update_db_101024
+    [Migration("20241025092850_create_db_010924")]
+    partial class create_db_010924
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,9 @@ namespace EduQuiz.Migrations
                     b.Property<int?>("QuizSessionId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EduQuizId");
@@ -52,6 +55,8 @@ namespace EduQuiz.Migrations
                     b.HasIndex("GroupId");
 
                     b.HasIndex("QuizSessionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AssignmentGroup");
                 });
@@ -117,6 +122,9 @@ namespace EduQuiz.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TopicId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Type")
                         .HasColumnType("int");
 
@@ -137,6 +145,8 @@ namespace EduQuiz.Migrations
                     b.HasIndex("MusicId");
 
                     b.HasIndex("ThemeId");
+
+                    b.HasIndex("TopicId");
 
                     b.HasIndex("UserId");
 
@@ -241,6 +251,9 @@ namespace EduQuiz.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("InviteCode")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -248,10 +261,15 @@ namespace EduQuiz.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("Uuid")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Group");
                 });
@@ -295,6 +313,9 @@ namespace EduQuiz.Migrations
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PostedDate")
                         .HasColumnType("datetime2");
@@ -438,6 +459,28 @@ namespace EduQuiz.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("PlayerAnswer");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.PlayerQuizSessionQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ListQuestionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PlayerSessionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerSessionId");
+
+                    b.ToTable("PlayerQuizSessionQuestion");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.PlayerSession", b =>
@@ -884,11 +927,17 @@ namespace EduQuiz.Migrations
                         .WithMany()
                         .HasForeignKey("QuizSessionId");
 
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("EduQuiz");
 
                     b.Navigation("Group");
 
                     b.Navigation("QuizSession");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Choice", b =>
@@ -911,6 +960,10 @@ namespace EduQuiz.Migrations
                         .WithMany()
                         .HasForeignKey("ThemeId");
 
+                    b.HasOne("EduQuiz.Models.EF.Interest", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId");
+
                     b.HasOne("EduQuiz.Models.EF.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -918,6 +971,8 @@ namespace EduQuiz.Migrations
                     b.Navigation("Music");
 
                     b.Navigation("Theme");
+
+                    b.Navigation("Topic");
 
                     b.Navigation("User");
                 });
@@ -943,6 +998,15 @@ namespace EduQuiz.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("ParentFolder");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.Group", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -1025,6 +1089,15 @@ namespace EduQuiz.Migrations
                     b.Navigation("PlayerSession");
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.PlayerQuizSessionQuestion", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.PlayerSession", "PlayerSession")
+                        .WithMany()
+                        .HasForeignKey("PlayerSessionId");
+
+                    b.Navigation("PlayerSession");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.PlayerSession", b =>

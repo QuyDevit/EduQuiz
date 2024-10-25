@@ -119,6 +119,9 @@ namespace EduQuiz.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TopicId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Type")
                         .HasColumnType("int");
 
@@ -140,9 +143,34 @@ namespace EduQuiz.Migrations
 
                     b.HasIndex("ThemeId");
 
+                    b.HasIndex("TopicId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("EduQuiz");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.EduQuizFavorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("EduQuizId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EduQuizId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EduQuizFavorite");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.FeedbackQuizSession", b =>
@@ -952,6 +980,10 @@ namespace EduQuiz.Migrations
                         .WithMany()
                         .HasForeignKey("ThemeId");
 
+                    b.HasOne("EduQuiz.Models.EF.Interest", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId");
+
                     b.HasOne("EduQuiz.Models.EF.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -959,6 +991,23 @@ namespace EduQuiz.Migrations
                     b.Navigation("Music");
 
                     b.Navigation("Theme");
+
+                    b.Navigation("Topic");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.EduQuizFavorite", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.EduQuiz", "EduQuiz")
+                        .WithMany()
+                        .HasForeignKey("EduQuizId");
+
+                    b.HasOne("EduQuiz.Models.EF.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("EduQuiz");
 
                     b.Navigation("User");
                 });

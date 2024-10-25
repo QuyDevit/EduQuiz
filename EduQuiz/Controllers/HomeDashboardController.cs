@@ -98,7 +98,10 @@ namespace EduQuiz.Controllers
                     SumQuestion = _context.Questions.Count(q => q.EduQuizId == n.Id)
                 }).Take(5).ToListAsync();
 
-            var listEduQuizHot = await _context.EduQuizs.Include(n=>n.User)
+            var userFavorites = JsonConvert.DeserializeObject<List<InterestUser>>(user.Favorite)?.Select(f => f.id).ToList();
+            var favoriteEduQuizQuery = _context.EduQuizs
+                .Where(n => userFavorites.Contains(n.TopicId ?? 1) && n.Visibility) // Chỉ lấy các EduQuiz có TopicId trong danh sách yêu thích
+                .Include(n => n.User)
                 .Select(n => new HomeEduQuizView
                 {
                     Id = n.Id,
@@ -109,8 +112,61 @@ namespace EduQuiz.Controllers
                     UserName = n.User.Username,
                     SumPlay = _context.QuizSessions.Count(p => p.EduQuizId == n.Id),
                     SumQuestion = _context.Questions.Count(q => q.EduQuizId == n.Id)
-                }).OrderByDescending(n => n.SumPlay).Take(5).ToListAsync();
+                })
+                .OrderByDescending(n => n.SumPlay)
+                .Take(5);
 
+            List<HomeEduQuizView> listEduQuizHot;
+
+            if (userFavorites == null || userFavorites.Count == 0)
+            {
+                // Nếu user chưa có sở thích, lấy top 5 EduQuiz được chơi nhiều nhất
+                listEduQuizHot = await _context.EduQuizs
+                    .Where(n=>n.Visibility)
+                    .Include(n => n.User)
+                    .Select(n => new HomeEduQuizView
+                    {
+                        Id = n.Id,
+                        Uuid = n.Uuid,
+                        Title = n.Title,
+                        Image = n.ImageCover,
+                        Avatar = n.User.ProfilePicture,
+                        UserName = n.User.Username,
+                        SumPlay = _context.QuizSessions.Count(p => p.EduQuizId == n.Id),
+                        SumQuestion = _context.Questions.Count(q => q.EduQuizId == n.Id)
+                    })
+                    .OrderByDescending(n => n.SumPlay)
+                    .Take(5)
+                    .ToListAsync();
+            }
+            else
+            {
+                // Nếu có sở thích, lấy theo sở thích và bổ sung nếu thiếu
+                listEduQuizHot = await favoriteEduQuizQuery.ToListAsync();
+
+                if (listEduQuizHot.Count < 5)
+                {
+                    var topEduQuizHot = await _context.EduQuizs
+                        .Include(n => n.User)
+                        .Where(n => !userFavorites.Contains(n.TopicId ?? 1) && n.Visibility) 
+                        .Select(n => new HomeEduQuizView
+                        {
+                            Id = n.Id,
+                            Uuid = n.Uuid,
+                            Title = n.Title,
+                            Image = n.ImageCover,
+                            Avatar = n.User.ProfilePicture,
+                            UserName = n.User.Username,
+                            SumPlay = _context.QuizSessions.Count(p => p.EduQuizId == n.Id),
+                            SumQuestion = _context.Questions.Count(q => q.EduQuizId == n.Id)
+                        })
+                        .OrderByDescending(n => n.SumPlay)
+                        .Take(5 - listEduQuizHot.Count) // Bổ sung cho đủ 5 mục
+                        .ToListAsync();
+
+                    listEduQuizHot.AddRange(topEduQuizHot);
+                }
+            }
             var listReportbyUser = await _context.QuizSessions
                 .Where(r => r.HostUserId == iduser)
                 .Select(n => new HomeReportView

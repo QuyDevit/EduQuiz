@@ -63,8 +63,8 @@
                             <a href="@Url.Action("EduQuizDraft","Library")" class="button-flat preview" style="background: rgb(242, 242, 242);color:#333;box-shadow:rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 12px">
                                 Thoát
                             </a>
-                            <button class="button-flat" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 20px" onclick="checkEduQuiz()">
-                                Lưu
+                            <button id="savequiz" class="button-flat" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;width: fit-content;padding:0 20px" onclick="checkEduQuiz()">
+                                Lưu    
                             </button>
                         </div>
                     </div>
@@ -752,6 +752,7 @@
                     return;
                 }
             }
+            $("#savequiz").text("").append(`<span class="loader"></span>`);
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("SaveTypeEduQuiz", "Creator")",
@@ -761,7 +762,7 @@
                 },
                 success: function (response) {
                     if (response.result === "PASS") {
-                        console.log(response.data)
+                        location.href = "@Url.Action("Index", "Library")";
                     }
                 },
                 error: function (err) {

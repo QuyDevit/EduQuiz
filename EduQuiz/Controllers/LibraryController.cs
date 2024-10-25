@@ -118,6 +118,48 @@ namespace EduQuiz.Controllers
                                           }).ToListAsync();
             return View(listEduQuizShare);
         }
+        [Route("my-library/eduquizs/favorite")]
+        public async Task<IActionResult> EduQuizFavorite()
+        {
+            var authCookie = Request.Cookies["acToken"];
+            int iduser = 0;
+            if (authCookie == null)
+            {
+                return RedirectToAction("Login", "Accout");
+
+            }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            iduser = int.Parse(userId ?? "1");
+            var user = await _context.Users.FindAsync(iduser);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Accout");
+            }
+            await EnsureFolderExistsAsync(user.Id);
+            var folders = _context.Folders
+              .Where(f => f.UserId == iduser)
+              .OrderBy(f => f.Name)
+              .ToList();
+
+            ViewBag.Folders = folders;
+            var listEduQuizShare = await (from s in _context.EduQuizFavorite
+                                          join e in _context.EduQuizs on s.EduQuizId equals e.Id
+                                          join u in _context.Users on e.UserId equals u.Id
+                                          where s.UserId == iduser
+                                          select new EduQuizView
+                                          {
+                                              Id = e.Id,
+                                              Avatar = u.ProfilePicture,
+                                              Image = e.ImageCover,
+                                              SumQuestion = _context.Questions.Count(q => q.EduQuizId == e.Id),
+                                              Title = e.Title,
+                                              Uuid = e.Uuid,
+                                              UserName = u.Username
+                                          }).ToListAsync();
+            return View(listEduQuizShare);
+        }
         [Route("my-library/eduquizs/drafts")]
         public async Task<IActionResult> EduQuizDraft()
         {

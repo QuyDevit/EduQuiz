@@ -596,7 +596,7 @@ namespace EduQuiz.Controllers
                                 "Một EduQuiz đã được chia sẻ với bạn",
                                 user.UserName,
                                 $"{hostName} vừa chia sẻ EduQuiz của họ '{eduQuizTitle}' với bạn",
-                                getGroup.Name,
+                                "nhóm "+getGroup.Name,
                                 "Nội dung được chia sẻ",
                                 $"/groups/{getGroup.Uuid}/shared"
                             ));
@@ -702,7 +702,7 @@ namespace EduQuiz.Controllers
                                         "Một bài tập EduQuiz đã được giao với bạn",
                                         user.UserName,
                                         $"{hostName} vừa giao bài tập EduQuiz của họ '{eduQuiz.Title}' với bạn",
-                                        getGroup.Name, 
+                                        "nhóm " + getGroup.Name,
                                         "Nội dung bài tập nhóm",
                                         $"/groups/{getGroup.Uuid}/assignments"
                                     ));
