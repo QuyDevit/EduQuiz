@@ -18,7 +18,7 @@ namespace EduQuiz.Controllers
             _logger = logger;
             _geminiAiService = geminiAiService;
         }
-        [Route("home")]
+        [Route("")]
         public IActionResult Index()
         {
             return View();

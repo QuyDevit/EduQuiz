@@ -43,7 +43,7 @@
                                     <div class="medal__Medal @(count == 1 ? "gold" : count == 2 ?"silver" :"bronze")">
                                     </div>
                                     <div class="bar-styles__UserNameBelow efname-@count">@item.Nickname</div>
-                                    <div class="bar-styles__Score">@(item.TotalScore != 0 ? item.TotalScore : "")</div>
+                                    <div class="bar-styles__Score">@(item.TotalScore != 0 ? item.TotalScore : "0")</div>
                                 </div>
                                 count++;
                             }

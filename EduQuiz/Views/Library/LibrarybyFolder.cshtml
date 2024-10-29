@@ -138,8 +138,7 @@
                 </div>
                  @if (Model.EduQuizs.Count != 0)
                  {
-                <div class="eduquiz-list__Content">
-                        <div class="bulk-actions__Position"></div>
+                    <div class="bulk-actions__Position"></div>
                     <div class="bulk-actions__Container d-none">
                         <div class="bulk-actions">
                             <input id="bulk-checkall" type="checkbox" class="checkbox">
@@ -151,7 +150,8 @@
                         <div class="bulk-actions">
                             <button data-toggle="modal" data-target="#modalMoveEduQuiz" onclick="getFolder()" class="styles__eduquizInfo-Btn" style="background: rgb(19, 104, 206);border:1px solid #fff;"> Di chuyển</button>
                         </div>
-                    </div>     
+                    </div>
+                <div class="eduquiz-list__Content">
                         @foreach (var item in Model.EduQuizs)
                         {
                             <div class="styles__BaseCard" data-id="@item.Id">

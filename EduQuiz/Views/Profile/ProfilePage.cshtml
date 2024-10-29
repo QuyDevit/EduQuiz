@@ -3,23 +3,24 @@
     Layout = "_LayoutUser";
     ViewBag.Title = "Trang cá nhân";
 }
+@model EduQuiz.Models.ProfilePage
 <link href="~/src/css/profile.css" rel="stylesheet" />
 <div class="content" style="padding:0;margin-top:63px;">
     <div class="viewPage__Wrapper">
         <div class="userprofile__header">
             <header class="userprofile-header__Wrapper">
-                <img class="userprofile-header__Img" src="~/src/img/banner-userprofile.png" />
+                <img class="userprofile-header__Img" src="@Model.ImageCover" />
             </header>
             <div class="userprofile__headerLower">
                 <div class="verified-profile-section__Container">
-                    <a href="#" class="verified-profile-image" style="background: url(/src/img/profiles/ce146eab-cfa3-4bf9-9e55-6f206792a675_user.jpg) 100% center / cover no-repeat rgb(242, 242, 242);"></a>
+                    <a href="#" class="verified-profile-image" style="background: url(@Model.Avatar) 100% center / cover no-repeat rgb(242, 242, 242);"></a>
                     <div class="user-profile-username__Content">
-                        <div class="user-profile-username">MonkeyD.Luffy
+                        <div class="user-profile-username">@Model.PageTitle
                             <span class="verified-icon">
                                 <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: rgb(19, 104, 206);"></path></svg>
                             </span>
                         </div>
-                        <a href="#" class="user-profile-username__Intro">monkeyd.luffy@gmail.com</a>
+                        <span class="user-profile-username__Intro">@Model.Email</span>
                     </div>
                     <div class="user-profile-header__Wrapper">
                         <div class="user-profile-statistics">
@@ -27,7 +28,7 @@
                                 <div class="profile-statistic__Title">
                                     EduQuiz
                                 </div>
-                                <div class="profile-statistic__Value">10</div>
+                                <div class="profile-statistic__Value">@Model.SumEduQuiz</div>
                             </div>
                         </div>
                         <div class="user-profile-statistics">
@@ -35,7 +36,7 @@
                                 <div class="profile-statistic__Title">
                                     Lượt chơi
                                 </div>
-                                <div class="profile-statistic__Value">30k</div>
+                                <div class="profile-statistic__Value">@Model.SumPlay</div>
                             </div>
                         </div>
                         <div class="user-profile-statistics">
@@ -43,135 +44,55 @@
                                 <div class="profile-statistic__Title">
                                     Người chơi
                                 </div>
-                                <div class="profile-statistic__Value">10k</div>
+                                <div class="profile-statistic__Value">@Model.SumPlayerPlay</div>
                             </div>
                         </div>
-                        <div class="styles__ButtonsWrapper">
-                            <button class="btn">Theo dõi</button>
-                        </div>
+                        @if (!Model.IsHost)
+                        {
+                            <div class="styles__ButtonsWrapper">
+                                <button id="followpage" class="btn @(Model.IsFollow?"unfollow" :"")">@(Model.IsFollow ? "Hủy theo dõi" : "Theo dõi")</button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
-        <div class="verified-profile-section__Container">
-            <div class="verified-profile-section__Tabs">
-                <div class="verified-profile-section__TabsWrapper">
-                    <a href="@Url.Action("ProfilePage","Profile",new{id = Guid.NewGuid()})" class="verified-user-profile__eduquizs-tab-link active">Nội dung</a>
-                    <a href="@Url.Action("ProfilePageAbout","Profile",new{id = Guid.NewGuid()})" class="verified-user-profile__eduquizs-tab-link">Giới thiệu</a>
-                    <a href="#" class="verified-user-profile__eduquizs-tab-link">Cộng đồng</a>
-                </div>
-            </div>
-        </div>
+        <partial name="_TabProfile" />
     </div>
     <div class="eduquizs-tab__PinnedEduquizsBackground">
         <div class="eduquizs-tab__PinnedEduquizsContainer">
             <section class="user-profile-section">
                 <div class="user-profile-section__Title">EduQuiz nổi bật</div>
                 <div class="profile-eduquizs-native-carouse">
-                    <div class="native-carousel-item">
-                        <div class="styles__Top">
-                            <div class="d-flex align-items-center">
-                                <span class="styles_Icon-EduQuiz">
-                                    <svg x="0px" y="0px" viewBox="0 0 16 16">
-                                        <path fill="#fff" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
+                    @foreach(var item in Model.ListEduQuizItem)
+                    {
+                        <div class="native-carousel-item">
+                            <div class="styles__Top">
+                                <div class="d-flex align-items-center">
+                                    <span class="styles_Icon-EduQuiz">
+                                        <svg x="0px" y="0px" viewBox="0 0 16 16">
+                                            <path fill="#fff" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
                                                   z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
                                                   C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
                                                   V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                    </svg>
-                                </span>
-                                <h4 class="label-top">EduQuiz</h4>
+                                        </svg>
+                                    </span>
+                                    <h4 class="label-top">EduQuiz</h4>
+                                </div>
+                                <div class="styles_eduquiz-price">@item.Type</div>
                             </div>
-                            <div class="styles_eduquiz-price">Miễn phí</div>
+                            <a href="@Url.Action("Index","Detail",new {id = item.Uuid})" class="native-carousel-item__Body">
+                                <div class="styles_CenterWithLandscapeImage">
+                                    <img src="@item.Image" />
+                                    <div class="styles_BottomRightLabel">@item.SumQuestion câu hỏi</div>
+                                </div>
+                                <div class="styles_Bottom">
+                                    <div class="eduquiz-title">@item.Title</div>
+                                    <div style="font-size:11px">@item.UserName</div>
+                                </div>
+                            </a>
                         </div>
-                        <a href="#" class="native-carousel-item__Body">
-                            <div class="styles_CenterWithLandscapeImage">
-                                <img src="/src/img/market.jpg"/>
-                                <div class="styles_BottomRightLabel">5 câu hỏi</div>
-                            </div>
-                            <div class="styles_Bottom">
-                                <div class="eduquiz-title">Học tiếng anh mọi cấp độ</div>
-                                <div style="font-size:11px">pingvocuc222</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="native-carousel-item">
-                        <div class="styles__Top">
-                            <div class="d-flex align-items-center">
-                                <span class="styles_Icon-EduQuiz">
-                                    <svg x="0px" y="0px" viewBox="0 0 16 16">
-                                        <path fill="#fff" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                    </svg>
-                                </span>
-                                <h4 class="label-top">EduQuiz</h4>
-                            </div>
-                            <div class="styles_eduquiz-price">Miễn phí</div>
-                        </div>
-                        <a href="#" class="native-carousel-item__Body">
-                            <div class="styles_CenterWithLandscapeImage">
-                                <img src="/src/img/market.jpg" />
-                                <div class="styles_BottomRightLabel">5 câu hỏi</div>
-                            </div>
-                            <div class="styles_Bottom">
-                                <div class="eduquiz-title">Học tiếng anh mọi cấp độ</div>
-                                <div style="font-size:11px">pingvocuc222</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="native-carousel-item">
-                        <div class="styles__Top">
-                            <div class="d-flex align-items-center">
-                                <span class="styles_Icon-EduQuiz">
-                                    <svg x="0px" y="0px" viewBox="0 0 16 16">
-                                        <path fill="#fff" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                    </svg>
-                                </span>
-                                <h4 class="label-top">EduQuiz</h4>
-                            </div>
-                            <div class="styles_eduquiz-price">Miễn phí</div>
-                        </div>
-                        <a href="#" class="native-carousel-item__Body">
-                            <div class="styles_CenterWithLandscapeImage">
-                                <img src="/src/img/market.jpg" />
-                                <div class="styles_BottomRightLabel">5 câu hỏi</div>
-                            </div>
-                            <div class="styles_Bottom">
-                                <div class="eduquiz-title">Học tiếng anh mọi cấp độ</div>
-                                <div style="font-size:11px">pingvocuc222</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="native-carousel-item">
-                        <div class="styles__Top">
-                            <div class="d-flex align-items-center">
-                                <span class="styles_Icon-EduQuiz">
-                                    <svg x="0px" y="0px" viewBox="0 0 16 16">
-                                        <path fill="#fff" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                    </svg>
-                                </span>
-                                <h4 class="label-top">EduQuiz</h4>
-                            </div>
-                            <div class="styles_eduquiz-price">Miễn phí</div>
-                        </div>
-                        <a href="#" class="native-carousel-item__Body">
-                            <div class="styles_CenterWithLandscapeImage">
-                                <img src="/src/img/market.jpg" />
-                                <div class="styles_BottomRightLabel">5 câu hỏi</div>
-                            </div>
-                            <div class="styles_Bottom">
-                                <div class="eduquiz-title">Học tiếng anh mọi cấp độ</div>
-                                <div style="font-size:11px">pingvocuc222</div>
-                            </div>
-                        </a>
-                    </div>
+                    }
                 </div>
             </section>
         </div>

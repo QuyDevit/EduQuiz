@@ -12,6 +12,7 @@
     <link href="~/src/css/paper-dashboard.css" rel="stylesheet" />
     <link href="~/src/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/src/css/normalize.css" rel="stylesheet" />
+    <link href="~/src/css/toast.css" rel="stylesheet" />
     <link href="~/src/css/layoutcreator.css" rel="stylesheet" />
     @RenderSection("styles", required: false)
 </head>
@@ -462,8 +463,18 @@
 
    
     @RenderBody()
- 
-   
+    <section id="toast" class="info off">
+        <div id="icon-wrapper">
+            <div id="icon"></div>
+        </div>
+        <div id="toast-message">
+            <h4 id="toast-title"></h4>
+            <p id="toast-description"></p>
+        </div>
+        <button id="toast-close"></button>
+        <div id="timer"></div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="~/src/js/jquery.min.js"></script>
     <!-- Popper JS -->
     <script src="~/src/js/popper.min.js"></script>
@@ -471,9 +482,11 @@
     <script src="~/src/js/bootstrap.min.js"></script>
     <script src="~/src/css/js/bootstrap-notify.js"></script>
     <script src="~/src/css/js/perfect-scrollbar.jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/src/js/toast.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        var dataImport = "";
         var arrmusic = [];
         var arrtheme = [];
         var imgCoverSetting = "";
@@ -670,9 +683,9 @@
                         errorVip = 'Vui lòng nâng cấp tài khoản để lưu EduQuiz.';
                         return false; // Thoát khỏi vòng lặp
                     }
-                    if (totalAnswers !== 4 || correctAnswers !== 1) {
+                    if (totalAnswers < 2 || correctAnswers !== 1) {
                         valid = false;
-                        errorMessage = 'Câu hỏi kiểu "Đố vui" phải có đúng 4 đáp án và 1 đáp án đúng.';
+                        errorMessage = 'Câu hỏi kiểu "Đố vui" phải có 2 đáp án và 1 đáp án đúng.';
                         return false; // Thoát khỏi vòng lặp
                     }
                 }
@@ -1364,7 +1377,7 @@
                     const hasDisplayOrderGreaterThan4 = sortedChoices.some(choice => choice.DisplayOrder >= 4);
                     // Create answer cards based on DisplayOrder
                     for (let i = 0; i < 6; i++) {
-                        const choice = sortedChoices.find(c => c.DisplayOrder === i); // Find choice with matching DisplayOrder
+                        const choice = sortedChoices.find(c => c.DisplayOrder === i); 
                         const card = choice
                             ? createAnswerCard(answerOption[i], choice.Answer, true, true, i)
                             : createAnswerCard(answerOption[i], "", true, true, i);
@@ -1380,16 +1393,14 @@
                         choicesWrapper.append(card);
                     }
                 } else {
-                    // Render default 4 answers
                     for (let i = 0; i < 4; i++) {
                         const card = createAnswerCard(answerOption[i], "", true, true, i);
                         choicesWrapper.append(card);
                     }
 
-                    // Create 2 additional answers (hidden initially)
                     for (let i = 4; i < 6; i++) {
                         const card = createAnswerCard(answerOption[i], "", true, true, i);
-                        card.hide(); // Hide additional answers
+                        card.hide(); 
                         choicesWrapper.append(card);
                     }
                 }
@@ -1680,10 +1691,8 @@
             if ($(this).attr('id') === 'closesidebar-theme') {
                 return;
             }
-            // Toggle hiển thị/ẩn đi ul liền kề với button được nhấn
             $(this).closest('.themes-list__CollapsableWrapper').find('ul').toggle();
 
-            // Thay đổi icon
             var icon = $(this).find('i');
             if (icon.hasClass('fa-chevron-down')) {
                 icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
@@ -1713,16 +1722,13 @@
                     </button>
                 `;
 
-                // Thêm sự kiện click vào mỗi button
                 listItem.querySelector('.styles__ThemeCardButton').addEventListener('click', function () {
-                    // Xóa class 'default' khỏi tất cả các nút khác
                     document.querySelectorAll('.styles__ThemeCardButton.default').forEach(button => {
                         button.classList.remove('default');
                     });
                     $(".styles__ContentBackground").css("background", `url(${theme.source}) center center / cover no-repeat rgb(242, 242, 242)`)
 
                     eduquizdata.ThemeId = $(this).attr("data-theme")
-                    // Thêm class 'default' vào nút hiện tại
                     this.classList.add('default');
                     autoSaveEduQuiz();
                 });
@@ -1769,13 +1775,12 @@
 
             function setupMusicControls() {
                 $('#menumusic-wrapper').on('click', '.btn-testmusic', function (event) {
-                    event.stopPropagation(); // Ngăn chặn sự kiện click lan truyền lên các phần tử cha
+                    event.stopPropagation(); 
 
                     const button = $(this);
                     const audioElement = button.siblings('audio')[0];
                     const playIcon = button.find('.play-icon');
 
-                    // Nếu nhạc đang phát
                     if (!audioElement.paused) {
                         audioElement.pause();
                         audioElement.currentTime = 0;
@@ -1785,7 +1790,6 @@
                                 </svg>
                             `);
                     } else {
-                        // Dừng tất cả các bài nhạc đang phát
                         $('audio').each(function () {
                             this.pause();
                             this.currentTime = 0;
@@ -1809,16 +1813,12 @@
             $('#input-music').on('focus', function () {
                 $('#choosemusic').addClass('focused');
 
-                // Xóa menu hiện tại nếu có
                 $('#menu-music').remove();
-                // Sử dụng attr để lấy giá trị data-music hiện tại
                 const currentMusic = $('#choosemusic').attr('data-music');
 
-                // Render và hiển thị menu mới
                 const menuHtml = renderMusicOptions(parseInt(currentMusic));
                 $('#menumusic-wrapper').append(menuHtml);
 
-                // Gán sự kiện cho các mục nhạc
                 $('#menu-music .item_option-content').on('click', function (event) {
                     if ($(event.target).closest('.btn-testmusic').length === 0) {
                         const selectedMusic = $(this).data('music');
@@ -1832,7 +1832,6 @@
                 });
             });
 
-            // Xử lý sự kiện blur để xóa menu
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('#choosemusic, #menu-music').length) {
                     $('#choosemusic').removeClass('focused');
@@ -1840,7 +1839,6 @@
                 }
             });
 
-            // Setup các điều khiển phát nhạc
             setupMusicControls();
         }
 
@@ -1852,13 +1850,132 @@
 
         // Ẩn menu và overlay khi click ra ngoài
         $(document).click(function (event) {
-            // Kiểm tra xem click có nằm trong menu hoặc nút tạo câu hỏi không
             if (!$(event.target).closest(".menu-Slide__Wrapper, #createquestion").length) {
                 $("#overlay-question").addClass("d-none");
                 $(".menu-Slide__Wrapper").addClass("d-none");
             }
         });
+        $(document).on("click", ".btn-import",function(){
+            $("#overlay-question").addClass("d-none");
+            $(".menu-Slide__Wrapper").addClass("d-none");
+            $("#modalImportEduQuiz").modal("show"); 
+        })
+        $(document).on("click", "#btn-submitimport", function () {
+            const file = $('#file-import')[0].files[0];
+            if (!file) {
+                openToast('warning', 'Lỗi', "Vui lòng chọn file!", 2500);
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', file);
+            $.ajax({
+                url: '@Url.Action("ReadImportData", "Creator")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.redirectUrl) {
+                        Swal.fire({
+                            title: 'Hết phiên đăng nhập',
+                            text: 'Vui lòng đăng nhập lại',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = response.redirectUrl;
+                            }
+                        });
+                    } else {
+                        if (response.status == true) {
+                            dataImport = response.data;
+                            $("#count-question").text(`Đã nhập ${JSON.parse(response.data).length} câu hỏi`)
+                            $("#modalImportEduQuiz").modal("hide");
+                            $("#modalInfoSuccess").modal("show");
+                        }else{
+                            openToast('warning', 'Lỗi', response.message, 2500);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', status, error);
+                }
+            });
+        })
+        $(document).on("click", "#btn-addQuestion",function(){
+            if(dataImport == ""){
+                openToast('warning', 'Lỗi', "Không có dữ liệu!", 2500);
+                return;
+            }
+            const data = JSON.stringify({
+                QuizId: quizId,
+                Data: JSON.parse(dataImport)
+            });
+            $.ajax({
+                url: '@Url.Action("ImportQuestion", "Creator")',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: data,
+                success:function(response){
+                    if (response.redirectUrl) {
+                        Swal.fire({
+                            title: 'Hết phiên đăng nhập',
+                            text: 'Vui lòng đăng nhập lại',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = response.redirectUrl;
+                            }
+                        });
+                    } else {
+                        if (response.status == true) {
+                            location.reload();
+                        } 
+                    }
+                }
+            })
+        })
+        $('#choose-file').click(function () {
+            $('#file-import').click();
+        });
+        $('#file-import').change(function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const validExtensions = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+                if (!validExtensions.includes(file.type)) {
+                    openToast('warning', 'Lỗi', "Vui lòng chọn đúng file có định dạng .xlsx", 2500);
+                    $('#file-import').val(''); 
+                    return;
+                }
+                $("#remove-file").removeClass("d-none");
+                $('.selected-file__Name').text(file.name);
+                $('.selected-file__Size').text(`(${(file.size / 1024).toFixed(2)} KB)`);
+                $('#btn-submitimport').prop('disabled', false);
+            }
+        });
+        $('#modalImportEduQuiz').on('hidden.bs.modal', function (e) {
+            clearFile()
+        });
+        $('#modalInfoSuccess').on('hidden.bs.modal', function (e) {
+            clearFile()
+        });
 
+        $(document).on("click",'#remove-file',function () {
+            clearFile()
+        });
+        function clearFile(){
+            $("#remove-file").addClass("d-none");
+            $('#file-import').val('');
+            $('.selected-file__Name').text('Chưa chọn file');
+            $('.selected-file__Size').text('');
+            $('#btn-submitimport').prop('disabled', true);
+        }
+
+        $("#template").click(function () {
+            location.href = '/src/templates/EduQuizTemplate.xlsx'
+        });
         const examples = {
             quiz: {
                 question: "Con vật nào sau đây biết bay?",
@@ -1890,12 +2007,12 @@
             );
             $("#game-block-title").text(example.title);
             $("#game-block-description").text(example.description);
-            // Kiểm tra nếu không phải loại quiz thì đặt chiều cao là 3.75rem
+            
             if (exampleType !== "quiz") {
                 $(".example-cards").css("height", "3.75rem");
             } 
         }, function () {
-            // Có thể đặt lại nội dung mặc định nếu cần
+           
         });
 
         // CHọn ảnh câu hỏi
@@ -2223,11 +2340,9 @@
                 // Luôn luôn xóa menu cũ và tạo mới
                 $('#menutime').remove();
 
-                // Sử dụng attr để lấy giá trị data-time hiện tại
                 const currentTime = $('#timelimit').attr('data-time');
                 $('#menutime_wrapper').append(renderMenu(parseInt(currentTime)));
 
-                // Thêm sự kiện click cho các mục trong menu
                 $('#menutime .item_option-content').on('click', function () {
                     const selectedTime = $(this).data('time');
                     const selectedLabel = $(this).find('span:first').text();
@@ -2243,7 +2358,6 @@
                 });
             });
 
-            // Xử lý sự kiện blur để xóa menu
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('#timelimit, #menutime').length) {
                     $('#timelimit').removeClass('focused');

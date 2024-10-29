@@ -496,6 +496,7 @@ button:hover {
     .layoutcard-item a {
         color: rgb(51, 51, 51);
         text-decoration: none;
+        overflow:hidden;
     }
 .layoutcard-item_img {
     min-width: 110px;

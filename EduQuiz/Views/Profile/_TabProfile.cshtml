@@ -1,0 +1,36 @@
+﻿@{
+    @using System.Web
+    @using Microsoft.AspNetCore.Http
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+    var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
+    var check = currentPath.Contains("/about");
+    var slug = currentPath.Split("/")[currentPath.Split("/").Length - (check ? 2 : 1)];
+}
+<div class="verified-profile-section__Container">
+    <div class="verified-profile-section__Tabs">
+        <div class="verified-profile-section__TabsWrapper">
+            <a href="@Url.Action("ProfilePage","Profile",new{id = slug})" class="verified-user-profile__eduquizs-tab-link @(currentPath.Contains("/profiles") && !currentPath.Contains("/about") ? " active" : "" )">Nội dung</a>
+            <a href="@Url.Action("ProfilePageAbout","Profile",new{id = slug})" class="verified-user-profile__eduquizs-tab-link @(currentPath.Contains("/about") ? " active" : "" )">Giới thiệu</a>
+            <a href="#" class="verified-user-profile__eduquizs-tab-link">Cộng đồng</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on("click", "#followpage", function () {
+        const flag = $(this).hasClass("unfollow");
+        flag ? $(this).removeClass("unfollow").text("Theo dõi") : $(this).addClass("unfollow").text("Đang theo dõi");
+        $.ajax({
+            type:"POST",
+            url:"@Url.Action("FollowPage","Profile")",
+            data:{
+                uuid: `@slug`
+            },
+            success: function (response) {
+               
+            },
+            error: function (xhr, status, error) {
+
+            }
+        })
+    })
+</script>

@@ -591,7 +591,7 @@ namespace EduQuiz.Controllers
                         dynamic privacySettings = JsonConvert.DeserializeObject<dynamic>(user.Privacy);
                         if (privacySettings["ShareEduQuizWithMe"] == true)
                         {
-                            Task.Run(() => SendEmail(
+                             SendEmail(
                                 user.UserEmail,
                                 "Một EduQuiz đã được chia sẻ với bạn",
                                 user.UserName,
@@ -599,7 +599,7 @@ namespace EduQuiz.Controllers
                                 "nhóm "+getGroup.Name,
                                 "Nội dung được chia sẻ",
                                 $"/groups/{getGroup.Uuid}/shared"
-                            ));
+                            );
                         }
                     }
                     newShares.Add(new ShareGroup
@@ -697,15 +697,15 @@ namespace EduQuiz.Controllers
 
             foreach (var user in filteredList)
             {
-                Task.Run(() => SendEmail(
-                                        user.UserEmail,
-                                        "Một bài tập EduQuiz đã được giao với bạn",
-                                        user.UserName,
-                                        $"{hostName} vừa giao bài tập EduQuiz của họ '{eduQuiz.Title}' với bạn",
-                                        "nhóm " + getGroup.Name,
-                                        "Nội dung bài tập nhóm",
-                                        $"/groups/{getGroup.Uuid}/assignments"
-                                    ));
+                SendEmail(
+                    user.UserEmail,
+                    "Một bài tập EduQuiz đã được giao với bạn",
+                    user.UserName,
+                    $"{hostName} vừa giao bài tập EduQuiz của họ '{eduQuiz.Title}' với bạn",
+                    "nhóm " + getGroup.Name,
+                    "Nội dung bài tập nhóm",
+                    $"/groups/{getGroup.Uuid}/assignments"
+                 );
             }
             return Json(new { status = true});
         }

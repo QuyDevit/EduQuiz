@@ -1,15 +1,13 @@
-﻿using Azure.Core;
+﻿
 using EduQuiz.DatabaseContext;
 using EduQuiz.Models;
 using EduQuiz.Models.EF;
 using EduQuiz.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using OfficeOpenXml;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -218,7 +216,7 @@ namespace EduQuiz.Controllers
             }
         }
 
-        public async Task<IActionResult> AutoSaveEduQuiz([FromBody] Models.EduQuizData data)
+        public async Task<IActionResult> AutoSaveEduQuiz([FromBody] EduQuizData data)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -402,11 +400,11 @@ namespace EduQuiz.Controllers
                 await _context.SaveChangesAsync(); // Lưu mọi thay đổi một lần duy nhất
                 await transaction.CommitAsync();
 
-                var eduQuiz = await _context.EduQuizs.AsNoTracking()
+                var eduQuiz = await _context.EduQuizs
                     .Include(d => d.Questions)
                         .ThenInclude(q => q.Choices)
                     .FirstOrDefaultAsync(d => d.Uuid == data.Uuid);
-                var getdata = new Models.EduQuizData
+                var getdata = new EduQuizData
                 {
                     Uuid = eduQuiz.Uuid,
                     Description = eduQuiz.Description,
@@ -555,6 +553,208 @@ namespace EduQuiz.Controllers
 
             geteduquiz.TopicId = getid;
             await _context.SaveChangesAsync();
+        }
+        public async Task <IActionResult>ReadImportData(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    return Json(new { status = false });
+                }
+                var data = new List<QuestionData>();
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var worksheet = package.Workbook.Worksheets[0];
+                        var rowCount = 9;
+                        var validTimeLimits = new List<int> { 5, 10, 20, 30, 60, 90, 120, 240 };
+
+                        for (int row = rowCount; row <= 108; row++)
+                        {
+                            var questionText = worksheet.Cells[row, 2].Text;
+                            if (string.IsNullOrWhiteSpace(questionText))
+                            {
+                                break;
+                            }
+
+                            if (questionText.Length > 120 ||
+                                worksheet.Cells[row, 3].Text.Length > 75 ||
+                                worksheet.Cells[row, 4].Text.Length > 75 ||
+                                worksheet.Cells[row, 5].Text.Length > 75 ||
+                                worksheet.Cells[row, 6].Text.Length > 75)
+                            {
+                                return Json(new { status = false, message = "Câu hỏi hoặc câu trả lời vượt quá giới hạn ký tự." });
+                            }
+                            var answers = new List<string>
+                        {
+                            worksheet.Cells[row, 3].Text,
+                            worksheet.Cells[row, 4].Text,
+                            worksheet.Cells[row, 5].Text,
+                            worksheet.Cells[row, 6].Text
+                        }.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
+
+                            if (answers.Count < 2)
+                            {
+                                return Json(new { status = false, message = "Phải có ít nhất hai phương án trả lời." });
+                            }
+                            if (!int.TryParse(worksheet.Cells[row, 7].Text, out int timeLimit) || !validTimeLimits.Contains(timeLimit))
+                            {
+                                return Json(new { status = false, message = "Giá trị của TimeLimit không hợp lệ." });
+                            }
+                            var correctAnswers = worksheet.Cells[row, 8].Text;
+                            if (string.IsNullOrWhiteSpace(correctAnswers) || !System.Text.RegularExpressions.Regex.IsMatch(correctAnswers, @"^(\d,?)+$"))
+                            {
+                                return Json(new { status = false, message = "Phải chọn ít nhất một câu trả lời đúng và định dạng phải là các số cách nhau bởi dấu phẩy." });
+                            }
+
+                            var correctAnswerIndices = correctAnswers.Split(',').Select(int.Parse).ToList();
+                            if (correctAnswerIndices.Any(index => index < 1 || index > answers.Count))
+                            {
+                                return Json(new { status = false, message = "Các chỉ số câu trả lời đúng không hợp lệ." });
+                            }
+                            var choices = new List<ChoiceData>();
+                            for (int i = 0; i < answers.Count; i++)
+                            {
+                                choices.Add(new ChoiceData
+                                {
+                                    Answer = answers[i],
+                                    IsCorrect = correctAnswerIndices.Contains(i + 1),
+                                    DisplayOrder = i,
+                                });
+                            }
+                            var question = new QuestionData
+                            {
+                                QuestionText = worksheet.Cells[row, 2].Text,
+                                TypeQuestion = "quiz",
+                                TypeAnswer = correctAnswerIndices.Count > 1 ? 2 : 1,
+                                PointsMultiplier = 1,
+                                Choices = choices,
+                                Image = "",
+                                ImageEffect = "",
+                                Time = timeLimit,
+                            };
+                            data.Add(question);
+                        }
+                    }
+                }
+                return Json(new { status = true, data = JsonConvert.SerializeObject(data) });
+            }
+            catch (Exception ex) {
+                return Json(new { status = false });
+            }
+        }
+        public async Task<IActionResult> ImportQuestion([FromBody] ImportData data)
+        {
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie == null)
+            {
+                return RedirectToAction("Index", "HomeDashboard");
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var iduser = int.Parse(userId ?? "1");
+
+            var checkEduQuiz = await _context.EduQuizs.Include(e => e.Questions).FirstOrDefaultAsync(n=>n.Uuid == data.QuizId);
+            if (checkEduQuiz == null) {
+                var newEduQuiz = new Models.EF.EduQuiz
+                {
+                    Title = "",
+                    Uuid = data.QuizId,
+                    ImageCover = "/src/img/EduQuizDefault.png",
+                    Description = "",
+                    Type = 0,
+                    Visibility = true,
+                    ThemeId = 1,
+                    MusicId = 1,
+                    CreatedAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
+                    UserId = iduser,
+                    Questions = new List<Question>()
+                };
+
+                foreach (var question in data.Data)
+                {
+                    var newQuestion = new Question
+                    {
+                        QuestionText = question.QuestionText,
+                        TypeQuestion = question.TypeQuestion,
+                        TypeAnswer = question.TypeAnswer,
+                        Time = question.Time,
+                        PointsMultiplier = question.PointsMultiplier,
+                        Image = question.Image,
+                        ImageEffect = question.ImageEffect,
+                        Choices = new List<Choice>()
+                    };
+
+                    if (question.Choices?.Count > 0)
+                    {
+                        var newChoices = question.Choices.Select(choice => new Choice
+                        {
+                            Question = newQuestion, 
+                            Answer = choice.Answer,
+                            IsCorrect = choice.IsCorrect,
+                            DisplayOrder = choice.DisplayOrder
+                        }).ToList();
+
+                        newQuestion.Choices = newChoices; 
+                    }
+
+                    newEduQuiz.Questions.Add(newQuestion);
+                }
+                _context.EduQuizs.Add(newEduQuiz);
+                await _context.SaveChangesAsync();
+
+                var questionIds = newEduQuiz.Questions.Select(q => q.Id).ToList();
+                newEduQuiz.OrderQuestion = JsonConvert.SerializeObject(questionIds);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                foreach (var question in data.Data)
+                {
+                    var newQuestion = new Question
+                    {
+                        EduQuizId= checkEduQuiz.Id,
+                        QuestionText = question.QuestionText,
+                        TypeQuestion = question.TypeQuestion,
+                        TypeAnswer = question.TypeAnswer,
+                        Time = question.Time,
+                        PointsMultiplier = question.PointsMultiplier,
+                        Image = question.Image,
+                        ImageEffect = question.ImageEffect,
+                        Choices = new List<Choice>()
+                    };
+
+                    if (question.Choices?.Count > 0)
+                    {
+                        var newChoices = question.Choices.Select(choice => new Choice
+                        {
+                            Question = newQuestion,
+                            Answer = choice.Answer,
+                            IsCorrect = choice.IsCorrect,
+                            DisplayOrder = choice.DisplayOrder
+                        }).ToList();
+
+                        newQuestion.Choices = newChoices;
+                    }
+
+                    checkEduQuiz.Questions.Add(newQuestion);
+                }
+                await _context.SaveChangesAsync();
+
+                var existingQuestionIds = JsonConvert.DeserializeObject<List<int>>(checkEduQuiz.OrderQuestion) ?? new List<int>();
+                var newQuestionIds = checkEduQuiz.Questions.Select(q => q.Id).ToList();
+                existingQuestionIds.AddRange(newQuestionIds.Except(existingQuestionIds));
+
+                checkEduQuiz.OrderQuestion = JsonConvert.SerializeObject(existingQuestionIds);
+                await _context.SaveChangesAsync();
+            }
+            return Json(new { status = true});
         }
         #endregion
     }

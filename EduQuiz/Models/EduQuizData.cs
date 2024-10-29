@@ -36,4 +36,9 @@ namespace EduQuiz.Models
         public bool IsCorrect { get; set; }
         public int DisplayOrder { get; set; }
     }
+    public class ImportData
+    {
+        public Guid QuizId { get; set; }
+        public List<QuestionData> Data { get; set; }
+    }
 }

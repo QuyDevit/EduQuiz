@@ -26,7 +26,7 @@ namespace EduQuiz.Controllers
             _config = config;
             _cookieAuth = cookieAuth;
         }
-        [Route("")]
+        [Route("home")]
         public async Task<IActionResult> Index()
         {
             var authCookie = Request.Cookies["acToken"];
@@ -90,8 +90,9 @@ namespace EduQuiz.Controllers
                 {
                     Id = n.Id,
                     Uuid = n.Uuid,
-                    Title = n.Title,
+                    Title = n.Title == ""? "Chưa đặt tên" : n.Title,
                     Image = n.ImageCover,
+                    Type= n.Type ?? 0,
                     Avatar = avatar,
                     UserName = username,
                     SumPlay = _context.QuizSessions.Count(p => p.EduQuizId == n.Id),

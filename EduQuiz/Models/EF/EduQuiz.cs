@@ -14,7 +14,7 @@ namespace EduQuiz.Models.EF
         public string? Description { get; set; }
         public string? ImageCover { get; set; }
         public int? Type { get; set; } = 0; // 0: Bản nháp , 1 Bản chính
-        public bool Visibility { get; set; } = true; // Hiển thị (Công khai hoặc riêng tư)
+        public bool Visibility { get; set; } = true; // Hiển thị (Công khai hoặc riêng tư) true: Công khai _=> Riêng tư
         [ForeignKey("UserId")]
         public int? UserId { get; set; }
         public virtual User User { get; set; }

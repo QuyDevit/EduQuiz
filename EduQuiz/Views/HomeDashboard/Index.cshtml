@@ -71,7 +71,7 @@
                         <i style="font-size:16px;margin-left:8px" class="fa fa-info-circle" aria-hidden="true"></i>
                     </div>
                     <p>Trở thành người sáng tạo được xác minh! Cung cấp tài nguyên học tập của bạn để bán và tham gia cộng đồng toàn cầu.</p>
-                    <a href="@Url.Action("Index","Profile")" class="btn">Xác minh ngay</a>
+                    <a href="@Url.Action("Index","Profile")" class="btn">Thiết lập hồ sơ</a>
                 </div>
             </div>
 
@@ -247,13 +247,13 @@
                 @foreach(var eduquizowner in Model.ListEduQuizOwner)
                 {
                     <div class="layoutcard-item">
-                        <a class="d-flex" href="@Url.Action("Index","Detail",new{id = eduquizowner.Uuid})">
+                        <a class="d-flex" href="@(eduquizowner.Type == 1 ? Url.Action("Index","Detail",new{id = eduquizowner.Uuid}) : Url.Action("Index","Creator",new{id = eduquizowner.Uuid}))">
                             <div class="layoutcard-item_img">
                                 <img src="@eduquizowner.Image" />
                                 <span>@eduquizowner.SumQuestion câu hỏi</span>
                             </div>
                             <div class="d-flex flex-column" style="flex:1">
-                                <div class="card-item_title">
+                                <div class="card-item_title" style="max-height: 33px;max-width: 130px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
                                     <span>@eduquizowner.Title</span>
                                 </div>
                                 <div class="card-item_footer">
@@ -271,7 +271,7 @@
                 }
             </div>
             <div class="layout-card_footter">
-                <a class="footer-link" href="@Url.Action("Index","Library")">Xem tất cả(5)</a>
+                <a class="footer-link" href="@Url.Action("Index","Library")">Xem tất cả(@Model.ListEduQuizOwner.Count)</a>
             </div>
         </div>
         <div class="layout-card mt-3">
@@ -296,7 +296,7 @@
                 
             </div>
             <div class="layout-card_footter">
-                <a class="footer-link" href="@Url.Action("Index","Reports")">Xem tất cả(5)</a>
+                <a class="footer-link" href="@Url.Action("Index","Reports")">Xem tất cả(@Model.ListReport.Count)</a>
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@ using EduQuiz.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduQuiz.Migrations
 {
     [DbContext(typeof(EduQuizDBContext))]
-    partial class EduQuizDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241026154029_update_tbl_Profile_261024")]
+    partial class update_tbl_Profile_261024
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,32 +246,6 @@ namespace EduQuiz.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Folders");
-                });
-
-            modelBuilder.Entity("EduQuiz.Models.EF.Follow", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ProfileId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Follow");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.Group", b =>
@@ -626,9 +603,6 @@ namespace EduQuiz.Migrations
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("Uuid")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1118,21 +1092,6 @@ namespace EduQuiz.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("ParentFolder");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("EduQuiz.Models.EF.Follow", b =>
-                {
-                    b.HasOne("EduQuiz.Models.EF.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId");
-
-                    b.HasOne("EduQuiz.Models.EF.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Profile");
 
                     b.Navigation("User");
                 });

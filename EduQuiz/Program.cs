@@ -1,5 +1,4 @@
 ﻿using EduQuiz.DatabaseContext;
-using EduQuiz.Helper;
 using EduQuiz.Hubs;
 using EduQuiz.Models;
 using EduQuiz.Security;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +21,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true; 
     options.Cookie.IsEssential = true; 
 });
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {

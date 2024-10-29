@@ -32,7 +32,9 @@ namespace EduQuiz.DatabaseContext
         public DbSet<GroupPostLike> GroupPostLikes { get; set; }
         public DbSet<PlayerQuizSessionQuestion> PlayerQuizSessionQuestions { get; set; }
         public DbSet<EduQuizFavorite> EduQuizFavorite { get; set; }
-        
+        public DbSet<Profile> Profile { get; set; }
+        public DbSet<Follow> Follows { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

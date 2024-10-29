@@ -210,7 +210,6 @@
     height: calc(100% - 5px);
 }
 .styles__Image {
-    background: center center / cover, url(/src/img/EduQuizDefault.png) center center / cover no-repeat rgb(204, 204, 204);
     height: 100%;
     flex: 1 1 0%;
     border-radius: 4px 4px 0px 0px;
@@ -521,4 +520,12 @@ a:hover {
 .about-tab__ExternalLinksSection {
     margin-left: 5rem;
     width: 33%;
+}
+.btn.unfollow {
+    background: rgb(242, 242, 242);
+    color: #000 !important;
+}
+.btn.unfollow:hover {
+    background-color: rgb(223, 223, 223);
+    color: #000 !important;
 }

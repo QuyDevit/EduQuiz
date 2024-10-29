@@ -45,7 +45,7 @@ namespace EduQuiz.Controllers
                 {
                     return Redirect(referer);
                 }
-                return RedirectToAction("Index", "HomeDashboard");
+                return RedirectToAction("Error404", "Home");
             }
 
             List<int> orderQuestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion) ?? new List<int>();
@@ -120,7 +120,7 @@ namespace EduQuiz.Controllers
             var authCookie = Request.Cookies["acToken"];
             if (authCookie == null)
             {
-                return RedirectToAction("Index", "HomeDashboard");
+                return RedirectToAction("Index", "Home");
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(authCookie);
@@ -134,7 +134,7 @@ namespace EduQuiz.Controllers
                 dynamic privacySettings = JsonConvert.DeserializeObject<dynamic>(geteduquiz.User.PrivacySettings);
                 if (privacySettings["FavoriteEduQuiz"] == true)
                 {
-                    Task.Run(() => SendEmail(
+                    SendEmail(
                         geteduquiz.User.Email,
                         $"EduQuiz {geteduquiz.Title} vừa được yêu thích",
                         geteduquiz.User.Username,
@@ -142,7 +142,7 @@ namespace EduQuiz.Controllers
                         geteduquiz.Title,
                         "Chi tiết EduQuiz",
                         $"/detail/{geteduquiz.Uuid}"
-                    ));
+                    );
                 }
                 var newEduQuizFavorite = new EduQuizFavorite
                 {

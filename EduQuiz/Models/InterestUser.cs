@@ -36,6 +36,7 @@
     public class HomeEduQuizView
     {
         public int Id { get; set; }
+        public int Type { get; set; }
         public Guid Uuid { get; set; }
         public string Title { get; set; }
         public string Image { get; set; }

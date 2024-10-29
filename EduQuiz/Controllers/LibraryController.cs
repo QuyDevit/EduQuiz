@@ -23,18 +23,16 @@ namespace EduQuiz.Controllers
         public IActionResult _PartialFolders()
         {
             var authCookie = Request.Cookies["acToken"];
-            int iduser = 0;
-            if (authCookie != null)
-            {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
-                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-                iduser = int.Parse(userId ?? "1");
-            }
-            else
+
+            if (authCookie == null)
             {
                 return RedirectToAction("Login", "Accout");
+                
             }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            int iduser = int.Parse(userId ?? "1");
             var model = _context.Folders
                 .Where(f => f.UserId == iduser)
                 .OrderBy(f => f.Name)
@@ -179,6 +177,7 @@ namespace EduQuiz.Controllers
             {
                 return RedirectToAction("Login", "Accout");
             }
+            await EnsureFolderExistsAsync(user.Id);
             var folders = _context.Folders
                 .Where(f => f.UserId == iduser)
                 .OrderBy(f => f.Name)
@@ -197,7 +196,6 @@ namespace EduQuiz.Controllers
         public async Task<IActionResult> LibrarybyFolder(Guid id)
         {
             var authCookie = Request.Cookies["acToken"];
-            int iduser = 0;
             if (authCookie == null)
             {
                 return RedirectToAction("Login", "Accout");
@@ -205,7 +203,7 @@ namespace EduQuiz.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(authCookie);
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            iduser = int.Parse(userId ?? "1");
+            int iduser = int.Parse(userId ?? "1");
             var user = await _context.Users.FindAsync(iduser);
             if (user == null)
             {
@@ -433,18 +431,16 @@ namespace EduQuiz.Controllers
             try
             {
                 var authCookie = Request.Cookies["acToken"];
-                int iduser = 0;
-                if (authCookie != null)
-                {
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var jwtToken = tokenHandler.ReadJwtToken(authCookie);
-                    var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-                    iduser = int.Parse(userId ?? "1");
-                }
-                else
+                if (authCookie == null)
                 {
                     return RedirectToAction("Login", "Accout");
+                    
                 }
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                int iduser = int.Parse(userId ?? "1");
+
                 if (idfolder == 0)
                 {
                     var rootFolder = await _context.Folders
@@ -628,18 +624,16 @@ namespace EduQuiz.Controllers
             try
             {
                 var authCookie = Request.Cookies["acToken"];
-                int iduser = 0;
-                if (authCookie != null)
-                {
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var jwtToken = tokenHandler.ReadJwtToken(authCookie);
-                    var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-                    iduser = int.Parse(userId ?? "1");
-                }
-                else
+                if (authCookie == null)
                 {
                     return RedirectToAction("Login", "Accout");
+                   
                 }
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                int iduser = int.Parse(userId ?? "1");
+
                 // Tìm EduQuiz cần sao chép
                 var originalEduQuiz = await _context.EduQuizs
                     .Include(eq => eq.Questions)

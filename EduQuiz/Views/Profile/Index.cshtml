@@ -1,21 +1,31 @@
 ﻿@{
     Layout = "_LayoutUser";
     ViewBag.Title = "Hồ sơ";
+    @using Newtonsoft.Json
+    var flag = Model.Profile != null;
+    List<int> arrquiz = new List<int>();
+    var image = "";
+    if (flag)
+    {
+        image = Model.Profile.Image;
+        arrquiz = JsonConvert.DeserializeObject<List<int>>(Model.Profile.ListEduQuizTop);
+    }
 }
-@model EduQuiz.Models.EF.User
+@model EduQuiz.Models.ProfileViewModel
 <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<link href="~/src/css/group.css" rel="stylesheet" />
 <link href="~/src/css/profile.css" rel="stylesheet" />
+
 <div class="content" style="min-height:auto;">
     <div class="layout-index flex-column">
         <div class="center-wrapper">
             <div class="d-flex justify-content-between">
                 <h2 class="title-setting m-0">Trang hồ sơ đã xác minh của bạn</h2>
                 <div>
-                    <button disabled class="btn">Xem trước</button>
-                    <button class="btn ml-2">Lưu</button>
+                    <a href="@(flag ? Url.Action("ProfilePage","Profile",new {id = Model.Profile.Uuid}) : "#")" @(flag ? "" : "disabled") class="btn">Xem trước</a>
+                    <button class="btn ml-2" onclick="saveProfile()">Lưu</button>
                 </div>
-             
             </div>
 
             <div class="row" style="margin:8px 0 0 0">
@@ -30,14 +40,14 @@
                                     <div class="d-flex">
                                         <div class="profile-image-field">
                                             <label class="mr-4">Ảnh đại diện</label>
-                                            <div id="logo" style="@($"background: url({Model.ProfilePicture}) 100% center / cover no-repeat, rgb(242, 242, 242);") ">
+                                            <div id="logo" style="@($"background: url({Model.User.ProfilePicture}) 100% center / cover no-repeat, rgb(242, 242, 242);") ">
                                             </div>
                                         </div>
                                         <div class="cover-image-field">
                                             <label class="mr-4">Ảnh nền</label>
-                                            <div class="cover-image-field__Wrapper" >
+                                            <div class="cover-image-field__Wrapper" style="background: url('@(flag ? Model.Profile.Image : "")') center / contain no-repeat, rgb(242, 242, 242);">
                                                 <div class="cover-image-field-btn">
-                                                    <div class="cover-image-field__AddImage">Tải ảnh lên</div>
+                                                    <div class="cover-image-field__AddImage @(flag? "d-none" :"")">Tải ảnh lên</div>
                                                     <div class="cover-image-field__RemoveImage">
                                                         <span class="styles-icon">
                                                             <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M9,24 C9,25.103 9.897,26 11,26 L21,26 C22.103,26 23,25.103 23,24 L23,12 L9,12 L9,24 Z M11,14 L21,14 L21.001,24 L11,24 L11,14 Z M19,9 L25,9 L25,11 L7,11 L7,9 L13,9 L13,7 L19,7 L19,9 Z M13,16 L13,22 L15,22 L15,16 L13,16 Z M17,16 L17,22 L19,22 L19,16 L17,16 Z" style="fill: rgb(255, 255, 255);"></path></svg>
@@ -46,7 +56,7 @@
                                                         <span style="color:#fff;font-weight:600">Xóa ảnh</span>
                                                     </div>
                                                     <input id="uploadImgBanner" type="file" accept="image/*" hidden />
-                                                    <div class="CoverImage__Crop d-none">
+                                                    <div class="CoverImage__Crop @(flag? "d-none" :"")">
                                                         <span>
                                                             <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M13.0654,15.6865 L11.0004,18.9995 L21.0004,18.9995 L17.2734,13.0215 L14.3384,17.7285 L13.0654,15.6865 Z M10,21 L10,12 L8,12 L8,21 C8,22.103 8.897,23 10,23 L27,23 L27,21 L10,21 Z M22,20 L24,20 L24,11 C24,9.898 23.103,9 22,9 L5,9 L5,11 L22,11 L22,20 Z M10,5 L8,5 L8,8 L10,8 L10,5 Z M22,27 L24,27 L24,24 L22,24 L22,27 Z" style="fill: rgb(0, 0, 0);"></path></svg>
                                                         </span>
@@ -61,7 +71,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Email</label>
-                                        <input type="text" class="form-control" readonly placeholder="Email" value="@Model.Email">
+                                        <input type="text" class="form-control" readonly placeholder="Email" value="@Model.User.Email">
                                     </div>
                                 </div>
                             </div>
@@ -71,11 +81,11 @@
                                         <label>Hồ sơ truyền thông xã hội:</label>
                                         <div>
                                             <label>Zalo</label>
-                                            <button class="social-platform-links-field">Thêm ngay</button>
-                                            <div class="social-platform-link-item d-none">
+                                            <button class="social-platform-links-field @(flag ? "d-none": "")">Thêm ngay</button>
+                                            <div class="social-platform-link-item @(flag ? "": "d-none")">
                                                 <div class="social-platform-link-item__InputWrapper">
                                                     <svg class="icon-social" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><path fill="#2962ff" d="M15 36V6.827l-1.211-.811C8.64 8.083 5 13.112 5 19v10c0 7.732 6.268 14 14 14h10c4.722 0 8.883-2.348 11.417-5.931V36H15z" /><path fill="#eee" d="M29 5H19c-1.845 0-3.601.366-5.214 1.014C10.453 9.25 8 14.528 8 19c0 6.771.936 10.735 3.712 14.607.216.301.357.653.376 1.022.043.835-.129 2.365-1.634 3.742-.162.148-.059.419.16.428.942.041 2.843-.014 4.797-.877a1.976 1.976 0 0 1 1.729.083C20.453 39.764 24.333 40 28 40c4.676 0 9.339-1.04 12.417-2.916A13.922 13.922 0 0 0 43 29V19c0-7.732-6.268-14-14-14z" /><path fill="#2962ff" d="M36.75 27C34.683 27 33 25.317 33 23.25s1.683-3.75 3.75-3.75 3.75 1.683 3.75 3.75S38.817 27 36.75 27zm0-6c-1.24 0-2.25 1.01-2.25 2.25s1.01 2.25 2.25 2.25S39 24.49 39 23.25 37.99 21 36.75 21zM31.5 27h-1a.5.5 0 0 1-.5-.5V18h1.5v9zM27 19.75v.519a3.715 3.715 0 0 0-2.25-.769c-2.067 0-3.75 1.683-3.75 3.75S22.683 27 24.75 27c.847 0 1.621-.293 2.25-.769v.269a.5.5 0 0 0 .5.5h1v-7.25H27zm-2.25 5.75c-1.24 0-2.25-1.01-2.25-2.25S23.51 21 24.75 21 27 22.01 27 23.25s-1.01 2.25-2.25 2.25z" /><path fill="#2962ff" d="M21.25 18h-8v1.5h5.321L13 26h.026a1.221 1.221 0 0 0-.276.75V27h7.5a.5.5 0 0 0 .5-.5v-1h-5.321L21 19h-.026c.163-.211.276-.463.276-.75V18z" /></svg>
-                                                    <input class="social-platform-link-item__Input" data-social="zalo" value="https://zalo.me/" />
+                                                    <input class="social-platform-link-item__Input" data-social="zalo" value="@(flag ? Model.Profile.LinkZalo : "https://zalo.me/")" />
                                                     <button class="icon-button remove">
                                                         <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
                                                     </button>
@@ -84,11 +94,11 @@
                                         </div>
                                         <div>
                                             <label>Youtube</label>
-                                            <button class="social-platform-links-field">Thêm ngay</button>
-                                            <div class="social-platform-link-item d-none">
+                                            <button class="social-platform-links-field @(flag ? "d-none": "")">Thêm ngay</button>
+                                            <div class="social-platform-link-item @(flag ? "": "d-none")">
                                                 <div class="social-platform-link-item__InputWrapper">
                                                     <svg class="icon-social" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><path fill="#FF3D00" d="M43.2 33.9c-.4 2.1-2.1 3.7-4.2 4-3.3.5-8.8 1.1-15 1.1-6.1 0-11.6-.6-15-1.1-2.1-.3-3.8-1.9-4.2-4-.4-2.3-.8-5.7-.8-9.9s.4-7.6.8-9.9c.4-2.1 2.1-3.7 4.2-4C12.3 9.6 17.8 9 24 9c6.2 0 11.6.6 15 1.1 2.1.3 3.8 1.9 4.2 4 .4 2.3.9 5.7.9 9.9-.1 4.2-.5 7.6-.9 9.9z" /><path fill="#FFF" d="M20 31V17l12 7z" /></svg>
-                                                    <input class="social-platform-link-item__Input" data-social="youtube" value="https://www.youtube.com/user/" />
+                                                    <input class="social-platform-link-item__Input" data-social="youtube" value="@(flag ? Model.Profile.LinkYoutube : "https://www.youtube.com/user/")" />
                                                     <button class="icon-button remove">
                                                         <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
                                                     </button>
@@ -97,12 +107,11 @@
                                         </div>
                                         <div>
                                             <label>Facebook</label>
-                                            <button class="social-platform-links-field">Thêm ngay</button>
-                                            <div class="social-platform-link-item d-none">
+                                            <button class="social-platform-links-field @(flag ? "d-none": "")">Thêm ngay</button>
+                                            <div class="social-platform-link-item @(flag ? "": "d-none")">
                                                 <div class="social-platform-link-item__InputWrapper">
-
                                                     <svg class="icon-social" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><linearGradient id="a" x1="9.993" x2="40.615" y1="-299.993" y2="-330.615" gradientTransform="matrix(1 0 0 -1 0 -290)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2aa4f4" /><stop offset="1" stop-color="#007ad9" /></linearGradient><path fill="url(#a)" d="M24 4C12.954 4 4 12.954 4 24c0 10.028 7.379 18.331 17.004 19.777C21.981 43.924 22.982 41 24 41c.919 0 1.824 2.938 2.711 2.818C36.475 42.495 44 34.127 44 24c0-11.046-8.954-20-20-20z" /><path d="M27.707 21.169c0-1.424.305-3.121 1.757-3.121h4.283l-.001-5.617-.05-.852-.846-.114c-.608-.082-1.873-.253-4.206-.253-5.569 0-8.636 3.315-8.636 9.334v2.498H15.06v7.258h4.948V43.6c1.29.261 2.625.4 3.992.4 1.268 0 2.504-.131 3.707-.357V30.301h5.033l1.122-7.258h-6.155v-1.874z" opacity=".05" /><path d="M27.207 21.169c0-1.353.293-3.621 2.257-3.621h3.783V12.46l-.026-.44-.433-.059c-.597-.081-1.838-.249-4.143-.249-5.323 0-8.136 3.055-8.136 8.834v2.998H15.56v6.258h4.948v13.874c1.136.2 2.298.324 3.492.324 1.094 0 2.16-.112 3.207-.281V29.801h5.104l.967-6.258h-6.072v-2.374z" opacity=".05" /><path fill="#fff" d="M26.707 29.301h5.176l.813-5.258h-5.989v-2.874c0-2.184.714-4.121 2.757-4.121h3.283V12.46c-.577-.078-1.797-.248-4.102-.248-4.814 0-7.636 2.542-7.636 8.334v3.498H16.06v5.258h4.948v14.475a20.234 20.234 0 0 0 5.699.041V29.301z" /></svg>
-                                                    <input class="social-platform-link-item__Input" data-social="facebook" value="https://www.facebook.com/" />
+                                                    <input class="social-platform-link-item__Input" data-social="facebook" value="@(flag ? Model.Profile.LinkFacebook : "https://www.facebook.com/")" />
                                                     <button class="icon-button remove">
                                                         <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
                                                     </button>
@@ -111,13 +120,13 @@
                                         </div>
                                         <div>
                                             <label>Instagram</label>
-                                            <button class="social-platform-links-field">Thêm ngay</button>
-                                            <div class="social-platform-link-item d-none">
+                                            <button class="social-platform-links-field @(flag ? "d-none": "")">Thêm ngay</button>
+                                            <div class="social-platform-link-item @(flag ? "": "d-none")">
                                                 <div class="social-platform-link-item__InputWrapper">
 
                                                     <svg class="icon-social" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px"><radialGradient id="yOrnnhliCrdS2gy~4tD8ma" cx="19.38" cy="42.035" r="44.899" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fd5" /><stop offset=".328" stop-color="#ff543f" /><stop offset=".348" stop-color="#fc5245" /><stop offset=".504" stop-color="#e64771" /><stop offset=".643" stop-color="#d53e91" /><stop offset=".761" stop-color="#cc39a4" /><stop offset=".841" stop-color="#c837ab" /></radialGradient><path fill="url(#yOrnnhliCrdS2gy~4tD8ma)" d="M34.017,41.99l-20,0.019c-4.4,0.004-8.003-3.592-8.008-7.992l-0.019-20	c-0.004-4.4,3.592-8.003,7.992-8.008l20-0.019c4.4-0.004,8.003,3.592,8.008,7.992l0.019,20	C42.014,38.383,38.417,41.986,34.017,41.99z" /><radialGradient cx="11.786" cy="5.54" r="29.813" gradientTransform="matrix(1 0 0 .6663 0 1.849)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4168c9" /><stop offset=".999" stop-color="#4168c9" stop-opacity="0" /></radialGradient><path fill="url(#yOrnnhliCrdS2gy~4tD8mb)" d="M34.017,41.99l-20,0.019c-4.4,0.004-8.003-3.592-8.008-7.992l-0.019-20	c-0.004-4.4,3.592-8.003,7.992-8.008l20-0.019c4.4-0.004,8.003,3.592,8.008,7.992l0.019,20	C42.014,38.383,38.417,41.986,34.017,41.99z" /><path fill="#fff" d="M24,31c-3.859,0-7-3.14-7-7s3.141-7,7-7s7,3.14,7,7S27.859,31,24,31z M24,19c-2.757,0-5,2.243-5,5	s2.243,5,5,5s5-2.243,5-5S26.757,19,24,19z" /><circle cx="31.5" cy="16.5" r="1.5" fill="#fff" /><path fill="#fff" d="M30,37H18c-3.859,0-7-3.14-7-7V18c0-3.86,3.141-7,7-7h12c3.859,0,7,3.14,7,7v12	C37,33.86,33.859,37,30,37z M18,13c-2.757,0-5,2.243-5,5v12c0,2.757,2.243,5,5,5h12c2.757,0,5-2.243,5-5V18c0-2.757-2.243-5-5-5H18z" /></svg>
 
-                                                    <input class="social-platform-link-item__Input" data-social="instagram" value="https://www.instagram.com/" />
+                                                    <input class="social-platform-link-item__Input" data-social="instagram" value="@(flag? Model.Profile.LinkInstagram : "https://www.instagram.com/")" />
                                                     <button class="icon-button remove">
                                                         <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
                                                     </button>
@@ -140,7 +149,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Tiêu đề trang ngắn</label>
-                                            <input type="text" class="form-control" placeholder="Tiêu đề trang" value="">
+                                        <input id="titlepage" type="text" class="form-control" placeholder="Tiêu đề trang" value="@(flag ? Model.Profile.TitlePage : "")">
                                         </div>
                                     </div>
                                 </div>
@@ -148,7 +157,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Giới thiệu</label>
-                                            <textarea class="page-Intro" rows="5"  placeholder="Nhập giới thiệu cho trang"></textarea>
+                                        <textarea id="descriptionpage" class="page-Intro" rows="5" placeholder="Nhập giới thiệu cho trang">@(flag ? Model.Profile.DescriptionPage : "")</textarea>
                                         </div>
                                     </div>
                                 </div> 
@@ -174,64 +183,43 @@
                                         <label style="font-weight:500">Vui lòng chọn ít nhất 3 kahoot bạn muốn hiển thị ở đầu hồ sơ của mình.</label>
                                         <br />
                                         <div class="featured-eduquizs-field">
-                                            <div class="eduquiz-item">
-                                                <button class="icon__button">
-                                                    <span>
-                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
-                                                    </span>
-                                                </button>
-                                                <div class="style__Card">
-                                                    <div class="styles__Image"></div>
-                                                    <div class="style__Card-Title">
-                                                        <div class="styles__Title">Học tiếng anh mọi cấp độ</div>
+                                            @if (flag)
+                                            {
+                                                foreach(var item in Model.ListEduQuizProfile)
+                                                {
+                                                    <div class="eduquiz-item">
+                                                        <button class="icon__button" onclick="removeQuiz(@item.Id,this)">
+                                                            <span>
+                                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
+                                                            </span>
+                                                        </button>
+                                                        <div class="style__Card">
+                                                            <div class="styles__Image" style="background: center center / cover, url(@item.Image) center center / cover no-repeat rgb(204, 204, 204);"></div>
+                                                            <div class="style__Card-Title">
+                                                                <div class="styles__Title">@item.Name</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="eduquiz-item">
-                                                <button class="icon__button">
-                                                    <span>
-                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
+                                                }
+                                                if (Model.ListEduQuizProfile.Count < 4)
+                                                {
+                                                    <button class="dashed-title" id="addeduquiz">
+                                                        <span class="dashed-title__Icon">
+                                                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7 15 15 15 15 7 17 7 17 15 25 15 25 17 17 17 17 25 15 25 15 17 7 17z" style="fill: #6e6e6e;"></path></svg>
+                                                        </span>
+                                                        Thêm EduQuiz
+                                                    </button>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <button class="dashed-title" id="addeduquiz">
+                                                    <span class="dashed-title__Icon">
+                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7 15 15 15 15 7 17 7 17 15 25 15 25 17 17 17 17 25 15 25 15 17 7 17z" style="fill: #6e6e6e;"></path></svg>
                                                     </span>
+                                                    Thêm EduQuiz
                                                 </button>
-                                                <div class="style__Card">
-                                                    <div class="styles__Image"></div>
-                                                    <div class="style__Card-Title">
-                                                        <div class="styles__Title">Học tiếng anh mọi cấp độ</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="eduquiz-item">
-                                                <button class="icon__button">
-                                                    <span>
-                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
-                                                    </span>
-                                                </button>
-                                                <div class="style__Card">
-                                                    <div class="styles__Image"></div>
-                                                    <div class="style__Card-Title">
-                                                        <div class="styles__Title">Học tiếng anh mọi cấp độ</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="eduquiz-item">
-                                                <button class="icon__button">
-                                                    <span>
-                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
-                                                    </span>
-                                                </button>
-                                                <div class="style__Card">
-                                                    <div class="styles__Image"></div>
-                                                    <div class="style__Card-Title">
-                                                        <div class="styles__Title">Học tiếng anh mọi cấp độ</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button class="dashed-title">
-                                                <span class="dashed-title__Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7 15 15 15 15 7 17 7 17 15 25 15 25 17 17 17 17 25 15 25 15 17 7 17z" style="fill: #6e6e6e;"></path></svg>
-                                                </span>
-                                                Thêm EduQuiz
-                                            </button>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -242,7 +230,7 @@
                                         Thông tin Donate
                                         <i id="noteOrganization" style="margin-left:4px;font-size:18px" class="fa fa-question-circle" aria-hidden="true"></i>
                                     </label>
-                                    <textarea class="page-Intro" rows="5" placeholder="VD : BIDV - 043753984578 - Nguyễn Văn A "></textarea>
+                                    <textarea id="donateinfo" class="page-Intro" rows="5" placeholder="VD : BIDV - 043753984578 - Nguyễn Văn A ">@(flag ? Model.Profile.InfoDonate : "")</textarea>
                                 </div>
                             </div>
                         </div>
@@ -271,8 +259,37 @@
         </div>
     </div>
 </div>
+<div class="modal" id="modalEduQuizProfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="margin-top:100px;max-width:640px" role="document">
+        <div class="modal-content" style="width: 640px; height: 720px;">
+            <div class="modal-header" style="border:none">
+                <h3 class="modal-title">Chọn EduQuiz</h3>
+            </div>
+            <div class="modal-body">
+                <input style="padding:10px 16px;color: #000;" id="searcheduquiz" type="text" class="form-control mb-3" placeholder="Tìm kiếm EduQuiz" value="">
+                <div class="cards-with-search__CardsListWrapper">
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button type="button" class="btn " data-dismiss="modal" style="background-color:rgb(226, 27, 60)">Hủy bỏ</button>
+                <button id="btn-submitshare" disabled type="button" class="btn " style="background-color:rgb(38, 137, 12)">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+    var listeduquizbyuser = [];
     var imgcurrent = "";
+    var imgfinal = "";
+    var listeduquizidtop = [];
+    console.log()
+    if (`@flag` == 'True') {
+        listeduquizidtop = @Html.Raw(JsonConvert.SerializeObject(arrquiz));
+        imgfinal = `@image`;
+    } else {
+        listeduquizidtop = [];
+        imgfinal = "";
+    }
     $('.social-platform-links-field').click(function () {
         var button = $(this);
         var linkItem = button.siblings('.social-platform-link-item');
@@ -280,6 +297,99 @@
         linkItem.removeClass('d-none');
         button.addClass('d-none'); 
     });
+    function removeQuiz(id,button) {
+        listeduquizidtop = listeduquizidtop.filter(function (item) {
+            return item !== id;
+        });
+        $(button).closest(".eduquiz-item").remove();
+        if (listeduquizidtop.length < 4 && $("#addeduquiz").length === 0) {
+            $(".featured-eduquizs-field").append(`
+                    <button class="dashed-title" id="addeduquiz">
+                        <span class="dashed-title__Icon">
+                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7 15 15 15 15 7 17 7 17 15 25 15 25 17 17 17 17 25 15 25 15 17 7 17z" style="fill: #6e6e6e;"></path></svg>
+                        </span>
+                        Thêm EduQuiz
+                    </button>
+                `);
+        }
+        console.log(listeduquizidtop)
+    }
+    $(document).on("click", "#addeduquiz", function () { 
+        $("#modalEduQuizProfile").modal("show");
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetEduQuiz", "Profile")",
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        listeduquizbyuser = response.data;
+                        $(".cards-with-search__CardsListWrapper").empty();
+                        response.data.forEach(item => {
+                            $(".cards-with-search__CardsListWrapper").append(`
+                                <div class="styles__ContainerCard" style="width:100%" data-id="${item.id}">
+                                    <div class="style__ImgWrapper">
+                                        <img src="${item.image}" />
+                                        <div class="extra-info">
+                                            <div class="extra-info__Label">${item.countQuestion} câu hỏi</div>
+                                        </div>
+                                    </div>
+                                    <div class="styles__ContentContainer">
+                                        <div class="styles__LeftContentContainer">
+                                            <div class="styles__TopContent">
+                                                <div class="styles__MainInfo">
+                                                    <div class="title__Wrapper">${item.title}</div>
+                                                    <p class="description">${item.description}</p>
+                                                </div>
+                                            </div>
+                                            <div class="styles__BottomContent">
+                                                <div class="styles__BottomInnerWrapper">
+                                                    <div class="creator">
+                                                        <img src="${item.avatart}" />
+                                                        <div>${item.username}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="styles__ActionsWrapper">
+                                            <button class="btn ${listeduquizidtop.includes(item.id) ? "selected" : ""}" onclick="SelectEduQuiz(${item.id}, this)">
+                                                ${listeduquizidtop.includes(item.id) ? "Đã chọn" : "Chọn"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    }
+                }
+            }
+        })
+    })
+
+    function SelectEduQuiz(id, button) {
+        var index = listeduquizidtop.indexOf(id);
+        if (index === -1) {
+            listeduquizidtop.push(id);
+            $(button).text("Đã chọn").addClass("selected");
+        } else {
+            listeduquizidtop.splice(index, 1);
+            $(button).text("Chọn").removeClass("selected");
+        }
+
+        listeduquizidtop.length > 0 && listeduquizidtop.length < 5 ? $("#btn-submitshare").removeAttr("disabled") : $("#btn-submitshare").attr("disabled", true);
+
+        console.log(listeduquizidtop);
+    }
 
     // Khi nhấn nút "X"
     $('.icon-button.remove').click(function () {
@@ -345,13 +455,124 @@
             width: 1280,   // Chiều rộng ảnh sau crop
             height: 256    // Chiều cao ảnh sau crop
         });
-
-        // Lấy ảnh đã crop và hiển thị ở trang hồ sơ
-        var croppedImage = canvas.toDataURL('image/png');
-        $(".cover-image-field__Wrapper").css({
-            "background": `url(${croppedImage}) center / contain no-repeat, rgb(242, 242, 242)`
-        });
-        $("#modalCropImage").modal("hide");
+        // Chuyển canvas thành Blob và tạo FormData
+        canvas.toBlob(function (blob) {
+            const formData = new FormData();
+            formData.append('image', blob, 'croppedImage.png');  
+            // Gửi FormData qua AJAX
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveImgProfilePage", "Profile")",  
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.status === true) {
+                        imgfinal = response.url;
+                        $(".cover-image-field__Wrapper").css({
+                            "background": `url(${response.url}) center / contain no-repeat, rgb(242, 242, 242)`
+                        });
+                        $("#modalCropImage").modal("hide");
+                    } 
+                },
+                error: function () {
+                    openToast('error', 'Lỗi', 'Có lỗi xảy ra khi tải ảnh lên!', 2500);
+                }
+            });
+        }, 'image/png');  
+      
     });
+    $("#btn-submitshare").click(function () {
+        $(".featured-eduquizs-field").empty();
+        listeduquizidtop.forEach(function (id) {
+            var quiz = listeduquizbyuser.find(q => q.id === id);
+            if (quiz) {
+                $(".featured-eduquizs-field").append(`
+                    <div class="eduquiz-item">
+                        <button class="icon__button" onclick="removeQuiz(${quiz.id}, this)">
+                            <span>
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
+                            </span>
+                        </button>
+                        <div class="style__Card">
+                            <div class="styles__Image" style="background: center center / cover, url(${quiz.image}) center center / cover no-repeat rgb(204, 204, 204);"></div>
+                            <div class="style__Card-Title">
+                                <div class="styles__Title">${quiz.title}</div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        });
+        if (listeduquizidtop.length < 4) {
+            $(".featured-eduquizs-field").append(`
+                <button class="dashed-title" id="addeduquiz">
+                    <span class="dashed-title__Icon">
+                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7 15 15 15 15 7 17 7 17 15 25 15 25 17 17 17 17 25 15 25 15 17 7 17z" style="fill: #6e6e6e;"></path></svg>
+                    </span>
+                    Thêm EduQuiz
+                </button>
+            `);
+        }
+        $("#modalEduQuizProfile").modal("hide");
+    })
+    function saveProfile() {
+        const title = $("#titlepage").val();
+        const description = $("#descriptionpage").val();
+        const donate = $("#donateinfo").val();
+        const zaloLink = $('input[data-social="zalo"]').val();
+        const youtubeLink = $('input[data-social="youtube"]').val();
+        const facebookLink = $('input[data-social="facebook"]').val();
+        const instagramLink = $('input[data-social="instagram"]').val();
 
+        if (title == "") {
+            openToast('warning', 'Lỗi', 'Tiêu đề không được rỗng!', 2500);
+            return;
+        }
+        if (description == "") {
+            openToast('warning', 'Lỗi', 'Vui lòng mô tả giới thiệu trang!', 2500);
+            return;
+        }
+        if (imgfinal == "") {
+            openToast('warning', 'Lỗi', 'Vui lòng chọn ảnh bìa cho trang!', 2500);
+            return;
+        }
+        if (listeduquizidtop.length < 3) {
+            openToast('warning', 'Lỗi', 'Vui lòng chọn ít nhất 3 kahoot!', 2500);
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveProfile", "Profile")",
+            data: {
+                image: imgfinal,
+                zaloLink: zaloLink,
+                youtubeLink: youtubeLink,
+                facebookLink: facebookLink,
+                instagramLink: instagramLink,
+                title: title,
+                description: description,
+                donate: donate,
+                listeduquizid: listeduquizidtop
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        window.location.reload();
+                    }
+                }
+            }
+        })
+    }
 </script>
