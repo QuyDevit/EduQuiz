@@ -20,6 +20,9 @@ namespace EduQuiz.Models.EF
         public bool CanSeeMemberList { get; set; } = true;
         public bool CanShareContent { get; set; } = true;
         public bool CanPostContent { get; set; } = true;
+        public string SubscriptionType { get; set; } = "basic";// Loại đăng ký gói
+        public DateTime? SubscriptionStartDate { get; set; } // Ngày bắt đầu đăng ký gói
+        public DateTime? SubscriptionEndDate { get; set; } // Ngày kết thúc đăng ký gói
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public virtual ICollection<GroupMember> Members { get; set; }
         public bool Status { get; set; } = true;

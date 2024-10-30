@@ -444,7 +444,7 @@ namespace EduQuiz.Controllers
                     getdata.Questions = getdata.Questions
                         .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
                         .ToList();
-
+                    eduQuiz.OrderQuestion = JsonConvert.SerializeObject(orderid);
                 }
                 else if (orderid.Count(x => x == 0) == 1)
                 {
@@ -645,6 +645,29 @@ namespace EduQuiz.Controllers
             catch (Exception ex) {
                 return Json(new { status = false });
             }
+        }
+        public async Task<IActionResult> GenerateQuesion(string language,string topic)
+        {
+            var contentask = $"Tạo cho tôi 5 câu hỏi \"mới\" gồm quiz(Câu đố 4 đáp án) hoặc true_false(Đúng hoặc sai 2 đáp án) về chủ đề \"{topic}\" với language \"{language}\" không cần giải thích và dẫn dắt trả về đúng định dạng: [{{\"QuestionText\":\"Đà Lạt ở nước nào?\",\"TypeQuestion\":\"quiz\",\"TypeAnswer\": 1(default),\"Time\": 20(default),\"PointsMultiplier\": 1(default),\"Image\": \"\",\"ImageEffect\": \"\",\"Choices\":[{{\"Answer\":\"Việt Nam\",\"IsCorrect\":true,\"DisplayOrder\":0}},{{}}...]}}]";
+            var request = new ChatRequest
+            {
+                Model = "gemini-1.5-pro",
+                MaxTokens = 2048,
+                Messages = new[]
+                {
+                    new Message
+                    {
+                        Role = "user",
+                        Content = contentask
+                    }
+                }
+            };
+
+            var responseContent = await _geminiAiService.GenerateResponse(request);
+            var geminiResponse = JsonConvert.DeserializeObject<GeminiResponse>(responseContent);
+
+            string extractedText = geminiResponse.Candidates[0].Content.Parts[0].Text;
+            return Json(new { status = true, data = extractedText });
         }
         public async Task<IActionResult> ImportQuestion([FromBody] ImportData data)
         {

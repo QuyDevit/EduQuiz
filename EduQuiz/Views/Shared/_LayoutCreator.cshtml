@@ -486,7 +486,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const svgOption = [
+            '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M27,24.559972 L5,24.559972 L16,7 L27,24.559972 Z" style="fill: #fff;"></path></svg>',
+            '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M4,16.0038341 L16,4 L28,16.0007668 L16,28 L4,16.0038341 Z" style="fill: #fff;"></path></svg>',
+            '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M16,27 C9.92486775,27 5,22.0751322 5,16 C5,9.92486775 9.92486775,5 16,5 C22.0751322,5 27,9.92486775 27,16 C27,22.0751322 22.0751322,27 16,27 Z" style="fill: #fff;"></path></svg>',
+            '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M7,7 L25,7 L25,25 L7,25 L7,7 Z" style="fill: #fff;"></path></svg>',
+            '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M8.584 27 4 12.786 16 3.982 28 12.786 23.417 27z" style="fill: #fff;"></path></svg>',
+            '<svg viewBox="0 0 32 32" focusable="false" stroke="rgba(0, 0, 0, 0.15)" stroke-width="1.3px" aria-hidden="true" style="paint-order: stroke;"><title>Icon</title><path d="M5 8L16 26.857 27 8z" style="fill: #fff;"></path></svg>'
+        ];
         var dataImport = "";
+        var listQuestionAskAi = [];
         var arrmusic = [];
         var arrtheme = [];
         var imgCoverSetting = "";
@@ -1855,6 +1864,150 @@
                 $(".menu-Slide__Wrapper").addClass("d-none");
             }
         });
+        //Dùng tạo câu hỏi với AI
+        $("#open-support-ai").click(function () {
+            $("#overlay-question").addClass("d-none");
+            $(".menu-Slide__Wrapper").addClass("d-none");
+            $("#modalSuportWithAI").modal("show");
+        });
+        $("#ask-ai").on("submit", function (e) {
+            e.preventDefault(); 
+            handleAskAi();
+        });
+        $("#btn-ask-ai").click(function(){
+            handleAskAi();
+        })
+        $(document).on("click", "#add-allquestion", function () {
+            if (listQuestionAskAi.length < 1) {
+                openToast('warning', 'Lỗi', "Không có dữ liệu!", 2500);
+                return;
+            }
+            const data = JSON.stringify({
+                QuizId: quizId,
+                Data: listQuestionAskAi
+            });
+            addListQuestion(data);
+        })
+        $('#modalSuportWithAI').on('hidden.bs.modal', function (e) {
+            $(".container-result__Scroll").empty();
+            listQuestionAskAi = [];
+            $("#add-allquestion").text(`Thêm tất cả (${listQuestionAskAi.length})`).prop("disabled", true);
+        });
+        function handleAskAi(){
+            const topic = $("#topic-ask").val();
+            const language = $("#language-ask").val();
+            if (userSubscriptionType !="vip"){
+                openToast('warning', 'Lỗi', "Vui lòng nâng cấp để sử dụng tính năng", 2500);
+                return;
+            }
+            if (topic == "" || language == "") { 
+                openToast('warning', 'Lỗi', "Vui nhập chủ đề", 2500);
+                return;
+            }
+            $("#btn-ask-ai").text("").append(`<span class="loader"></span>`);
+            try{
+                $.ajax({
+                    url: '@Url.Action("GenerateQuesion", "Creator")',
+                    type: 'POST',
+                    data: {
+                        language: language,
+                        topic: topic
+                    },
+                    success: function (response) {
+                        if (response.redirectUrl) {
+                            Swal.fire({
+                                title: 'Hết phiên đăng nhập',
+                                text: 'Vui lòng đăng nhập lại',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            });
+                        } else {
+                            if (response.status == true) {
+                                cleanDataResponse(response.data);
+                            } else {
+                                openToast('warning', 'Lỗi', "Đã xảy ra lỗi khi Gọi Api", 2500);
+                            }
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error:', status, error);
+                        $("#btn-ask-ai").empty().append(`<div style="padding:3px 3px;border-radius:50%;margin-right:8px;display:flex;background-color:#fff">
+                                                <i style="color:#028282" class="fa fa-star" aria-hidden="true"></i>
+                                            </div>
+                                            <span>Tạo ngay</span>`);
+                    }
+                });
+            } catch (error) {
+                openToast('warning', 'Lỗi', "Vui lòng ghi chủ đề rõ ràng hơn", 2500);
+                $("#btn-ask-ai").empty().append(`<div style="padding:3px 3px;border-radius:50%;margin-right:8px;display:flex;background-color:#fff">
+                                                        <i style="color:#028282" class="fa fa-star" aria-hidden="true"></i>
+                                                    </div>
+                                                    <span>Tạo ngay</span>`);
+            }
+        }
+
+        function cleanDataResponse(response) {
+            const cleanJsonData = response
+                .replace(/^```json|```$/g, "")
+                .trim();  
+            try {
+                const questionsArray = JSON.parse(cleanJsonData);
+                $("#add-allquestion").text(`Thêm tất cả (${questionsArray.length})`).prop("disabled", false);
+                listQuestionAskAi = questionsArray;
+                console.log(listQuestionAskAi);
+                $(".container-result__Scroll").empty();
+                listQuestionAskAi.forEach(question => {
+                    const questionHtml = `
+                        <div class="border-result-preview">
+                            <div class="eduquiz-preview-card__Container">
+                                <div class="quiz-preview__ContentContainer">
+                                    <div class="preview__TitleContainer">
+                                        <div class="quiz-preview__Title">${question.QuestionText}</div>
+                                    </div>
+                                    <div class="quiz-preview__QuizImageContainer">
+                                        <img class="quiz-preview__QuizImage" src="/src/img/EduQuizDefault.png"/>
+                                    </div>
+                                    <div class="quiz-preview__Answers">
+                                        ${question.Choices.map((choice, index) => `
+                                            <div class="quiz-preview__Answer">
+                                                <span class="icon__Icon" style="width:24px;height:24px;">
+                                                   ${svgOption[index % svgOption.length]}
+                                                </span>
+                                                <span class="preview__AnswerText">${choice.Answer}</span>
+                                                ${choice.IsCorrect ? `
+                                                    <span class="icon__Icon">
+                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
+                                                            <title>Icon</title>
+                                                            <path d="M12.926 22.652L8 17.725 9.767 15.957 12.841 19.031 21.959 9 23.808 10.682z" style="fill: rgb(255, 255, 255);"></path>
+                                                        </svg>
+                                                    </span>` : ''}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    $(".container-result__Scroll").append(questionHtml);
+                });
+                $("#btn-ask-ai").empty().append(`<div style="padding:3px 3px;border-radius:50%;margin-right:8px;display:flex;background-color:#fff">
+                                                        <i style="color:#028282" class="fa fa-star" aria-hidden="true"></i>
+                                                    </div>
+                                                    <span>Tạo ngay</span>`);
+            } catch (error) {
+                openToast('warning', 'Lỗi', "Vui lòng ghi chủ đề rõ ràng hơn", 2500);
+                console.error("Lỗi parse JSON:", error.message);
+                $("#btn-ask-ai").empty().append(`<div style="padding:3px 3px;border-radius:50%;margin-right:8px;display:flex;background-color:#fff">
+                                                        <i style="color:#028282" class="fa fa-star" aria-hidden="true"></i>
+                                                    </div>
+                                                    <span>Tạo ngay</span>`);
+            }
+        }
+        //Nhập câu hỏi từ excel
         $(document).on("click", ".btn-import",function(){
             $("#overlay-question").addClass("d-none");
             $(".menu-Slide__Wrapper").addClass("d-none");
@@ -1889,6 +2042,7 @@
                     } else {
                         if (response.status == true) {
                             dataImport = response.data;
+                            console.log(JSON.parse(response.data));
                             $("#count-question").text(`Đã nhập ${JSON.parse(response.data).length} câu hỏi`)
                             $("#modalImportEduQuiz").modal("hide");
                             $("#modalInfoSuccess").modal("show");
@@ -1911,13 +2065,16 @@
                 QuizId: quizId,
                 Data: JSON.parse(dataImport)
             });
+            addListQuestion(data);
+        })
+        function addListQuestion(data){
             $.ajax({
                 url: '@Url.Action("ImportQuestion", "Creator")',
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 data: data,
-                success:function(response){
+                success: function (response) {
                     if (response.redirectUrl) {
                         Swal.fire({
                             title: 'Hết phiên đăng nhập',
@@ -1932,11 +2089,11 @@
                     } else {
                         if (response.status == true) {
                             location.reload();
-                        } 
+                        }
                     }
                 }
             })
-        })
+        }
         $('#choose-file').click(function () {
             $('#file-import').click();
         });

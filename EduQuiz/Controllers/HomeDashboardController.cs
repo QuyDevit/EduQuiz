@@ -85,7 +85,7 @@ namespace EduQuiz.Controllers
                                               }).ToListAsync();
 
             var listEduQuizbyUser = await _context.EduQuizs
-                .Where(g => g.UserId == iduser)
+                .Where(g => g.UserId == iduser && g.Status)
                 .Select(n => new HomeEduQuizView
                 {
                     Id = n.Id,
@@ -101,7 +101,7 @@ namespace EduQuiz.Controllers
 
             var userFavorites = JsonConvert.DeserializeObject<List<InterestUser>>(user.Favorite)?.Select(f => f.id).ToList();
             var favoriteEduQuizQuery = _context.EduQuizs
-                .Where(n => userFavorites.Contains(n.TopicId ?? 1) && n.Visibility) // Chỉ lấy các EduQuiz có TopicId trong danh sách yêu thích
+                .Where(n => userFavorites.Contains(n.TopicId ?? 1) && n.Visibility && n.Type == 1 && n.Status) // Chỉ lấy các EduQuiz có TopicId trong danh sách yêu thích
                 .Include(n => n.User)
                 .Select(n => new HomeEduQuizView
                 {

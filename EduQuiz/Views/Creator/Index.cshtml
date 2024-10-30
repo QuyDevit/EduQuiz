@@ -17,7 +17,11 @@
                     <span><i style="font-size:18px;margin-right:4px" class="fa fa-plus" aria-hidden="true"></i></span>
                     <span style="font-size:16px;font-weight:600">Thêm</span>
                 </button>
-                <button style="border-left:1px solid rgb(204, 204, 204);background-color: rgb(242, 242, 242);" type="button" class="tab__TabList-button">
+                <button id="open-support-ai" style="border-left:1px solid rgb(204, 204, 204);background-color: rgb(242, 242, 242);" type="button" class="tab__TabList-button">
+                    <div style="background-color:#028282;padding:3px 3px;border-radius:50%;margin-right:8px;">
+                        <i style="color:#fff" class="fa fa-star" aria-hidden="true"></i>
+                    </div>
+                    <span style="font-size:16px;font-weight:600">Hỗ trợ bởi AI</span>
                 </button>
                 <button style="background-color: rgb(242, 242, 242);" type="button" class="tab__TabList-button">
                 </button>
@@ -94,6 +98,71 @@
         </div>
     </div>
 </div>
+<!-- Modal Suport with AI Quiz-->
+<div class="modal" id="modalSuportWithAI" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:960px;max-height:666px;margin-top:100px">
+        <div class="modal-content" style="width:960px;height:666px">
+            <div class="modal-header" style="border:none; border-bottom:1px solid rgb(233, 233, 233)">
+                <h3 class="modal-title">Tạo câu hỏi với AI</h3>
+            </div>
+            <div class="modal-body">
+                <div class="generate-eduquiz-result-screen">
+                    <div class="left-section">
+                       <form id="ask-ai" class="ai-input-block">
+                           <div class="ai-input-block__Title">Chủ đề</div>
+                           <div class="ai-input-block__InputSection">
+                                <div class="query-input__InputContainer">
+                                    <input id="topic-ask" class="query-input__Input" placeholder="Chủ đề của bạn là gì?" maxlength="60" />
+                                </div>
+                                <button id="btn-ask-ai" type="button" class="button-flat" style="background-color:#028282;line-height:40px;min-height:40px;height:40px;">
+                                    <div style="padding:3px 3px;border-radius:50%;margin-right:8px;display:flex;background-color:#fff">
+                                        <i style="color:#028282" class="fa fa-star" aria-hidden="true"></i>
+                                    </div>
+                                    <span>Tạo ngay</span>
+                                </button>
+                           </div>
+                       </form>
+                       <div class="generate-eduquiz__ContentContainer">
+                           <div class="generate-eduquiz__ResultContent">
+                                <div class="container-result__Scroll">
+                                   
+                                </div>
+                           </div>
+                       </div>
+                    </div>
+                    <div class="right-section">
+                        <div class="format-quiz__Wrapper">
+                            <div class="option-quiz">
+                                <img src="/src/img/logo-quiz.png" class="option-quiz__Image" />
+                            </div>
+                            <div class="quiz-option__Content">
+                                <p class="format-option__Title">Định dạng</p>
+                                <h5 class="format-option__Label">Câu đố</h5>
+                            </div>
+                        </div>
+                        <div class="generate-side-bar__Settings">
+                            <div class="form-group">
+                                <label>Ngôn ngữ</label>
+                                <select id="language-ask" class="form-control">
+                                    <option value="vi" selected>Tiếng Việt</option>
+                                    <option value="en">Tiếng Anh</option>
+                                    <option value="zh">Tiếng Trung</option>
+                                    <option value="ja">Tiếng Nhật</option>
+                                    <option value="fr">Tiếng Pháp</option>
+                                    <option value="ru">Tiếng Nga</option>
+                                </select>
+                            </div>
+                        </div>
+                        <footer class="generation-footer">
+                            <button id="add-allquestion" disabled class="generation-footer-btn">Thêm tất cả (0)</button>
+                            <button class="generation-footer-btn" data-dismiss="modal">Hủy</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Modal Title Quiz-->
 <div class="modal bd-example-modal-lg" id="modalQuizSetting" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -161,6 +230,7 @@
         </div>
     </div>
 </div>
+<!-- Modal Import Quiz-->
 <div class="modal" id="modalImportEduQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -212,6 +282,7 @@
         </div>
     </div>
 </div>
+<!-- Modal Loading Import Success-->
 <div class="modal" id="modalInfoSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" style="width:415px;height:430px">
@@ -248,4 +319,5 @@
     var quizId = viewData.quizId;
     var userId = viewData.userId;
     var userSubscriptionType = viewData.subscriptionType;
+
 </script>

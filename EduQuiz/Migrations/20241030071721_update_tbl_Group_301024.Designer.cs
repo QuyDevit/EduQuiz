@@ -4,6 +4,7 @@ using EduQuiz.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduQuiz.Migrations
 {
     [DbContext(typeof(EduQuizDBContext))]
-    partial class EduQuizDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241030071721_update_tbl_Group_301024")]
+    partial class update_tbl_Group_301024
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
