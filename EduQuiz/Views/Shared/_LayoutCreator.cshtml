@@ -1281,14 +1281,14 @@
             if (type === 'true_false') {
                 // Thêm đáp án 'True'
                 newQuestion.Choices.push({
-                    Answer: 'True',
+                    Answer: 'Đúng',
                     IsCorrect: false,
                     DisplayOrder: 0
                 });
 
                 // Thêm đáp án 'False'
                 newQuestion.Choices.push({
-                    Answer: 'False',
+                    Answer: 'Sai',
                     IsCorrect: false,
                     DisplayOrder: 1
                 });
@@ -1465,8 +1465,8 @@
                 const falseChoice = dataquestion ? dataquestion.Choices.find(c => c.DisplayOrder === 1) : null;
 
                 // Render predefined 'Đúng' and 'Sai' answers
-                const trueCard = createAnswerCard(answerOption[0], "True", true, true, 0);
-                const falseCard = createAnswerCard(answerOption[1],"False", true, true, 1);
+                const trueCard = createAnswerCard(answerOption[0], "Đúng", true, true, 0);
+                const falseCard = createAnswerCard(answerOption[1],"Sai", true, true, 1);
 
                 if (trueChoice && trueChoice.IsCorrect) {
                     trueCard.find('.iconCheck_Answer').append('<img src="/src/img/check-answer.svg" />').addClass('choose-answer');
@@ -2237,6 +2237,7 @@
                     eduquizdata.Questions[slideFocus - 1].ImageEffect = "0";
                     $('.styles__LayoutsImage .style__LayoutImage:first-child .style__StyledImageEffectButton').click();
                     $("#removeImg").removeClass("d-none");
+                    autoSaveEduQuiz();
                 }
             } catch (error) {
                 console.error("Upload failed:", error);
@@ -2281,7 +2282,6 @@
                 //     console.error('Error:', error.responseText);
                 // }
                 await uploadImage(file);
-                autoSaveEduQuiz();
             }
         });
 

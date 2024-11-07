@@ -253,7 +253,7 @@
         })
     })
     function RedirectPlay(value) {
-        location.href = `/playmode?quizId=${value}`;
+        window.open(`/playmode?quizId=${value}`, '_blank');
     }
     $(".styles__Group-Quesion-btn").click(function () {
         let id = $(this).attr("data-question");

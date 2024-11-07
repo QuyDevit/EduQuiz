@@ -12,7 +12,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EduQuiz.Controllers
 {
-    [CustomAuthorize]
+    [CustomAuthorize("User")]
     public class LibraryController : Controller
     {
         private readonly EduQuizDBContext _context;

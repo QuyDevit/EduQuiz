@@ -14,7 +14,7 @@ using BcryptNet = BCrypt.Net.BCrypt;
 
 namespace EduQuiz.Controllers
 {
-    [CustomAuthorize]
+    [CustomAuthorize("User")]
     public class HomeDashboardController : Controller
     {
         private readonly EduQuizDBContext _context;
@@ -101,7 +101,7 @@ namespace EduQuiz.Controllers
 
             var userFavorites = JsonConvert.DeserializeObject<List<InterestUser>>(user.Favorite)?.Select(f => f.id).ToList();
             var favoriteEduQuizQuery = _context.EduQuizs
-                .Where(n => userFavorites.Contains(n.TopicId ?? 1) && n.Visibility && n.Type == 1 && n.Status) // Chỉ lấy các EduQuiz có TopicId trong danh sách yêu thích
+                .Where(n => userFavorites.Contains(n.TopicId ?? 1) && n.Visibility && n.Type == 1 && n.Status && n.UserId != 8) // Chỉ lấy các EduQuiz có TopicId trong danh sách yêu thích
                 .Include(n => n.User)
                 .Select(n => new HomeEduQuizView
                 {
@@ -123,7 +123,7 @@ namespace EduQuiz.Controllers
             {
                 // Nếu user chưa có sở thích, lấy top 5 EduQuiz được chơi nhiều nhất
                 listEduQuizHot = await _context.EduQuizs
-                    .Where(n=>n.Visibility)
+                    .Where(n=>n.Visibility && n.Type == 1 && n.Status && n.UserId != 8)
                     .Include(n => n.User)
                     .Select(n => new HomeEduQuizView
                     {
@@ -149,7 +149,7 @@ namespace EduQuiz.Controllers
                 {
                     var topEduQuizHot = await _context.EduQuizs
                         .Include(n => n.User)
-                        .Where(n => !userFavorites.Contains(n.TopicId ?? 1) && n.Visibility) 
+                        .Where(n => !userFavorites.Contains(n.TopicId ?? 1) && n.Visibility && n.Status && n.UserId != 8) 
                         .Select(n => new HomeEduQuizView
                         {
                             Id = n.Id,

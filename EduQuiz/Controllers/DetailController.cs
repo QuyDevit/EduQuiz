@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace EduQuiz.Controllers
 {
-    [CustomAuthorize]
+    [CustomAuthorize("User")]
     public class DetailController : Controller
     {
         private readonly EduQuizDBContext _context;

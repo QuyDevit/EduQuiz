@@ -3,6 +3,7 @@
     Layout = "_LayoutUser";
     ViewBag.Title = "Khám phá";
 }
+@model EduQuiz.Models.DiscoverViewModel
 <link href="~/src/css/discover.css" rel="stylesheet" />
 <div class="content" style="min-height:auto;background: linear-gradient(180deg, rgba(199, 222, 235, 0) 0%, #6ba0b9 100%);">
     <div class="layout-index flex-column">
@@ -77,184 +78,59 @@
                 <div class="col-md-12">
                     <div id="accesspassCarousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <div class="row" style="margin:0">
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
+                            @{
+                                int itemsPerPage = 6; // Số mục trên mỗi trang
+                                int totalItems = Model.ListCollection.Count;
+                                int totalPages = (int)Math.Ceiling((double)totalItems / itemsPerPage);
+                                for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
+                                {
+                                    var items = Model.ListCollection.Skip(pageIndex * itemsPerPage).Take(itemsPerPage).ToList();
+                                    <div class="carousel-item @(pageIndex == 0 ? "active" : "")">
+                                        <div class="row" style="margin:0">
+                                            @foreach(var item in items)
+                                            {
+                                                <div class="col-md-2 channel-item">
+                                                    <a href="@Url.Action("ProfilePage","Profile",new{id = "672891ca-ff80-8001-b068-1ca3c6565285"})" class="card__Content align-items-start">
+                                                        <div class="d-flex align-items-center ml-2">
+                                                            <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
+                                                                <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
+                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
+                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
+                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
+                                                            </svg>
+                                                            <h4 class="label-top">Bộ sưu tập</h4>
+                                                            <div class="styles_eduquiz-price" style="padding: 2px 8px;border-radius: 20px;background-color: #947100;font-size: 11px;margin-left: 8px;">Eduquiz+</div>
+                                                        </div>
+
+                                                        <div class="styles_CenterWithLandscapeImage">
+                                                            <img class="eduquiz-collection-img" src="@item.ImgCover">
+                                                            <div class="styles_BottomTitle">
+                                                                <span class="title-collection">@item.Topic</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card__Creator">
+                                                            <img src="@item.Avatar" style="width:32px;height:32px;border-radius:50%" />
+                                                            <div class="d-flex flex-column">
+                                                                <span>@item.SumActive hoạt động</span>
+                                                                <div class="d-flex">
+                                                                    <span>@item.UserName</span>
+                                                                    <span class="card-Icon">
+                                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
+                                                                            <title>Icon</title>
+                                                                            <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
+                                                                        </svg>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
                                                 </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
+                                            }
+
+                                        </div>
                                     </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                                }
+                            }
                         </div>
                         <a class="carousel-control-prev" href="#accesspassCarousel" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -268,194 +144,60 @@
                 </div>
             </div>
             <div class="row my-3">
-                <h2 style="font-size:16px;font-weight:bold;margin:0 0 10px 15px;color:#000">Các EduQuiz cao cấp bán chạy nhất từ ​​những người sáng tạo đã được xác minh của chúng tôi.</h2>
+                <h2 style="font-size:16px;font-weight:bold;margin:0 0 10px 15px;color:#000">Các EduQuiz được đề nghị hay nhất từ ​​những người sáng tạo đã được xác minh của chúng tôi.</h2>
                 <div class="col-md-12">
-                    <div id="accesspassCarousel" class="carousel slide" data-ride="carousel">
+                    <div id="eduquiz-Carousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <div class="row" style="margin:0">
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
+                            @{
+                                int totalItemsQuizRecommned = Model.ListEduQuizRecommend.Count;
+                                int totalPagesQuizRecommned = (int)Math.Ceiling((double)totalItemsQuizRecommned / itemsPerPage);
+                                for (int pageIndex = 0; pageIndex < totalPagesQuizRecommned; pageIndex++)
+                                {
+                                    var items = Model.ListEduQuizRecommend.Skip(pageIndex * itemsPerPage).Take(itemsPerPage).ToList();
+                                    <div class="carousel-item @(pageIndex == 0 ? "active" : "")">
+                                        <div class="row" style="margin:0">
+                                            @foreach(var item in items){
+                                                <div class="col-md-2 channel-item">
+                                                    <a href="@Url.Action("Index","Detail",new{id = item.Uuid})" class="card__Content align-items-start">
+                                                        <div class="d-flex align-items-center ml-2">
+                                                            <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
+                                                                <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
+                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
+                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
+                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
+                                                            </svg>
+                                                            <h4 class="label-top">EduQuiz</h4>
+                                                        </div>
+                                                        <div class="styles_CenterWithLandscapeImage">
+                                                            <img class="eduquiz-item-img" src="@item.Image">
+                                                            <div class="styles_BottomRightLabel">
+                                                                <span>@item.SumQuestion câu hỏi</span>
+                                                            </div>
+                                                        </div>
+                                                        <p class="card-title">@item.Title</p>
+                                                        <div class="card__Creator">
+                                                            <span>@item.UserName</span>
+                                                            <span class="card-Icon">
+                                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
+                                                                    <title>Icon</title>
+                                                                    <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
+                                                                </svg>
+                                                            </span>
+                                                        </div>
+                                                    </a>
                                                 </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
+                                            }
+                                        </div>
                                     </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2 channel-item">
-                                        <a href="#" class="card__Content align-items-start">
-                                            <div class="d-flex align-items-center ml-2">
-                                                <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                    <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                                </svg>
-                                                <h4 class="label-top">EduQuiz</h4>
-                                            </div>
-                                            <div class="styles_CenterWithLandscapeImage">
-                                                <img class="" src="~/src/img/school6.png">
-                                                <div class="styles_BottomRightLabel">
-                                                    <span>10 câu hỏi</span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                            <div class="card__Creator">
-                                                <span>pingvocuc333</span>
-                                                <span class="card-Icon">
-                                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
-                                                        <title>Icon</title>
-                                                        <path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path>
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                                }
+                            }
+                            
                         </div>
-                        <a class="carousel-control-prev" href="#accesspassCarousel" role="button" data-slide="prev">
+                        <a class="carousel-control-prev" href="#eduquiz-Carousel" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
                         </a>
-                        <a class="carousel-control-next" href="#accesspassCarousel" role="button" data-slide="next">
+                        <a class="carousel-control-next" href="#eduquiz-Carousel" role="button" data-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
                         </a>
@@ -473,206 +215,37 @@
             <div class="col-md-12">
                 <div id="channelCarousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="row" style="margin:0">
-                                <div class="col-md-2 channel-item">
-                                    <a href="@Url.Action("ProfilePage","Profile",new {id = Guid.NewGuid()})" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
+                        @{
+                            int totalItemsChannel = Model.ListProfile.Count;
+                            int totalPagesChannel = (int)Math.Ceiling((double)totalItemsChannel / itemsPerPage);
+                            @for (int pageIndex = 0; pageIndex < totalPagesChannel; pageIndex++)
+                            {
+                                var items = Model.ListProfile.Skip(pageIndex * itemsPerPage).Take(itemsPerPage).ToList();
+                                <div class="carousel-item @(pageIndex == 0 ? "active" : "")">
+                                    <div class="row" style="margin:0">
+                                        @foreach(var item in items)
+                                        {
+                                            <div class="col-md-2 channel-item">
+                                                <a href="@Url.Action("ProfilePage","Profile",new {id = item.Uuid})" class="card__Content">
+                                                    <img class="card__BannerImg" src="@item.ImgCover">
+                                                    <div class="card__ProfileWrapper">
+                                                        <img class="card__profileImg" src="@item.Avatar" />
+                                                    </div>
+                                                    <p class="card-title">@item.TitlePage</p>
+                                                    <div class="card_Data">@item.SumEduQuiz EduQuiz</div>
+                                                    <div class="card__Creator">
+                                                        <span>@item.UserName</span>
+                                                        <span class="card-Icon">
+                                                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="row" style="margin:0">
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-2 channel-item">
-                                    <a href="#" class="card__Content">
-                                        <img class="card__BannerImg" src="~/src/img/school6.png">
-                                        <div class="card__ProfileWrapper">
-                                            <img class="card__profileImg" src="/src/img/defaultimguser.png" />
-                                        </div>
-                                        <p class="card-title">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card_Data">10 EduQuiz</div>
-                                        <div class="card__Creator">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                            }
+                        }
                     </div>
 
                     <a class="carousel-control-prev" href="#channelCarousel" role="button" data-slide="prev">
@@ -691,118 +264,49 @@
             <div class="col-md-12">
                 <div id="recipeCarousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="row" style="margin:0">
-                                <div class="col-md-3 channel-item">
-                                    <a href="#" class="card__Content align-items-start">
-                                        <div class="d-flex align-items-center ml-2">
-                                            <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                            </svg>
-                                            <h4 class="label-top">EduQuiz</h4>
-                                        </div>
-                                        <div class="styles_CenterWithLandscapeImage">
-                                            <img class="" src="~/src/img/school6.png">
-                                            <div class="styles_BottomRightLabel">
-                                                <span>10 câu hỏi</span>
-                                            </div>
-                                        </div>
+                        @{
+                            int totalItemsQuizHot= Model.ListEduQuizHot.Count;
+                            int totalPagesQuizHot = (int)Math.Ceiling((double)totalItemsQuizHot / itemsPerPage);
+                            for (int pageIndex = 0; pageIndex < totalPagesQuizHot; pageIndex++)
+                            {
+                                var items = Model.ListEduQuizHot.Skip(pageIndex * itemsPerPage).Take(itemsPerPage).ToList();
+                                <div class="carousel-item @(pageIndex==0?"active":"")">
+                                    <div class="row" style="margin:0">
+                                        @foreach(var item in items)
+                                        {
+                                            <div class="col-md-2 channel-item">
+                                                <a href="@Url.Action("Index","Detail",new{id = item.Uuid})" class="card__Content align-items-start">
+                                                    <div class="d-flex align-items-center ml-2">
+                                                        <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
+                                                            <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
+                                                          z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
+                                                          C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
+                                                          V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
+                                                        </svg>
+                                                        <h4 class="label-top">EduQuiz</h4>
+                                                    </div>
+                                                    <div class="styles_CenterWithLandscapeImage">
+                                                        <img class="eduquiz-item-img" src="@item.Image">
+                                                        <div class="styles_BottomRightLabel">
+                                                            <span>@item.SumQuestion câu hỏi</span>
+                                                        </div>
+                                                    </div>
 
-                                        <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card__Creator justify-content-start ml-2">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-3 channel-item">
-                                    <a href="#" class="card__Content align-items-start">
-                                        <div class="d-flex align-items-center ml-2">
-                                            <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                            </svg>
-                                            <h4 class="label-top">EduQuiz</h4>
-                                        </div>
-
-                                        <div class="styles_CenterWithLandscapeImage">
-                                            <img class="" src="~/src/img/school6.png">
-                                            <div class="styles_BottomRightLabel">
-                                                <span>10 câu hỏi</span>
+                                                    <p class="card-title">@item.Title</p>
+                                                    <div class="card__Creator justify-content-start ml-2">
+                                                        <span>@item.UserName</span>
+                                                        <span class="card-Icon">
+                                                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
+                                                        </span>
+                                                    </div>
+                                                </a>
                                             </div>
-                                        </div>
-                                        <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card__Creator justify-content-start ml-2">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
+                                        }
+                                    </div>
                                 </div>
-                                <div class="col-md-3 channel-item">
-                                    <a href="#" class="card__Content align-items-start">
-                                        <div class="d-flex align-items-center ml-2">
-                                            <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                            </svg>
-                                            <h4 class="label-top">EduQuiz</h4>
-                                        </div>
-
-                                        <div class="styles_CenterWithLandscapeImage">
-                                            <img class="" src="~/src/img/school6.png">
-                                            <div class="styles_BottomRightLabel">
-                                                <span>10 câu hỏi</span>
-                                            </div>
-                                        </div>
-                                        <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card__Creator justify-content-start ml-2">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-3 channel-item">
-                                    <a href="#" class="card__Content align-items-start">
-                                        <div class="d-flex align-items-center ml-2">
-                                            <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
-                                                <path fill="currentColor" d="M7.5,6.5h-2l1-1.6L7.5,6.5z M6.6,11.1c0.4,0,0.8-0.4,0.8-0.8S7,9.5,6.6,9.5s-0.8,0.4-0.8,0.8S6.1,11.1,6.6,11.1
-                                                  z M11.8,9.5h-1.5V11h1.5V9.5z M10,5.8l1,1l1-1l-1-1L10,5.8z M13.8,4.5v7c0,0.8-0.7,1.5-1.5,1.5h-7c-0.8,0-1.5-0.7-1.5-1.5v-7
-                                                  C3.8,3.7,4.4,3,5.2,3h7C13.1,3,13.8,3.7,13.8,4.5z M8.2,8.5H4.8v3C4.8,11.8,5,12,5.2,12h3V8.5z M8.2,4h-3C5,4,4.8,4.2,4.8,4.5v3h3.5
-                                                  V4z M12.8,8.5H9.2V12h3c0.3,0,0.5-0.2,0.5-0.5V8.5z M12.8,4.5c0-0.3-0.2-0.5-0.5-0.5h-3v3.5h3.5V4.5z"></path>
-                                            </svg>
-                                            <h4 class="label-top">EduQuiz</h4>
-                                        </div>
-
-                                        <div class="styles_CenterWithLandscapeImage">
-                                            <img class="" src="~/src/img/school6.png">
-                                            <div class="styles_BottomRightLabel">
-                                                <span>10 câu hỏi</span>
-                                            </div>
-                                        </div>
-                                        <p class="card-title" style="margin:0 0 0 10px">Tiếng Anh cho mọi cấp độ</p>
-                                        <div class="card__Creator justify-content-start ml-2">
-                                            <span>pingvocuc333</span>
-                                            <span class="card-Icon">
-                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M20.2871871,-5.82867088e-15 L22.2944792,5.09764226 L27.7128129,4.28718708 L26.9023577,9.70552082 L32,11.7128129 L28.5889584,16 L32,20.2871871 L26.9023577,22.2944792 L27.7128129,27.7128129 L22.2944792,26.9023577 L20.2871871,32 L16,28.5889584 L11.7128129,32 L9.70552082,26.9023577 L4.28718708,27.7128129 L5.09764226,22.2944792 L-1.90403249e-14,20.2871871 L3.41104165,16 L-1.90403249e-14,11.7128129 L5.09764226,9.70552082 L4.28718708,4.28718708 L9.70552082,5.09764226 L11.7128129,-5.82867088e-15 L16,3.41104165 L20.2871871,-5.82867088e-15 Z M22.2625692,11.3520913 C21.6798272,10.8340984 20.8156488,10.8347259 20.2352482,11.3207259 L20.0702065,11.4810538 L14.1882667,18.0933284 L11.8672071,15.7737353 L11.6930355,15.6233756 C11.0850975,15.1722966 10.2223735,15.2224164 9.67105467,15.7737353 C9.11973581,16.3250542 9.06961591,17.1877781 9.52069498,17.7957161 L9.67105467,17.9698877 L13.1583007,21.4571338 L13.3241297,21.6013036 C13.8957566,22.0316344 14.6929553,22.0126789 15.2433599,21.5583183 L15.4170396,21.3907577 L22.3915317,13.544454 L22.5314042,13.3617535 C22.9460056,12.7283763 22.8453113,11.8700843 22.2625692,11.3520913 Z" style="fill: #fff;"></path></svg>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                            }
+                        }
+                       
                     </div>
 
                     <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-slide="prev">

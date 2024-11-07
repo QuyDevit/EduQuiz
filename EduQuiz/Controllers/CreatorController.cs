@@ -14,7 +14,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EduQuiz.Controllers
 {
-    [CustomAuthorize]
+    [CustomAuthorize("User")]
     public class CreatorController : Controller
     {
         private readonly EduQuizDBContext _context;
@@ -196,7 +196,7 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var list = await _context.Musics.ToListAsync();
+                var list = await _context.Musics.Where(n=>n.Status).ToListAsync();
                 return Json(new { data = list, result = "PASS" });
             }
             catch (Exception ) {
@@ -207,7 +207,7 @@ namespace EduQuiz.Controllers
         {
             try
             {
-                var list = await _context.Themes.ToListAsync();
+                var list = await _context.Themes.Where(n => n.Status).ToListAsync();
                 return Json(new { data = list, result = "PASS" });
             }
             catch (Exception)

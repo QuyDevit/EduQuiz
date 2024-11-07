@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using OfficeOpenXml;
+using EduQuiz.Areas.Admin.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,17 +37,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
-
+builder.Services.AddScoped<UsernameService>(); // Đăng ký UsernameService
 // Đăng ký EduQuizDBContext
 builder.Services.AddDbContext<EduQuizDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EduQuizDBConnection")));
-builder.Services.AddScoped<UsernameService>(); // Đăng ký UsernameService
+
 builder.Services.AddScoped<GeminiAiService>(); // Đăng ký GeminiAiService
 builder.Services.AddScoped<CookieAuth>();// Đăng ký CookieAuth
 // Đọc cấu hình từ appsettings.json và thêm vào container DI
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 // Đăng ký EmailService
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
@@ -83,6 +85,15 @@ app.UseStatusCodePages(async context =>
 });
 app.MapHub<GameHub>("/gameHub");
 app.MapHub<SoloGameHub>("/sologameHub");
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Auth}/{action=Index}/{id?}"
+    );
+});
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

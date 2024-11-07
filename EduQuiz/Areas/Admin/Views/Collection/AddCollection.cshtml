@@ -1,0 +1,398 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+    ViewBag.Title = "Thêm - Chỉnh sửa bộ sưu tập";
+    @using Newtonsoft.Json
+    var flag = Model != null;
+    List<int> arrquiz = new List<int>();
+    if (flag)
+    {
+        arrquiz = JsonConvert.DeserializeObject<List<int>>(Model.Collection.ListEduQuizId);
+    }
+}
+<link href="~/src/css/group.css" rel="stylesheet" />
+<link href="~/src/css/profile.css" rel="stylesheet" />
+@model EduQuiz.Areas.Admin.Models.CollectionEdit
+<style>
+    .featured-eduquizs-field{
+        grid-template-columns: repeat(4, minmax(0px, 1fr));
+    }
+
+    .selected{
+        color:white !important
+    }
+</style>
+<div class="container-fluid py-2">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="card mt-4">
+                <div class="card-header pb-0 p-3">
+                    <div class="row">
+                        <div class="col-6 d-flex align-items-center">
+                            <h6 class="mb-0">Thêm bộ sưu tập</h6>
+                        </div>
+                        <div class="col-6 text-end">
+                            <a class="btn bg-gradient-dark mb-0" href="javascript:;" onclick="@(!flag ? "AddCollection()":$"EditCollection({Model.Collection.Id})")"><i class="material-symbols-rounded text-sm">add</i>&nbsp;&nbsp;Lưu</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-md-6 mb-md-0 mb-4">
+                            <label class="form-label">Tên bộ sưu tập</label>           
+                            <input id="input-name" type="text" class="form-control px-3" value="@(flag ? Model.Collection.Topic :"")">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center my-3">
+                                <label id="label-file" class="form-label" style="margin-bottom:0">Chọn ảnh nền</label>
+                                <button class="btn bg-gradient bg-gray-200 mx-md-4 my-1" onclick="openfile()">Chọn file</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-4 mb-md-0 mb-4">
+                            <label class="form-label">Ảnh xem trước</label>
+                        </div>
+                        <div class="col-md-5 d-flex justify-content-center py-2" style="border-style: dashed;border-width: 3px;border-color:#a7a7a7">
+                            <img src="@(flag ? Model.Collection.ImageCover :"")" id="img-preview" style="width:190px;height:237px" />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="featured-eduquizs-field">
+                            @if (flag)
+                            {
+                                foreach (var item in Model.ListQuiz)
+                                {
+                                    <div class="eduquiz-item">
+                                        <button class="icon__button" onclick="removeQuiz(@item.Id,this)">
+                                            <span>
+                                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
+                                            </span>
+                                        </button>
+                                        <div class="style__Card">
+                                            <div class="styles__Image" style="background: center center / cover, url(@item.Image) center center / cover no-repeat rgb(204, 204, 204);"></div>
+                                            <div class="style__Card-Title">
+                                                <div class="styles__Title">@item.Name</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <button class="dashed-title" id="addeduquiz">
+                                <span class="dashed-title__Icon">
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7 15 15 15 15 7 17 7 17 15 25 15 25 17 17 17 17 25 15 25 15 17 7 17z" style="fill: #6e6e6e;"></path></svg>
+                                </span>
+                                Thêm bộ câu hỏi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalEduQuizCollection" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:640px" role="document">
+        <div class="modal-content" style="width: 640px; height: 720px;">
+            <div class="modal-header" style="border:none">
+                <h3 class="modal-title">Chọn EduQuiz</h3>
+            </div>
+            <div class="modal-body">
+                <input style="padding:10px 16px;color: #000;" id="searcheduquiz" type="text" class="form-control mb-3" placeholder="Tìm kiếm EduQuiz" value="">
+                <div class="cards-with-search__CardsListWrapper">
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button type="button" class="btn bg-gradient-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button id="btn-submit" type="button" class="btn bg-gradient-success">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="elfinder-modal" title="Quản lý tập tin" style="display:none;">
+    <div id="elfinder"></div>
+</div>
+<script>
+    var listeduquizbyuser = [];
+    var listeduquizid = [];
+    if (`@flag` == 'True') {
+        listeduquizid = @Html.Raw(JsonConvert.SerializeObject(arrquiz));
+    }
+    function openElFinder(flag) {
+        var myCommands = elFinder.prototype._options.commands;
+        var disabled = ['callback', 'chmod', 'editor', 'netmount', 'ping', 'help'];
+        elFinder.prototype.i18.en.messages.TextArea = "Edit";
+        elFinder.prototype.i18.en.messages.errNewNameSelection = 'Unable to create new file with name "$1"';
+
+        $.each(disabled, function (i, cmd) {
+            (idx = $.inArray(cmd, myCommands)) !== -1 && myCommands.splice(idx, 1);
+        });
+
+        var options = {
+            baseUrl: '/lib/elfinder/',
+            url: '/el-finder-file-system/connector',
+            rememberLastDir: false,
+            commands: myCommands,
+            uiOptions: {
+                toolbar: [
+                    ['back', 'forward'],
+                    ['reload'],
+                    ['home', 'up'],
+                    ['mkdir', 'mkfile', 'upload'],
+                    ['open', 'download'],
+                    ['undo', 'redo'],
+                    ['info'],
+                    ['quicklook'],
+                    ['copy', 'cut', 'paste'],
+                    ['rm'],
+                    ['duplicate', 'rename', 'edit'],
+                    ['selectall', 'selectnone', 'selectinvert'],
+                    ['view', 'sort'],
+                    ['search']
+                ]
+            },
+            lang: 'vi',
+            getFileCallback: function (file) {
+                var fullUrl = file.url.replace(/^.*\/\/[^\/]+/, '');
+                $("#elfinder-modal").dialog("close");
+                $("#img-preview").attr("src", fullUrl);
+                
+            }
+        };
+        $('#elfinder').elfinder(options).elfinder('instance');
+    }
+    function openfile(flag) {
+        
+        $("#elfinder-modal").dialog({
+            modal: true,
+            width: 900,
+            height: 500,
+            open: function () {
+                openElFinder(flag);
+            }
+        });
+    }
+
+    $('.social-platform-links-field').click(function () {
+        var button = $(this);
+        var linkItem = button.siblings('.social-platform-link-item');
+
+        linkItem.removeClass('d-none');
+        button.addClass('d-none');
+    });
+    $("#searcheduquiz").on("input", function () {
+        var searchValue = $(this).val().toLowerCase();
+        $(".cards-with-search__CardsListWrapper .styles__ContainerCard").filter(function () {
+            $(this).toggle($(this).find(".title__Wrapper").text().toLowerCase().indexOf(searchValue) > -1);
+        });
+    });
+    function AddCollection() {
+        const name = $("#input-name").val();
+        const imgcover = $("#img-preview").attr("src");
+        if (name == "" || imgcover == "" || listeduquizid.length < 1){
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: "Vui lòng nhập đầy đủ thông tin.",
+            });
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddDataCollection", "Collection")",
+            data: {
+                name: name,
+                img: imgcover,
+                listquizid: listeduquizid
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        window.location.href = "/admin/manage/collection";
+                    }
+                }
+            },
+            error: function () {
+
+            }
+        });
+    }
+    function EditCollection(id)
+    {
+        const name = $("#input-name").val();
+        const imgcover = $("#img-preview").attr("src");
+        if (name == "" || imgcover == "" || listeduquizid.length < 1){
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: "Vui lòng nhập đầy đủ thông tin.",
+            });
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UpdateDataCollection", "Collection")",
+            data: {
+                id : id,
+                name: name,
+                img: imgcover,
+                listquizid: listeduquizid
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        window.location.href = "/admin/manage/collection";
+                    }
+                }
+            },
+            error: function () {
+
+            }
+        });
+    }
+    function removeQuiz(id, button) {
+        listeduquizid = listeduquizid.filter(function (item) {
+            return item !== id;
+        });
+        $(button).closest(".eduquiz-item").remove();
+        
+        console.log(listeduquizid)
+    }
+    $(document).on("click", "#addeduquiz", function () {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetEduQuiz", "Collection")",
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        listeduquizbyuser = response.data;
+                        $(".cards-with-search__CardsListWrapper").empty();
+                        response.data.forEach(item => {
+                            $(".cards-with-search__CardsListWrapper").append(`
+                                    <div class="styles__ContainerCard" style="width:100%" data-id="${item.id}">
+                                        <div class="style__ImgWrapper">
+                                            <img src="${item.image}" />
+                                            <div class="extra-info">
+                                                <div class="extra-info__Label">${item.countQuestion} câu hỏi</div>
+                                            </div>
+                                        </div>
+                                        <div class="styles__ContentContainer">
+                                            <div class="styles__LeftContentContainer">
+                                                <div class="styles__TopContent">
+                                                    <div class="styles__MainInfo">
+                                                        <div class="title__Wrapper">${item.title}</div>
+                                                        <p class="description">${item.description}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="styles__BottomContent">
+                                                    <div class="styles__BottomInnerWrapper">
+                                                        <div class="creator">
+                                                            <img src="${item.avatart}" />
+                                                            <div>${item.username}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="styles__ActionsWrapper">
+                                                    <button class="btn ${listeduquizid.includes(item.id) ? "selected" : ""}" onclick="SelectEduQuiz(${item.id}, this)">
+                                                        ${listeduquizid.includes(item.id) ? "Đã chọn" : "Chọn"}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
+                        });
+                        $("#modalEduQuizCollection").modal("show");
+                    }
+                }
+            }
+        })
+    })
+    $("#btn-submit").click(function () {
+        $(".featured-eduquizs-field").empty();
+        listeduquizid.forEach(function (id) {
+            var quiz = listeduquizbyuser.find(q => q.id === id);
+            if (quiz) {
+                $(".featured-eduquizs-field").append(`
+                        <div class="eduquiz-item">
+                            <button class="icon__button" onclick="removeQuiz(${quiz.id}, this)">
+                                <span>
+                                    <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M24.714 8.414L23.3 7 16.007 14.293 8.714 7 7.3 8.414 14.593 15.707 7.3 23 8.714 24.414 16.007 17.122 23.3 24.414 24.714 23 17.421 15.707z" style="fill: rgb(0, 0, 0);"></path></svg>
+                                </span>
+                            </button>
+                            <div class="style__Card">
+                                <div class="styles__Image" style="background: center center / cover, url(${quiz.image}) center center / cover no-repeat rgb(204, 204, 204);"></div>
+                                <div class="style__Card-Title">
+                                    <div class="styles__Title">${quiz.title}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+            }
+        });
+        $(".featured-eduquizs-field").append(`
+                    <button class="dashed-title" id="addeduquiz">
+                        <span class="dashed-title__Icon">
+                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M7 15 15 15 15 7 17 7 17 15 25 15 25 17 17 17 17 25 15 25 15 17 7 17z" style="fill: #6e6e6e;"></path></svg>
+                        </span>
+                        Thêm EduQuiz
+                    </button>
+                `);
+        $("#modalEduQuizCollection").modal("hide");
+    })
+
+    function SelectEduQuiz(id, button) {
+        var index = listeduquizid.indexOf(id);
+        if (index === -1) {
+            listeduquizid.push(id);
+            $(button).text("Đã chọn").addClass("selected");
+        } else {
+            listeduquizid.splice(index, 1);
+            $(button).text("Chọn").removeClass("selected");
+        }
+
+        console.log(listeduquizid);
+    }
+
+    // Khi nhấn nút "X"
+    $('.icon-button.remove').click(function () {
+        var button = $(this);
+        var linkItem = button.closest('.social-platform-link-item');
+        var addButton = linkItem.siblings('.social-platform-links-field');
+
+        linkItem.addClass('d-none');
+        addButton.removeClass('d-none');
+    });
+</script>

@@ -16,8 +16,9 @@ namespace EduQuiz.Security
             _config = config;
             _context = context;
         }
-        public bool ValidateToken(string token)
+        public bool ValidateToken(string token, out string userRoleId)
         {
+            userRoleId = null;
             try
             {
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -37,6 +38,7 @@ namespace EduQuiz.Security
                 var roleClaim = principal.Claims.FirstOrDefault(c => c.Type == "RoleId");
                 if (roleClaim != null)
                 {
+                    userRoleId = roleClaim.Value;
                     return true;
                 }
 

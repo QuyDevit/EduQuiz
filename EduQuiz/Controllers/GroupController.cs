@@ -13,10 +13,9 @@ using EduQuiz.Services;
 using Azure.Core;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualBasic.FileIO;
-
 namespace EduQuiz.Controllers
 {
-    [CustomAuthorize]
+    [CustomAuthorize("User")]
     public class GroupController : Controller
     {
         private readonly EduQuizDBContext _context; 
@@ -579,7 +578,7 @@ namespace EduQuiz.Controllers
 
             foreach (var eduQuizId in listeduquizid)
             {
-                var eduQuizTitle = eduquizzes.GetValueOrDefault(eduQuizId);
+                eduquizzes.TryGetValue(eduQuizId, out var eduQuizTitle);
                 if (eduQuizTitle == null) continue; 
 
                 var alreadyShared = listshare.Any(g => g.EduQuizId == eduQuizId);

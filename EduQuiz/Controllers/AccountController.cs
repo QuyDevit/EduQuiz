@@ -63,9 +63,8 @@ namespace EduQuiz.Controllers
         public IActionResult Login()
         {
             var actoken = HttpContext.Request.Cookies["acToken"];
-            if (!string.IsNullOrEmpty(actoken) && _cookieAuth.ValidateToken(actoken))
+            if (!string.IsNullOrEmpty(actoken))
             {
-                // Token is valid, redirect to the desired page
                 return RedirectToAction("Index", "HomeDashboard");
             }
             return View();
@@ -458,27 +457,27 @@ namespace EduQuiz.Controllers
         [HttpPost]
         public async Task<IActionResult> CheckUserName(string username)
         {
+            var get2userrandom = await GenerateUniqueUsernames(2);
             if (string.IsNullOrEmpty(username))
             {
-                var get2userrandom = GenerateUniqueUsernames(2);
                 return Json(new { status = false, data = get2userrandom });
             }
             if (username.Length < 6)
             {
-                return Json(new { status = false, message = "Tên tài khoản phải lớn hơn hoặc bằng 6 ký tự!" });
+                return Json(new { status = false, message = "Tên tài khoản phải lớn hơn hoặc bằng 6 ký tự!", data = get2userrandom });
             }
             bool isAvailable = await _usernameService.IsUsernameAvailable(username);
             if (!isAvailable)
             {
-                return Json(new { status = false, message = "Tên tài khoản đã tồn tại!" });
+                return Json(new { status = false, message = "Tên tài khoản đã tồn tại!" , data = get2userrandom });
             }
             HttpContext.Session.SetString("_USERNAME", username);
             return Json(new { status = true });
         }
         [HttpGet]
-        public IActionResult RandomUserName()
+        public async Task<IActionResult> RandomUserName()
         {
-            var username = GenerateUniqueUsernames(1);
+            var username = await GenerateUniqueUsernames(1);
             return Json(new { status = true ,data = username });
         }
 

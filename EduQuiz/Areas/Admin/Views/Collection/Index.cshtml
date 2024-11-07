@@ -1,0 +1,504 @@
+﻿
+@{
+    Layout = "_LayoutAdmin";
+    ViewBag.Title = "Quản lý bộ sưu tập";
+}
+@model EduQuiz.Areas.Admin.Models.CollectionViewModel
+
+<div class="container-fluid py-2">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex align-items-center justify-content-between">
+                        <h6 class="text-white text-capitalize ps-3">Bộ sưu tập</h6>
+                        <a href="@Url.Action("AddCollection","Collection")" class="btn btn-white border-radius-lg p-2 mx-sm-4 m-0" type="button">
+                            Thêm mới
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2 px-4">
+                    <div class="table-responsive p-0">
+                        <table id="table-collection" class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên bộ sưu tập</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Hình ảnh</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày tạo</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
+                                    <th class="text-secondary opacity-7"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(var collection in Model.Collections)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">@collection.Topic</h6>
+                                                    <p class="text-xs text-secondary mb-0">@collection.SumActivity Hoạt động</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <img src="@collection.ImageCover" class="avatar avatar-lg me-3 border-radius-lg" alt="user1">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs font-weight-bold">@collection.CreatedAt</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div>
+                                                    <div class="form-check form-switch ps-0 ms-auto my-auto">
+                                                        <input class="form-check-input mt-1 ms-auto" type="checkbox" @(collection.Status?"checked":"") />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <a href="@Url.Action("AddCollection","Collection",new{id = collection.Id})" class="btn m-0 p-2 bg-gradient-info"><i class="material-symbols-rounded opacity-10 text-white">edit</i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex align-items-center justify-content-between">
+                        <h6 class="text-white text-capitalize ps-3">Hình nền chủ đề</h6>
+                        <button class="btn btn-white border-radius-lg p-2 mx-sm-4 m-0" type="button" onclick="openModalTheme()">
+                            Thêm mới
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2 px-4">
+                    <div class="table-responsive p-0">
+                        <table id="table-theme" class="table align-items-center justify-content-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên chủ đề</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Loại</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ngày tạo</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Trạng thái</th>
+                                    <th class="text-secondary opacity-7"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(var theme in Model.Themes)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2">
+                                                <div>
+                                                    <img src="@theme.Source" class="avatar avatar-lg border-radius-lg" alt="spotify">
+                                                </div>
+                                                <div class="mx-3 my-auto">
+                                                    <h6 class="mb-0 text-sm">@theme.Name</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-sm @(theme.Type == "vip" ? "bg-gradient-success" :"bg-gradient-secondary") ">@theme.Type</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">@string.Format("{0:dd/MM/yyyy}", theme.CreatedAt)</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div>
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <div>
+                                                            <div class="form-check form-switch ps-0 ms-auto my-auto">
+                                                                <input class="form-check-input mt-1 ms-auto" type="checkbox" @(theme.Status ? "checked" : "") />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn m-0 p-2 bg-gradient-info" onclick="openModalEdit(@theme.Id,1)"><i class="material-symbols-rounded opacity-10 text-white">edit</i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex align-items-center justify-content-between">
+                        <h6 class="text-white text-capitalize ps-3">Nhạc sảnh</h6>
+                        <button class="btn btn-white border-radius-lg p-2 mx-sm-4 m-0" type="button" onclick="openModalMusic()">
+                            Thêm mới
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2 px-4">
+                    <div class="table-responsive p-0">
+                        <table id="table-music" class="table align-items-center justify-content-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Loại</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ngày tạo</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Trạng thái</th>
+                                    <th class="text-secondary opacity-7"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(var music in Model.Musics)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2">
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">@music.Name</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-sm @(music.Type == "vip" ? "bg-gradient-success" :"bg-gradient-secondary") ">@music.Type</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">@string.Format("{0:dd/MM/yyyy}", music.CreatedAt)</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div>
+                                                    <div class="form-check form-switch ps-0 ms-auto my-auto">
+                                                        <input class="form-check-input mt-1 ms-auto" type="checkbox" @(music.Status ? "checked" : "") />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn m-0 p-2 bg-gradient-info" onclick="openModalEdit(@music.Id,2)"><i class="material-symbols-rounded opacity-10 text-white">edit</i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="overflow:hidden;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border:none">
+                <h3 id="title" class="modal-title">Thêm mới Hình nền chủ đề</h3>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column my-3">
+                    <label id="label-name" class="form-label">Tên chủ đề</label>
+                    <input id="input-name" type="text" placeholder="Nhập tên" class="form-input-custom">
+                </div>
+                <div class="d-flex flex-column my-3">
+                    <label class="form-label">Chọn thể loại</label>
+                    <select id="input-option" class="form-select px-3">
+                        <option value="free">Miễn phí</option>
+                        <option value="vip">Trả phí</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center my-3">
+                    <label id="label-file" class="form-label">Chọn Hình nền</label>
+                    <button class="btn bg-gradient bg-gray-200 mx-md-4 my-1" onclick="openfile(1)">Chọn file</button>
+                </div>
+                <div class="d-flex align-items-center my-3">
+                    <label id="input-file" class="form-label text-primary">Chưa chọn file</label>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button type="button" class="btn bg-gradient-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button id="savedata" type="button" class="btn bg-gradient-success">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="overflow:hidden;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border:none">
+                <h3 id="title-edit" class="modal-title">Chỉnh sửa</h3>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column my-3">
+                    <label id="label-name-edit" class="form-label">Tên chủ đề</label>
+                    <input id="input-name-edit" type="text" placeholder="Nhập tên" class="form-input-custom">
+                </div>
+                <div class="d-flex flex-column my-3">
+                    <label class="form-label">Chọn thể loại</label>
+                    <select id="input-option-edit" class="form-select px-3">
+                        <option value="free">Miễn phí</option>
+                        <option value="vip">Trả phí</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center my-3">
+                    <label id="label-file-edit" class="form-label">Chọn Hình nền</label>
+                    <button class="btn bg-gradient bg-gray-200 mx-md-4 my-1" onclick="openfile(2)">Chọn file</button>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;justify-content:center">
+                <button type="button" class="btn bg-gradient-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button id="savedata-edit" type="button" class="btn bg-gradient-success">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="elfinder-modal" title="Quản lý tập tin" style="display:none;">
+    <div id="elfinder"></div>
+</div>
+<script type="text/javascript">
+    var fileselect = "";
+
+    function openElFinder(flag) {
+        var myCommands = elFinder.prototype._options.commands;
+        var disabled = ['callback', 'chmod', 'editor', 'netmount', 'ping', 'help'];
+        elFinder.prototype.i18.en.messages.TextArea = "Edit";
+        elFinder.prototype.i18.en.messages.errNewNameSelection = 'Unable to create new file with name "$1"';
+
+        $.each(disabled, function (i, cmd) {
+            (idx = $.inArray(cmd, myCommands)) !== -1 && myCommands.splice(idx, 1);
+        });
+
+        var options = {
+            baseUrl: '/lib/elfinder/',
+            url: '/el-finder-file-system/connector',
+            rememberLastDir: false,
+            commands: myCommands,
+            uiOptions: {
+                toolbar: [
+                    ['back', 'forward'],
+                    ['reload'],
+                    ['home', 'up'],
+                    ['mkdir', 'mkfile', 'upload'],
+                    ['open', 'download'],
+                    ['undo', 'redo'],
+                    ['info'],
+                    ['quicklook'],
+                    ['copy', 'cut', 'paste'],
+                    ['rm'],
+                    ['duplicate', 'rename', 'edit'],
+                    ['selectall', 'selectnone', 'selectinvert'],
+                    ['view', 'sort'],
+                    ['search']
+                ]
+            },
+            lang: 'vi', 
+            getFileCallback: function (file) { 
+                var fullUrl = file.url.replace(/^.*\/\/[^\/]+/, ''); 
+               
+                $("#elfinder-modal").dialog("close");
+                if(flag == 1){
+                   $("#modalAdd").modal("show");
+                    fileselect = fullUrl;
+                    $("#input-file").text(fullUrl);
+                }else{
+                     $("#label-file-edit").text(fullUrl);
+                     $("#modalEdit").modal("show");
+                }  
+            }
+        };
+        $('#elfinder').elfinder(options).elfinder('instance');
+    }
+    function openfile(flag){
+        if(flag == 1){
+           $("#modalAdd").modal("hide");
+        }
+        $("#modalEdit").modal("hide");
+        $("#elfinder-modal").dialog({
+            modal: true,
+            width: 900,
+            height: 500,
+            open: function () {
+                openElFinder(flag);
+            }
+        });
+    }
+    $('#modalAdd').on('hidden.bs.modal', function (e) {
+        fileselect = "";
+        $("#input-file").text("Chưa chọn file");
+    });
+    $(document).ready(function () {
+        $('#table-music').DataTable({
+            "order": []
+        });
+        $('#table-theme').DataTable({
+            "order": []
+        });
+        $('#table-collection').DataTable({
+            "order": []
+        });
+        
+    });
+    function openModalEdit(id,flag) {
+         $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetDataDetail", "Collection")",
+            data: {
+                id: id,
+                flag: flag
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        setData(response.data,flag)
+                    }
+                }
+            },
+            error: function () {
+                
+            }
+        });
+        $("#modalEdit").modal("show");
+    }
+    function setData(data,flag){
+        if(flag == 1){
+            $("#title-edit").text("Chỉnh sửa Hình nền chủ đề");
+            $("#label-name-edit").text("Tên chủ đề");
+
+        }else{
+            $("#title-edit").text("Chỉnh sửa nhạc chờ");
+            $("#label-name-edit").text("Tên nhạc sảnh");
+        }
+        $("#input-name-edit").val(data.name);
+        $("#input-option-edit").val(data.type);
+        $("#label-file-edit").text(data.source);
+        $("#savedata-edit").attr("data-flag", flag);
+        $("#savedata-edit").attr("data-id", data.id);
+    }
+    function openModalTheme(){
+        $("#title").text("Thêm mới Hình nền chủ đề");
+        $("#label-name").text("Tên chủ đề");
+        $("#label-file").text("Chọn hình nền");
+        $("#modalAdd").modal("show");
+        $("#savedata").attr("data-id", 1);
+    }
+    function openModalMusic() {
+        $("#title").text("Thêm mới Nhạc sảnh trò chơi");
+        $("#label-name").text("Tên nhạc sảnh");
+        $("#label-file").text("Chọn nhạc sảnh");
+        $("#modalAdd").modal("show");
+        $("#savedata").attr("data-id", 2);
+    }
+
+    $("#savedata").click(function () {
+        const name = $("#input-name").val();
+        const type = $("#input-option").val();
+        const flag = $(this).attr("data-id");
+        if (name == "" || fileselect == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: "Vui lòng nhập đầy đủ thông tin.",
+            });
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddData", "Collection")",
+            data: {
+                name: name,
+                urlfile : fileselect,
+                type: type,
+                flag: flag
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        window.location.reload();
+                    }
+                }
+            },
+            error: function () {
+                
+            }
+        });
+    })
+     $("#savedata-edit").click(function () {
+        const name = $("#input-name-edit").val();
+        const type = $("#input-option-edit").val();
+        const file = $("#label-file-edit").text();
+        const id = $(this).attr("data-id");
+        const flag = $(this).attr("data-flag");
+        if (name == "" || file == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: "Vui lòng nhập đầy đủ thông tin.",
+            });
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveData", "Collection")",
+            data: {
+                id:id,
+                name: name,
+                urlfile : file,
+                type: type,
+                flag: flag
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                        window.location.reload();
+                    }
+                }
+            },
+            error: function () {
+                
+            }
+        });
+    })
+</script>

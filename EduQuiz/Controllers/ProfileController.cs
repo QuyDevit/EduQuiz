@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace EduQuiz.Controllers
 {
-    [CustomAuthorize]
+    [CustomAuthorize("User")]
     public class ProfileController : Controller
     {
         private readonly EduQuizDBContext _context;
@@ -66,38 +66,83 @@ namespace EduQuiz.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(authCookie);
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             var iduser = int.Parse(userId ?? "1");
-            
+
             var infoProfile = await _context.Profile
                 .Where(c => c.Uuid == id)
-                .Select(c => new {c.Id, c.Image, c.TitlePage,c.Status,c.UserId })
+                .Select(c => new { c.Id, c.Image, c.TitlePage, c.Status, c.UserId, c.ListEduQuizTop })
                 .FirstOrDefaultAsync();
-            if (infoProfile == null || (!infoProfile.Status && infoProfile.UserId != iduser))
+
+            if (infoProfile == null || (!infoProfile.Status && infoProfile.UserId != iduser && iduser != 8))
             {
                 return RedirectToAction("Error404", "Home");
             }
-            var getuser = await _context.Users.Where(n => n.Id == infoProfile.UserId)
+
+            var getuser = await _context.Users
+                .Where(n => n.Id == infoProfile.UserId)
                 .Select(n => new { n.ProfilePicture, n.Email, n.Username })
                 .FirstOrDefaultAsync();
 
+            var userCurrent = await _context.Users
+                .Where(n => n.Id == iduser)
+                .Select(n => new { n.SubscriptionType })
+                .FirstOrDefaultAsync();
+
+            List<CollectionItem> listcollection = new List<CollectionItem>();
+
+            if (infoProfile.UserId == 8)
+            {
+                var getcollection = await _context.Collections.ToListAsync();
+                foreach (var item in getcollection)
+                {
+                    var eduQuizIdscolletion = JsonConvert.DeserializeObject<List<int>>(item.ListEduQuizId);
+
+                    var eduQuizItemsbyCollection = await _context.EduQuizs
+                        .Where(n => eduQuizIdscolletion.Contains(n.Id))
+                        .Select(eduquizItem => new EduQuizItem
+                        {
+                            Image = eduquizItem.ImageCover,
+                            Title = eduquizItem.Title,
+                            Type = "Eduquiz+",
+                            UserName = getuser.Username,
+                            Uuid = eduquizItem.Uuid,
+                            SumQuestion = _context.Questions.Count(q => q.EduQuizId == eduquizItem.Id)
+                        }).ToListAsync();
+
+                    listcollection.Add(new CollectionItem
+                    {
+                        Topic = item.Topic,
+                        EduQuizCollection = eduQuizItemsbyCollection
+                    });
+                }
+            }
+
+            var eduquizstop = JsonConvert.DeserializeObject<List<int>>(infoProfile.ListEduQuizTop);
             var eduquizByUser = await _context.EduQuizs
-                .Where(n => n.UserId == infoProfile.UserId)
+                .Where(n => eduquizstop.Contains(n.Id))
                 .Select(n => new { n.Id, n.ImageCover, n.Title, n.Uuid })
                 .ToListAsync();
 
             var eduQuizIds = eduquizByUser.Select(e => e.Id).ToList();
-            var eduQuizItems = eduquizByUser.Select(eduquizItem => new EduQuizItem
+            List<EduQuizItem> eduQuizItems = new List<EduQuizItem>();
+
+            if (infoProfile.UserId != 8)
             {
-                Image = eduquizItem.ImageCover,
-                Title = eduquizItem.Title,
-                Type = "Miễn phí",
-                UserName = getuser.Username,
-                Uuid = eduquizItem.Uuid,
-                SumQuestion = _context.Questions.Count(q => q.EduQuizId == eduquizItem.Id)
-            }).ToList();
+                eduQuizItems = eduquizByUser.Select(eduquizItem => new EduQuizItem
+                {
+                    Image = eduquizItem.ImageCover,
+                    Title = eduquizItem.Title,
+                    Type = "Miễn phí",
+                    UserName = getuser.Username,
+                    Uuid = eduquizItem.Uuid,
+                    SumQuestion = _context.Questions.Count(q => q.EduQuizId == eduquizItem.Id)
+                }).ToList();
+            }
+
             var sumPlay = await _context.QuizSessions
                 .CountAsync(n => eduQuizIds.Contains(n.EduQuizId));
 
@@ -106,7 +151,8 @@ namespace EduQuiz.Controllers
                     .Any(q => q.Id == n.QuizSessionId && eduQuizIds.Contains(q.EduQuizId)));
 
             var isFollow = await _context.Follows
-                .FirstOrDefaultAsync(n => n.UserId == iduser && n.ProfileId == infoProfile.Id);
+                .AnyAsync(n => n.UserId == iduser && n.ProfileId == infoProfile.Id);
+
             var view = new ProfilePage
             {
                 Avatar = getuser.ProfilePicture,
@@ -117,11 +163,15 @@ namespace EduQuiz.Controllers
                 SumPlay = sumPlay,
                 SumPlayerPlay = sumPlayerPlay,
                 ListEduQuizItem = eduQuizItems,
-                IsFollow = isFollow != null,
+                IsFollow = isFollow,
                 IsHost = infoProfile.UserId == iduser,
+                UserCurrentSubscriptionType = userCurrent.SubscriptionType,
+                ListCollection = listcollection
             };
+
             return View(view);
         }
+
         [Route("/profiles/{id:guid}/about")]
         public async Task<IActionResult> ProfilePageAbout(Guid id)
         {

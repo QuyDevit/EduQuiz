@@ -86,6 +86,42 @@ namespace EduQuiz.Migrations
                     b.ToTable("Choice");
                 });
 
+            modelBuilder.Entity("EduQuiz.Models.EF.Collection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageCover")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ListEduQuizId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Collection");
+                });
+
             modelBuilder.Entity("EduQuiz.Models.EF.EduQuiz", b =>
                 {
                     b.Property<int>("Id")
@@ -1063,6 +1099,15 @@ namespace EduQuiz.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("EduQuiz.Models.EF.Collection", b =>
+                {
+                    b.HasOne("EduQuiz.Models.EF.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId");
+
+                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("EduQuiz.Models.EF.EduQuiz", b =>

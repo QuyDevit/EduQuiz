@@ -126,32 +126,29 @@
             var username = $("#username").val();
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("CheckUserName", "Account")',
+                url: '@Url.Action("CheckUserName", "Account",new {area =""})',
                 data: {
                     username: username
                 },
                 success: function (response) {
                     console.log(response); // Kiểm tra dữ liệu trong console
                     if (response.status == false) {
-                        if (response.data.result && response.data.result.length > 0) {
-                            // Xóa nội dung cũ trong #suggestions
+                        if (response.data && response.data.length > 0) {
+
                             $("#suggestions").empty();
 
-                            // Duyệt qua mảng response.data để thêm các nút mới
-                            response.data.result.forEach(function (username) {
+                            response.data.forEach(function (username) {
                                 var button = $("<button>")
                                     .addClass("flat-button")
                                     .text(username)
                                     .click(function () {
-                                        $("#username").val(username); // Gán giá trị username vào ô input
+                                        $("#username").val(username); 
                                         $(".suggestions-wrapper").addClass("d-none");
                                     });
 
-                                // Thêm nút vào phần tử #suggestions
                                 $("#suggestions").append(button);
                             });
 
-                            // Hiển thị phần tử #suggestions nếu nó đang bị ẩn
                             $(".suggestions-wrapper").removeClass("d-none");
                         } else {
                             openToast('warning', 'Lỗi', "Có lỗi xảy ra", 2500);
@@ -172,7 +169,7 @@
                 url: '@Url.Action("RandomUserName", "Account")',
                 success: function (response) {
                     if (response.status == true) {
-                        $("#username").val(response.data.result[0]);
+                        $("#username").val(response.data[0]);
                     }
                 },
                 error: function (xhr, status, error) {

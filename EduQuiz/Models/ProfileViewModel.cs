@@ -28,16 +28,24 @@ namespace EduQuiz.Models
         public string LinkYoutube { get; set; }
         public string LinkFacebook { get; set; }
         public string LinkInstagram { get; set; }
+        public string UserCurrentSubscriptionType { get; set; }
         public bool IsFollow {  get; set; }
         public bool IsHost { get; set; }
         public List<EduQuizItem> ListEduQuizItem { get; set; }
+        public List<CollectionItem> ListCollection { get; set; }
     }
+    public class CollectionItem
+    {
+        public string Topic { get; set; }
+        public List<EduQuizItem> EduQuizCollection { get; set; }
+    } 
     public class EduQuizItem
     {
         public string Title { get; set; }
         public Guid Uuid { get; set; }
         public string Type { get; set; }
         public int SumQuestion { get; set; }
+        public int SumPlay { get; set; }
         public string Image { get; set; }
         public string UserName { get; set; }
     }
