@@ -24,7 +24,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link @(currentPath.Contains("/admin/manage/bill") ? "bg-gradient-dark text-white active" : "text-dark" )" href="../pages/virtual-reality.html">
+            <a class="nav-link @(currentPath.Contains("/admin/manage/bill") ? "bg-gradient-dark text-white active" : "text-dark" )" href="@Url.Action("Index","Order")">
                 <i class="material-symbols-rounded opacity-5">receipt_long</i>
                 <span class="nav-link-text ms-1">Thanh toán</span>
             </a>

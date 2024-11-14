@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Nâng cấp gói";
+    Layout = "_LayoutUpgrade";
+}
+<section class="plans__container">
+        <div class="plans">
+            <div class="plansHero">
+                <a class="logo-wrapper" href="@Url.Action("Index","HomeDashboard")">
+                    <img class="logo-main" src="/src/img/logomain.png" />
+                </a>
+                
+                <h1 class="plansHero__title">Nâng cao việc học tập hấp dẫn trong nhóm, trường học hoặc cá nhân bạn với EduQuiz+!</h1>
+                <p class="plansHero__subtitle">Tăng cường sự tham gia của học sinh, mở khóa các công cụ quản trị nâng cao và mang trải nghiệm EduQuiz! đến mọi lớp học thực tế và ảo!</p>
+            </div>
+            <div class="planItem__container">
+                <!--free plan starts -->
+                <div class="planItem planItem--free">
+
+                    <div class="card-plan">
+                        <div class="card__header">
+                            <div class="card__icon symbol symbol--rounded"></div>
+                            <h2>Miễn phí</h2>
+                        </div>
+                        <div class="card__desc">Gói cơ bản cho tất cả mọi người dùng khi tham gia EduQuiz.</div>
+                    </div>
+
+                    <div class="price">0 VNĐ<span>/ Tháng</span></div>
+
+                    <ul class="featureList">
+                        <li>Tham gia trò chơi và quiz cơ bản</li>
+                        <li>Tạo và tham gia lớp học ảo</li>
+                        <li>Truy cập từ mọi thiết bị</li>
+                        <li class="disabled">Giới hạn 10 người tham gia quiz</li>
+                        <li class="disabled">Không được hỗ trợ bởi AI</li>
+                    </ul>
+
+                    <button  disabled class="button">Đăng ký</button>
+                </div>
+                <!--free plan ends -->
+                <!--pro plan starts -->
+                <div class="planItem planItem--pro">
+                    <div class="card-plan">
+                        <div class="card__header">
+                            <div class="card__icon symbol"></div>
+                            <h2>Chuyên nghiệp</h2>
+                            <div class="card__label label">Khuyến nghị</div>
+                        </div>
+                        <div class="card__desc">Gói cao cấp dành cho cá nhân, mở khóa các tính năng vip cho người dùng.</div>
+                    </div>
+
+                    <div class="price">69.000 VNĐ<span>/ tháng</span></div>
+
+                    <ul class="featureList">
+                        <li>Bao gồm tất cả tính năng trong gói Miễn phí</li>
+                        <li>Tùy chọn nâng cao cho thiết kế quiz</li>
+                        <li>Không giới hạn số lượng người chơi</li>
+                        <li>Truy cập vào bộ sưu tập EduQuiz+</li>
+                    </ul>
+
+                    <a href="@Url.Action("PaymentInfo","Upgrade",new{plan = "professional"})" class="button button--pink">Đăng ký</a>
+                </div>
+                <!--pro plan ends -->
+                <!--entp plan starts -->
+                <div class="planItem planItem--entp">
+                <div class="card-plan">
+                        <div class="card__header">
+                            <div class="card__icon"></div>
+                            <h2 class="text-white">Tổ chức</h2>
+                        </div>
+                        <div class="card__desc">Gói cao cấp dành cho mọi người tham gia trong tổ chức.</div>
+                    </div>
+
+                    <div class="price">249.000VNĐ<span style="color:#fff;">/ tháng</span></div>
+
+                    <ul class="featureList">
+                        <li>Bao gồm tất cả tính năng trong gói Chuyên nghiệp</li>
+                        <li>Số lượng người dùng không giới hạn</li>
+                        <li>Hỗ trợ qua chat và email</li>
+                    </ul>
+
+                    <a href="@Url.Action("PaymentInfo","Upgrade",new{plan = "organization"})" class="button button--white">Đăng ký</a>
+                </div>
+                <!--entp plan ends -->
+
+            </div>
+        </div>
+    </section>
+

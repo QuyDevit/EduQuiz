@@ -35,22 +35,28 @@
                         </button>
                     </li>
                 }
-                <li class="menu__list-item">
-                    <button class="menu__list-itemBtn">
+                
+                @if (!Model.IsHost)
+                {
+                    <li class="menu__list-item">
+                    <button class="menu__list-itemBtn" onclick="outGroup()">
                         <span class="menu__list-itemIcon">
                             <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M21,6 C22.103,6 23,6.898 23,8 L23,11 L21,11 L21,8 L10,8 L10,24 L21,24 L21,21 L23,21 L23,24 C23,25.103 22.103,26 21,26 L10,26 C8.897,26 8,25.103 8,24 L8,8 C8,6.898 8.897,6 10,6 L21,6 Z M16.293,11.292 L17.707,12.708 L15.41,15 L24,15 L24,17 L15.418,17 L17.708,19.294 L16.292,20.706 L11.586,15.991 L16.293,11.292 Z" style="fill: rgb(0, 0, 0);"></path></svg>
                         </span>
                         <p class="menu__list-itemTitle">Rời khỏi nhóm</p>
                     </button>
-                </li>
-                <li class="menu__list-item">
-                    <button class="menu__list-itemBtn">
-                        <span class="menu__list-itemIcon">
-                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M9,24 C9,25.103 9.897,26 11,26 L21,26 C22.103,26 23,25.103 23,24 L23,12 L9,12 L9,24 Z M11,14 L21,14 L21.001,24 L11,24 L11,14 Z M19,9 L25,9 L25,11 L7,11 L7,9 L13,9 L13,7 L19,7 L19,9 Z M13,16 L13,22 L15,22 L15,16 L13,16 Z M17,16 L17,22 L19,22 L19,16 L17,16 Z" style="fill: rgb(0, 0, 0);"></path></svg>
-                        </span>
-                        <p class="menu__list-itemTitle">Xóa nhóm</p>
-                    </button>
-                </li>
+                    </li>  
+                }else{
+                     <li class="menu__list-item">
+                        <button class="menu__list-itemBtn">
+                            <span class="menu__list-itemIcon">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M9,24 C9,25.103 9.897,26 11,26 L21,26 C22.103,26 23,25.103 23,24 L23,12 L9,12 L9,24 Z M11,14 L21,14 L21.001,24 L11,24 L11,14 Z M19,9 L25,9 L25,11 L7,11 L7,9 L13,9 L13,7 L19,7 L19,9 Z M13,16 L13,22 L15,22 L15,16 L13,16 Z M17,16 L17,22 L19,22 L19,16 L17,16 Z" style="fill: rgb(0, 0, 0);"></path></svg>
+                            </span>
+                            <p class="menu__list-itemTitle">Xóa nhóm</p>
+                        </button>
+                    </li>
+                }
+               
             </ul>
         </div>
     </div>
@@ -162,6 +168,33 @@
         $('#menuOption').addClass('d-none');
         $("#menu-post").addClass('d-none');
     });
+    function outGroup(){
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("OutGroup", "Group")",
+            data: {
+                groupid: "@Model.Group.Id",
+            },
+            success: function (response) {
+                if (response.redirectUrl) {
+                    Swal.fire({
+                        title: 'Hết phiên đăng nhập',
+                        text: 'Vui lòng đăng nhập lại',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    });
+                } else {
+                    if (response.status == true) {
+                      window.location.href = "/groups/joined";
+                    }
+                }
+            }
+        })
+    }
 
     $(document).on("click", "#geteduquiz", function () {
         arrEduQuizId = [];

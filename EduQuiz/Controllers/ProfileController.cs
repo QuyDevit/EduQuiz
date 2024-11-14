@@ -89,9 +89,21 @@ namespace EduQuiz.Controllers
 
             var userCurrent = await _context.Users
                 .Where(n => n.Id == iduser)
-                .Select(n => new { n.SubscriptionType })
+                .Select(n => new { n.SubscriptionEndDate,n.Id })
                 .FirstOrDefaultAsync();
+            var subsType = (userCurrent.SubscriptionEndDate.HasValue && userCurrent.SubscriptionEndDate > DateTime.Now) ? "vip" : "free";
+            if(subsType != "vip")
+            {
+                var checkvip = await _context.GroupMembers
+                .Where(gm => gm.UserId == userCurrent.Id)
+                .Include(gm => gm.Group)
+                .ToListAsync();
 
+                if (checkvip.Any(gm => gm.Group.SubscriptionEndDate.HasValue && gm.Group.SubscriptionEndDate > DateTime.Now))
+                {
+                    subsType = "vip";
+                }
+            }
             List<CollectionItem> listcollection = new List<CollectionItem>();
 
             if (infoProfile.UserId == 8)
@@ -165,7 +177,7 @@ namespace EduQuiz.Controllers
                 ListEduQuizItem = eduQuizItems,
                 IsFollow = isFollow,
                 IsHost = infoProfile.UserId == iduser,
-                UserCurrentSubscriptionType = userCurrent.SubscriptionType,
+                UserCurrentSubscriptionType = subsType,
                 ListCollection = listcollection
             };
 

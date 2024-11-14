@@ -2166,6 +2166,9 @@ view-wrapper__modalsuccess{
     background-color: rgb(242, 242, 241);
     flex-direction: row;
 }
+.eduquiz-preview-card__Container.active{
+    border:1.5px solid green;
+}
 .quiz-preview__ContentContainer {
     z-index: 1;
     display: grid;

@@ -44,7 +44,7 @@
                                             <p class="text-xs font-weight-bold mb-0">@item.Role.Name</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm @(item.SubscriptionType == "vip" ? "bg-gradient-success" :"bg-gradient-secondary") ">@item.SubscriptionType</span>
+                                            <span class="badge badge-sm @(item.SubscriptionEndDate.HasValue && item.SubscriptionEndDate > DateTime.Now ? "bg-gradient-success" :"bg-gradient-secondary") ">@(item.SubscriptionEndDate.HasValue && item.SubscriptionEndDate > DateTime.Now ?"vip" :"free")</span>
                                         </td>
                                         <td class="align-middle text-center">
                                             <span class="text-secondary text-xs font-weight-bold">@item.ViolationCount</span>

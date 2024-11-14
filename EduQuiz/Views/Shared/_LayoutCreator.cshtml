@@ -496,6 +496,7 @@
         ];
         var dataImport = "";
         var listQuestionAskAi = [];
+        var listQuestionAskAiImport = [];
         var arrmusic = [];
         var arrtheme = [];
         var imgCoverSetting = "";
@@ -1878,20 +1879,21 @@
             handleAskAi();
         })
         $(document).on("click", "#add-allquestion", function () {
-            if (listQuestionAskAi.length < 1) {
+            if (listQuestionAskAiImport.length < 1) {
                 openToast('warning', 'Lỗi', "Không có dữ liệu!", 2500);
                 return;
             }
             const data = JSON.stringify({
                 QuizId: quizId,
-                Data: listQuestionAskAi
+                Data: listQuestionAskAiImport
             });
             addListQuestion(data);
         })
         $('#modalSuportWithAI').on('hidden.bs.modal', function (e) {
             $(".container-result__Scroll").empty();
             listQuestionAskAi = [];
-            $("#add-allquestion").text(`Thêm tất cả (${listQuestionAskAi.length})`).prop("disabled", true);
+            listQuestionAskAiImport = [];
+            $("#add-allquestion").text(`Thêm tất cả (${listQuestionAskAiImport.length})`).prop("disabled", true);
         });
         function handleAskAi(){
             const topic = $("#topic-ask").val();
@@ -1958,12 +1960,13 @@
                 const questionsArray = JSON.parse(cleanJsonData);
                 $("#add-allquestion").text(`Thêm tất cả (${questionsArray.length})`).prop("disabled", false);
                 listQuestionAskAi = questionsArray;
+                listQuestionAskAiImport = questionsArray.slice();
                 console.log(listQuestionAskAi);
                 $(".container-result__Scroll").empty();
-                listQuestionAskAi.forEach(question => {
+                listQuestionAskAi.forEach((question,index) => {
                     const questionHtml = `
                         <div class="border-result-preview">
-                            <div class="eduquiz-preview-card__Container">
+                            <div class="eduquiz-preview-card__Container active" data-index="${index}">
                                 <div class="quiz-preview__ContentContainer">
                                     <div class="preview__TitleContainer">
                                         <div class="quiz-preview__Title">${question.QuestionText}</div>
@@ -2007,6 +2010,20 @@
                                                     <span>Tạo ngay</span>`);
             }
         }
+        $(".container-result__Scroll").on("click", ".eduquiz-preview-card__Container", function () {
+            const index = $(this).data("index");
+            $(this).toggleClass("active");
+
+            if ($(this).hasClass("active")) {
+                listQuestionAskAiImport.push(listQuestionAskAi[index]);
+            } else {
+                const questionToRemove = listQuestionAskAi[index];
+                listQuestionAskAiImport = listQuestionAskAiImport.filter(question => question !== questionToRemove);
+            }
+            $("#add-allquestion").text(`Thêm tất cả (${listQuestionAskAiImport.length})`).prop("disabled", false);
+            console.log(listQuestionAskAiImport);
+        });
+
         //Nhập câu hỏi từ excel
         $(document).on("click", ".btn-import",function(){
             $("#overlay-question").addClass("d-none");

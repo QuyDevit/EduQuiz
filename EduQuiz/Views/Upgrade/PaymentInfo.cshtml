@@ -1,0 +1,212 @@
+﻿@{
+    ViewBag.Title = "Nâng cấp gói";
+    Layout = "_LayoutUpgrade";
+    @using Newtonsoft.Json;
+    var data = JsonConvert.DeserializeObject<dynamic>(ViewBag.Data);
+}
+<section class="plans__container">
+    <div class="plans">
+        <div class="plansHero">
+            <a class="logo-wrapper" href="@Url.Action("Index","HomeDashboard")">
+                <img class="logo-main" src="/src/img/logomain.png" />
+            </a>
+            <h1 class="plansHero__title">Thông tin thanh toán</h1>
+        </div>
+    </div>
+    <main>
+        <div class="container d-flex">
+            <div class="col-7 card-payment mr-3">
+                <div class="row">
+                    <div class="col-6 form-group">
+                        <label class="font-weight-bold">Họ *</label>
+                        <input id="first-name" placeholder="Nguyễn" class="form-control" />
+                    </div>
+                    <div class="col-6 form-group">
+                        <label class="font-weight-bold">Tên *</label>
+                        <input id="last-name" placeholder="A" class="form-control" />
+                    </div>
+                </div>
+                <div class="row px-3">
+                    <label class="font-weight-bold">Email *</label>
+                    <input id="email" value="@data.Email" class="form-control" />     
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6 form-group">
+                        <label class="font-weight-bold">Tên tổ chức *</label>
+                        <input id="company-name" placeholder="Công ty / Tổ chức" class="form-control" />
+                    </div>
+                    <div class="col-6 form-group">
+                        <label class="font-weight-bold">Số điện thoại *</label>
+                        <input id="phone-number" class="form-control" />
+                    </div>
+                </div>
+                <div class="row px-3">
+                    <label class="font-weight-bold">Chọn phương thức thanh toán</label>
+                    <div class="payment-tabs">
+                        <button type="button" class="method-payment active" data-payment="MOMO">
+                           <div class="payment-item">
+                                <img class="payment-img" src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Square-300x300.png" />
+                           </div>
+                       </button>
+                        <button type="button" class="method-payment" data-payment="ZALOPAY">
+                            <div class="payment-item">
+                                <img class="payment-img" src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-ZaloPay.png" />
+                            </div>
+                        </button>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 card-payment d-flex flex-column">
+                <p class="m-0">Bạn đã chọn gói:</p>
+                <strong id="plan-title">EduQuiz+ @(data.Plan == "organization" ? "dành cho Tổ chức":"Chuyên nghiệp")</strong>
+                <div class="d-flex mt-3 align-items-center">
+                    <label class="font-weight-bold mr-4">Chọn số lượng:</label>
+                    <button type="button" class="method-payment-value active mr-2" data-period="month">
+                        <div class="payment-item">
+                            Tháng
+                        </div>
+                    </button>
+                    <button type="button" class="method-payment-value" data-period="year">
+                        <div class="payment-item">
+                            Năm
+                        </div>
+                    </button>
+                </div>
+                <div class="d-flex justify-content-between mt-3 align-items-center">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="quantity-ctrl">
+                            <button class="quantity-d" disabled>
+                                -
+                            </button>
+                            <input id="plan_quantity" value="1" step="1" data-price-professional="69000" data-price-organization="249000" max="999" min="1" type="number" style="width:65px" />
+                            <button class="quantity-u">
+                                +
+                            </button>
+                        </div>
+                        <div class="license-price-block">69.000vnđ</div>
+                    </div>
+                    <div class="license-price-quantity">69.000vnđ</div>
+                </div>
+                <div class="invoice-hide mt-4" style="border-top: .0625rem solid #f2f2f2;">
+                    <div class="d-flex align-items-center justify-content-between py-2">
+                        <label class="m-0">Số lượng</label>
+                        <div><span id="quantity">1</span> x <strong>@(data.Plan == "organization" ? "249.000vnđ" : "69.000vnđ")</strong></div>
+                    </div>
+                </div>
+                <div class="invoice-hide" style="font-size:16px;">
+                    <div class="d-flex align-items-center justify-content-between py-2">
+                        <label class="m-0 font-weight-bold">Tổng cộng</label>
+                        <div id="total-price" class="license-price-quantity font-weight-bold" style="font-size:16px;">69.000vnđ</div>
+                    </div>
+                </div>
+                <p class="mt-2" style="font-size:14px;">Tôi xác nhận rằng tôi đã đọc và đồng ý với <a href="#" style="font-weight:bold;color:#1368CE;">Điều khoản và Điều kiện</a> của EduQuiz.</p>
+                <button class="btn-payment mt-3">Thanh toán bằng MOMO</button>
+            </div>
+        </div>
+    </main>
+</section>
+<script>
+    var plan = "@(data.Plan)";
+    $(".method-payment").click(function () {
+        $(".method-payment").removeClass("active");
+        $(this).addClass("active");
+        $(".btn-payment").text("Thanh toán bằng " + $(this).attr("data-payment"));
+    })
+    $(".method-payment-value").click(function () {
+        $(".method-payment-value").removeClass("active");
+        $(this).addClass("active");
+        updatePrice();
+    })
+    $(".quantity-d").click(function(){
+        var currentVal = parseInt($("#plan_quantity").val());
+        if (currentVal > 1) {
+            $("#plan_quantity").val(currentVal - 1);
+            $("#quantity").text(currentVal - 1);
+            $(".quantity-d").attr("disabled", currentVal - 1 <= 1);
+            updatePrice();
+        }
+    })
+    $("#plan_quantity").on("change", function () {
+        let currentVal = parseInt($(this).val());
+        if (isNaN(currentVal) || currentVal < 1) {
+            currentVal = 1;
+            $(this).val(1);
+        }
+        $("#quantity").text(currentVal);
+        $(".quantity-d").attr("disabled", currentVal <= 1);
+        updatePrice();
+    })
+    $(".quantity-u").click(function(){
+        var currentVal = parseInt($("#plan_quantity").val());
+        if (currentVal < 999) {
+            $("#plan_quantity").val(currentVal + 1);
+            $("#quantity").text(currentVal + 1);
+            $(".quantity-d").attr("disabled", false);
+            updatePrice();
+        }
+    });
+    function updatePrice() {
+        var quantity = parseInt($("#plan_quantity").val());
+        var period = $(".method-payment-value.active").data("period");
+        var pricePerUnit = plan === "professional" ? $("#plan_quantity").data("price-professional") : $("#plan_quantity").data("price-organization");
+        $(".license-price-block").text(pricePerUnit.toLocaleString() + " VNĐ");
+        if (period === "year") {
+            pricePerUnit *= 12; 
+        }
+        var totalPrice = quantity * pricePerUnit;
+
+        $(".license-price-quantity").text(totalPrice.toLocaleString() + " VNĐ");
+    }
+    updatePrice();
+
+    $(".btn-payment").click(function () {
+        const quantity = parseInt($("#plan_quantity").val());
+        const period = $(".method-payment-value.active").data("period");
+        const firstname = $("#first-name").val();
+        const lastname = $("#last-name").val();
+        const email = $("#email").val();
+        const company = $("#company-name").val();
+        const phone = $("#phone-number").val();
+        const totalprice = parseFloat($(".license-price-quantity").text().replace(/\./g, ''));
+        const paymentmethod = $(".method-payment.active").data("payment");
+        if (firstname == "" || lastname == "" || email == "" || company== "" || phone=="") {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Vui lòng nhập đầy đủ thông tin",
+                icon: "info"
+            });
+            return;
+        }
+        const datasend =JSON.stringify({
+            Quantity: quantity,
+            Period: period,
+            Firstname: firstname,
+            Lastname: lastname,
+            Email: email,
+            Company: company,
+            Phone: phone,
+            Totalprice: totalprice,
+            Paymentmethod: paymentmethod,
+            Plan: plan
+        });
+        $.ajax({
+            type:"POST",
+            url: "@Url.Action("CreateOrder", "Upgrade")",
+            data: datasend,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (response) {
+                // console.log(response);
+                if (paymentmethod == "MOMO") {
+                    window.location.href = response.shortLink;
+                } else {
+                    window.location.href = response.order_url;
+                }
+            },
+            error: function (err) {
+
+            }
+        })
+    })
+</script>

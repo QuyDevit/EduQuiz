@@ -5,6 +5,7 @@
 @model EduQuiz.Models.EF.User
 @{
     var subscriptionType = Model.SubscriptionType;
+    var check = subscriptionType == "vip" && Model.SubscriptionEndDate.HasValue && Model.SubscriptionEndDate > DateTime.Now;
 }
 <style>
     .bill-img{
@@ -47,15 +48,15 @@
                         </div>
                     </div>
                     <div class="card card-user d-flex flex-row">
-                        <div class="bill-img @(subscriptionType== null ? "blur": "")" style="background-color:#1ccd6b">
-                            <img class="@(subscriptionType== null ? "grayscale-img": "")" style="width:100px;height:80px" src="~/src/img/logomain.png" />
+                        <div class="bill-img @( check ? "": "blur")" style="background-color:#1ccd6b">
+                            <img class="@(check ? "": "grayscale-img")" style="width:100px;height:80px" src="~/src/img/logomain.png" />
                         </div>
-                        <div class="d-flex flex-column justify-content-center pl-3 @(subscriptionType== null ? "not-buy": "") ">
+                        <div class="d-flex flex-column justify-content-center pl-3 @(check ? "": "not-buy") ">
                             <span style="font-size:16px;font-weight:700">Thẻ truy cập EduQuiz+</span>
-                            <span>@(subscriptionType == null ? "Chưa đăng ký" :"Đang sử dụng")</span>
+                            <span>@(check ? "Đang sử dụng" : "Chưa đăng ký")</span>
                         </div>
                         <div class="d-flex align-items-center justify-content-end pl-3 pr-4" style="flex:1">
-                            <a href="#" style="color:rgb(19, 104, 206)">Đăng ký EduQuiz+</a>
+                            <a href="@Url.Action("Index","Upgrade")" style="color:rgb(19, 104, 206)">Đăng ký EduQuiz+</a>
                         </div>
                     </div>
                 </div>

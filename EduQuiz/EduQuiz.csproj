@@ -68,6 +68,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="BouncyCastle.NetCore" Version="2.2.1" />
     <PackageReference Include="elFinder.NetCore" Version="1.4.1" />
     <PackageReference Include="EPPlus" Version="7.4.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />

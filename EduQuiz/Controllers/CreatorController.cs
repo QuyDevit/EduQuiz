@@ -61,6 +61,20 @@ namespace EduQuiz.Controllers
             {
                 return RedirectToAction("Index", "HomeDashboard");
             }
+            var subsType = (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate > DateTime.Now) ? "vip" : "free";
+            if(subsType != "vip")
+            {
+                var checkvip = await _context.GroupMembers
+                .Where(gm => gm.UserId == user.Id)
+                .Include(gm => gm.Group)
+                .ToListAsync();
+
+                if (checkvip.Any(gm => gm.Group.SubscriptionEndDate.HasValue && gm.Group.SubscriptionEndDate > DateTime.Now))
+                {
+                    subsType = "vip";
+                }
+            }
+            
             List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion);
 
             var getdata = new Models.EduQuizData
@@ -101,7 +115,7 @@ namespace EduQuiz.Controllers
                 .OrderBy(q => orderLookup.GetValueOrDefault(q.Id, int.MaxValue))
                 .ToList();
 
-            ViewBag.Data = new { quizId = id, userId = user.Id, subscriptionType = user.SubscriptionType };
+            ViewBag.Data = new { quizId = id, userId = user.Id, subscriptionType = subsType };
             return View(getdata);
         }
         #region handle
@@ -648,7 +662,7 @@ namespace EduQuiz.Controllers
         }
         public async Task<IActionResult> GenerateQuesion(string language,string topic)
         {
-            var contentask = $"Tạo cho tôi 5 câu hỏi \"mới\" gồm quiz(Câu đố 4 đáp án) hoặc true_false(Đúng hoặc sai 2 đáp án) về chủ đề \"{topic}\" với language \"{language}\" không cần giải thích và dẫn dắt trả về đúng định dạng: [{{\"QuestionText\":\"Đà Lạt ở nước nào?\",\"TypeQuestion\":\"quiz\",\"TypeAnswer\": 1(default),\"Time\": 20(default),\"PointsMultiplier\": 1(default),\"Image\": \"\",\"ImageEffect\": \"\",\"Choices\":[{{\"Answer\":\"Việt Nam\",\"IsCorrect\":true,\"DisplayOrder\":0}},{{}}...]}}]";
+            var contentask = $"Tạo cho tôi 5 câu hỏi \"mới\" gồm quiz(Câu đố 4 đáp án - 1 đáp án đúng) hoặc true_false(Đúng hoặc sai 2 đáp án - 1 đáp án đúng) về chủ đề \"{topic}\" với language \"{language}\" không cần giải thích và dẫn dắt trả về đúng định dạng: [{{\"QuestionText\":\"Đà Lạt ở nước nào?\",\"TypeQuestion\":\"quiz\",\"TypeAnswer\": 1(default),\"Time\": 20(default),\"PointsMultiplier\": 1(default),\"Image\": \"\",\"ImageEffect\": \"\",\"Choices\":[{{\"Answer\":\"Việt Nam\",\"IsCorrect\":true,\"DisplayOrder\":0}},{{}}...]}}]";
             var request = new ChatRequest
             {
                 Model = "gemini-1.5-pro",

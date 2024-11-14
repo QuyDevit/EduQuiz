@@ -40,7 +40,7 @@ namespace EduQuiz.Controllers
             var iduser = int.Parse(userId ?? "1");
             var listGroupJoinbyuser = await (from gm in _context.GroupMembers.AsNoTracking()
                                              join g in _context.Groups.AsNoTracking() on gm.GroupId equals g.Id
-                                      where gm.UserId == iduser && gm.UserId != g.UserId
+                                      where gm.UserId == iduser && gm.UserId != g.UserId && g.Status
                                       select new GroupView
                                       {
                                           Uuid = g.Uuid,
@@ -61,7 +61,10 @@ namespace EduQuiz.Controllers
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             var iduser = int.Parse(userId ?? "1");
 
-            var listGroupbyuser = await _context.Groups.Where(g => g.UserId == iduser).AsNoTracking().ToListAsync();
+            var listGroupbyuser = await _context.Groups
+                .Where(g => g.UserId == iduser && g.Status)
+                .AsNoTracking()
+                .ToListAsync();
             return View(listGroupbyuser);
 
         }
@@ -78,7 +81,7 @@ namespace EduQuiz.Controllers
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             var avatart = jwtToken.Claims.FirstOrDefault(c => c.Type == "Avatar")?.Value;
             var iduser = int.Parse(userId ?? "1");
-            var getGroup = await _context.Groups.Where(g => g.Uuid == id).Include(g=>g.Members).FirstOrDefaultAsync();          
+            var getGroup = await _context.Groups.Where(g => g.Uuid == id && g.Status).Include(g=>g.Members).FirstOrDefaultAsync();          
             if (getGroup == null)
             {
                 return RedirectToAction("Index", "HomeDashboard");
@@ -160,7 +163,7 @@ namespace EduQuiz.Controllers
             var jwtToken = tokenHandler.ReadJwtToken(authCookie);
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             var iduser = int.Parse(userId ?? "1");
-            var getGroup = await _context.Groups.Where(g => g.Uuid == id).Include(g => g.Members).FirstOrDefaultAsync();
+            var getGroup = await _context.Groups.Where(g => g.Uuid == id && g.Status).Include(g => g.Members).FirstOrDefaultAsync();
             if (getGroup == null)
             {
                 return RedirectToAction("Index", "HomeDashboard");
@@ -205,7 +208,7 @@ namespace EduQuiz.Controllers
             var jwtToken = tokenHandler.ReadJwtToken(authCookie);
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             var iduser = int.Parse(userId ?? "1");
-            var getGroup = await _context.Groups.Where(g => g.Uuid == id).Include(g => g.Members).FirstOrDefaultAsync();
+            var getGroup = await _context.Groups.Where(g => g.Uuid == id && g.Status).Include(g => g.Members).FirstOrDefaultAsync();
             if (getGroup == null)
             {
                 return RedirectToAction("Index", "HomeDashboard");
@@ -234,7 +237,7 @@ namespace EduQuiz.Controllers
             var jwtToken = tokenHandler.ReadJwtToken(authCookie);
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             var iduser = int.Parse(userId ?? "1");
-            var getGroup = await _context.Groups.Where(g => g.Uuid == id).Include(g => g.Members).FirstOrDefaultAsync();
+            var getGroup = await _context.Groups.Where(g => g.Uuid == id && g.Status).Include(g => g.Members).FirstOrDefaultAsync();
             if (getGroup == null)
             {
                 return RedirectToAction("Index", "HomeDashboard");
@@ -283,7 +286,7 @@ namespace EduQuiz.Controllers
             var jwtToken = tokenHandler.ReadJwtToken(authCookie);
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             var iduser = int.Parse(userId ?? "1");
-            var getGroup = await _context.Groups.Where(g => g.Uuid == id).Include(g => g.Members).ThenInclude(m => m.User).FirstOrDefaultAsync();
+            var getGroup = await _context.Groups.Where(g => g.Uuid == id && g.Status).Include(g => g.Members).ThenInclude(m => m.User).FirstOrDefaultAsync();
             if (getGroup == null)
             {
                 return RedirectToAction("Index", "HomeDashboard");
@@ -831,6 +834,28 @@ namespace EduQuiz.Controllers
             _context.GroupPosts.Remove(getPost);
             var result = await _context.SaveChangesAsync();
             return Json(new { status = true});
+        }
+        public async Task<IActionResult> OutGroup(int groupid)
+        {
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie == null)
+            {
+                return Json(new { result = false });
+            }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var iduser = int.Parse(userId ?? "1");
+
+            var member = await _context.GroupMembers
+                .FirstOrDefaultAsync(p => p.GroupId == groupid && p.UserId == iduser);
+            if (member == null)
+            {
+                return Json(new { status = false });
+            }
+            _context.GroupMembers.Remove(member);
+            var result = await _context.SaveChangesAsync();
+            return Json(new { status = true });
         }
         public async Task<IActionResult> GetEduQuizByUser(int groupid)
         {

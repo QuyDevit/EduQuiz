@@ -1,0 +1,139 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+    ViewBag.Title = "Quản lý hóa đơn";
+}
+@model ICollection<EduQuiz.Models.EF.Order>
+<div class="container-fluid py-2">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Hóa đơn</h6>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2 px-4">
+                    <div class="table-responsive p-0">
+                        <table id="myTable" class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên người dùng</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Thông tin đăng ký</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email đăng ký</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Công ty / Tổ chức</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Số điện thoại</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Gói đăng ký</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phương thức thanh toán</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày tạo</th>
+                                    <th class="text-secondary text-xxs opacity-7">Trạng thái</th>
+                                    <th class="text-secondary text-xxs opacity-7"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+                                                <div>
+                                                    <img src="@item.User.ProfilePicture" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
+                                                </div>
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">@item.User.Username</h6>
+                                                    <p class="text-xs text-secondary mb-0">@item.User.Email</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0">@item.FirstName @item.LastName</p>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs">@item.Email</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs">@item.Company</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs">@item.PhoneNumber</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs">@item.Quantity @(item.Period == "year" ? "năm" : "tháng") @(item.PlanType == "organization" ? "EduQuiz+ dành cho Tổ chức" : "EduQuiz+ Chuyên nghiệp")</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs">@item.PaymentMethod</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@item.CreateAt</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs @(item.Status == "Pending" ? "text-danger" : item.Status == "Success" ? "text-success" : "text-warning")">@(item.Status == "Pending" ? "Đang chờ" : item.Status == "Success" ? "Thành công" : "Đã hủy")</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <button class="btn m-0 p-2 bg-gradient-info" onclick="openModalCheckBill('@(Uri.EscapeDataString(item.OrderId))','@item.PaymentMethod')">Kiểm tra</button>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalCheckBill" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border:none">
+                <h3 class="modal-title">Kiểm tra hóa đơn</h3>
+                <button type="button" class="close btn" style="position: absolute;top: 0; right: 0;font-size: 20px;" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex">
+                    <span>Kiểm tra hóa đơn</span>
+                    <button id="check-bill" class="btn p-2 bg-gradient-success mx-4">Kiểm tra</button>
+                </div>
+                <textarea id="response-bill" class="input__Input"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var tranid ="";
+    var paymentmethod ="";
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "order": []
+        });
+    });
+    function openModalCheckBill(value,method){
+        $("#response-bill").val("")
+        $("#modalCheckBill").modal("show");
+        tranid = encodeURIComponent(value);
+        paymentmethod = method;
+    }
+    $("#check-bill").click(function(){
+        if(tranid ==""){
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CheckBill", "Order", new { area = "Admin" })",
+            data: {
+                tranid: tranid,
+                paymentmethod:paymentmethod
+            },
+            success: function (response) {
+                if (response.status == true) {
+                    $("#response-bill").val(JSON.stringify(response.data, null, 2))
+                }
+            },
+            error: function (err) {
+
+            }
+        })
+    })
+</script>

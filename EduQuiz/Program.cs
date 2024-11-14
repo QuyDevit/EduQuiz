@@ -48,6 +48,11 @@ builder.Services.AddScoped<CookieAuth>();// Đăng ký CookieAuth
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 // Đăng ký EmailService
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.Configure<ZaloPayConfig>(builder.Configuration.GetSection("ZaloPayConfig"));
+builder.Services.AddScoped<ZaloPayService>();
+
+builder.Services.Configure<MomoConfig>(builder.Configuration.GetSection("MomoConfig"));
+builder.Services.AddScoped<MoMoService>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
