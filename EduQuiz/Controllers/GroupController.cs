@@ -248,7 +248,7 @@ namespace EduQuiz.Controllers
                 return RedirectToAction("Index", "HomeDashboard");
             }
             var data = await (from ag in _context.AssignmentGroups join
-                             quiz in _context.EduQuizs on ag.EduQuizId equals quiz.Id join
+                             quiz in _context.EduQuizSnapshots on ag.EduQuizSnapshotId equals quiz.Id join
                              quizss in _context.QuizSessions on ag.QuizSessionId equals quizss.Id join
                              u in _context.Users on ag.UserId equals u.Id
                              where ag.GroupId == getGroup.Id
@@ -291,7 +291,7 @@ namespace EduQuiz.Controllers
             {
                 return RedirectToAction("Index", "HomeDashboard");
             }
-            var isHostOrMember = getGroup.UserId == iduser || getGroup.Members.Any(m => m.UserId == iduser);
+            var isHostOrMember = getGroup.Members.Any(m => m.UserId == iduser);
             if (!isHostOrMember)
             {
                 return RedirectToAction("Index", "HomeDashboard");
@@ -358,7 +358,7 @@ namespace EduQuiz.Controllers
             var iduser = int.Parse(userId ?? "1");
             var getquizsession = await (from q in _context.QuizSessions join
                                         ga in _context.AssignmentGroups on q.Id equals ga.QuizSessionId join
-                                       e in _context.EduQuizs on q.EduQuizId equals e.Id join
+                                       e in _context.EduQuizSnapshots on q.EduQuizSnapshotId equals e.Id join
                                        u in _context.Users on e.UserId equals u.Id
                                         where q.Pin == pin
                                         select new ChallengeModel
@@ -401,8 +401,10 @@ namespace EduQuiz.Controllers
             if (player != null)
             {
                 var getorderQuestionPlayer = await _context.PlayerQuizSessionQuestions.FirstOrDefaultAsync(p=>p.PlayerSessionId == player.PlayerId);
-
-                countChallengeQuestion = JsonConvert.DeserializeObject<List<int>>(getorderQuestionPlayer.ListQuestionId).Count;
+                var listIdQuestion = JsonConvert.DeserializeObject<List<int>>(getorderQuestionPlayer.ListQuestionId);
+                var lastAskedQuestionId = listIdQuestion.LastOrDefault();
+                var checkAnswerQuestion = await _context.PlayerAnswers.FirstOrDefaultAsync(pa => pa.PlayerSessionId == player.PlayerId && pa.QuestionId == lastAskedQuestionId);
+                countChallengeQuestion = checkAnswerQuestion == null? listIdQuestion.Count : listIdQuestion.Count+1;
             }
             var view = new ChallengeViewModel
             {
@@ -635,15 +637,77 @@ namespace EduQuiz.Controllers
             string pin = await GeneratePin();
             var eduQuiz = await _context.EduQuizs
                 .Where(e => e.Id == listeduquizid[0])
-                .Select(e => new { e.Title ,e.OrderQuestion})
+                .Include(x=>x.Questions)
+                .ThenInclude(x=>x.Choices)
                 .FirstOrDefaultAsync();
 
             if (eduQuiz == null)
             {
                 return Json(new { result = false });
             }
+            var checkSnapshot = await _context.EduQuizSnapshots
+               .SingleOrDefaultAsync(s => s.CreatedAt == eduQuiz.UpdateAt && s.EduQuizId == eduQuiz.Id);
+            EduQuizSnapshot newSnapshot = null;
+            if (checkSnapshot == null)
+            {
+                newSnapshot = new EduQuizSnapshot
+                {
+                    EduQuizId = eduQuiz.Id,
+                    Title = eduQuiz.Title,
+                    Uuid = Guid.NewGuid(),
+                    ImageCover = eduQuiz.ImageCover,
+                    Description = eduQuiz.Description,
+                    Type = eduQuiz.Type,
+                    Visibility = eduQuiz.Visibility,
+                    ThemeId = eduQuiz.ThemeId,
+                    MusicId = eduQuiz.MusicId,
+                    OrderQuestion = eduQuiz.OrderQuestion,
+                    CreatedAt = eduQuiz.UpdateAt,
+                    UserId = iduser,
+                    Questions = new List<QuestionSnapshot>()
+                };
+                // Sao chép các câu hỏi và lựa chọn
+                foreach (var originalQuestion in eduQuiz.Questions)
+                {
+                    var newQuestion = new QuestionSnapshot
+                    {
+                        QuestionText = originalQuestion.QuestionText,
+                        TypeQuestion = originalQuestion.TypeQuestion,
+                        TypeAnswer = originalQuestion.TypeAnswer,
+                        Time = originalQuestion.Time,
+                        PointsMultiplier = originalQuestion.PointsMultiplier,
+                        Image = originalQuestion.Image,
+                        ImageEffect = originalQuestion.ImageEffect,
+                        Choices = new List<ChoiceSnapshot>()
+                    };
+
+                    if (originalQuestion.Choices?.Count > 0)
+                    {
+                        var newChoices = originalQuestion.Choices.Select(choice => new ChoiceSnapshot
+                        {
+                            Question = newQuestion, // Gán trực tiếp vào Question mới
+                            Answer = choice.Answer,
+                            IsCorrect = choice.IsCorrect,
+                            DisplayOrder = choice.DisplayOrder
+                        }).ToList();
+
+                        newQuestion.Choices = newChoices; // Gán danh sách Choices vào Question
+                    }
+
+                    newSnapshot.Questions.Add(newQuestion);
+                }
+
+                // Lưu EduQuiz mới vào cơ sở dữ liệu
+                _context.EduQuizSnapshots.Add(newSnapshot);
+                await _context.SaveChangesAsync();
+
+                var newQuestionIds = newSnapshot.Questions.Select(q => q.Id).ToList();
+                newSnapshot.OrderQuestion = JsonConvert.SerializeObject(newQuestionIds);
+            }
+
             var newquizSession = new QuizSession
             {
+                EduQuizSnapshotId= checkSnapshot == null? newSnapshot.Id: checkSnapshot.Id,
                 EduQuizId = listeduquizid[0],
                 HostUserId = iduser,
                 Pin = pin,
@@ -662,13 +726,15 @@ namespace EduQuiz.Controllers
             var newassignment = new AssignmentGroup
             {
                 GroupId = groupid,
-                EduQuizId = listeduquizid[0],
+                EduQuizSnapshotId = checkSnapshot == null ? newSnapshot.Id : checkSnapshot.Id,
                 QuizSessionId= newquizSession.Id,
                 UserId = iduser
             };
             _context.AssignmentGroups.Add(newassignment);
-            List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(eduQuiz.OrderQuestion);
-            int i = 0;
+			List<int> orderquestion = checkSnapshot == null
+		    ? JsonConvert.DeserializeObject<List<int>>(newSnapshot.OrderQuestion)
+		    : JsonConvert.DeserializeObject<List<int>>(checkSnapshot.OrderQuestion);
+			int i = 0;
             foreach (var order in orderquestion)
             {
                 var questionOrder = new QuizSessionQuestion
@@ -849,6 +915,32 @@ namespace EduQuiz.Controllers
 
             var member = await _context.GroupMembers
                 .FirstOrDefaultAsync(p => p.GroupId == groupid && p.UserId == iduser);
+            if (member == null)
+            {
+                return Json(new { status = false });
+            }
+            _context.GroupMembers.Remove(member);
+            var result = await _context.SaveChangesAsync();
+            return Json(new { status = true });
+        }
+        public async Task<IActionResult> RemoveMember(int idmember,int groupid)
+        {
+            var authCookie = Request.Cookies["acToken"];
+            if (authCookie == null)
+            {
+                return Json(new { result = false });
+            }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var iduser = int.Parse(userId ?? "1");
+
+            var checkadmin = await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupid && g.UserId == iduser);
+            if (checkadmin == null) {
+                return Json(new { result = false });
+            }
+            var member = await _context.GroupMembers
+                .FirstOrDefaultAsync(p => p.GroupId == groupid && p.UserId == idmember);
             if (member == null)
             {
                 return Json(new { status = false });

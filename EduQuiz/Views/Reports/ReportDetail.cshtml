@@ -268,7 +268,7 @@
                         $("#full-screen-modal-question .dialog-header__IndexWrapper").text(data.order + " - " + data.typeQuestion);
                         $("#full-screen-modal-question .dialog__header_title").text(data.questionText);
                         $("#full-screen-modal-question .report-media-image__Wrapper").css("background-image", `url(${data.image})`);
-                        $("#timequestion").text(data.time);
+                        $("#timequestion").text(data.time +"s");
                         $("#typeanswer").text(data.typeAnswer);
                         $("#full-screen-modal-question .report-media-image__Wrapper").css("background-image", `url(${data.image == "" ? '/src/img/img-default.png' : data.image});`);
                         $("#full-screen-modal-question .styles__StatTable").empty();
@@ -364,8 +364,8 @@
                         $("#ranked").text(data.rank);
                         $("#player-answered").text(data.answered);
                         $("#final-score").text(data.totalScore);
-                        if ($.fn.DataTable.isDataTable('#myTable')) {
-                            $('#myTable').DataTable().clear().destroy(); // Hủy bỏ DataTable cũ
+                        if ($.fn.DataTable.isDataTable('#myTablePlayer')) {
+                            $('#myTablePlayer').DataTable().clear().destroy(); // Hủy bỏ DataTable cũ
                         }
                         $("#full-screen-modal-player #myTablePlayer tbody").empty();
                         $("#full-screen-modal-player #myTablePlayer tbody").append(`

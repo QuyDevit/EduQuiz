@@ -16,7 +16,7 @@ namespace EduQuiz.Areas.Admin.Controllers
         [Route("admin/dashboard")]
         public async Task<IActionResult> Index()
         {
-            var today = DateTime.Today;
+            var today = DateTime.Now.Date;
             var revenueToday = await _context.Orders
                 .Where(order => order.CreateAt.Date == today && order.Status == "Success")
                 .SumAsync(order => order.TotalPrice);
@@ -29,7 +29,7 @@ namespace EduQuiz.Areas.Admin.Controllers
                 .Where(order => order.CreateAt >= startOfMonth && order.CreateAt <= endOfMonth)
                 .SumAsync(order => order.TotalPrice);
             var quizSessionToday = await _context.QuizSessions
-                 .Where(q => (q.StartTime.HasValue ? q.StartTime.Value.Date : DateTime.Now.Date) == today && q.IsActive)
+                 .Where(q => (q.StartTime.HasValue ? q.StartTime.Value.Date : DateTime.Now.Date) == today )
                  .Include(q => q.HostUser)
                  .GroupJoin(
                      _context.PlayerSessions,

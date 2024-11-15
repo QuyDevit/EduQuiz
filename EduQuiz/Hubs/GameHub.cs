@@ -51,10 +51,10 @@ namespace EduQuiz.Hubs
 
                     await _context.SaveChangesAsync();
 
-                    var check = await _context.EduQuizs
+                    var check = await _context.EduQuizSnapshots
                         .Include(e => e.Questions)
                         .ThenInclude(q => q.Choices)
-                        .FirstOrDefaultAsync(d => d.Id == quizSession.EduQuizId);
+                        .FirstOrDefaultAsync(d => d.Id == quizSession.EduQuizSnapshotId);
                     List<int> orderquestion = JsonConvert.DeserializeObject<List<int>>(check.OrderQuestion);
 
                     var getdata = new Models.EduQuizSession
@@ -351,7 +351,7 @@ namespace EduQuiz.Hubs
         }
         private async Task SendTimeUp(string pin, QuestionSession question, QuizOption quizOption)
         {
-            var choiceCounts = await _context.Choices
+            var choiceCounts = await _context.ChoiceSnapshots
                 .Where(c => c.QuestionId == question.Id)
                 .GroupJoin(
                     _context.PlayerAnswers.Where(pa => pa.PlayerSession.QuizSessionId == quizOption.QuizSessionId),
@@ -387,7 +387,7 @@ namespace EduQuiz.Hubs
                 await Clients.Caller.SendAsync("RoomNotFound", true);
                 return;
             }
-            var getquestion = await _context.Questions.Include(q => q.Choices).FirstOrDefaultAsync(d => d.Id == questionId);
+            var getquestion = await _context.QuestionSnapshots.Include(q => q.Choices).FirstOrDefaultAsync(d => d.Id == questionId);
             var getPlayerSession = await _context.PlayerSessions.FindAsync(playerId);
             bool isCorrect = CheckAnswer(getquestion, choiceId);
             int point = CalculatePoints(getquestion, choiceId, timeTaken);
@@ -421,7 +421,7 @@ namespace EduQuiz.Hubs
                 await Clients.Caller.SendAsync("RoomNotFound", true);
                 return;
             }
-            var getquestion = await _context.Questions.Include(q => q.Choices).FirstOrDefaultAsync(d => d.Id == questionId);
+            var getquestion = await _context.QuestionSnapshots.Include(q => q.Choices).FirstOrDefaultAsync(d => d.Id == questionId);
             var getPlayerSession = await _context.PlayerSessions.FindAsync(playerId);
             var findAnswer = getquestion.Choices.FirstOrDefault(a => a.Answer.ToLower() == answerText.ToLower());
             bool isCorrect = findAnswer != null;
@@ -471,7 +471,7 @@ namespace EduQuiz.Hubs
                 return;
             }
 
-            var getquestion = await _context.Questions.Include(q => q.Choices).FirstOrDefaultAsync(d => d.Id == questionId);
+            var getquestion = await _context.QuestionSnapshots.Include(q => q.Choices).FirstOrDefaultAsync(d => d.Id == questionId);
             var getPlayerSession = await _context.PlayerSessions.FindAsync(playerId);
 
             var correctChoices = getquestion.Choices.Where(c => c.IsCorrect).Count();
@@ -509,7 +509,7 @@ namespace EduQuiz.Hubs
             }
         }
         // Hàm kiểm tra đáp án
-        private bool CheckAnswer(Question question, int choiceId)
+        private bool CheckAnswer(QuestionSnapshot question, int choiceId)
         {
             return question.Choices.Any(c => c.Id == choiceId && c.IsCorrect);
         }
@@ -523,7 +523,7 @@ namespace EduQuiz.Hubs
                 default: return 1.0; // Mặc định là tiêu chuẩn nếu không rõ
             }
         }
-        private int CalculatePoints(Question question, int choiceId, double timeTaken)
+        private int CalculatePoints(QuestionSnapshot question, int choiceId, double timeTaken)
         {
             int maxPoints = 1000; // Điểm mặc định là 1000
             double totalTime = question.Time ?? 30; // Thời gian tối đa từ câu hỏi, mặc định là 30 nếu không có

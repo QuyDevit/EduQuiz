@@ -143,6 +143,7 @@
                                         $("#email").val("");
                                         grecaptcha.reset()
                                     } else {
+                                        $(".loading").hide();
                                         openToast('warning', 'Lỗi', response.msg, 2500);
                                         grecaptcha.reset();
                                     } 

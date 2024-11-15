@@ -40,7 +40,7 @@ namespace EduQuiz.Controllers
                     {
                         Pin = q.Pin,
                         QuizSessionId = q.Id,
-                        Title = q.EduQuiz.Title,     
+                        Title = q.Title,     
                         IsActive = q.IsActive,
                         StartTime = q.StartTime,
                         EndTime = q.EndTime,
@@ -70,7 +70,7 @@ namespace EduQuiz.Controllers
                     {
                         Pin =q.Pin,
                         QuizSessionId = q.Id,
-                        Title = q.EduQuiz.Title,
+                        Title = q.Title,
                         IsActive = q.IsActive,
                         StartTime = q.StartTime,
                         EndTime = q.EndTime,
@@ -116,13 +116,13 @@ namespace EduQuiz.Controllers
                         Type = q.TypeQuizSession == 0 ? "Trực tiếp" : "Bài chỉ định",
                         StartTime = q.StartTime ?? DateTime.Now,
                         EndTime = q.EndTime ?? DateTime.Now,
-                        EduQuizId = q.EduQuizId,
+                        EduQuizId = q.EduQuizSnapshotId,
                         Title = q.Title,
                         PlayerSessions = _context.PlayerSessions
                             .Where(ps => ps.QuizSessionId == q.Id).AsNoTracking()
                             .ToList(),
-                        Questions = _context.Questions
-                            .Where(qst => qst.EduQuizId == q.EduQuizId)
+                        Questions = _context.QuestionSnapshots
+                            .Where(qst => qst.EduQuizId == q.EduQuizSnapshotId)
                             .Include(qst =>qst.Choices).AsNoTracking()
                             .ToList()
                     })
@@ -133,7 +133,7 @@ namespace EduQuiz.Controllers
                     var playerCount = quizSessionData.PlayerSessions.Count;
                     var questionCount = quizSessionData.Questions.Count;
 
-    
+
                     var playerAnswers = await _context.PlayerAnswers
                         .Where(pa => pa.PlayerSession.QuizSessionId == quizSessionData.QuizSession.Id)
                         .ToListAsync();
@@ -155,7 +155,6 @@ namespace EduQuiz.Controllers
                         PlayersBelowAvg = new List<ReportBelowAvg>(),
                         PlayersNotFinish = new List<ReportNotFinish>()
                     };
-
                     
                     foreach (var question in quizSessionData.Questions)
                     {
@@ -337,14 +336,10 @@ namespace EduQuiz.Controllers
                        Type = q.TypeQuizSession == 0 ? "Trực tiếp" : "Bài chỉ định",
                        StartTime = q.StartTime ?? DateTime.Now,
                        EndTime = q.EndTime ?? DateTime.Now,
-                       EduQuizId = q.EduQuizId,
+                       EduQuizId = q.EduQuizSnapshotId,
                        Title = q.Title,
                        PlayerSessions = _context.PlayerSessions
                            .Where(ps => ps.QuizSessionId == q.Id).AsNoTracking()
-                           .ToList(),
-                       Questions = _context.Questions
-                           .Where(qst => qst.EduQuizId == q.EduQuizId)
-                           .Include(qst => qst.Choices).AsNoTracking()
                            .ToList()
                    })
                    .FirstOrDefaultAsync();
@@ -352,7 +347,7 @@ namespace EduQuiz.Controllers
                 if (quizSessionData != null)
                 {
                     var playerCount = quizSessionData.PlayerSessions.Count;
-                    var questionCount = quizSessionData.Questions.Count;
+
 
                     var players = quizSessionData.PlayerSessions
                     .OrderByDescending(p => p.TotalScore)
@@ -365,12 +360,8 @@ namespace EduQuiz.Controllers
                     .ToList();
                     if (players != null)
                     {
-                        var getquizsession = await _context.QuizSessions
-                             .Where(n => n.Id == id)
-                             .Select(n => n.EduQuizId)
-                             .FirstOrDefaultAsync();
-                        var getquestions = await _context.Questions
-                            .Where(q => q.EduQuizId == getquizsession)
+                        var getquestions = await _context.QuestionSnapshots
+                            .Where(q => q.EduQuizId == quizSessionData.EduQuizId)
                             .Include(q => q.Choices)
                             .Select(q => new
                             {
@@ -385,6 +376,8 @@ namespace EduQuiz.Controllers
                                 q.Choices
                             }).OrderBy(q => q.Order)
                             .ToListAsync();
+
+                        var questionCount = getquestions.Count;
 
                         var reportPlayers = new List<ReportRankPlayer>();
                         var rank = 1;
@@ -480,14 +473,10 @@ namespace EduQuiz.Controllers
                        Type = q.TypeQuizSession == 0 ? "Trực tiếp" : "Bài chỉ định",
                        StartTime = q.StartTime ?? DateTime.Now,
                        EndTime = q.EndTime ?? DateTime.Now,
-                       EduQuizId = q.EduQuizId,
+                       EduQuizId = q.EduQuizSnapshotId,
                        Title = q.Title,
                        PlayerSessions = _context.PlayerSessions
                            .Where(ps => ps.QuizSessionId == q.Id).AsNoTracking()
-                           .ToList(),
-                       Questions = _context.Questions
-                           .Where(qst => qst.EduQuizId == q.EduQuizId)
-                           .Include(qst => qst.Choices).AsNoTracking()
                            .ToList()
                    })
                    .FirstOrDefaultAsync();
@@ -495,7 +484,6 @@ namespace EduQuiz.Controllers
                 if (quizSessionData != null)
                 {
                     var playerCount = quizSessionData.PlayerSessions.Count;
-                    var questionCount = quizSessionData.Questions.Count;
 
                     var players = quizSessionData.PlayerSessions
                     .OrderByDescending(p => p.TotalScore)
@@ -508,12 +496,8 @@ namespace EduQuiz.Controllers
                     .ToList();
                     if (players != null)
                     {
-                        var getquizsession = await _context.QuizSessions
-                             .Where(n => n.Id == id)
-                             .Select(n => n.EduQuizId)
-                             .FirstOrDefaultAsync();
-                        var getquestions = await _context.Questions
-                            .Where(q => q.EduQuizId == getquizsession)
+                        var getquestions = await _context.QuestionSnapshots
+                            .Where(q => q.EduQuizId == quizSessionData.EduQuizId)
                             .Include(q => q.Choices)
                             .Select(q => new
                             {
@@ -528,7 +512,7 @@ namespace EduQuiz.Controllers
                                 q.Choices
                             }).OrderBy(q => q.Order)
                             .ToListAsync();
-
+                        var questionCount = getquestions.Count;
                         var reportPlayers = new List<ReportRankPlayer>();
                         var rank = 1;
                         foreach (var player in players)
@@ -627,22 +611,17 @@ namespace EduQuiz.Controllers
                        Type = q.TypeQuizSession == 0 ? "Trực tiếp" : "Bài chỉ định",
                        StartTime = q.StartTime ?? DateTime.Now,
                        EndTime = q.EndTime ?? DateTime.Now,
-                       EduQuizId = q.EduQuizId,
+                       EduQuizId = q.EduQuizSnapshotId,
                        Title = q.Title,
                        PlayerSessions = _context.PlayerSessions
                            .Where(ps => ps.QuizSessionId == q.Id).AsNoTracking()
-                           .ToList(),
-                       Questions = _context.Questions
-                           .Where(qst => qst.EduQuizId == q.EduQuizId)
-                           .Include(qst => qst.Choices).AsNoTracking()
                            .ToList()
                    })
                    .FirstOrDefaultAsync();
 
                 if (quizSessionData != null)
                 {
-                    var playerCount = quizSessionData.PlayerSessions.Count;
-                    var questionCount = quizSessionData.Questions.Count;
+                    var playerCount = quizSessionData.PlayerSessions.Count;            
 
                     var players = quizSessionData.PlayerSessions
                      .OrderByDescending(p => p.TotalScore)
@@ -655,12 +634,8 @@ namespace EduQuiz.Controllers
                      .ToList();
                     if (players != null)
                     {
-                        var getquizsession = await _context.QuizSessions
-                             .Where(n => n.Id == id)
-                             .Select(n => n.EduQuizId)
-                             .FirstOrDefaultAsync();
-                        var getquestions = await _context.Questions
-                            .Where(q => q.EduQuizId == getquizsession)
+                        var getquestions = await _context.QuestionSnapshots
+                            .Where(q => q.EduQuizId == quizSessionData.EduQuizId)
                             .Include(q => q.Choices)
                             .Select(q => new
                             {
@@ -675,7 +650,7 @@ namespace EduQuiz.Controllers
                                 q.Choices
                             }).OrderBy(q => q.Order)
                             .ToListAsync();
-
+                        var questionCount = getquestions.Count;
                         var reportPlayers = new List<ReportRankPlayer>();
                         var rank = 1;
                         foreach (var player in players)
@@ -774,19 +749,19 @@ namespace EduQuiz.Controllers
                          Type = q.TypeQuizSession == 0 ? "Trực tiếp" : "Bài chỉ định",
                          StartTime = q.StartTime ?? DateTime.Now,
                          EndTime = q.EndTime ?? DateTime.Now,
-                         EduQuizId = q.EduQuizId,
+                         EduQuizId = q.EduQuizSnapshotId,
                          Title = q.Title,
                          PlayerSessions = _context.PlayerSessions
                              .Where(ps => ps.QuizSessionId == q.Id)
                              .AsNoTracking()
                              .ToList(),
-                         Questions = _context.Questions
-                             .Where(qst => qst.EduQuizId == q.EduQuizId)
+                         Questions = _context.QuestionSnapshots
+                             .Where(qst => qst.EduQuizId == q.EduQuizSnapshotId)
                              .Include(qst => qst.Choices)
                              .AsNoTracking()
                              .ToList(),
-                         OrderQuestion = _context.EduQuizs
-                             .Where(e=>e.Id == q.EduQuizId)
+                         OrderQuestion = _context.EduQuizSnapshots
+                             .Where(e => e.Id == q.EduQuizSnapshotId)
                              .Select(n => n.OrderQuestion)
                              .FirstOrDefault()
                      })
@@ -826,7 +801,7 @@ namespace EduQuiz.Controllers
                         var totalCorrectAnswersForQuestion = question.Choices
                             .Where(a => a.QuestionId == question.Id && a.IsCorrect)
                             .Count();
-                        double accuracy;
+                        double accuracy = 0;
 
                         if (question.TypeAnswer == 2)
                         {
@@ -835,7 +810,7 @@ namespace EduQuiz.Controllers
                         else
                         {
                             accuracy = (double)correctAnswersCount / playerCount;
-                        };
+                        }
                         var questionAnswers = playerAnswers.Where(pa => pa.QuestionId == question.Id);
                         float averageTime = 0;
                         if (questionAnswers.Any())
@@ -854,8 +829,8 @@ namespace EduQuiz.Controllers
                             },
                             QuestionTitle = question.QuestionText,
                             Order = count,
-                            Accuracy = (int)Math.Round(accuracy * 100) + "%",
-                            ValueAccuracy = CalculateHelper.CalculateValueFromPercentageQuestion((int)Math.Round(accuracy * 100))
+                            Accuracy = double.IsNaN(accuracy) ? "0%" : (int)Math.Round(accuracy * 100) + "%",
+                            ValueAccuracy = double.IsNaN(accuracy) ? CalculateHelper.CalculateValueFromPercentageQuestion(0) : CalculateHelper.CalculateValueFromPercentageQuestion((int)Math.Round(accuracy * 100))
                         });
                         count++;
                     }
@@ -897,13 +872,13 @@ namespace EduQuiz.Controllers
                          Type = q.TypeQuizSession == 0 ? "Trực tiếp" : "Bài chỉ định",
                          StartTime = q.StartTime ?? DateTime.Now,
                          EndTime = q.EndTime ?? DateTime.Now,
-                         EduQuizId = q.EduQuizId,
+                         EduQuizId = q.EduQuizSnapshotId,
                          Title = q.Title,
                          PlayerSessions = _context.PlayerSessions
                              .Where(ps => ps.QuizSessionId == q.Id)
                              .ToList(),
-                         Questions = _context.Questions
-                             .Where(qst => qst.EduQuizId == q.EduQuizId)
+                         Questions = _context.QuestionSnapshots
+                             .Where(qst => qst.EduQuizId == q.EduQuizSnapshotId)
                              .Include(qst => qst.Choices)
                              .ToList()
                      })
@@ -913,7 +888,6 @@ namespace EduQuiz.Controllers
                 {
                     var playerCount = quizSessionData.PlayerSessions.Count;
                     var questionCount = quizSessionData.Questions.Count;
-
 
                     var playerAnswers = await _context.PlayerAnswers
                         .Where(pa => pa.PlayerSession.QuizSessionId == quizSessionData.QuizSession.Id)
@@ -940,7 +914,7 @@ namespace EduQuiz.Controllers
                         var totalCorrectAnswersForQuestion = question.Choices
                             .Where(a => a.QuestionId == question.Id && a.IsCorrect)
                             .Count();
-                        double accuracy;
+                        double accuracy = 0;
 
                         if (question.TypeAnswer == 2)
                         {
@@ -1051,7 +1025,9 @@ namespace EduQuiz.Controllers
             {
                 FlagFeedback = getfeedback.Count > 0,
                 FlagRating = getfeedback.Where(f=>f.Rating == null).Count() != getfeedback.Count,
-                Rating = getfeedback.Count > 0 ? getfeedback.Where(f => f.Rating.HasValue).Average(f => f.Rating.Value) : 0,
+                Rating = getfeedback.Count > 0
+                    ? Math.Round(getfeedback.Where(f => f.Rating.HasValue).Average(f => f.Rating.Value), 1)
+                    : 0,
                 FlagLearning = getfeedback.Where(f => f.PositiveLearningOutcome == null).Count() != getfeedback.Count,
                 CountYesLearning = getfeedback.Where(f => f.PositiveLearningOutcome == true).Count(),
                 CountNoLearning = getfeedback.Where(f => f.PositiveLearningOutcome == false).Count(),
@@ -1102,17 +1078,17 @@ namespace EduQuiz.Controllers
                     Type = q.TypeQuizSession == 0 ? "Trực tiếp" : "Bài chỉ định",
                     q.StartTime,
                     q.EndTime,
-                    q.EduQuizId,
+                    EduQuizId = q.EduQuizSnapshotId,
                     q.Title,
                     PlayerSessions = _context.PlayerSessions
                         .Where(ps => ps.QuizSessionId == q.Id).AsNoTracking()
                         .ToList(),
-                    Questions = _context.Questions
-                        .Where(qst => qst.EduQuizId == q.EduQuizId)
+                    Questions = _context.QuestionSnapshots
+                        .Where(qst => qst.EduQuizId == q.EduQuizSnapshotId)
                         .Include(qst => qst.Choices).AsNoTracking()
                         .ToList(),
-                    OrderQuestion = _context.EduQuizs
-                        .Where(e => e.Id == q.EduQuizId)
+                    OrderQuestion = _context.EduQuizSnapshots
+                        .Where(e => e.Id == q.EduQuizSnapshotId)
                         .Select(n => n.OrderQuestion)
                         .FirstOrDefault(),
                     PlayerAnswer = _context.PlayerAnswers
@@ -1282,8 +1258,8 @@ namespace EduQuiz.Controllers
                             .OrderByDescending(pa => pa.TotalScore)
                             .AsNoTracking()
                             .ToList(),
-                        Questions = _context.Questions
-                            .Where(qst => qst.EduQuizId == q.EduQuizId)
+                        Questions = _context.QuestionSnapshots
+                            .Where(qst => qst.EduQuizId == q.EduQuizSnapshotId)
                             .Include(qst => qst.Choices).AsNoTracking()
                             .ToList(),
                         OrderQuizSessionQuestion = _context.QuizSessionQuestions
@@ -1320,7 +1296,7 @@ namespace EduQuiz.Controllers
                     var correctAnswersCount = reportData.PlayerAnswers.Count(pa => pa.QuestionId == question.Id && pa.IsCorrect);
                     var totalCorrectAnswersForQuestion = question.Choices.Count(a => a.QuestionId == question.Id && a.IsCorrect);
 
-                    double accuracy;
+                    double accuracy = 0;
                     if (question.TypeAnswer == 2)
                     {
                         accuracy = (double)correctAnswersCount / (playerCount * totalCorrectAnswersForQuestion);
@@ -1678,7 +1654,7 @@ namespace EduQuiz.Controllers
         }
         public async Task<IActionResult> GetReportbyQuestion(int idquestion, int quizsessionId)
         {
-            var getQuestion = await _context.Questions
+            var getQuestion = await _context.QuestionSnapshots
                 .Where(q => q.Id == idquestion)
                 .Select(n => new
                 {
@@ -1756,22 +1732,26 @@ namespace EduQuiz.Controllers
                 IsCorrect = false,
                 Percent = Math.Round((double)playersWithoutAnswers.Count / allPlayers.Count * 100, 2)
             });
-            // Tính toán số lượng người chơi đã trả lời đúng
-            int playerAnsweredCount = playerAnswers.Select(pa => pa.PlayerId).Distinct().Count(); // Số người chơi đã trả lời
+            choiceStats = choiceStats.Select(cs => new
+            {
+                cs.Answer,
+                cs.Count,
+                cs.IsCorrect,
+                Percent = double.IsNaN(cs.Percent) ? 0 : cs.Percent
+            }).ToList();
+            int playerAnsweredCount = playerAnswers.Select(pa => pa.PlayerId).Distinct().Count(); 
             int totalPlayers = allPlayers.Count;
-            // Tính tỷ lệ chính xác cho các câu hỏi có TypeAnswer = 2
+
             double correctAccuracy;
             if (getQuestion.TypeAnswer == 2)
             {
-                // Tính tổng số lựa chọn đúng
                 var totalCorrectChoices = getQuestion.Choices.Count(c => c.IsCorrect);
-                var totalAnswersGiven = playerAnswers.Count(pa => pa.IsCorrect); // Số câu trả lời đúng
-                correctAccuracy = (double)totalAnswersGiven / (totalPlayers * totalCorrectChoices) * 100; // Chia theo số lượng người chơi đã trả lời
+                var totalAnswersGiven = playerAnswers.Count(pa => pa.IsCorrect); 
+                correctAccuracy = (double)totalAnswersGiven / (totalPlayers * totalCorrectChoices) * 100; 
             }
             else
             {
-                // Với câu hỏi bình thường
-                correctAccuracy = (double)playerAnswers.Count(p => p.IsCorrect) / totalPlayers * 100; // Chia theo số lượng người chơi đã trả lời
+                correctAccuracy = (double)playerAnswers.Count(p => p.IsCorrect) / totalPlayers * 100; 
             }
             var avgTime = playerAnswers.Count > 0 ? playerAnswers.Average(a => Convert.ToDouble(a.TimeTaken)) : 0;
 
@@ -1790,8 +1770,10 @@ namespace EduQuiz.Controllers
                 getQuestion.Time,
                 TypeAnswer = getQuestion.TypeAnswer == 1 ? "Chọn một" : "Chọn nhiều",
                 getQuestion.Order,
-                CorrectAccuracy = Math.Round(correctAccuracy),
-                ValueAccuracy = CalculateHelper.CalculateValueFromPercentageQuestion((int)Math.Round(correctAccuracy)),
+                CorrectAccuracy = double.IsNaN(correctAccuracy) ?0: Math.Round(correctAccuracy),
+                ValueAccuracy = double.IsNaN(correctAccuracy) ? 
+                    CalculateHelper.CalculateValueFromPercentageQuestion(0): 
+                    CalculateHelper.CalculateValueFromPercentageQuestion((int)Math.Round(correctAccuracy)),
                 AvgTime = Math.Round(avgTime, 2),
                 PlayerAnsweredCount = $"{playerAnsweredCount} trên {totalPlayers}",
                 Choices = choiceStats,
@@ -1822,10 +1804,11 @@ namespace EduQuiz.Controllers
             {
                 var getquizsession = await _context.QuizSessions
                      .Where(n => n.Id == quizsessionId)
-                     .Select(n => n.EduQuizId)
+                     .Select(n =>new { n.EduQuizSnapshotId})
                      .FirstOrDefaultAsync();
-                var getquestions = await _context.Questions
-                    .Where(q => q.EduQuizId == getquizsession)
+              
+                var getquestions = await _context.QuestionSnapshots
+                    .Where(q => q.EduQuizId == getquizsession.EduQuizSnapshotId)
                     .Include(q=>q.Choices)
                     .Select(q => new
                     {
@@ -1840,6 +1823,7 @@ namespace EduQuiz.Controllers
                         q.Choices
                     }).OrderBy(q => q.Order)
                     .ToListAsync();
+                
                 // Tạo list đáp án chi tiết
                 var detailedAnswers = new List<object>();
                 double totalPlayerAccuracy = 0.0;

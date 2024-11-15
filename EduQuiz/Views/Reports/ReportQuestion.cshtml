@@ -99,7 +99,7 @@
                         $("#full-screen-modal-question .dialog-header__IndexWrapper").text(data.order + " - " + data.typeQuestion);
                         $("#full-screen-modal-question .dialog__header_title").text(data.questionText); 
                         $("#full-screen-modal-question .report-media-image__Wrapper").css("background-image", `url(${data.image})`);
-                        $("#timequestion").text(data.time);
+                        $("#timequestion").text(data.time +"s");
                         $("#typeanswer").text(data.typeAnswer);
                         $("#full-screen-modal-question .report-media-image__Wrapper").css("background-image", `url(${data.image == "" ? '/src/img/img-default.png' : data.image});`);
                         $("#full-screen-modal-question .styles__StatTable").empty();

@@ -33,6 +33,10 @@
                             <tr>
                                 <th>Tên</th>
                                 <th style="text-align:right">Ngày tham gia</th>
+                                @if (Model.IsHost)
+                                {
+                                    <th>Thao tác</th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -51,6 +55,20 @@
                                     <td style="text-align:right">
                                         <div>@member.JoinDate</div>
                                     </td>
+                                    @if (Model.IsHost)
+                                    {
+                                        <td>
+                                            @if(member.Role != "Admin")
+                                            {
+                                                <button class="btn" onclick="removeMember(@member.UserId)">
+                                                    <span class="icon__Icon">
+                                                        <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path fill-rule="evenodd" d="M24.4142 10L26.5355 12.1213L25.1213 13.5355L23 11.4142L20.8787 13.5355L19.4645 12.1213L21.5858 10L19.4645 7.87869L20.8787 6.46448L23 8.5858L25.1213 6.46448L26.5355 7.87869L24.4142 10ZM14 18C11.795 18 10 16.205 10 14C10 11.795 11.795 10 14 10C16.205 10 18 11.795 18 14C18 16.205 16.206 18 14 18ZM6 26V25C6 21.467 9.289 19 14 19C18.711 19 22 21.467 22 25V26H6ZM14.001 21C17.009 21 19.244 22.192 19.843 24H8.159C8.757 22.192 10.993 21 14.001 21ZM14 12C12.896 12 12 12.896 12 14C12 15.103 12.896 16 14 16C15.104 16 16 15.103 16 14C16 12.896 15.104 12 14 12Z" style="fill: #fff;"></path></svg>
+                                                    </span>
+                                                    <span class="ml-2">Xóa</span>
+                                                </button>
+                                            }                                           
+                                        </td>
+                                    } 
                                 </tr>
                             }
                         </tbody>
@@ -67,4 +85,35 @@
             "order": []
         });
     });
+    function removeMember(value){
+        Swal.fire({
+            title: "Bạn chắc chứ?",
+            text: "Bạn có muốn xóa thành viên này!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Đồng ý",
+            cancelButtonText: "Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("RemoveMember", "Group")",
+                    data: {
+                        idmember: value,
+                        groupid: `@Model.Group.Id`
+                    },
+                    success: function (response) { 
+                        if (response.status) {
+                            window.location.reload();
+                        }
+                    },
+                    error: function (err) {
+
+                    }
+                })
+            }
+        });
+    }
 </script>

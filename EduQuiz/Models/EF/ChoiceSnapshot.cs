@@ -3,18 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduQuiz.Models.EF
 {
-    [Table("QuizSessionQuestion")]
-    public class QuizSessionQuestion
+    [Table("ChoiceSnapshot")]
+    public class ChoiceSnapshot
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int? QuizSessionId { get; set; }
-        [ForeignKey("QuizSessionId")]
-        public virtual QuizSession QuizSession { get; set; }
-        public int? QuestionId { get; set; }
         [ForeignKey("QuestionId")]
+        public int? QuestionId { get; set; }
         public virtual QuestionSnapshot Question { get; set; }
-        public int Order { get; set; }
+        public string Answer { get; set; }
+        public bool IsCorrect { get; set; }
+        public int DisplayOrder { get; set; }
     }
 }

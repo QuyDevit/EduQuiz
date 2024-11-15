@@ -653,8 +653,7 @@ namespace EduQuiz.Controllers
                     Type = originalEduQuiz.Type,
                     Visibility = originalEduQuiz.Visibility,
                     ThemeId = originalEduQuiz.ThemeId,
-                    MusicId = originalEduQuiz.MusicId,
-                    OrderQuestion = originalEduQuiz.OrderQuestion,
+                    MusicId = originalEduQuiz.MusicId, 
                     CreatedAt = DateTime.Now,
                     UpdateAt = DateTime.Now,
                     UserId = iduser,
@@ -704,6 +703,11 @@ namespace EduQuiz.Controllers
 
                     _context.QuizFolders.Add(quizFolder);
                 }
+                await _context.SaveChangesAsync();
+
+                var newQuestionIds = newEduQuiz.Questions.Select(q => q.Id).ToList();
+                newEduQuiz.OrderQuestion = JsonConvert.SerializeObject(newQuestionIds);
+
                 await _context.SaveChangesAsync();
                 return Json(new { result = "PASS" });
             }

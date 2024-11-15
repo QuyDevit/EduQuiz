@@ -398,6 +398,9 @@ button:focus{
     animation: 250ms ease 0ms 1 normal none running bounceScale;
     cursor: pointer;
 }
+.styles__eduquizInfo-Btn:focus{
+    color:#fff;
+}
 @keyframes bounceScale {
     0% {
         z-index: 1;

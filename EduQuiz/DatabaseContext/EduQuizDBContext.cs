@@ -36,6 +36,9 @@ namespace EduQuiz.DatabaseContext
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<EduQuizSnapshot> EduQuizSnapshots { get; set; }
+        public DbSet<QuestionSnapshot> QuestionSnapshots { get; set; }
+        public DbSet<ChoiceSnapshot> ChoiceSnapshots { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

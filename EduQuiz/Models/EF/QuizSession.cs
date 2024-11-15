@@ -13,6 +13,9 @@ namespace EduQuiz.Models.EF
         [ForeignKey("EduQuizId")]
         public int EduQuizId { get; set; }
         public virtual EduQuiz EduQuiz { get; set; }
+        [ForeignKey("EduQuizSnapshotId")]
+        public int? EduQuizSnapshotId { get; set; }
+        public virtual EduQuizSnapshot EduQuizSnapshot { get; set; }
 
         [ForeignKey("HostUserId")]
         public int HostUserId { get; set; }

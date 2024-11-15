@@ -16,11 +16,11 @@ namespace EduQuiz.Models.EF
 
         [ForeignKey("QuestionId")]
         public int QuestionId { get; set; }
-        public virtual Question Question { get; set; }
+        public virtual QuestionSnapshot Question { get; set; }
 
         [ForeignKey("ChoiceId")]
         public int? ChoiceId { get; set; } 
-        public virtual Choice Choice { get; set; }
+        public virtual ChoiceSnapshot Choice { get; set; }
 
         public bool IsCorrect { get; set; } 
         public double TimeTaken { get; set; } 

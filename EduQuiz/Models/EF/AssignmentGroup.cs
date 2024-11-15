@@ -21,9 +21,9 @@ namespace EduQuiz.Models.EF
         [ForeignKey("QuizSessionId")]
         public int? QuizSessionId { get; set; }
         public virtual QuizSession QuizSession { get; set; }
-        [ForeignKey("EduQuizId")]
-        public int? EduQuizId { get; set; }
-        public virtual EduQuiz EduQuiz { get; set; }
+        [ForeignKey("EduQuizSnapshotId")]
+        public int? EduQuizSnapshotId { get; set; }
+        public virtual EduQuizSnapshot EduQuiz { get; set; }
         public DateTime AssignedDate { get; set; } = DateTime.Now;
     }
 }
