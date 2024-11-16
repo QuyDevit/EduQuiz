@@ -203,7 +203,7 @@
                     var link = document.createElement('a');
                     var url = window.URL.createObjectURL(blob);
                     link.href = url;
-                    link.download = 'Report.xlsx';
+                    link.download = `Báo cáo chi tiết - EduQuiz.xlsx`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);

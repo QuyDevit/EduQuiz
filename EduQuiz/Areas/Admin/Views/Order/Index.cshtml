@@ -3,6 +3,7 @@
     ViewBag.Title = "Quản lý hóa đơn";
 }
 @model ICollection<EduQuiz.Models.EF.Order>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <div class="container-fluid py-2">
     <div class="row">
         <div class="col-12">
@@ -14,6 +15,12 @@
                 </div>
                 <div class="card-body px-0 pb-2 px-4">
                     <div class="table-responsive p-0">
+                        <div class="col-6" style="display:flex;gap:20px;margin-bottom:20px">
+                            <input class="input__date" type="text" id="datepickerstart" placeholder="Từ ngày" style="min-height:18px;flex:1"/>
+                            <input class="input__date" type="text" id="datepickerend" placeholder="Đến ngày" style="min-height:18px;flex:1" />
+                            <button class="btn m-0 px-2 bg-gradient-info" onclick="filterTable()">Lọc</button>
+                            <button class="btn m-0 px-2 bg-gradient-success" onclick="printReport()">Xuất hóa đơn</button>
+                        </div>
                         <table id="myTable" class="table align-items-center mb-0">
                             <thead>
                                 <tr>
@@ -109,6 +116,17 @@
             "order": []
         });
     });
+    flatpickr("#datepickerstart", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+    });
+
+    flatpickr("#datepickerend", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+    });
     function openModalCheckBill(value,method){
         $("#response-bill").val("")
         $("#modalCheckBill").modal("show");
@@ -136,4 +154,108 @@
             }
         })
     })
+    function filterTable(){
+        const startdate = $('#datepickerstart').val();
+        const enddate = $('#datepickerend').val();
+        if (startdate == "" || enddate == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: "Vui lòng nhập ngày lọc.",
+            });
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("FilterOrder", "Order", new { area = "Admin" })",
+            data: {
+                startdate: startdate,
+                enddate: enddate
+            },
+            success: function (response) {
+                if (response.status == true) {
+                    LoadList(response.data);
+                }
+            },
+            error: function (err) {
+
+            }
+        })
+    }
+    function LoadList(data) {
+        data = JSON.parse(data);
+        var table = $('#myTable').DataTable();
+        table.clear().draw();
+        for (let i = 0; i < data.length; i++) {
+            const node = table.row.add([
+                `<div class="d-flex px-2 py-1">
+                    <div>
+                        <img src="${data[i].ProfilePicture}" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">${data[i].Username}</h6>
+                        <p class="text-xs text-secondary mb-0">${data[i].UserEmail}</p>
+                    </div>
+                </div>`,
+                `<p class="text-xs font-weight-bold mb-0">${data[i].FirstName} ${data[i].LastName}</p>`,
+                `<span class="text-secondary text-xs">${data[i].OrderEmail}</span>`,
+                `<span class="text-secondary text-xs">${data[i].Company}</span>`,
+                `<span class="text-secondary text-xs">${data[i].PhoneNumber}</span>`,
+                `<span class="text-secondary text-xs">${data[i].PlanType}</span>`,
+                `<span class="text-secondary text-xs">${data[i].PaymentMethod}</span>`,
+                `<span class="text-secondary text-xs font-weight-bold">${data[i].CreateAt}</span>`,
+                `<span class="text-secondary text-xs ${data[i].Status == 'Đang chờ' ? 'text-danger' : data[i].Status == 'Thành công' ? 'text-success' : 'text-warning'}">${data[i].Status}</span>`,
+                `<button class="btn m-0 p-2 bg-gradient-info" onclick="openModalCheckBill('${encodeURIComponent(data[i].OrderId)}','${data[i].PaymentMethod}')">Kiểm tra</button>`
+            ]).draw().node();
+            $(node).find("td").eq(1).addClass("align-middle text-center text-sm");
+            $(node).find("td").eq(2).addClass("align-middle text-center text-sm");
+            $(node).find("td").eq(3).addClass("align-middle text-center text-sm");
+            $(node).find("td").eq(4).addClass("align-middle text-center text-sm");
+            $(node).find("td").eq(5).addClass("align-middle text-center text-sm");
+            $(node).find("td").eq(6).addClass("align-middle text-center text-sm");
+            $(node).find("td").eq(7).addClass("align-middle text-center text-sm");
+        }
+    }
+    function printReport() {
+        const startdate = $('#datepickerstart').val();
+        const enddate = $('#datepickerend').val();
+        if (startdate == "" || enddate == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: "Vui lòng nhập ngày lọc.",
+            });
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ExportReportOrder", "Order", new { area = "Admin" })",
+            data: {
+                startdate: startdate,
+                enddate: enddate
+            },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (response) {
+                // Tạo blob từ response (đã định nghĩa 'blob')
+                var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                var link = document.createElement('a');
+                var url = window.URL.createObjectURL(blob);
+                link.href = url;
+                link.download = `Báo cáo chi tiết hóa đơn từ ngày ${formatDate(startdate)} đến ngày ${formatDate(enddate)}.xlsx`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            },
+            error: function (err) {
+
+            }
+        })
+    }
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return new Date(dateString).toLocaleDateString('en-GB', options).replace(/\//g, '-');
+    }
 </script>

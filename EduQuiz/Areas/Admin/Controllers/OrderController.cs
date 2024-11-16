@@ -2,6 +2,9 @@
 using EduQuiz.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using OfficeOpenXml;
+using System.Numerics;
 
 namespace EduQuiz.Areas.Admin.Controllers
 {
@@ -46,6 +49,73 @@ namespace EduQuiz.Areas.Admin.Controllers
                 }
             }
             return Json(new {status = true ,data = result});
+        }
+        public async Task<IActionResult> FilterOrder(DateTime startdate, DateTime enddate)
+        {
+            var listorder = await _context.Orders
+                .Where(n=>n.CreateAt >= startdate && n.CreateAt <= enddate)
+                .Include(n => n.User).Select(n => new {
+                    ProfilePicture = n.User.ProfilePicture,
+                    Username = n.User.Username,
+                    UserEmail = n.User.Email,
+                    FirstName = n.FirstName,
+                    LastName = n.LastName,
+                    OrderEmail = n.Email,
+                    Company = n.Company,
+                    PhoneNumber = n.PhoneNumber,
+                    PlanType = n.Quantity + " " + (n.Period == "year" ? "năm" : "tháng") + " " + (n.PlanType == "organization" ? "EduQuiz+ dành cho Tổ chức" : "EduQuiz+ Chuyên nghiệp"),
+                    Period = n.Period,
+                    PaymentMethod = n.PaymentMethod,
+                    CreateAt = n.CreateAt.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                    Status = n.Status == "Pending" ? "Đang chờ" : n.Status == "Success" ? "Thành công" : "Đã hủy",
+                    OrderId = n.OrderId
+                })
+                .ToListAsync();
+            return Json(new { status = true, data = JsonConvert.SerializeObject(listorder) });
+        }
+        public async Task<IActionResult> ExportReportOrder(DateTime startdate, DateTime enddate)
+        {
+            // Đường dẫn tới file Excel mẫu
+            var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/src/templates", "ReportBillTemplate.xlsx");
+            using (var package = new ExcelPackage(new FileInfo(templatePath)))
+            {
+                var listorder = await _context.Orders
+               .Where(n => n.CreateAt >= startdate && n.CreateAt <= enddate)
+               .Select(n => new {
+                   UserEmail = n.User.Email,
+                   FirstName = n.FirstName,
+                   LastName = n.LastName,
+                   OrderEmail = n.Email,
+                   Company = n.Company,
+                   PhoneNumber = n.PhoneNumber,
+                   PlanType = n.Quantity + " " + (n.Period == "year" ? "năm" : "tháng") + " " + (n.PlanType == "organization" ? "EduQuiz+ dành cho Tổ chức" : "EduQuiz+ Chuyên nghiệp"),
+                   Period = n.Period,
+                   PaymentMethod = n.PaymentMethod,
+                   CreateAt = n.CreateAt.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                   Status = n.Status == "Pending" ? "Đang chờ" : n.Status == "Success" ? "Thành công" : "Đã hủy",
+                   OrderId = n.OrderId
+               })
+               .ToListAsync();
+                var worksheet = package.Workbook.Worksheets[0];
+                var startRow = 5;
+                worksheet.Cells[1, 1].Value ="Từ ngày: "+ startdate.ToString("dd/MM/yyyy");
+                worksheet.Cells[1, 3].Value ="Đến ngày: "+ enddate.ToString("dd/MM/yyyy");
+                foreach (var orderbill in listorder)
+                {
+                    worksheet.Cells[startRow, 2].Value = orderbill.OrderId;
+                    worksheet.Cells[startRow, 3].Value = orderbill.FirstName +" "+orderbill.LastName;
+                    worksheet.Cells[startRow, 4].Value = orderbill.OrderEmail;
+                    worksheet.Cells[startRow, 5].Value = orderbill.Company;
+                    worksheet.Cells[startRow, 6].Value = orderbill.PhoneNumber;
+                    worksheet.Cells[startRow, 7].Value = orderbill.PlanType;
+                    worksheet.Cells[startRow, 8].Value = orderbill.PaymentMethod;
+                    worksheet.Cells[startRow, 9].Value = orderbill.CreateAt;
+                    worksheet.Cells[startRow, 10].Value = orderbill.Status;
+                    startRow++;
+                }
+                var excelBytes = package.GetAsByteArray();
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report.xlsx");
+            }
         }
     }
 }
