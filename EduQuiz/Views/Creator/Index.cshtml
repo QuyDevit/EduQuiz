@@ -109,18 +109,30 @@
                 <div class="generate-eduquiz-result-screen">
                     <div class="left-section">
                        <form id="ask-ai" class="ai-input-block">
-                           <div class="ai-input-block__Title">Chủ đề</div>
-                           <div class="ai-input-block__InputSection">
-                                <div class="query-input__InputContainer">
-                                    <input id="topic-ask" class="query-input__Input" placeholder="Chủ đề của bạn là gì?" maxlength="60" />
+                           <div class="d-flex flex-column" style="flex:1">
+                                <div class="ai-input-block__InputSection">
+                                    <div class="ai-input-block__Title">Chủ đề</div>
+                                    <div class="query-input__InputContainer">
+                                        <input id="topic-ask" class="query-input__Input" placeholder="Chủ đề của bạn là gì?" maxlength="60" />
+                                    </div>
                                 </div>
+                                <div class="ai-input-block__InputSection mt-2">
+                                    <div class="ai-input-block__Title">Số lượng câu hỏi</div>
+                                    <div class="query-input__InputContainer">
+                                        <input id="questioncount-ask" class="query-input__Input" placeholder="Nhập số lượng" value="5" min="5" max="40" type="number" />
+                                    </div>
+                                </div>
+                           </div>
+                           <div class="d-flex flex-column">
                                 <button id="btn-ask-ai" type="button" class="button-flat" style="background-color:#028282;line-height:40px;min-height:40px;height:40px;">
                                     <div style="padding:3px 3px;border-radius:50%;margin-right:8px;display:flex;background-color:#fff">
                                         <i style="color:#028282" class="fa fa-star" aria-hidden="true"></i>
                                     </div>
                                     <span>Tạo ngay</span>
                                 </button>
+                                <strong class="question-count-note"> Từ 5 đến 40</strong>
                            </div>
+                            
                        </form>
                        <div class="generate-eduquiz__ContentContainer">
                            <div class="generate-eduquiz__ResultContent">

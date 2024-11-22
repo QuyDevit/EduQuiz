@@ -1,70 +1,105 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EduQuiz.Gemini;
+using EduQuiz.Gemini.DTO;
+using EduQuiz.Helper;
 using EduQuiz.Models;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Crmf;
 
 namespace EduQuiz.Services
 {
     public class GeminiAiService
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private static readonly HttpClient Client = new();
         private readonly IConfiguration _configuration;
-        private const string GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-
-        public GeminiAiService(IHttpClientFactory clientFactory, IConfiguration configuration)
+        public GeminiAiService(IConfiguration configuration)
         {
-            _clientFactory = clientFactory;
             _configuration = configuration;
         }
 
-        public async Task<string> GenerateResponse(ChatRequest request)
+        public async Task<string> GenerateContent(string? instruction, string query, bool useJson = true, double creativeLevel = 50, GenerativeModel model = GenerativeModel.Gemini_15_Flash)
         {
-            var client = _clientFactory.CreateClient();
             var apiKey = _configuration["GoogleGenerativeAI:ApiKey"];
-            int maxTokens = request.MaxTokens <= 0 ? 2048 : request.MaxTokens;
+            var endpoint = GetUriWithHeadersIfAny(apiKey, model);
 
-            var geminiRequest = new
+            var request = new
             {
-                contents = new[]
-                {
-                new
+                systemInstruction = new
                 {
                     parts = new[]
                     {
                         new
                         {
-                            text = request.Messages[0].Content
+                            text = instruction
                         }
                     }
-                }
-            },
+                },
+                contents = new[]
+                {
+                    new
+                    {
+                        parts = new[]
+                        {
+                            new
+                            {
+                                text = query
+                            }
+                        }
+                    }
+                },
+                safetySettings = new[]
+                {
+                    new { category = "HARM_CATEGORY_DANGEROUS_CONTENT", threshold = "BLOCK_NONE" },
+                    new { category = "HARM_CATEGORY_HARASSMENT", threshold = "BLOCK_NONE" },
+                    new { category = "HARM_CATEGORY_HATE_SPEECH", threshold = "BLOCK_NONE" },
+                    new { category = "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold = "BLOCK_NONE" }
+                },
                 generationConfig = new
                 {
-                    maxOutputTokens = maxTokens,
-                    temperature = 0.7,
+                    temperature = creativeLevel / 100,
                     topP = 0.8,
-                    topK = 40
+                    topK = 40,
+                    responseMimeType = useJson ? "application/json" :"text/plain"
                 }
             };
+            var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(endpoint, body).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            var responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseDTO = JsonConvert.DeserializeObject<ResponseForOneShot.Response>(responseData);
 
-            var requestUrl = $"{GEMINI_API_URL}?key={apiKey}";
-            var requestContent = new StringContent(
-                JsonSerializer.Serialize(geminiRequest),
-                Encoding.UTF8,
-                "application/json"
-            );
+            return responseDTO.Candidates[0].Content.Parts[0].Text;
+        }
+		public async Task<string> GenerateResponseForConversation(ChatRequest.Request requestData)
+		{
+			var apiKey = _configuration["GoogleGenerativeAI:ApiKey"];
+			var endpoint = GetUriWithHeadersIfAny(apiKey, GenerativeModel.Gemini_15_Flash);
 
-            var geminiResponse = await client.PostAsync(requestUrl, requestContent);
-            var responseContent = await geminiResponse.Content.ReadAsStringAsync();
+			var body = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+			var response = await Client.PostAsync(endpoint, body);
+			response.EnsureSuccessStatusCode();
 
-            if (!geminiResponse.IsSuccessStatusCode)
+			var responseData = await response.Content.ReadAsStringAsync();
+			var dto = JsonConvert.DeserializeObject<ResponseForConversation.Response>(responseData);
+
+			return dto.Candidates[0].Content.Parts[0].Text;
+		}
+		private static string GetUriWithHeadersIfAny(string accessKey, GenerativeModel model)
+        {
+            var modelName = GeneralHelper.GetEnumDescription(model);
+            var endpoint = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent";
+
+            if (accessKey.StartsWith("AIza"))
             {
-                throw new Exception($"Gemini API error: {responseContent}");
+                endpoint += $"?key={accessKey}";
+                return endpoint;
             }
-
-            return responseContent;
+            return endpoint;
         }
     }
 }

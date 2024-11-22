@@ -756,7 +756,7 @@ a {
 }
 
 a:visited {
-	color: inherit;
+	color: #fff;
 }
 
 a:hover, a:focus, a:active {

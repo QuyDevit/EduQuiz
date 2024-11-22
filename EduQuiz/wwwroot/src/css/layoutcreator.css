@@ -2105,7 +2105,6 @@ view-wrapper__modalsuccess{
     flex-shrink: 1;
     display: flex;
     width: 0px;
-    --pad-width: 1px;
     background-color: rgb(204, 204, 204);
     padding: 1px;
     padding-inline-end: 0px;
@@ -2115,19 +2114,24 @@ view-wrapper__modalsuccess{
     font-size: 0.875rem;
     -webkit-box-flex: 1;
     flex-grow: 1;
-    border: none;
+    border: none !important;
     width: 100%;
     border-radius: 0px;
     outline: none;
-    --pad-left: 12px;
-    padding-inline-start: 12px;
+    padding-inline-start: 12px !important;
     padding-inline-end: 32px;
     color: rgb(51, 51, 51);
+    border-right: 1px solid #ccc !important;
+}
+.question-count-note{
+   display:flex;
+   justify-content:center;
+   margin-top:16px;
 }
 .generate-eduquiz__ContentContainer {
     display: flex;
     position: relative;
-    height: calc(100% - 40px);
+    height: calc(100% - 97px);
     overflow: hidden;
 }
 .generate-eduquiz__ResultContent {

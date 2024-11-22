@@ -659,6 +659,31 @@ namespace EduQuiz.Hubs
                 await Clients.Caller.SendAsync("RoomExists", false); // Phòng không tồn tại
             }
         }
+        // Moblie
+        public async Task GetSessionQuizRoom(string pin)
+        {
+            if (WaitingRoomPlayers.ContainsKey(pin))
+            {
+                var getQuizSession = await _context.QuizSessions
+                    .Where(x => x.Pin == pin)
+                    .AsNoTracking()
+                    .Select(n => n.Id)
+                    .SingleOrDefaultAsync();
+                if(getQuizSession != 0)
+                {
+                    await Clients.Caller.SendAsync("RoomExists", true, getQuizSession); // Phòng tồn tại
+                }
+                else
+                {
+                    await Clients.Caller.SendAsync("RoomExists", false, getQuizSession); // Phòng không tồn tại
+                }
+                
+            }
+            else
+            {
+                await Clients.Caller.SendAsync("RoomExists", false,0); // Phòng không tồn tại
+            }
+        }
         // Thêm người chơi vào sảnh chờ
         public async Task AddPlayerToWaitingRoom(string pin, string nickname, int idquizsession)
         {

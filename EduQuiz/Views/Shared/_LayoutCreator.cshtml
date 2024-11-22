@@ -1898,12 +1898,17 @@
         function handleAskAi(){
             const topic = $("#topic-ask").val();
             const language = $("#language-ask").val();
+            const totalquestion = $("#questioncount-ask").val();
             if (userSubscriptionType !="vip"){
-                openToast('warning', 'Lỗi', "Vui lòng nâng cấp để sử dụng tính năng", 2500);
+                openToast('warning', 'Thất bại', "Vui lòng nâng cấp để sử dụng tính năng", 2500);
                 return;
             }
             if (topic == "" || language == "") { 
-                openToast('warning', 'Lỗi', "Vui nhập chủ đề", 2500);
+                openToast('warning', 'Thất bại', "Vui lòng nhập chủ đề câu hỏi", 2500);
+                return;
+            }
+            if (totalquestion<5 || totalquestion>40){
+                openToast('warning', 'Thất bại', "Vui nhập số lượng câu hỏi trong khoảng từ 10 đến 40!", 2500);
                 return;
             }
             $("#btn-ask-ai").text("").append(`<span class="loader"></span>`);
@@ -1913,7 +1918,8 @@
                     type: 'POST',
                     data: {
                         language: language,
-                        topic: topic
+                        topic: topic,
+                        totalquestion: totalquestion
                     },
                     success: function (response) {
                         if (response.redirectUrl) {
@@ -1929,9 +1935,9 @@
                             });
                         } else {
                             if (response.status == true) {
-                                cleanDataResponse(response.data);
+                                renderDataResponse(response.data);
                             } else {
-                                openToast('warning', 'Lỗi', "Đã xảy ra lỗi khi Gọi Api", 2500);
+                                openToast('warning', 'Lỗi', response.msg, 2500);
                             }
                         }
                     },
@@ -1952,16 +1958,12 @@
             }
         }
 
-        function cleanDataResponse(response) {
-            const cleanJsonData = response
-                .replace(/^```json|```$/g, "")
-                .trim();  
+        function renderDataResponse(response) {
             try {
-                const questionsArray = JSON.parse(cleanJsonData);
+                const questionsArray = JSON.parse(response);
                 $("#add-allquestion").text(`Thêm tất cả (${questionsArray.length})`).prop("disabled", false);
                 listQuestionAskAi = questionsArray;
                 listQuestionAskAiImport = questionsArray.slice();
-                console.log(listQuestionAskAi);
                 $(".container-result__Scroll").empty();
                 listQuestionAskAi.forEach((question,index) => {
                     const questionHtml = `
@@ -2003,7 +2005,6 @@
                                                     <span>Tạo ngay</span>`);
             } catch (error) {
                 openToast('warning', 'Lỗi', "Vui lòng ghi chủ đề rõ ràng hơn", 2500);
-                console.error("Lỗi parse JSON:", error.message);
                 $("#btn-ask-ai").empty().append(`<div style="padding:3px 3px;border-radius:50%;margin-right:8px;display:flex;background-color:#fff">
                                                         <i style="color:#028282" class="fa fa-star" aria-hidden="true"></i>
                                                     </div>
@@ -2021,7 +2022,6 @@
                 listQuestionAskAiImport = listQuestionAskAiImport.filter(question => question !== questionToRemove);
             }
             $("#add-allquestion").text(`Thêm tất cả (${listQuestionAskAiImport.length})`).prop("disabled", false);
-            console.log(listQuestionAskAiImport);
         });
 
         //Nhập câu hỏi từ excel

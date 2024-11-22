@@ -1,4 +1,7 @@
-﻿using EduQuiz.Models;
+﻿using EduQuiz.Events;
+using EduQuiz.Gemini.DTO;
+using EduQuiz.Helper;
+using EduQuiz.Models;
 using EduQuiz.Services;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.ContentModel;
@@ -10,13 +13,14 @@ namespace EduQuiz.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly GeminiAiService _geminiAiService;
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, GeminiAiService geminiAiService)
+        private readonly ILogger<HomeController> _logger;
+        private readonly ChatScope _chatScope;
+
+		public HomeController(ILogger<HomeController> logger,ChatScope chatScope)
         {
             _logger = logger;
-            _geminiAiService = geminiAiService;
+            _chatScope = chatScope;
         }
         [Route("")]
         public IActionResult Index()
@@ -43,19 +47,31 @@ namespace EduQuiz.Controllers
 
         #region handle
         [HttpPost]
-        public async Task<IActionResult> Chat([FromBody] ChatRequest request)
-        {
-            try
-            {
-                var responseContent = await _geminiAiService.GenerateResponse(request);
-                return Ok(responseContent);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = new { message = ex.Message } });
-            }
-        }
-      
-        #endregion
-    }
+		public async Task<ActionResult<string>> GenerateAnswer([FromBody] Conversation request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Question))
+			{
+				return Ok("Vui lòng nhập câu hỏi!");
+			}
+
+			if (GeneralHelper.GetTotalWords(request.Question) > 30)
+			{
+				return Ok("Hỏi ngắn thôi (dưới 30 từ ấy) 😡\nHỏi nhiều quá tôi ngộp.");
+			}
+
+			try
+			{
+				var result = await _chatScope.GenerateAnswer(request);
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Cannot generate answer");
+				return Ok("Nhắn từ từ thôi 😡\nChờ tôi suy nghĩ nữa.");
+			}
+		}
+
+		#endregion
+	}
 }

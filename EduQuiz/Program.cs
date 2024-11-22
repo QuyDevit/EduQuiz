@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using OfficeOpenXml;
 using EduQuiz.Areas.Admin.Models;
+using EduQuiz.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,9 @@ builder.Services.AddDbContext<EduQuizDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EduQuizDBConnection")));
 
 builder.Services.AddScoped<GeminiAiService>(); // Đăng ký GeminiAiService
+builder.Services.AddScoped<QuizScope>();
+builder.Services.AddScoped<AnalysisScope>();
+builder.Services.AddScoped<ChatScope>();
 builder.Services.AddScoped<CookieAuth>();// Đăng ký CookieAuth
 // Đọc cấu hình từ appsettings.json và thêm vào container DI
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -55,6 +59,7 @@ builder.Services.Configure<MomoConfig>(builder.Configuration.GetSection("MomoCon
 builder.Services.AddScoped<MoMoService>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 // Add services to the container.
+builder.Services.AddControllers(); // API controllers
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
@@ -97,10 +102,12 @@ app.UseEndpoints(endpoints =>
       name: "areas",
       pattern: "{area:exists}/{controller=Auth}/{action=Index}/{id?}"
     );
-});
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapControllers();
+
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();

@@ -41,4 +41,9 @@ namespace EduQuiz.Models
         public Guid QuizId { get; set; }
         public List<QuestionData> Data { get; set; }
     }
+    public class Analyze
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+    }
 }

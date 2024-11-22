@@ -1,5 +1,6 @@
 ﻿
 using EduQuiz.DatabaseContext;
+using EduQuiz.Events;
 using EduQuiz.Models;
 using EduQuiz.Models.EF;
 using EduQuiz.Services;
@@ -19,13 +20,15 @@ namespace EduQuiz.Controllers
     {
         private readonly EduQuizDBContext _context;
         private readonly HttpClient _httpClient;
-        private readonly GeminiAiService _geminiAiService;
+        private readonly QuizScope _quizScope;
+        private readonly AnalysisScope _analysisScope;
         private readonly string content = "Vui lòng chọn đúng 1 thể loại phù hợp với bộ câu hỏi dưới không cần giải thích ví dụ output [{\"id\":...,\"name\":\"...\"}]: [ { \"id\": 1, \"name\": \"Nghệ thuật\" }, { \"id\": 2, \"name\": \"Sinh học\" }, { \"id\": 3, \"name\": \"Kinh doanh\" }, { \"id\": 4, \"name\": \"Hóa học\" }, { \"id\": 5, \"name\": \"Tin tức hiện tại\" }, { \"id\": 6, \"name\": \"Kinh tế\" }, { \"id\": 7, \"name\": \"Tiếng Anh\" }, { \"id\": 8, \"name\": \"Giải trí\" }, { \"id\": 9, \"name\": \"Kiến thức tổng hợp\" }, { \"id\": 10, \"name\": \"Địa lý\" }, { \"id\": 11, \"name\": \"Lịch sử\" }, { \"id\": 12, \"name\": \"Ngôn ngữ\" }, { \"id\": 13, \"name\": \"Luật\" }, { \"id\": 14, \"name\": \"Toán học\" }, { \"id\": 15, \"name\": \"Âm nhạc\" }, { \"id\": 16, \"name\": \"Vật lý\" }, { \"id\": 17, \"name\": \"Chính trị\" }, { \"id\": 18, \"name\": \"Văn hóa phổ biến\" }, { \"id\": 19, \"name\": \"Tâm lý học\" }, { \"id\": 20, \"name\": \"Tôn giáo\" }, { \"id\": 21, \"name\": \"Khoa học\" }, { \"id\": 22, \"name\": \"Nghiên cứu xã hội\" }, { \"id\": 23, \"name\": \"Thể thao\" }, { \"id\": 24, \"name\": \"Công nghệ\" } ] Bộ câu hỏi:";
-        public CreatorController(EduQuizDBContext context, HttpClient httpClient, GeminiAiService geminiAiService)
+        public CreatorController(EduQuizDBContext context, HttpClient httpClient, QuizScope quizScope,AnalysisScope analysisScope)
         {
             _context = context;
             _httpClient = httpClient;
-            _geminiAiService = geminiAiService;
+            _quizScope = quizScope;
+            _analysisScope = analysisScope;
         }
         [Route("creator/{id:guid}")]
         public async Task<IActionResult> Index(Guid id)
@@ -489,12 +492,12 @@ namespace EduQuiz.Controllers
             }
         }
 
-        public async Task<IActionResult> SaveTypeEduQuiz(Guid idquiz,int userid)
+        public async Task<IActionResult> SaveTypeEduQuiz(Guid idquiz, int userid)
         {
             try
             {
-                var geteduquiz = await _context.EduQuizs.Where(q => q.Uuid == idquiz).Include(n=>n.Questions).ThenInclude(n=>n.Choices).FirstOrDefaultAsync();
-                if(geteduquiz == null)
+                var geteduquiz = await _context.EduQuizs.Where(q => q.Uuid == idquiz).Include(n => n.Questions).ThenInclude(n => n.Choices).FirstOrDefaultAsync();
+                if (geteduquiz == null)
                 {
                     return Json(new { result = "FAIL", msg = "Eduquiz không tồn tại" });
                 }
@@ -503,7 +506,6 @@ namespace EduQuiz.Controllers
                     return Json(new { result = "FAIL", msg = "Bạn không có quyền chỉnh sửa" });
                 }
                 geteduquiz.Type = 1;
-                await _context.SaveChangesAsync();
                 var getdata = new EduQuizData
                 {
                     Uuid = geteduquiz.Uuid,
@@ -535,39 +537,18 @@ namespace EduQuiz.Controllers
                     }).ToList()
                 };
 
-                await ProcessEduQuizAsync(geteduquiz, getdata);
+                var data = await _analysisScope.AnalyzeEduQuiz(getdata);
+                geteduquiz.TopicId = data.FirstOrDefault().id;
+                await _context.SaveChangesAsync();
 
-                return Json(new { result = "PASS"});
+                return Json(new { result = "PASS" });
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return Json(new { result = "FAIL", msg = $"Lưu thất bại: {ex.Message}" });
             }
         }
-        private async Task ProcessEduQuizAsync(Models.EF.EduQuiz geteduquiz, EduQuizData getdata)
-        {
-            var request = new ChatRequest
-            {
-                Model = "gemini-1.5-pro",
-                MaxTokens = 2048,
-                Messages = new[]
-                {
-                    new Message
-                    {
-                        Role = "user",
-                        Content = $"{content}{getdata}"
-                    }
-                }
-            };
 
-            var responseContent = await _geminiAiService.GenerateResponse(request);
-            var geminiResponse = JsonConvert.DeserializeObject<GeminiResponse>(responseContent);
-
-            string extractedText = geminiResponse.Candidates[0].Content.Parts[0].Text;
-            var getid = int.Parse(extractedText.Split(',')[0][^1].ToString());
-
-            geteduquiz.TopicId = getid;
-            await _context.SaveChangesAsync();
-        }
         public async Task <IActionResult>ReadImportData(IFormFile file)
         {
             try
@@ -660,28 +641,19 @@ namespace EduQuiz.Controllers
                 return Json(new { status = false });
             }
         }
-        public async Task<IActionResult> GenerateQuesion(string language,string topic)
+        public async Task<IActionResult> GenerateQuesion(string language,string topic,short totalquestion = 10)
         {
-            var contentask = $"Tạo cho tôi 5 câu hỏi \"mới\" gồm quiz(Câu đố 4 đáp án - 1 đáp án đúng) hoặc true_false(Đúng hoặc sai 2 đáp án - 1 đáp án đúng) về chủ đề \"{topic}\" với language \"{language}\" không cần giải thích và dẫn dắt trả về đúng định dạng: [{{\"QuestionText\":\"Đà Lạt ở nước nào?\",\"TypeQuestion\":\"quiz\",\"TypeAnswer\": 1(default),\"Time\": 20(default),\"PointsMultiplier\": 1(default),\"Image\": \"\",\"ImageEffect\": \"\",\"Choices\":[{{\"Answer\":\"Việt Nam\",\"IsCorrect\":true,\"DisplayOrder\":0}},{{}}...]}}]";
-            var request = new ChatRequest
+            if (string.IsNullOrEmpty(language) || string.IsNullOrEmpty(topic) || totalquestion < 5 || totalquestion > 40) {
+                return Json(new { status = false,msg ="Vui lòng nhập đầy đủ!" });
+            }
+            try
             {
-                Model = "gemini-1.5-pro",
-                MaxTokens = 2048,
-                Messages = new[]
-                {
-                    new Message
-                    {
-                        Role = "user",
-                        Content = contentask
-                    }
-                }
-            };
-
-            var responseContent = await _geminiAiService.GenerateResponse(request);
-            var geminiResponse = JsonConvert.DeserializeObject<GeminiResponse>(responseContent);
-
-            string extractedText = geminiResponse.Candidates[0].Content.Parts[0].Text;
-            return Json(new { status = true, data = extractedText });
+                var quizzes = await _quizScope.GenerateQuizes(language, topic, totalquestion);
+                return Json(new { status = true, data = JsonConvert.SerializeObject(quizzes)});
+            }
+            catch (Exception ex) {
+                return Json(new { status = true, msg = "Hệ thống đang ngộp, vui lòng đợi 3 phút rồi thử lại nha!" });
+            }
         }
         public async Task<IActionResult> ImportQuestion([FromBody] ImportData data)
         {

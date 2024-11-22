@@ -421,7 +421,7 @@ namespace EduQuiz.Controllers
                 return Json(new { result = "FAIL", message = "reCAPTCHA không được giải." });
             }
 
-            var secret = "6LdFqR4qAAAAAOdBNXXRzgOEhERH9rn4aHLdYWLB"; // Thay bằng secret key của bạn
+            var secret = "6Lf_34EqAAAAAJo06L5MoVxrfsO8Xs3N3wVawNKk"; // Thay bằng secret key của bạn
             var client = _httpClientFactory.CreateClient();
 
             var response = await client.GetStringAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secret}&response={captcharesponse}");

@@ -69,13 +69,15 @@ body{
 	box-shadow: -4px 0px 5px #00000036;
 	color: #fff;
 	z-index: 9999;
-	padding:20px 30px 30px 30px;
+	padding-top:20px;
+	/*padding:20px 30px 30px 30px;*/
 	-webkit-transition:all 0.4s ease;
 	-moz-transition:all 0.4s ease;
 	transition:all 0.4s ease;
 }
 .pro-features.active{
-	right:0;
+	right:15px;
+	top:70%;
 }
 .pro-features li.big-title {
 	font-weight: 600;
@@ -4251,3 +4253,97 @@ body{
 /*=========================
 	End Footer CSS
 ===========================*/
+
+/*Chat bot*/
+
+/* Chat header */
+.chat-header {
+	background-color: #1A76D1;
+	color: white;
+	padding: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 20px;
+}
+
+	.chat-header h3 {
+		margin: 0;
+		font-size: 18px;
+		color: #fff;
+		text-align: center
+	}
+
+.close-chat {
+	background: none;
+	border: none;
+	color: white;
+	font-size: 18px;
+	cursor: pointer;
+}
+
+/* Container for messages */
+.chat-messages {
+	flex-grow: 1;
+	padding: 20px;
+	overflow-y: auto;
+	height: 270px;
+}
+
+/* Styling for both user and bot messages */
+.message {
+	margin-bottom: 10px;
+	max-width: 80%;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.bot-message {
+	background-color: #f1f1f1;
+	align-self: flex-start;
+}
+
+.user-message {
+	background-color: #1A76D1;
+	color: white;
+	margin-left:49px;
+}
+.user-message p{
+	color:#fff;
+}
+/* Chat input section */
+.chat-input {
+	display: flex;
+	padding: 10px;
+	border-top: 1px solid #f1f1f1;
+}
+
+	.chat-input input {
+		flex-grow: 1;
+		padding: 10px;
+		border: none;
+		border-radius: 5px;
+		font-size: 14px;
+		border: 1px solid #ccc;
+	}
+		.chat-input input:focus-visible {
+			border: 1px solid #7b7bdf;
+			outline: 0;
+		}
+
+	.chat-input button {
+		background-color: #1A76D1;
+		color: white;
+		border: none;
+		padding: 10px;
+		margin-left: 5px;
+		cursor: pointer;
+		border-radius: 4px;
+		font-size: 0.875rem;
+	}
+
+.chat-input button:hover {
+	background-color: #08539d;
+}
