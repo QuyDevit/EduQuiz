@@ -2,11 +2,13 @@
     Layout = "_LayoutUser";
     ViewBag.Title = "Gói thanh toán";
 }
-@model EduQuiz.Models.EF.User
+@model EduQuiz.Models.BillViewModel
 @{
-    var subscriptionType = Model.SubscriptionType;
-    var check = subscriptionType == "vip" && Model.SubscriptionEndDate.HasValue && Model.SubscriptionEndDate > DateTime.Now;
+    var subscriptionType = Model.User.SubscriptionType;
+    var check = subscriptionType == "vip" && Model.User.SubscriptionEndDate.HasValue && Model.User.SubscriptionEndDate > DateTime.Now;
 }
+<link href="~/src/css/js/datatable/datatables.min.css" rel="stylesheet" />
+<script src="~/src/css/js/datatable/datatables.min.js" defer></script>
 <style>
     .bill-img{
         padding:5px;
@@ -61,6 +63,45 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="card-body px-0 pb-2 px-4" style="background-color:#fff">
+                    <div class="p-0">
+                        <table id="myTable" class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mã hóa đơn</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Gói đăng ký</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phương thức thanh toán</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày tạo</th>
+                                    <th class="text-secondary text-xxs opacity-7">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ListBill)
+                                {
+                                <tr>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs">@item.OrderCode</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs">@item.PlanType</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs">@item.PaymentMethod</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@item.CreateAt</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="text-secondary text-xs @(item.Status == "Đang chờ" ? "text-danger" : item.Status == "Thành công" ? "text-success" : "text-warning")">@item.Status</span>
+                                        </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="right-wrapper">
         </div>
@@ -69,10 +110,12 @@
 
 @section scripts {
     <script>
-        $(document).ready(function () {
-            var userid = `@Model.Id`;
 
-           
+        $(document).ready(function () {
+            var userid = `@Model.User.Id`;
+            $('#myTable').DataTable({
+                "order": []
+            });
         })
     </script>
 }

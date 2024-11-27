@@ -25,11 +25,15 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.search-nav:hover {
+    filter: opacity(95%);
+    text-decoration:underline;
+}
 
-    .tabs-setting:hover {
-        font-weight: bold;
-        color: rgb(51, 51, 51);
-    }
+.tabs-setting:hover {
+    font-weight: bold;
+    color: rgb(51, 51, 51);
+}
 
     .tabs-setting.active {
         color: rgb(70, 23, 143);

@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "_LayoutUser";
+    ViewBag.Title = "Tìm kiếm nội dung";
+}
+@model ICollection<EduQuiz.Models.EF.Interest>
+<link href="~/src/css/search.css" rel="stylesheet" />
+<div class="content" style="margin-top:0;min-height:100vh;display:flex;flex-direction:column">
+    <div class="search_TextFieldContainer">
+        <div class="icon-search">
+            <span class="icon__Icon">
+                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true"><title>Icon</title><path d="M25.707,24.293 L20.314,18.9 C21.403,17.504 22,15.799 22,14 C22,11.863 21.167,9.854 19.656,8.344 C18.146,6.832 16.137,6 14,6 C11.863,6 9.854,6.832 8.344,8.344 C6.833,9.854 6,11.863 6,14 C6,16.137 6.833,18.146 8.344,19.656 C9.854,21.168 11.863,22 14,22 C15.799,22 17.504,21.404 18.9,20.314 L24.293,25.706 L25.707,24.293 Z M14,20 C12.397,20 10.891,19.376 9.758,18.243 C8.624,17.11 8,15.603 8,14 C8,12.398 8.624,10.891 9.758,9.758 C10.891,8.624 12.397,8 14,8 C15.603,8 17.109,8.624 18.242,9.758 C19.376,10.891 20,12.398 20,14 C20,15.603 19.376,17.11 18.242,18.243 C17.109,19.376 15.603,20 14,20 Z" style="fill: rgb(51, 51, 51);"></path></svg>
+            </span>
+        </div>
+        <form action="@Url.Action("SearchResult", "Search")" method="get" class="search_TextField">
+            <input name="query" class="input__Input-Search" placeholder="Tìm kiếm nội dung công khai" type="text" />
+            <input name="category" value="null" hidden/>
+            <input id="type" name="type" value="" hidden/>
+        </form>
+    </div>
+    <div class="layout-search">
+        <div class="suggestions-section">
+            <div class="suggestions-section-Title">Tìm kiếm theo</div>
+            <div class="suggestions__ContentTypes">
+                <button class="content-type__FlatButton" data-tag="eduquiz">
+                    EduQuiz
+                </button>
+                <button class="content-type__FlatButton" data-tag="channel">
+                    Kênh
+                </button>
+            </div>
+        </div>
+        
+        <div class="suggestions-section" id="search-recent-content">
+            <div class="suggestions-section-Title">Tìm kiếm gần đây của bạn</div>
+            <div class="recent-searchesWrapper">
+            </div>
+        </div>
+        <div class="suggestions-section">
+            <div class="suggestions-section-Title">Thể loại</div>
+            <div class="categories__FullPage">
+                <div class="categorie__FullCard">
+                    <a href="@Url.Action("SearchResult","Search", new{category = 0})" class="categorie__Card" style="background: linear-gradient(transparent 0%, transparent 1rem, rgb(51, 51, 51)), url(https://images-cdn.kahoot.it/fcaa8660-de79-4a3c-bf1e-acd083d55860) center center / cover no-repeat">
+                        <div class="categories__title">Bộ sưu tập</div>
+                    </a>
+                </div>
+                @foreach(var item in Model)
+                {
+                    <div class="categorie__FullCard">
+                        <a href="@Url.Action("SearchResult","Search", new{category = item.Id})" class="categorie__Card" style="background: linear-gradient(transparent 0%, transparent 1rem, rgb(51, 51, 51)), url(@item.Image) center center / cover no-repeat">
+                            <div class="categories__title">@item.Name</div>
+                        </a>
+                    </div>
+                }
+           </div>
+        </div>
+    </div>
+</div>
+<script>
+    function loadRecentSearch(){
+        let searchHistory = JSON.parse(localStorage.getItem('eduquiz-recent_search')) || [];
+        if (searchHistory.length == 0) {
+            $("#search-recent-content").remove();
+        } else {
+            let recentSearchesWrapper = $(".recent-searchesWrapper");
+            recentSearchesWrapper.empty();
+            searchHistory.forEach(function (search) {
+                let searchButton = `
+                    <a href="/search-result?query=${search}" class="recent-searchButton">
+                        <span class="icon__Icon" style="width: 18px; height: 18px; margin-right: 8px;">
+                            <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
+                                <title>Icon</title>
+                                <path d="M16,26 C10.486,26 6,21.515 6,16 C6,10.487 10.486,6 16,6 C21.514,6 26,10.486 26,16 C26,21.515 21.514,26 16,26 Z M16,8 C11.589,8 8,11.589 8,16 C8,20.411 11.589,24 16,24 C20.411,24 24,20.411 24,16 C24,11.589 20.411,8 16,8 Z M15,11 L17,11 L17,18 L15,18 L15,11 Z" style="fill: rgb(51, 51, 51);"></path>
+                            </svg>
+                        </span>
+                        ${search}
+                    </>
+                `;
+                // Append the new button to the wrapper
+                recentSearchesWrapper.append(searchButton);
+            });
+        }
+    }
+    loadRecentSearch();
+    function saveSearch(query) {
+        let searchHistory = JSON.parse(localStorage.getItem('eduquiz-recent_search')) || [];
+        searchHistory.unshift(query);
+        searchHistory = searchHistory.slice(0, 5);
+        localStorage.setItem('eduquiz-recent_search', JSON.stringify(searchHistory));
+    }
+    $(".input__Input-Search").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); 
+            const query = $(this).val().trim();
+            if (query !== "") {
+                saveSearch(query);
+                $(this).closest("form").submit(); 
+            }
+        }
+    });
+    $(".content-type__FlatButton").click(function () { 
+        $(".icon-search").hide();
+        $(".content-type__FlatButton").removeClass("active");
+        $(this).addClass("active");
+        let contentTag = `<div class="content-tag-Wrapper">
+                    <div class="content-type__FlatButton">
+                        ${$(this).text()}
+                        <button class="icon-button" onclick="removeTag()">
+                            <span class="icon__Icon" style="width: 12px; height: 12px; display: flex;">
+                                <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0" aria-hidden="true">
+                                    <title>Icon</title>
+                                    <path d="M24 9.29918L22.7008 8L16 14.7008L9.29918 8L8 9.29918L14.7008 16L8 22.7008L9.29918 24L16 17.3001L22.7008 24L24 22.7008L17.2992 16L24 9.29918Z" style="fill: rgb(110, 110, 110);"></path>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>`;
+        $(".content-tag-Wrapper").remove();
+        $('.search_TextField').prepend(contentTag);
+        $("#type").val($(this).attr("data-tag"));
+    });
+    function removeTag() {
+        $(".content-tag-Wrapper").remove(); 
+        $(".icon-search").show();
+        $(".content-type__FlatButton").removeClass("active");
+        $("#type").val("");
+    }
+</script>

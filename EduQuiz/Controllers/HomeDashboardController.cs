@@ -253,20 +253,37 @@ namespace EduQuiz.Controllers
         public async Task<IActionResult> Billing()
         {
             var authCookie = Request.Cookies["acToken"];
-            if (authCookie != null)
+            if (authCookie == null)
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtToken = tokenHandler.ReadJwtToken(authCookie);
-                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-                var iduser = int.Parse(userId ?? "1");
-                var user = await _context.Users.FindAsync(iduser);
-                if (user != null)
-                {
-                    return View(user);
-                }
+				return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
-        }
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var jwtToken = tokenHandler.ReadJwtToken(authCookie);
+			var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+			var iduser = int.Parse(userId ?? "1");
+			var user = await _context.Users.FindAsync(iduser);
+            var listbillbyUser = await _context.Orders
+                .Where(u=>u.UserId == iduser)
+                .Select(n => new BillUser
+                {
+                    Id = n.Id,
+                    OrderCode = n.OrderId,
+					CreateAt = n.CreateAt.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                    PaymentMethod = n.PaymentMethod,
+                    PlanType = n.Quantity + " " + (n.Period == "year" ? "năm" : "tháng") + " " + (n.PlanType == "organization" ? "EduQuiz+ dành cho Tổ chức" : "EduQuiz+ Chuyên nghiệp"),
+					Status = n.Status == "Pending" ? "Đang chờ" : n.Status == "Success" ? "Thành công" : "Đã hủy",
+				}).ToListAsync();
+			if (user == null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+            var view = new BillViewModel
+            {
+                ListBill = listbillbyUser,
+                User = user,
+            };
+			return View(view);
+		}
         #region handle
         public async Task<IActionResult> SavePass(int userid,string oldpass, string newpass)
         {

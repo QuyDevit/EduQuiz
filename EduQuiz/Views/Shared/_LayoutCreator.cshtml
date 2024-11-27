@@ -2265,40 +2265,40 @@
         $("#input-file").on("change", async function (event) {
             const file = event.target.files[0];
             if (file) {
-                // try {
-                //     const response = await analyzeImage(file);
-                //     if (response.status === 'success') {
-                //         if (response.final_decision === 'KO') {
-                //             let violationReason = getViolationReason(response.reject_criteria);
-                //             let footerText = `Lưu ý: Vi phạm ba lần sẽ dẫn đến khóa tài khoản! (Đã vi phạm: ${response.violation_count}/3 )`;
+                try {
+                    const response = await analyzeImage(file);
+                    if (response.status === 'success') {
+                        if (response.final_decision === 'KO') {
+                            let violationReason = getViolationReason(response.reject_criteria);
+                            let footerText = `Lưu ý: Vi phạm ba lần sẽ dẫn đến khóa tài khoản! (Đã vi phạm: ${response.violation_count}/3 )`;
 
-                //             if (response.violation_count < 3) {
-                //                 Swal.fire({
-                //                     icon: 'error',
-                //                     title: 'Vi phạm nội dung!',
-                //                     text: violationReason,
-                //                     footer: `<span style="color: #1f74b6;font-weight: 600;text-decoration: none;">${footerText}</span>`
-                //                 });
-                //             } else {
-                //                 Swal.fire({
-                //                     icon: 'error',
-                //                     title: 'Vi phạm nội dung!',
-                //                     text: violationReason,
-                //                     footer: `<span style="color: #1f74b6;font-weight: 600;text-decoration: none;">${footerText}</span>`,
-                //                     confirmButtonText: 'OK',
-                //                     didClose: () => {
-                //                         window.location.href = '@Url.Action("Logout", "Account")';
-                //                     }
-                //                 });
-                //             }
-                //         } else {
-                //             await uploadImage(file);
-                //         }
-                //     }
-                // } catch (error) {
-                //     console.error('Error:', error.responseText);
-                // }
-                await uploadImage(file);
+                            if (response.violation_count < 3) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Vi phạm nội dung!',
+                                    text: violationReason,
+                                    footer: `<span style="color: #1f74b6;font-weight: 600;text-decoration: none;">${footerText}</span>`
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Vi phạm nội dung!',
+                                    text: violationReason,
+                                    footer: `<span style="color: #1f74b6;font-weight: 600;text-decoration: none;">${footerText}</span>`,
+                                    confirmButtonText: 'OK',
+                                    didClose: () => {
+                                        window.location.href = '@Url.Action("Logout", "Account")';
+                                    }
+                                });
+                            }
+                        } else {
+                            await uploadImage(file);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error.responseText);
+                }
+                // await uploadImage(file);
             }
         });
 

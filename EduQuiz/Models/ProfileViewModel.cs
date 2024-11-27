@@ -8,11 +8,26 @@ namespace EduQuiz.Models
         public Profile Profile { get; set; }
         public List<EduQuizProfile> ListEduQuizProfile { get; set; }
     }
+    
     public class EduQuizProfile
     {
         public string Name { get; set; }
         public string Image { get; set; }
         public int Id { get; set; }
+    }
+    public class BillViewModel
+    {
+        public User User { get; set; }
+        public List<BillUser> ListBill { get; set; }
+    }
+    public class BillUser
+    {
+        public int Id { get; set; }
+        public string OrderCode { get; set; }
+        public string CreateAt { get; set; }
+        public string PaymentMethod { get; set; }
+        public string PlanType { get; set; }
+        public string Status { get; set; }
     }
     public class ProfilePage
     {

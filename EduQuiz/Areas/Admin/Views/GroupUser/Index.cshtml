@@ -1,0 +1,83 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+    ViewBag.Title = "Quản lý nhóm";
+}
+@model ICollection<EduQuiz.Areas.Admin.Models.GroupUserViewModel>
+<div class="container-fluid py-2">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Tài khoản</h6>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2 px-4">
+                    <div class="table-responsive p-0">
+                        <table id="myTable" class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên nhóm</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Loại nhóm</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Số lượng thành viên</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày tạo</th>
+                                    <th class="text-secondary text-xxs opacity-7">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="align-middle text-sm">
+                                            <span class="text-secondary text-xs font-weight-bold">@item.Name</span>
+                                        </td>
+             
+                                        <td class="align-middle text-sm">
+                                            <span class="badge badge-sm @(item.SubscriptionEndDate > DateTime.Now ? "bg-gradient-success" :"bg-gradient-secondary") ">@(item.SubscriptionEndDate > DateTime.Now ? "vip" : "free")</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@item.SumMember</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@string.Format("{0:dd/MM/yyyy}", item.CreateAt)</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-check form-switch ps-0 ms-auto my-auto">
+                                                <input class="form-check-input mt-1 ms-auto" type="checkbox" onchange="ChangeStatus(@item.Id)" @(item.Status ? "checked" : "") />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "order": []
+        });
+    });
+    function ChangeStatus(value) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ChangeStatusGroup", "GroupUser", new { area = "Admin" })",
+            data: {
+                idgroup: value,
+            },
+            success: function (response) {
+                if (response.status == true) {
+
+                }
+            },
+            error: function (err) {
+
+            }
+        })
+    }
+</script>

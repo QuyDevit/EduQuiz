@@ -7,6 +7,12 @@
         public List<ProfileDiscover> ListProfile{ get; set; }
         public List<EduQuizItem> ListEduQuizHot{ get; set; }
     }
+    public class SearchViewModel
+    {
+        public List<CollectionDiscover> ListCollection { get; set; }
+        public List<EduQuizItem> ListEduQuiz { get; set; }
+        public List<ProfileDiscover> ListProfile { get; set; }
+    }
     public class CollectionDiscover
     {
         public int Id { get; set; }
