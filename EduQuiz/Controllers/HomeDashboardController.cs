@@ -173,7 +173,7 @@ namespace EduQuiz.Controllers
                 .Select(n => new HomeReportView
                 {
                     Id = n.Id,
-                    ReportDate = StringHelper.ConvertDateTimeToCustomString(n.StartTime ?? DateTime.Now),
+                    ReportDate = StringHelper.ConvertDateTimeToCustomShortString(n.StartTime ?? DateTime.Now),
                     Title = n.Title,
                     Pin = n.Pin,
                 }).OrderByDescending(n => n.Id).Take(5).ToListAsync();

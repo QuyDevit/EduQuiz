@@ -68,7 +68,22 @@
                                         <a href="">Thời gian</a>
                                     </span>
                                     <span class="stats-card__CountBox">
-                                        <span class="stats-card__CountText">@Model.TimeSession phút</span>
+                                        <span class="stats-card__CountText">
+                                            @{
+                                                if (@Model.TimeSession >= 1440) 
+                                                {
+                                                    @string.Format("{0} ngày", Math.Round((decimal)@Model.TimeSession / 1440, 0))
+                                                }
+                                                else if (@Model.TimeSession >= 60) 
+                                                {
+                                                    @string.Format("{0} giờ", Math.Round((decimal)@Model.TimeSession / 60, 0))
+                                                }
+                                                else 
+                                                {
+                                                    @string.Format("{0} phút", Math.Round((decimal)@Model.TimeSession, 0))
+                                                }
+                                            }
+                                        </span>
                                     </span>
                                 </span>
                             </div>

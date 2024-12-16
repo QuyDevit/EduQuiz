@@ -162,7 +162,7 @@
 <script>
     var urlcurrent = "@currentPath";
     $(document).on('click', '.link-action', function (event) {
-        if (target.is('a.styles__eduquizInfo-Btn')) {
+        if ($(event.target).is('a.styles__eduquizInfo-Btn')) {
             return; // Cho phép hành động mặc định của liên kết
         }
         if ($(event.target).closest('.styles__Button.p-2,.list-action__menu').length > 0) {

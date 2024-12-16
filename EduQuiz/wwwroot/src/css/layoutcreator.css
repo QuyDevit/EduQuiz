@@ -1100,6 +1100,7 @@ button:focus{
     background-repeat: no-repeat;
     background-size: cover;
     position: absolute;
+    max-height:150px;
 }
 .StyledImageEffectButton_Title {
     position: absolute;

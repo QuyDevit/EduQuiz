@@ -342,13 +342,13 @@ namespace EduQuiz.Controllers
                 {
                     return Json(new { status = false });
                 }
-                var checkProfile = await _context.Profile.FirstOrDefaultAsync(c => c.Id == iduser);
+                var checkProfile = await _context.Profile.FirstOrDefaultAsync(c => c.UserId == iduser);
                 if (checkProfile == null)
                 {
                     var newProfile = new Profile
                     {
                         DescriptionPage = description,
-                        InfoDonate = donate,
+                        InfoDonate = donate == null? "" : donate,
                         LinkFacebook = facebookLink,
                         LinkInstagram = instagramLink,
                         LinkYoutube = youtubeLink,

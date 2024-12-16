@@ -725,8 +725,8 @@ namespace EduQuiz.Hubs
                 }
 
                 var random = new Random();
-                var avatarIndex = random.Next(1, 9);
-                var accessoryIndex = random.Next(1, 10);
+                var avatarIndex = random.Next(1, 13);
+                var accessoryIndex = random.Next(1, 16);
 
                 var avatarUrl = $"/src/img/avatar/avatar{avatarIndex}.svg";
                 var accessory = $"/src/img/accessory/accessory{accessoryIndex}.svg";
@@ -1012,6 +1012,17 @@ namespace EduQuiz.Hubs
         public async Task GetFeedback(string pin)
         {
             await Clients.Group(pin).SendAsync("GetFeedback");
+        }
+        public async Task ReConnectGetFeedback(string pin)
+        {
+            try
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, pin);
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("Error", "Có lỗi xảy ra trong quá trình tham gia.");
+            }
         }
     }
 }

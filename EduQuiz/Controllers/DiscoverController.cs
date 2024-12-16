@@ -67,7 +67,7 @@ namespace EduQuiz.Controllers
                     .Take(12)
                     .ToListAsync();
             var listProfileUser = await _context.Profile
-                .Where(n=>n.UserId != 8)
+                .Where(n=>n.UserId != 8 && n.Status)
                 .Include(n=>n.User)
                 .Select(n=>new ProfileDiscover
                 {

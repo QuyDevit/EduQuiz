@@ -21,6 +21,11 @@
     <script src="@("https://unpkg.com/@popperjs/core@2")"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     @RenderSection("styles", required: false)
+    <style>
+        .modal-body{
+            max-height:575px !important;
+        }
+    </style>
 </head>
 <body>  
     <div class="wrapper ">
