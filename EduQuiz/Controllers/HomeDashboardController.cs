@@ -80,7 +80,7 @@ namespace EduQuiz.Controllers
                                                   Deadline = CalculateHelper.ConvertDeadline(q.EndTime ?? DateTime.Now),
                                                   Image = e.ImageCover,
                                                   Title = e.Title,
-                                                  SumQuestion = _context.Questions.Count(q => q.EduQuizId == e.Id),
+                                                  SumQuestion = _context.QuestionSnapshots.Count(q => q.EduQuizId == e.Id),
                                                   UserName = u.Username
                                               }).ToListAsync();
 
