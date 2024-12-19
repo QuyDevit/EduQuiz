@@ -70,7 +70,7 @@ namespace EduQuiz.Controllers
 
             var listAssignmentbyUser = await (from ag in _context.AssignmentGroups
                                               join q in _context.QuizSessions on ag.QuizSessionId equals q.Id
-                                              join e in _context.EduQuizs on ag.EduQuizSnapshotId equals e.Id
+                                              join e in _context.EduQuizSnapshots on ag.EduQuizSnapshotId equals e.Id
                                               join u in _context.Users on e.UserId equals u.Id
                                               where groupIds.Contains(ag.GroupId ?? 0) && DateTime.Now < q.EndTime
                                               select new HomeAssignmentView
