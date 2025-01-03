@@ -264,7 +264,7 @@ namespace EduQuiz.Controllers
                                  Username = u.Username,
                                  StartTime = StringHelper.ConvertDateTimeToCustomString(quizss.StartTime ?? DateTime.Now),
                                  EndTime = quizss.EndTime ?? DateTime.Now ,
-                                 CountQuestion = _context.Questions.Count(q => q.EduQuizId == quiz.Id)
+                                 CountQuestion = _context.QuestionSnapshots.Count(q => q.EduQuizId == quiz.Id)
                              }).ToListAsync();
             var view = new GroupViewModel
             {
