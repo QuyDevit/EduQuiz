@@ -1,77 +1,31 @@
-## Công nghệ sử dụng
+# 📌 Công nghệ  
 
-*   **Ngôn ngữ và nền tảng:** ASP.NET Core, JavaScript
-*   **Thư viện và framework:** jQuery, AJAX, SignalR
-*   **Xác thực và ủy quyền:** JWT
-*   **API tích hợp:** Gemini API, ZaloPay API, Momo API
+- **Nền tảng:** ASP.NET Core, JavaScript  
+- **Thư viện:** jQuery, AJAX, SignalR  
+- **Xác thực:** JWT  
+- **Tích hợp:** Gemini API, ZaloPay, Momo , PicPurify  
 
-## Chức năng
+## ⚡ Chức năng  
 
-### Quản trị viên
+### 🔹 Quản trị viên  
 
-*   **Đăng nhập/Đăng xuất**
-*   **Quản lý tài khoản:**
-    *   Hiển thị danh sách tài khoản
-    *   Tìm kiếm tài khoản
-    *   Khóa tài khoản
-*   **Quản lý bộ sưu tập:**
-    *   Hiển thị danh sách bộ sưu tập câu hỏi
-    *   Thêm bộ sưu tập câu hỏi
-    *   Cập nhật thông tin bộ sưu tập câu hỏi
-    *   Xóa bộ sưu tập
-    *   Tìm kiếm thông tin bộ sưu tập
-*   **Quản lý chủ đề hình nền trò chơi:**
-    *   Hiển thị danh sách hình nền trò chơi
-    *   Thêm hình nền trò chơi
-    *   Cập nhật hình nền trò chơi
-    *   Xóa hình nền trò chơi
-    *   Tìm kiếm hình nền trò chơi
-*   **Quản lý chủ đề âm nhạc trò chơi:**
-    *   Hiển thị danh sách âm nhạc trò chơi
-    *   Thêm âm nhạc trò chơi
-    *   Cập nhật âm nhạc trò chơi
-    *   Xóa âm nhạc trò chơi
-    *   Tìm kiếm âm nhạc trò chơi
-*   **Quản lý hồ sơ người dùng:**
-    *   Hiển thị danh sách hồ sơ người dùng
-    *   Xem và duyệt hồ sơ người dùng
-*   **Quản lý thanh toán:**
-    *   Hiển thị danh sách hóa đơn thanh toán
-    *   Xem, tìm kiếm và lọc hóa đơn thanh toán
-    *   Xác nhận thanh toán và xuất danh sách hóa đơn
-*   **Quản lý nhóm:**
-    *   Hiển thị danh sách nhóm
-    *   Tìm kiếm, lọc thông tin nhóm
-    *   Khóa nhóm
+- **Tài khoản**: Đăng nhập, danh sách, tìm kiếm, khóa  
+- **Bộ sưu tập**: Danh sách, thêm, cập nhật, xóa, tìm kiếm  
+- **Chủ đề trò chơi**: Hình nền, âm nhạc (quản lý, tìm kiếm)  
+- **Hồ sơ**: Danh sách, xem, duyệt  
+- **Thanh toán**: Hóa đơn, tìm kiếm, xác nhận  
+- **Nhóm**: Danh sách, tìm kiếm, khóa  
 
-### Người dùng
+### 🔹 Người dùng  
 
-*   **Đăng ký/Đăng nhập/Đăng xuất**
-*   **Đổi mật khẩu**
-*   **Thông tin người dùng:**
-    *   Cập nhật hồ sơ
-    *   Cập nhật thông tin cá nhân
-    *   Cập nhật cài đặt riêng tư (gửi mail)
-    *   Nâng cấp tài khoản
-*   **Quản lý bộ câu hỏi:**
-    *   Thêm, cập nhật, xóa, nhân bản bộ câu hỏi
-    *   Xem chi tiết bộ câu hỏi
-*   **Tổ chức phiên chơi:**
-    *   Thêm và quản lý phiên chơi
-*   **Quản lý thư viện:**
-    *   Thêm, cập nhật, xóa thư mục
-    *   Quản lý bộ câu hỏi theo thư mục
-*   **Quản lý nhóm:**
-    *   Thêm, xóa, thiết lập nhóm
-    *   Tham gia nhóm
-    *   Xem danh sách thành viên
-    *   Đăng bài, chia sẻ bộ câu hỏi
-    *   Giao bài tập cho thành viên
-*   **Báo cáo - thống kê:**
-    *   Xem lại kết quả phiên chơi
-    *   Thống kê theo phiên chơi
-    *   Xuất báo cáo.
- 
-## Video Demo
+- **Tài khoản**: Đăng ký, đăng nhập, đổi mật khẩu  
+- **Hồ sơ**: Cập nhật thông tin, cài đặt riêng tư, nâng cấp (thanh toán ZaloPay, Momo)  
+- **Bộ câu hỏi**: Thêm (Sử dụng Api Gemini tạo câu hỏi tự động và phân tích bộ câu hỏi thuộc thể loại gì, import từ file xlsx, Kiểm duyệt hình ảnh bằng PicPurify) , sửa, xóa, nhân bản, xem chi tiết
+- **Phiên chơi**: Thêm, quản lý  
+- **Thư viện**: Quản lý thư mục, bộ câu hỏi  
+- **Nhóm**: Tạo, xóa, tham gia, đăng bài, giao bài  
+- **Báo cáo**: Xem kết quả, thống kê, xuất báo cáo (bản tóm tắt pdf, bản chi tiết xlsx)  
 
-[Nhấn vào đây để xem video demo](https://www.youtube.com/watch?v=cpCvs7yBuOk)
+## 🎥 Video Demo  
+
+📺 [Xem video demo](https://www.youtube.com/watch?v=cpCvs7yBuOk)
