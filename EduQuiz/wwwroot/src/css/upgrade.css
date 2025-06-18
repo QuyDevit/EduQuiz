@@ -423,3 +423,12 @@ input[type=number]::-webkit-outer-spin-button {
 .btn-payment:hover{
     background-color:#0a4e9f;
 }
+@media only screen and (max-width: 760px) {
+    .plansHero__title{
+        margin-top:20px;
+    }
+    .logo-wrapper{
+        left:-4%;
+    }
+ 
+}

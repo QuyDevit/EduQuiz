@@ -8,9 +8,10 @@
     @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
     var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value;
 }
-@section styles {
+ @section styles {
     <link href="~/src/css/library.css" rel="stylesheet" />
-}
+ }
+
 <div class="content" style="padding:0;margin-top:63px;">
     <div class="layout-library">
         <div class="col-md-3 sidebar-wrapper__library" style="min-height:400px;padding:0;">

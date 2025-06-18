@@ -111,4 +111,32 @@
             event.stopPropagation(); 
         });
     });
+    $(".navbar-wrapper .navbar-toggler").on("click", function (e) {
+        e.stopPropagation();
+        const sidebar = $(".sidebar");
+        const isOpen = sidebar.hasClass("open");
+
+        $(".sidebar").removeClass("open");
+        $("#navigation").collapse("hide");
+
+        if (!isOpen) {
+            sidebar.addClass("open");
+        } 
+        
+    })
+    $("button[data-target='#navigation']").on("click", function () {
+        const sidebar = $(".sidebar");
+        sidebar.removeClass("open");
+
+    });
+    $(document).on("click", function (e) {
+        if (
+            !$(e.target).closest(".sidebar").length &&
+            !$(e.target).closest(".navbar-toggler").length &&
+            !$(e.target).closest("#navigation").length
+        ) {
+            $(".sidebar").removeClass("open");
+            $("#navigation").collapse("hide"); 
+        }
+    });
 </script>

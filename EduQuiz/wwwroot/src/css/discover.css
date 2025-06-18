@@ -215,3 +215,17 @@
     height:155px;
     min-width:188px;
 }
+@media only screen and (max-width: 500px) {
+    .carousel-item .row{
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+    }
+    .eduquiz-collection-img{
+        height:unset;
+    }
+    .eduquiz-item-img {
+        min-height:160px;
+        height: unset;
+    }
+}

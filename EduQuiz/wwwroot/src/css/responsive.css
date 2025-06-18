@@ -1027,13 +1027,28 @@ Version:	1.1
 
 
 }
+.logo img{
+	height: 48px;
+	width: 140px
+}
 /* Mobile Screen */
 @media only screen and (max-width: 450px) {
-
-
-.section{
-	padding:50px 0px;
-}
+	.logo img {
+		height: 40px;
+		width: 80px
+	}
+	.get-quote .btn {
+		padding: 11px 20px !important;
+	}
+	.fun-facts img {
+		height:170px;
+	}
+	.layout-page-content .wrapper-content .wrapper-title {
+		margin: 1rem 12px 1.5rem 12px;
+	}
+	.section {
+		padding: 50px 0px;
+	}
 .section-title {
 	margin-bottom: 30px;
 	padding: 0px 20px;

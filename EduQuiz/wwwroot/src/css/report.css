@@ -145,6 +145,7 @@ div.dt-search label{
 }
 div.dt-container div.dt-layout-row{
     padding:0 20px;
+    overflow-y:auto;
 }
 .dt-layout-row:first-child div.dt-layout-cell {
     padding-top: 20px;
@@ -1483,6 +1484,9 @@ table.dataTable > tbody > tr {
     width: 100%;
     gap: 8px;
 }
+.info-question{
+    display:flex;
+}
 @keyframes scalemodal {
     0% {
         transform: scale(0.95);
@@ -1612,4 +1616,43 @@ table.dataTable > tbody > tr {
     .report-header__RightPanel {
         display: block;
     }
-}    
+}
+
+@media only screen and (max-width: 760px) {
+    .report-info__TextWrapper{
+        width:unset;
+    }
+    .report-info__TextWrapper-Title span {
+        font-size: 1rem;
+    }
+    .report-info__TextWrapper-Description{
+        font-size:.8rem;
+    }
+    .report-Img {
+        width: 640px;
+        height: 110px;
+        margin-right:0;
+    }
+    .report-info__Wrapper{
+        align-items:center;
+        gap:4px;
+    }
+    .report-bottom, .styles__Wrapper, .list__List-Tabs, .dialog__DialogMidleContent, .report-detail-feedback__FeedbackWrapper {
+        flex-direction: column;
+    }
+    .modal-report{
+        overflow:auto;
+    }
+    .duration__Wrapper{
+        justify-content:initial;
+    }
+    .question-details-MidleWrapper {
+        justify-content:initial;
+    }
+    .info-question{
+        flex-direction:column;
+    }
+    .question-answers-table__TableWrapper{
+        padding:0 8px;
+    }
+}

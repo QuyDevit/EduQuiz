@@ -1288,8 +1288,9 @@
 }
 .question-media__QuestionImage {
     position: relative;
-    width: 750px;
-    height: 450px;
+    width: 100%;
+    max-width: 750px;
+    aspect-ratio: 5 / 3;
 }
 .question-base__Img {
     position: absolute;
@@ -2149,6 +2150,12 @@
 
     .question-base__Img {
         object-fit: contain;
+    }
+    .answer-counter__AnswerCounter {
+        width: 3.5rem;
+    }
+    .question-choice-content__Text{
+        font-size:1rem;
     }
 }
 @media (min-width: 900px) {
@@ -3060,6 +3067,7 @@
 .shadow-text__Container {
     position: relative;
     z-index: 0;
+    display:flex;
 }
 .shadow-text__HiddenText{
     visibility:hidden;

@@ -39,7 +39,7 @@
                         Kế hoạch
                     </span>
                     <span class="text-profile">
-                        <a href="#" class="profile-link">
+                        <a href="@Url.Action("Index","Upgrade")" class="profile-link">
                             Nâng cấp
                         </a>
                     </span>
@@ -141,8 +141,8 @@
                         foreach(var groupowner in Model.ListGroupOwner)
                         {
                             <div class="group-card__Wrapper">
-                                <div class="layout-card__StyledLayoutCard" style="margin:8px;box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;background-color:#fff">
-                                    <div class="d-flex">
+                                <div class="layout-card__StyledLayoutCard">
+                                    <div class="content-card">
                                         <div class="layoutcard-item_img">
                                             <img src="/src/img/school3.png" />
                                         </div>
@@ -175,7 +175,7 @@
                         foreach (var groupjoin in Model.ListGroupJoin)
                         {
                             <div class="group-card__Wrapper">
-                                <div class="layout-card__StyledLayoutCard" style="margin:8px;box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;background-color:#fff">
+                                <div class="layout-card__StyledLayoutCard">
                                     <div class="d-flex">
                                         <div class="layoutcard-item_img">
                                             <img src="/src/img/school3.png" />
@@ -253,7 +253,7 @@
                                 <span>@eduquizowner.SumQuestion câu hỏi</span>
                             </div>
                             <div class="d-flex flex-column" style="flex:1">
-                                <div class="card-item_title" style="max-height: 33px;max-width: 130px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                <div class="card-item_title">
                                     <span>@eduquizowner.Title</span>
                                 </div>
                                 <div class="card-item_footer">
@@ -261,7 +261,7 @@
                                         <div class="card-item_footer-img">
                                             <img src="@eduquizowner.Avatar" />
                                         </div>
-                                        <span class="card-item_footer-name" style="width: 60px; display: inline-block; overflow: hidden; text-overflow: ellipsis;">@eduquizowner.UserName</span>
+                                        <span class="card-item_footer-name">@eduquizowner.UserName</span>
                                     </div>
                                     <span class="count-playquiz">@eduquizowner.SumPlay lượt</span>
                                 </div>

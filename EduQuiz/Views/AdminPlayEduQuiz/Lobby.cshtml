@@ -3,6 +3,7 @@
     ViewBag.Title = "Game";
         @using Newtonsoft.Json
 }
+<audio id="audio-player" src="" hidden loop muted></audio>
 <main class="lobbystyles__PageWrapper">
     <div id="header-title" class="lobbystyles__GetReadyToJoinWrapper">
         <div class="lobbystyles__GetReadyToJoin">
@@ -19,7 +20,7 @@
                                 <div class="headerstyles__ExpandedTextWrapper">
                                     <div class="headerstyles__GamePinTextWrapper">
                                         <div>Tham gia tại 
-                                            <strong>eduquiz.website/pin</strong>
+                                            <strong>vn.eduquiz.website/pin</strong>
                                         </div>
                                         <div>hoặc với 
                                             <strong>EduQuiz! app</strong>
@@ -96,7 +97,6 @@
                         <div class="track__right"></div>
                     </div>
                 </div>
-                <audio id="audio-player" src="" hidden loop muted ></audio>
                 <button id="unmuteButton" hidden></button>
             </div>
             <div>
@@ -271,6 +271,9 @@
     });
     connection.on("ReportQuesion", function (data) {
         $(".top-bar__TopRightContainer").removeClass("d-none");
+        $("#audio-player").attr("src", `/src/music/bell.mp3`);
+        audioPlayer.muted = false;
+        audioPlayer.play();
         skipResult(data);      
     });
     connection.on("FinishedQuiz", function (data) {
@@ -843,6 +846,9 @@
             </div>
             </main>`);
             startCountdown('.question-countdown__count', questionCurrent.question.time);
+            $("#audio-player").attr("src", `/src/music/countdown${questionCurrent.question.time}s.mp3`);
+            audioPlayer.muted = false;
+            audioPlayer.play();
             checkImgEffect == true ? applyGridRevealEffect(parseInt(questionCurrent.question.imageEffect), questionCurrent.question.time * 1000) : "";
         }
     });
@@ -869,6 +875,10 @@
                             <div class="spinning-count-down__Count">3</div>
                         </div>`)
                 rotateElement();
+                $("#audio-player").attr("src", `/src/music/countdown3s.mp3`);
+                audioPlayer.loop = false;
+                audioPlayer.muted = false;
+                audioPlayer.play();
             }, 3000)
         }
         setTimeout(() => {
@@ -1038,6 +1048,7 @@
         });
     }
     function startGame() {
+        audioPlayer.pause();
         connection.invoke("StartGame", currentRoomPin, parseInt(idQuizSession, 10))
             .catch(function (err) {
                 console.error(err.toString());

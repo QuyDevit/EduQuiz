@@ -22,7 +22,7 @@ namespace EduQuiz.Controllers
         private readonly HttpClient _httpClient;
         private readonly QuizScope _quizScope;
         private readonly AnalysisScope _analysisScope;
-        private readonly string content = "Vui lòng chọn đúng 1 thể loại phù hợp với bộ câu hỏi dưới không cần giải thích ví dụ output [{\"id\":...,\"name\":\"...\"}]: [ { \"id\": 1, \"name\": \"Nghệ thuật\" }, { \"id\": 2, \"name\": \"Sinh học\" }, { \"id\": 3, \"name\": \"Kinh doanh\" }, { \"id\": 4, \"name\": \"Hóa học\" }, { \"id\": 5, \"name\": \"Tin tức hiện tại\" }, { \"id\": 6, \"name\": \"Kinh tế\" }, { \"id\": 7, \"name\": \"Tiếng Anh\" }, { \"id\": 8, \"name\": \"Giải trí\" }, { \"id\": 9, \"name\": \"Kiến thức tổng hợp\" }, { \"id\": 10, \"name\": \"Địa lý\" }, { \"id\": 11, \"name\": \"Lịch sử\" }, { \"id\": 12, \"name\": \"Ngôn ngữ\" }, { \"id\": 13, \"name\": \"Luật\" }, { \"id\": 14, \"name\": \"Toán học\" }, { \"id\": 15, \"name\": \"Âm nhạc\" }, { \"id\": 16, \"name\": \"Vật lý\" }, { \"id\": 17, \"name\": \"Chính trị\" }, { \"id\": 18, \"name\": \"Văn hóa phổ biến\" }, { \"id\": 19, \"name\": \"Tâm lý học\" }, { \"id\": 20, \"name\": \"Tôn giáo\" }, { \"id\": 21, \"name\": \"Khoa học\" }, { \"id\": 22, \"name\": \"Nghiên cứu xã hội\" }, { \"id\": 23, \"name\": \"Thể thao\" }, { \"id\": 24, \"name\": \"Công nghệ\" } ] Bộ câu hỏi:";
+        
         public CreatorController(EduQuizDBContext context, HttpClient httpClient, QuizScope quizScope,AnalysisScope analysisScope)
         {
             _context = context;
@@ -584,12 +584,12 @@ namespace EduQuiz.Controllers
                                 return Json(new { status = false, message = "Câu hỏi hoặc câu trả lời vượt quá giới hạn ký tự." });
                             }
                             var answers = new List<string>
-                        {
-                            worksheet.Cells[row, 3].Text,
-                            worksheet.Cells[row, 4].Text,
-                            worksheet.Cells[row, 5].Text,
-                            worksheet.Cells[row, 6].Text
-                        }.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
+                            {
+                                worksheet.Cells[row, 3].Text,
+                                worksheet.Cells[row, 4].Text,
+                                worksheet.Cells[row, 5].Text,
+                                worksheet.Cells[row, 6].Text
+                            }.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
 
                             if (answers.Count < 2)
                             {

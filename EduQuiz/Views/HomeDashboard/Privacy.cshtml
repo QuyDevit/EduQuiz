@@ -70,10 +70,19 @@
     #autosave{
         margin-top:10px;
     }
-}
+
+    .main-content {
+        display: flex;
+    }
+
+    @@media only screen and (max-width: 760px) {
+        .main-content {
+            flex-direction: column;
+        }
+    }
 </style>
 <div class="content" style="padding:0">
-    <div class="row" style="margin:0">
+    <div class="main-content" style="margin:0">
         <div class="left-wrapper">
         </div>
         <div class="center-wrapper">

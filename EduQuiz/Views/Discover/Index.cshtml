@@ -89,7 +89,7 @@
                                         <div class="row" style="margin:0">
                                             @foreach(var item in items)
                                             {
-                                                <div class="col-md-2 channel-item">
+                                                <div class="col-8 col-md-8 col-lg-2 col-xl-2 channel-item">
                                                     <a href="@Url.Action("ProfilePage","Profile",new{id = "672891ca-ff80-8001-b068-1ca3c6565285"})" class="card__Content align-items-start">
                                                         <div class="d-flex align-items-center ml-2">
                                                             <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
@@ -157,7 +157,7 @@
                                     <div class="carousel-item @(pageIndex == 0 ? "active" : "")">
                                         <div class="row" style="margin:0">
                                             @foreach(var item in items){
-                                                <div class="col-md-2 channel-item">
+                                                <div class="col-8 col-md-8 col-lg-2 col-xl-2 channel-item">
                                                     <a href="@Url.Action("Index","Detail",new{id = item.Uuid})" class="card__Content align-items-start">
                                                         <div class="d-flex align-items-center ml-2">
                                                             <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">
@@ -225,7 +225,7 @@
                                     <div class="row" style="margin:0">
                                         @foreach(var item in items)
                                         {
-                                            <div class="col-md-2 channel-item">
+                                            <div class="col-8 col-md-8 col-lg-2 col-xl-2 channel-item">
                                                 <a href="@Url.Action("ProfilePage","Profile",new {id = item.Uuid})" class="card__Content">
                                                     <img class="card__BannerImg" src="@item.ImgCover">
                                                     <div class="card__ProfileWrapper">
@@ -274,7 +274,7 @@
                                     <div class="row" style="margin:0">
                                         @foreach(var item in items)
                                         {
-                                            <div class="col-md-2 channel-item">
+                                            <div class="col-8 col-md-8 col-lg-2 col-xl-2 channel-item">
                                                 <a href="@Url.Action("Index","Detail",new{id = item.Uuid})" class="card__Content align-items-start">
                                                     <div class="d-flex align-items-center ml-2">
                                                         <svg class="styles_Icon-EduQuiz" x="0px" y="0px" viewBox="0 0 16 16">

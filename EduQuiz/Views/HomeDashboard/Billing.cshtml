@@ -30,9 +30,24 @@
     .grayscale-img {
         filter: grayscale(100%);
     }
+
+    .main-content {
+        display: flex;
+    }
+
+    @@media only screen and (max-width: 760px) {
+        .main-content {
+            flex-direction: column;
+          
+        }
+
+        #myTable_wrapper{
+            overflow:auto;
+        }
+    }
 </style>
 <div class="content" style="padding:0">
-    <div class="row" style="margin:0">
+    <div class="main-content" style="margin:0">
         <div class="left-wrapper">
         </div>
         <div class="center-wrapper">
@@ -63,7 +78,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="main-content">
                 <div class="card-body px-0 pb-2 px-4" style="background-color:#fff">
                     <div class="p-0">
                         <table id="myTable" class="table align-items-center mb-0">

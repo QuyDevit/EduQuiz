@@ -23,6 +23,10 @@
 .style_wrapper{
     width:100%;
 }
+.header-left,.header-right{
+    display:flex;
+    align-items:center;
+}
 .style-content_wrapper{
     display:flex;
     align-items:center;
@@ -39,7 +43,6 @@
     padding: 0px;
     cursor: pointer;
     overflow: hidden;
-    width: 45%;
     max-width: 320px;
     border: 1px solid rgb(204, 204, 204);
 }
@@ -116,9 +119,20 @@
     position: relative;
     justify-content:center;
 }
-    .button-flat:hover {
-        background-color: rgb(18, 96, 190);
-    }
+#btn-theme2.button-flat {
+    display:none;
+    height: 30px;
+    line-height: 24px;
+    min-height: 24px;
+    width: 90px;
+    padding: 0 0 0 4px;
+    justify-content: start;
+    margin : 0 auto;
+    margin-bottom: 8px;
+}
+.button-flat:hover {
+    background-color: rgb(18, 96, 190);
+}
 .button-flat .icon {
     display: flex;
     align-items:center;
@@ -146,6 +160,8 @@
     background: rgb(255, 255, 255);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
     padding-top: 0px;
+    transition: transform 0.5s ease-in-out;
+    transform: translateX(0);
 }
 
 .side-bar-drag-and-drop {
@@ -848,17 +864,30 @@ button:focus{
     clip-path: inset(-10px 24px -10px -10px);
     border: none;
 }
-    .Sidebar-right_button span {
-        display: flex;
-        width: 24px;
-        height: 20px;
-        flex: 0 0 auto;
-        z-index: 90;
-        align-items: center;
-        justify-content: center;
-    }
-    .Sidebar-right_button span i{
-        font-size:16px;
+.Sidebar-left_button {
+    display:none;
+    position: absolute;
+    right: -66px;
+    left: unset;
+    top: 50%;
+    height: 40px;
+    width:34px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.15) -2px 0px 4px 0px;
+    transform: translate(-100%, -50%);
+    border:none;
+}
+.Sidebar-right_button span, .Sidebar-left_button span {
+    display: flex;
+    width: 24px;
+    height: 20px;
+    flex: 0 0 auto;
+    z-index: 90;
+    align-items: center;
+    justify-content: center;
+}
+    .Sidebar-right_button span i, .Sidebar-left_button span i{
+        font-size: 16px;
     }
 
 .styles__ScrollWrapper {
@@ -1161,7 +1190,7 @@ button:focus{
     position: absolute;
     top: 144.375px;
     width: 256px;
-    z-index: 102;
+    z-index: 121;
     box-sizing: border-box;
 }
  
@@ -2319,4 +2348,50 @@ view-wrapper__modalsuccess{
 }
 .generation-footer-btn:hover{
     background-color: rgb(223, 223, 223);
+}
+
+@media only screen and (max-width: 760px) {
+    .style-content_wrapper{
+        flex-direction:column;
+        gap:4px;
+    }
+    .base-topbar_style{
+        height:120px;
+    }
+    .side-bar-drag-and-drop {
+        margin: 120px 0px 0px;
+    }
+    .topbar {
+        padding-bottom: 120px;
+    }
+    .side-bar_wrapper.hide {
+        transform: translateX(-100%);
+    }
+    .styles__ContentBackground{
+        margin-left:0;
+    }
+    .styles__Sidebar-right {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 120;
+    }
+    #btn-theme2.button-flat{
+        display:flex;
+    }
+    .side-bar_wrapper{
+        overflow:unset;
+    }
+    .Sidebar-left_button{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    .modal-dialog-centered{
+        margin-top:50px;
+    }
+    #btn-theme{
+        display:none;
+    }
 }

@@ -947,3 +947,25 @@
 .icon-feeling{
     padding:0 !important;
 }
+@media only screen and (max-width: 760px) {
+    .group-detail__Container, .group-detail-tabs__Container, .post__Container, .activity-card__Container, .group-empty-view {
+        width: 100% !important;
+    }
+    .group-detail-tabs__Container, .activity-card__Header {
+        flex-direction: column;
+        align-items:initial;
+    }
+    .group-detail-tabs__Container .btn{
+        margin-top:8px;
+        width:fit-content;
+    }
+    .activity-card__InfoWrapper{
+        margin-top:8px;
+    }
+    .activity-card__InfoWrapper:last-child{
+        justify-content: space-between;
+    }
+    .library-layout__Content {
+        padding: 2rem 0px 0px !important;
+    }
+}

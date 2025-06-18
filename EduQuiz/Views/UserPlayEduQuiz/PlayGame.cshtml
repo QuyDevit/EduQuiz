@@ -2,6 +2,7 @@
     Layout = "_LayoutPlay";
     ViewBag.Title = "Play Game";
 }
+<audio id="audio-player" src="" hidden muted></audio>
 <div class="instructions__PageWrapper">
     <main class="instructions-with-avatar__PageMainContent">
         <button id="avatar-current" class="avatar-content__AvatarContainer" style="--scale-size: -225.25px;">
@@ -387,7 +388,8 @@
         </div>
     </main>
 </div>
-<script> 
+<script>
+    var audioPlayer = document.getElementById('audio-player');
     let isKicked = false;
     var flagfeedback = false;
     var bg = `@ViewBag.Player.QuizSession.EduQuiz.Theme.Source`;
@@ -775,6 +777,9 @@
         }
     });
     connection.on("TimeUp", function (data) {
+        $("#audio-player").attr("src", `/src/music/bell.mp3`);
+        audioPlayer.muted = false;
+        audioPlayer.play();
         const parsedPlayerId = parseInt(playerid, 10);
         const playerAnswers = data.filter(answer => answer.playerId === parsedPlayerId);
         let messageHTML = '';
@@ -1180,6 +1185,9 @@
             }
         }
         startCountdown('.question-countdown__count', timeCountDown ?? questionCurrent.time);
+        $("#audio-player").attr("src", `/src/music/countdown${questionCurrent.time}s.mp3`);
+        audioPlayer.muted = false;
+        audioPlayer.play();
     }
     function chooseAnswer(value) {
         const $button = $(`button[onclick="chooseAnswer(${value})"]`);
@@ -1401,6 +1409,11 @@
     $(document).on('click', '#avatar-current', function () {
         $(this).addClass("active");
         $(".avatar-content__AvatarMenu").addClass("open");
+    });
+    $(document).on('click', function () {
+        if (audioPlayer.muted) {
+            audioPlayer.muted = false;
+        }
     });
 
     $(document).on('click', '#close-menu', function () {
